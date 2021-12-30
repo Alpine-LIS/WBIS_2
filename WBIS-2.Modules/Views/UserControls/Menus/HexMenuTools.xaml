@@ -1,0 +1,15 @@
+﻿<dxb:BarSubItem x:Class="WBIS_2.Modules.Views.HexMenuTools"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WBIS_2.Modules.Views"
+             xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
+             xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+                Glyph="{dx:DXImage SvgImages/XAF/Action_Printing_PageSetup.svg}" ToolTip="Hex160 Tools">
+    
+        <dxb:BarButtonItem Content="Manage Requred Passes" Command="{Binding ManageRequiredPassesCommand}"/>
+        <dxb:BarButtonItem Content="Drop Selected Hexagons" Command="{Binding DropHexagonsCommand}"/>
+</dxb:BarSubItem>

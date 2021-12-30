@@ -1,0 +1,51 @@
+﻿<UserControl x:Class="WBIS_2.Modules.Views.DetailMenuView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WBIS_2.Modules.Views"
+             xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
+             xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <dxb:ToolBarControl>
+            <dxb:BarButtonItem 
+                Command="{Binding SaveCommand}"
+                KeyGesture="Control+S"
+                ToolTip="Save (Ctrl+S)"
+                Glyph="{dx:DXImage SvgImages/Save/Save.svg}"
+                Content="Save"
+                IsEnabled="{Binding EnableDetailMenuItems, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <dxb:BarButtonItem Glyph="{dx:DXImage SvgImages/XAF/Action_Workflow_ShowWorkflowInstances.svg}"
+                        Content="Show Edits"
+                      ToolTip="Show Edits"
+                               Command="{Binding ViewEditsCommand}"/>
+
+
+            <dxb:BarButtonItem 
+                ToolTip="Zoom to feature"
+                Command="{Binding ZoomToLayerCommand}"
+                IsVisible="{Binding IsIMapNavigation}"
+                Content="Zoom to feature" Glyph="{dx:DXImage SvgImages/Dashboards/GeoPointMaps.svg}"/>
+
+
+            <dxb:BarSubItem ToolTip="Append Activity Feature" IsVisible="{Binding IsActivityDetail, UpdateSourceTrigger=PropertyChanged}" 
+                            IsEnabled="{Binding EnableListMenuItems, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                            Glyph="{dx:DXImage SvgImages/Dashboards/ChoroplethMap.svg}">
+                <dxb:BarButtonItem Content="From Shapefile" Command="{Binding ActivityFeatureExternalCommand}"/>
+                <dxb:BarButtonItem Content="From Parent Area" Command="{Binding ActivityFeatureParentCommand}"/>
+                <dxb:BarButtonItem Content="Draw Manually" Command="{Binding ActivityFeatureDrawCommand}"/>
+            </dxb:BarSubItem>
+            <dxb:BarButtonItem ToolTip="Open Parent Unit" IsVisible="{Binding IsActivityDetail, UpdateSourceTrigger=PropertyChanged}" Command="{Binding ActivityParentUnitCommand}" Glyph="{dx:DXImage SvgImages/Spreadsheet/ChangeDataSourcePivotTable.svg}"/>
+            <dxb:BarButtonItem ToolTip="View Evaluation Photos" 
+                               IsVisible="{Binding HasPhotos, UpdateSourceTrigger=PropertyChanged}" 
+                               Command="{Binding ViewEvaluationPhotosCommand}" 
+                               Glyph="{dx:DXImage SvgImages/Icon Builder/Electronics_Photo.svg}"/>
+
+            <dxb:BarCheckItem Content="Activity Record Locked" ToolTip="Activity Record Locked" IsVisible="{Binding IsActivityDetail, UpdateSourceTrigger=PropertyChanged}"
+                              IsChecked="{Binding LockedRecord, UpdateSourceTrigger=PropertyChanged}" Glyph="{dx:DXImage SvgImages/Icon Builder/Security_Lock.svg}"/>
+
+        </dxb:ToolBarControl>
+    </Grid>
+</UserControl>

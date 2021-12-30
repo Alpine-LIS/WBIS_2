@@ -1,0 +1,74 @@
+﻿<UserControl x:Class="WBIS_2.Modules.Views.ListMenuView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WBIS_2.Modules.Views"
+             xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
+             xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <dxb:ToolBarControl Grid.Row="2">
+            <dxb:BarButtonItem 
+                KeyGesture="Insert"
+                ToolTip="{Binding AddRecordToolTip, UpdateSourceTrigger=PropertyChanged}"
+                Command="{Binding AddRecordCommand}"
+                Glyph="{dx:DXImage SvgImages/Icon Builder/Actions_Add.svg}"
+                Content="Add"
+                IsEnabled="{Binding EnableListMenuItems, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <dxb:BarButtonItem 
+                KeyGesture="Delete"
+                ToolTip="Delete (delete)"
+                Command="{Binding DeleteRecordCommand}"
+                Glyph="{dx:DXImage SvgImages/Dashboards/Delete.svg}"
+                Content="Delete"
+                IsEnabled="{Binding EnableListMenuItems, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <dxb:BarButtonItem 
+                KeyGesture="F5"
+                ToolTip="Refresh (F5)"
+                Command="{Binding RecordsRefreshCommand}"
+                Glyph="{dx:DXImage SvgImages/Icon Builder/Actions_Refresh.svg}"
+                Content="Delete"
+                IsEnabled="{Binding RecordsRefreshEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <dxb:BarButtonItem 
+                KeyGesture="Enter"
+                ToolTip="Open Details (Enter)"
+                Command="{Binding ShowDetailsCommand}"
+                Glyph="{dx:DXImage SvgImages/Dashboards/EnableSearch.svg}"
+                Content="Open Details"
+                IsEnabled="{Binding ShowDetailsEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <dxb:BarCheckItem Glyph="{dx:DXImage SvgImages/RichEdit/TrackingChanges_ShowMarkup.svg}"
+                Content="View Deleted" 
+                ToolTip="View Deleted" 
+                IsChecked="{Binding ViewDeleted, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                IsEnabled="{Binding ViewDeletedEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              IsVisible="{Binding AdminUser, UpdateSourceTrigger=PropertyChanged}"/>
+            <dxb:BarCheckItem Glyph="{dx:DXImage SvgImages/Icon Builder/Security_Visibility.svg}"
+                Content="View All Activities" 
+                ToolTip="View All Activities" 
+                IsChecked="{Binding ShowAllActivites, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                IsVisible="{Binding IsActivityList, UpdateSourceTrigger=PropertyChanged}"/>
+            <dxb:BarCheckItem 
+                ToolTip="Toggle map auto zoom"
+                IsChecked="{Binding ToggleAutoZoom}"
+                IsVisible="{Binding IsIMapNavigationList}"
+                Content="Toggle map auto zoom" Glyph="{dx:DXImage SvgImages/Dashboards/GeoPointMaps.svg}"/>
+
+            <dxb:BarSubItem Glyph="{dx:DXImage SvgImages/Dashboards/EditFilter.svg}" ToolTip="Filter Tools">
+                <dxb:BarButtonItem 
+                    ToolTip="Save Filter"
+                    Content="Save Filter"
+                    Command="{Binding SaveFilterCommand}"/>
+                <dxb:BarButtonItem 
+                    ToolTip="Load Filter"
+                    Content="Load Filter"
+                    Command="{Binding LoadFilterCommand}"/>
+            </dxb:BarSubItem>
+
+
+
+            <local:HexMenuTools IsVisible="{Binding IsHex160List, UpdateSourceTrigger =PropertyChanged}"/>
+        </dxb:ToolBarControl>
+    </Grid>
+</UserControl>
