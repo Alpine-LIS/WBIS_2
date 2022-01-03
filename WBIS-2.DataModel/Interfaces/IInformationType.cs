@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq.Expressions;
 using System.Text;
 
 namespace WBIS_2.DataModel
@@ -12,5 +13,9 @@ namespace WBIS_2.DataModel
         /// </summary>
         [NotMapped]
         public string DisplayName { get; }
+        [NotMapped]
+        public IInformationType[] AvailibleChildren { get; }
+       
+        public abstract Expression<Func<object, bool>> GetParentWhere(object[] Query, Type QueryType);
     }
 }

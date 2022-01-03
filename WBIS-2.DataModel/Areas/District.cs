@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+using System.Linq;
+using System.Linq.Expressions;
 
 namespace WBIS_2.DataModel
 {
@@ -33,5 +35,17 @@ namespace WBIS_2.DataModel
 
         [NotMapped, Display(Order = -1)]
         public string DisplayName { get { return "District"; } }
+
+        [NotMapped]
+        public IInformationType[] AvailibleChildren
+        {
+            get
+            { return new IInformationType[] { new Watershed(), new Hex160(), new SiteCalling(), new CNDDBOccurrence(), new CDFW_SpottedOwl() }; }
+        }
+        public Expression<Func<object, bool>> GetParentWhere(object[] Query, Type QueryType)
+        {
+            Expression<Func<object, bool>> a = _ => Query.Contains(((District)_));
+            return a;
+        }
     }
 }

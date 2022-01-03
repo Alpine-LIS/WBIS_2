@@ -39,7 +39,7 @@ namespace WBIS_2.Modules.ViewModels
         }
 
 
-        public Hex160ChildrenViewModel ChildrenView { get; set; }
+        public ChildrenListViewModel ChildrenView { get; set; }
         private void UpdateChildren(object sender, EventArgs e)
         {
             if (ChildrenView != null)
@@ -58,8 +58,8 @@ namespace WBIS_2.Modules.ViewModels
             IDocument document = service.FindDocumentById("Hex160 Children");
             if (document == null)
             {
-                ChildrenView = Hex160ChildrenViewModel.Create(SelectedItems.Cast<Hex160>().ToArray());
-                document = service.CreateDocument("Hex160ChildrenView", ChildrenView, "Hex160 Children", this);
+                ChildrenView = ChildrenListViewModel.Create(SelectedItems.Cast<Hex160>().ToArray(), new Hex160());
+                document = service.CreateDocument("ChildrenListView", ChildrenView, "Hex160 Children", this);
                 document.Id = "Hex160 Children";
             }
             document.Show();

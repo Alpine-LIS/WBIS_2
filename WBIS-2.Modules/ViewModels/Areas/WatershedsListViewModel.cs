@@ -41,7 +41,7 @@ namespace WBIS_2.Modules.ViewModels
         }
 
 
-        public WatershedChildrenViewModel ChildrenView { get; set; }
+        public ChildrenListViewModel ChildrenView { get; set; }
         private void UpdateChildren(object sender, EventArgs e)
         {
             if (ChildrenView != null)
@@ -60,8 +60,8 @@ namespace WBIS_2.Modules.ViewModels
             IDocument document = service.FindDocumentById("Watershed Children");
             if (document == null)
             {
-                ChildrenView = WatershedChildrenViewModel.Create(SelectedItems.Cast<Watershed>().ToArray());
-                document = service.CreateDocument("WatershedChildrenView", ChildrenView, "Watershed Children", this);
+                ChildrenView = ChildrenListViewModel.Create(SelectedItems.Cast<Watershed>().ToArray(), new Watershed());
+                document = service.CreateDocument("ChildrenListView", ChildrenView, "Watershed Children", this);
                 document.Id = "Watershed Children";
             }
             document.Show();

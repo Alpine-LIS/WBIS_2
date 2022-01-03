@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+using System.Linq;
+using System.Linq.Expressions;
 
 namespace WBIS_2.DataModel
 {
@@ -45,5 +47,25 @@ namespace WBIS_2.DataModel
 
         [NotMapped, Display(Order = -1)]
         public string DisplayName { get { return "Hex160"; } }
+
+        [NotMapped]
+        public IInformationType[] AvailibleChildren
+        {
+            get
+            { return new IInformationType[] { new SiteCalling(), new Hex160RequiredPass(), }; }
+        }
+        public Expression<Func<object, bool>> GetParentWhere(object[] Query, Type QueryType)
+        {
+            Expression<Func<object, bool>> a;
+            if (QueryType == typeof(District))
+                a = _ => ((Hex160)_).Districts.Any(d => Query.Contains(d));
+            else if (QueryType == typeof(Watershed))
+                a = _ => ((Hex160)_).Watersheds.Any(d => Query.Contains(d));
+            else if (QueryType == typeof(Quad75))
+                a = _ => ((Hex160)_).Quad75s.Any(d => Query.Contains(d));
+            else
+                a = _ => Query.Contains(((Hex160)_));
+            return a;
+        }
     }
 }

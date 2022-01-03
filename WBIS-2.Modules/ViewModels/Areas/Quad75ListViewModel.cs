@@ -39,7 +39,7 @@ namespace WBIS_2.Modules.ViewModels
         }
 
 
-        public Quad75ChildrenViewModel ChildrenView { get; set; }
+        public ChildrenListViewModel ChildrenView { get; set; }
         private void UpdateChildren(object sender, EventArgs e)
         {
             if (ChildrenView != null)
@@ -58,8 +58,8 @@ namespace WBIS_2.Modules.ViewModels
             IDocument document = service.FindDocumentById("Quad75 Children");
             if (document == null)
             {
-                ChildrenView = Quad75ChildrenViewModel.Create(SelectedItems.Cast<Quad75>().ToArray());
-                document = service.CreateDocument("Quad75ChildrenView", ChildrenView, "Quad75 Children", this);
+                ChildrenView = ChildrenListViewModel.Create(SelectedItems.Cast<Quad75>().ToArray(), new Quad75());
+                document = service.CreateDocument("ChildrenListView", ChildrenView, "Quad75 Children", this);
                 document.Id = "Quad75 Children";
             }
             document.Show();

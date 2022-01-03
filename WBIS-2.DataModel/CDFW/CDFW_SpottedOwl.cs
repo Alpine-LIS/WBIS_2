@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 
 namespace WBIS_2.DataModel
@@ -69,5 +71,25 @@ namespace WBIS_2.DataModel
 
         [NotMapped, Display(Order = -1)]
         public string DisplayName { get { return "CDFW Spotted OWl"; } }
+
+        [NotMapped]
+        public IInformationType[] AvailibleChildren
+        {
+            get
+            { return new IInformationType[0]; }
+        }
+        public Expression<Func<object, bool>> GetParentWhere(object[] Query, Type QueryType)
+        {
+            Expression<Func<object, bool>> a;
+            if (QueryType == typeof(District))
+                a = _ => ((CDFW_SpottedOwl)_).Districts.Any(d => Query.Contains(d));
+            else if (QueryType == typeof(Watershed))
+                a = _ => ((CDFW_SpottedOwl)_).Watersheds.Any(d => Query.Contains(d));
+            else if (QueryType == typeof(Quad75))
+                a = _ => ((CDFW_SpottedOwl)_).Quad75s.Any(d => Query.Contains(d));
+            else
+                a = _ => Query.Contains(((CDFW_SpottedOwl)_));
+            return a;
+        }
     }
 }

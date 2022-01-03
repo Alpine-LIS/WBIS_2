@@ -40,7 +40,7 @@ namespace WBIS_2.Modules.ViewModels
 
 
 
-        public DistrictChildrenViewModel ChildrenView { get; set; }
+        public ChildrenListViewModel ChildrenView { get; set; }
         private void UpdateChildren(object sender, EventArgs e)
         {
             if (ChildrenView != null)
@@ -60,8 +60,8 @@ namespace WBIS_2.Modules.ViewModels
             IDocument document = service.FindDocumentById("District Children");
             if (document == null)
             {
-                ChildrenView = DistrictChildrenViewModel.Create(SelectedItems.Cast<District>().ToArray());
-                document = service.CreateDocument("DistrictChildrenView", ChildrenView, "District Children", this);
+                ChildrenView = ChildrenListViewModel.Create(SelectedItems.Cast<District>().ToArray(), new District());
+                document = service.CreateDocument("ChildrenListView", ChildrenView, "District Children", this);
                 document.Id = "District Children";
             }
             document.Show();
