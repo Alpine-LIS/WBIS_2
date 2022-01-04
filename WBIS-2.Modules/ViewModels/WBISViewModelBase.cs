@@ -15,6 +15,8 @@ using System.Windows.Input;
 using WBIS_2.Common;
 using System.Collections.ObjectModel;
 using System.Collections;
+using WBIS_2.Modules.Tools;
+using WBIS_2.Modules.Views.Wildlife;
 
 namespace WBIS_2.Modules.ViewModels
 {
@@ -95,7 +97,12 @@ namespace WBIS_2.Modules.ViewModels
             SaveFilterCommand = new DelegateCommand(SaveFilterClick);
             LoadFilterCommand = new DelegateCommand(LoadFilterClick);
 
-            Privileges();
+
+            ManageRequiredPassesCommand = new DelegateCommand(ManageRequiredPassesClick);
+            RemoveRequiredPassesCommand = new DelegateCommand(RemoveRequiredPassesClick);
+            DropHexagonsCommand = new DelegateCommand(DropHexagonsClick);
+
+        Privileges();
 
         }
 
@@ -356,6 +363,25 @@ namespace WBIS_2.Modules.ViewModels
             RaisePropertyChanged(nameof(IsSiteCallingList));
             RaisePropertyChanged(nameof(IsCnddbOccurrenceList));
             RaisePropertyChanged(nameof(IsCdfwSpottedOwlList));
+        }
+
+
+
+        public ICommand ManageRequiredPassesCommand { get; set; }
+        public ICommand RemoveRequiredPassesCommand { get; set; }
+        public ICommand DropHexagonsCommand { get; set; }
+        private void ManageRequiredPassesClick()
+        {
+            ManageRequiredPassesView manageRequiredPassesView = new ManageRequiredPassesView();
+            CustomControlWindow userWindow = new CustomControlWindow(manageRequiredPassesView);
+        }
+        private void RemoveRequiredPassesClick()
+        {
+
+        }
+        private void DropHexagonsClick()
+        {
+
         }
     }
 }

@@ -29,8 +29,8 @@ namespace WBIS_2.Modules.ViewModels
         {
             return ViewModelSource.Create(() => new ChildrenListViewModel()
             {
-                Caption = $"{parentType.DisplayName} Children",
-                Content = $"{parentType.DisplayName} Children",
+                Caption = $"{((IInformationType)parentType).DisplayName} Children",
+                Content = $"{((IInformationType)parentType).DisplayName} Children",
                 SelectedItems = new ObservableCollection<object>(),
                 ParentType = parentType,
                 ParentQuery = parentQuery,
@@ -69,12 +69,14 @@ namespace WBIS_2.Modules.ViewModels
             SelectionUpdated += UpdateChildren;
         }
 
-        public ChildrenListViewModel ChildrenView { get; set; }
         private void UpdateChildren(object sender, EventArgs e)
         {
-            if (ChildrenView != null)
+            IDocumentManagerService service = this.GetRequiredService<IDocumentManagerService>();
+            IDocument document = service.FindDocumentById(CurrentChild.DisplayName + " Children");
+            if (document != null)
             {
-                ChildrenView.ParentQuery = SelectedItems.Cast<Hex160>().ToArray();
+                var ChildrenView = (ChildrenListViewModel)document.Content;
+                ChildrenView.ParentQuery = SelectedItems.ToArray();
                 RaisePropertyChanged(nameof(ChildrenView));
             }
         }
@@ -91,6 +93,7 @@ namespace WBIS_2.Modules.ViewModels
                 IDocument document = service.FindDocumentById(CurrentChild.DisplayName + " Children");
                 if (document == null)
                 {
+                    ChildrenListViewModel ChildrenView = new ChildrenListViewModel();
                     if (CurrentChild.GetType() == typeof(Watershed))
                         ChildrenView = ChildrenListViewModel.Create(SelectedItems.Cast<Watershed>().ToArray(), new Watershed());
                     else if (CurrentChild.GetType() == typeof(Quad75))
@@ -166,7 +169,7 @@ namespace WBIS_2.Modules.ViewModels
                     .Include(_ => _.SurveySpecies)
                     .Include(_ => _.SpeciesFound)
                     .Include(_ => _.User)
-                    .Where(CurrentChild.GetParentWhere(ParentQuery, ParentType.GetType()))
+                    .Where(((SiteCalling)CurrentChild).GetParentWhere(ParentQuery, ParentType.GetType()))
                     .AsNoTracking();
             }
             else if(CurrentChild.GetType() == typeof(Hex160RequiredPass))
@@ -177,7 +180,7 @@ namespace WBIS_2.Modules.ViewModels
                     .Include(_ => _.Hex160).ThenInclude(_ => _.Watersheds)
                     .Include(_ => _.BirdSpecies)
                     .Include(_ => _.User)
-                    .Where(CurrentChild.GetParentWhere(ParentQuery, ParentType.GetType()))
+                    .Where(((Hex160RequiredPass)CurrentChild).GetParentWhere(ParentQuery, ParentType.GetType()))
                     .AsNoTracking();
             }
             else if (CurrentChild.GetType() == typeof(CNDDBOccurrence))
@@ -186,7 +189,7 @@ namespace WBIS_2.Modules.ViewModels
                     .Include(_ => _.Districts)
                     .Include(_ => _.Watersheds)
                     .Include(_ => _.Quad75s)
-                    .Where(CurrentChild.GetParentWhere(ParentQuery, ParentType.GetType()))
+                    .Where(((CNDDBOccurrence)CurrentChild).GetParentWhere(ParentQuery, ParentType.GetType()))
                     .AsNoTracking();
             }
             else if (CurrentChild.GetType() == typeof(CDFW_SpottedOwl))
@@ -195,14 +198,14 @@ namespace WBIS_2.Modules.ViewModels
                     .Include(_ => _.Districts)
                     .Include(_ => _.Watersheds)
                     .Include(_ => _.Quad75s)
-                    .Where(CurrentChild.GetParentWhere(ParentQuery, ParentType.GetType()))
+                    .Where(((CDFW_SpottedOwl)CurrentChild).GetParentWhere(ParentQuery, ParentType.GetType()))
                     .AsNoTracking();
             }
             else if (CurrentChild.GetType() == typeof(Watershed))
             {
                 e.QueryableSource = Database.Set<Watershed>()
                     .Include(_ => _.Districts)
-                    .Where(CurrentChild.GetParentWhere(ParentQuery, ParentType.GetType()))
+                    .Where(((Watershed)CurrentChild).GetParentWhere(ParentQuery, ParentType.GetType()))
                     .AsNoTracking();
             }
             else if (CurrentChild.GetType() == typeof(Hex160))
@@ -211,7 +214,7 @@ namespace WBIS_2.Modules.ViewModels
                     .Include(_ => _.Districts)
                     .Include(_ => _.Quad75s)
                     .Include(_ => _.Watersheds)
-                    .Where(CurrentChild.GetParentWhere(ParentQuery, ParentType.GetType()))
+                    .Where(((Hex160)CurrentChild).GetParentWhere(ParentQuery, ParentType.GetType()))
                     .AsNoTracking();
             }
         }
@@ -250,16 +253,7 @@ namespace WBIS_2.Modules.ViewModels
             }
         }
         public bool ClosingFormEnabled = true;
-        public ObservableCollection<object> SelectedItems
-        {
-            get
-            {
-                return GetProperty(() => SelectedItems);
-                //this.Caption = $"Regens {SelectedItems.Count}";
-            }
-            set { SetProperty(() => SelectedItems, value); }
-        }
-
+     
         public string TableKeyField => throw new NotImplementedException();
 
         public string LayerKeyField => throw new NotImplementedException();

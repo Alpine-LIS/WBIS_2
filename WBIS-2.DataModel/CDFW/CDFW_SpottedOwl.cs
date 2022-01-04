@@ -9,7 +9,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class CDFW_SpottedOwl : IInformationType
+    public class CDFW_SpottedOwl : IInformationType, IQueryStuff<CDFW_SpottedOwl>
     {
         [Key, Column("guid")]
         public Guid Guid { get; set; }
@@ -78,17 +78,17 @@ namespace WBIS_2.DataModel
             get
             { return new IInformationType[0]; }
         }
-        public Expression<Func<object, bool>> GetParentWhere(object[] Query, Type QueryType)
+        public Expression<Func<CDFW_SpottedOwl, bool>> GetParentWhere(object[] Query, Type QueryType)
         {
-            Expression<Func<object, bool>> a;
+            Expression<Func<CDFW_SpottedOwl, bool>> a;
             if (QueryType == typeof(District))
-                a = _ => ((CDFW_SpottedOwl)_).Districts.Any(d => Query.Contains(d));
+                a = _ => _.Districts.Any(d => Query.Cast<District>().Contains(d));
             else if (QueryType == typeof(Watershed))
-                a = _ => ((CDFW_SpottedOwl)_).Watersheds.Any(d => Query.Contains(d));
+                a = _ => _.Watersheds.Any(d => Query.Cast<Watershed>().Contains(d));
             else if (QueryType == typeof(Quad75))
-                a = _ => ((CDFW_SpottedOwl)_).Quad75s.Any(d => Query.Contains(d));
+                a = _ => _.Quad75s.Any(d => Query.Cast<Quad75>().Contains(d));
             else
-                a = _ => Query.Contains(((CDFW_SpottedOwl)_));
+                a = _ => Query.Contains(_);
             return a;
         }
     }

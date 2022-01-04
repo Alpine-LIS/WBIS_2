@@ -39,14 +39,18 @@ namespace WBIS_2.Modules.ViewModels
         }
 
 
-        public ChildrenListViewModel ChildrenView { get; set; }
+
+
         private void UpdateChildren(object sender, EventArgs e)
         {
-            if (ChildrenView != null)
-            {
-                ChildrenView.ParentQuery = SelectedItems.Cast<Hex160>().ToArray();
-                RaisePropertyChanged(nameof(ChildrenView));
-            }
+                IDocumentManagerService service = this.GetRequiredService<IDocumentManagerService>();
+                IDocument document = service.FindDocumentById("Hex160 Children");
+                if (document != null)
+                {
+                var ChildrenView = (ChildrenListViewModel)document.Content;
+                    ChildrenView.ParentQuery = SelectedItems.Cast<Hex160>().ToArray();
+                    RaisePropertyChanged(nameof(ChildrenView));
+                }
         }
         public override void ShowDetails()
         {
@@ -58,7 +62,7 @@ namespace WBIS_2.Modules.ViewModels
             IDocument document = service.FindDocumentById("Hex160 Children");
             if (document == null)
             {
-                ChildrenView = ChildrenListViewModel.Create(SelectedItems.Cast<Hex160>().ToArray(), new Hex160());
+                var ChildrenView = ChildrenListViewModel.Create(SelectedItems.Cast<Hex160>().ToArray(), new Hex160());
                 document = service.CreateDocument("ChildrenListView", ChildrenView, "Hex160 Children", this);
                 document.Id = "Hex160 Children";
             }

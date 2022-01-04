@@ -10,12 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="ViewModels\Wildlife\" />
     <Folder Include="ViewModels\Botany\" />
     <Folder Include="ViewModels\Users\" />
     <Folder Include="Views\Botany\" />
     <Folder Include="Views\Users\" />
-    <Folder Include="Views\Wildlife\" />
   </ItemGroup>
 
   <ItemGroup>

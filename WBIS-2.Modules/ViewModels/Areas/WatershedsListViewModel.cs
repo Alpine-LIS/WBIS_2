@@ -41,14 +41,16 @@ namespace WBIS_2.Modules.ViewModels
         }
 
 
-        public ChildrenListViewModel ChildrenView { get; set; }
         private void UpdateChildren(object sender, EventArgs e)
-        {
-            if (ChildrenView != null)
-            {
-                ChildrenView.ParentQuery = SelectedItems.Cast<Watershed>().ToArray();
-                RaisePropertyChanged(nameof(ChildrenView));
-            }
+        {  
+                IDocumentManagerService service = this.GetRequiredService<IDocumentManagerService>();
+                IDocument document = service.FindDocumentById("Watershed Children");
+                if (document != null)
+                {
+                var ChildrenView = (ChildrenListViewModel)document.Content;
+                    ChildrenView.ParentQuery = SelectedItems.Cast<Watershed>().ToArray();
+                    RaisePropertyChanged(nameof(ChildrenView));
+                }
         }
         public override void ShowDetails()
         {
@@ -60,7 +62,7 @@ namespace WBIS_2.Modules.ViewModels
             IDocument document = service.FindDocumentById("Watershed Children");
             if (document == null)
             {
-                ChildrenView = ChildrenListViewModel.Create(SelectedItems.Cast<Watershed>().ToArray(), new Watershed());
+                var ChildrenView = ChildrenListViewModel.Create(SelectedItems.Cast<Watershed>().ToArray(), new Watershed());
                 document = service.CreateDocument("ChildrenListView", ChildrenView, "Watershed Children", this);
                 document.Id = "Watershed Children";
             }

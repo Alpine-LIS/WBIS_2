@@ -13,9 +13,10 @@ namespace WBIS_2.DataModel
         /// </summary>
         [NotMapped]
         public string DisplayName { get; }
-        [NotMapped]
         public IInformationType[] AvailibleChildren { get; }
-       
-        public abstract Expression<Func<object, bool>> GetParentWhere(object[] Query, Type QueryType);
+    }
+    public interface IQueryStuff<T> where T : class
+    {
+        public abstract Expression<Func<T, bool>> GetParentWhere(object[] Query, Type QueryType);
     }
 }

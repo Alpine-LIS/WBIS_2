@@ -31,6 +31,9 @@ xmlns:local="clr-namespace:WBIS_2">
             <Setter Property="PopupMaxWidth" Value="400"/>
             <!--<Setter Property="PopupMaxWidth" Value="{Binding MaxCommentsWidth, UpdateSourceTrigger=PropertyChanged}"/>-->
         </Style>
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="2"/>
+        </Style>
         <Style TargetType="Label">
             <Setter Property="Margin" Value="2"/>
             <Setter Property="HorizontalAlignment" Value="Right"/>

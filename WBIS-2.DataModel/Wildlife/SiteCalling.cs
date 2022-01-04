@@ -9,7 +9,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class SiteCalling : UserDataValidator, IUserRecords
+    public class SiteCalling : UserDataValidator, IUserRecords, IQueryStuff<SiteCalling>
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
@@ -48,19 +48,19 @@ namespace WBIS_2.DataModel
             get
             { return new IInformationType[0]; }
         }
-        public Expression<Func<object, bool>> GetParentWhere(object[] Query, Type QueryType)
+        public Expression<Func<SiteCalling, bool>> GetParentWhere(object[] Query, Type QueryType)
         {
-            Expression<Func<object, bool>> a;
+            Expression<Func<SiteCalling, bool>> a;
             if (QueryType == typeof(District))
-                a = _ => ((SiteCalling)_).Hex160.Districts.Any(d => Query.Contains(d));
+                a = _ => _.Hex160.Districts.Any(d => Query.Cast<District>().Contains(d));
             else if (QueryType == typeof(Watershed))
-                a = _ => ((SiteCalling)_).Hex160.Quad75s.Any(d => Query.Contains(d));
+                a = _ => _.Hex160.Watersheds.Any(d => Query.Cast<Watershed>().Contains(d));
             else if (QueryType == typeof(Quad75))
-                a = _ => ((SiteCalling)_).Hex160.Watersheds.Any(d => Query.Contains(d));
+                a = _ => _.Hex160.Quad75s.Any(d => Query.Cast<Quad75>().Contains(d));
             else if (QueryType == typeof(Hex160))
-                a = _ => Query.Contains(((SiteCalling)_).Hex160);
+                a = _ => Query.Cast<Hex160>().Contains(_.Hex160);
             else
-                a = _ => Query.Contains(((SiteCalling)_));
+                a = _ => Query.Contains(_);
             return a;
         }
     }

@@ -39,14 +39,16 @@ namespace WBIS_2.Modules.ViewModels
         }
 
 
-        public ChildrenListViewModel ChildrenView { get; set; }
         private void UpdateChildren(object sender, EventArgs e)
         {
-            if (ChildrenView != null)
-            {
-                ChildrenView.ParentQuery = SelectedItems.Cast<Quad75>().ToArray();
-                RaisePropertyChanged(nameof(ChildrenView));
-            }
+                IDocumentManagerService service = this.GetRequiredService<IDocumentManagerService>();
+                IDocument document = service.FindDocumentById("Quad75 Children");
+                if (document != null)
+                {
+                var ChildrenView = (ChildrenListViewModel)document.Content;
+                    ChildrenView.ParentQuery = SelectedItems.Cast<Quad75>().ToArray();
+                    RaisePropertyChanged(nameof(ChildrenView));
+                }
         }
         public override void ShowDetails()
         {
@@ -58,7 +60,7 @@ namespace WBIS_2.Modules.ViewModels
             IDocument document = service.FindDocumentById("Quad75 Children");
             if (document == null)
             {
-                ChildrenView = ChildrenListViewModel.Create(SelectedItems.Cast<Quad75>().ToArray(), new Quad75());
+                var ChildrenView = ChildrenListViewModel.Create(SelectedItems.Cast<Quad75>().ToArray(), new Quad75());
                 document = service.CreateDocument("ChildrenListView", ChildrenView, "Quad75 Children", this);
                 document.Id = "Quad75 Children";
             }

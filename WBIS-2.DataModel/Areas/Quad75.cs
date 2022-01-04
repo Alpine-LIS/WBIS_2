@@ -10,7 +10,7 @@ using System.Linq.Expressions;
 
 namespace WBIS_2.DataModel
 {
-    public class Quad75 : IInformationType
+    public class Quad75 : IInformationType, IQueryStuff<Quad75>
     {
         [Key,DatabaseGenerated(DatabaseGeneratedOption.Identity),Column("guid")]
         public Guid Guid { get; set; }
@@ -63,9 +63,9 @@ namespace WBIS_2.DataModel
             get
             { return new IInformationType[] { new Hex160(), new SiteCalling(), new CNDDBOccurrence(), new CDFW_SpottedOwl() }; }
         }
-        public Expression<Func<object, bool>> GetParentWhere(object[] Query, Type QueryType)
+        public Expression<Func<Quad75, bool>> GetParentWhere(object[] Query, Type QueryType)
         {
-            Expression<Func<object, bool>> a = _ => Query.Contains(((Quad75)_));
+            Expression<Func<Quad75, bool>> a = _ => Query.Contains((_));
             return a;
         }
     }

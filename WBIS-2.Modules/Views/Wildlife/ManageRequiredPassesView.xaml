@@ -1,0 +1,42 @@
+﻿<UserControl x:Class="WBIS_2.Modules.Views.Wildlife.ManageRequiredPassesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WBIS_2.Modules.Views.Wildlife" xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="AUTO"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="AUTO"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="AUTO"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+           
+            <Label Content="Target Species:" Grid.Column="0"/>
+            <dxe:ComboBoxEdit Grid.Column="1" IsTextEditable="False"
+                SelectedItem="{Binding SelectedSpecies, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" ItemsSource="{Binding BirdSpecies}" DisplayMember="Species"/>
+            <Label Content="Required Passes:" Grid.Column="2"/>
+            <dxe:TextEdit Grid.Column="3" Text="{Binding RequiredPasses, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" MaskType="Numeric"/>
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="AUTO"/>
+                <ColumnDefinition Width="AUTO"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="AUTO"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Content="Add/Edit Passes" Command="{Binding AddEditPassesCommand}" Grid.Column="0"/>
+            <Button Content="Remove Passes" Command="{Binding RemovePassesCommand}" Grid.Column="1"/>
+            <Button Content="Close" Click="Button_Click" Grid.Column="3"/>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -9,7 +9,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class Watershed : IInformationType
+    public class Watershed : IInformationType, IQueryStuff<Watershed>
     {
         [Key,DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
@@ -104,13 +104,13 @@ namespace WBIS_2.DataModel
             get
             { return new IInformationType[] { new Hex160(), new SiteCalling(), new CNDDBOccurrence(), new CDFW_SpottedOwl() }; }
         }
-        public Expression<Func<object, bool>> GetParentWhere(object[] Query, Type QueryType)
+        public Expression<Func<Watershed, bool>> GetParentWhere(object[] Query, Type QueryType)
         {
-            Expression<Func<object, bool>> a;
+            Expression<Func<Watershed, bool>> a;
             if (QueryType == typeof(District))
-                a = _ => ((Watershed)_).Districts.Any(d => Query.Contains(d));
+                a = _ => (_).Districts.Any(d => Query.Cast<District>().Contains(d));
             else
-                a = _ => Query.Contains(((Watershed)_));
+                a = _ => Query.Contains((_));
             return a;
         }
     }

@@ -9,7 +9,7 @@ using System.Linq.Expressions;
 
 namespace WBIS_2.DataModel
 {
-    public class Hex160 : IInformationType
+    public class Hex160 : IInformationType, IQueryStuff<Hex160>
     {
         [Key,DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
@@ -54,17 +54,17 @@ namespace WBIS_2.DataModel
             get
             { return new IInformationType[] { new SiteCalling(), new Hex160RequiredPass(), }; }
         }
-        public Expression<Func<object, bool>> GetParentWhere(object[] Query, Type QueryType)
+        public Expression<Func<Hex160, bool>> GetParentWhere(object[] Query, Type QueryType)
         {
-            Expression<Func<object, bool>> a;
+            Expression<Func<Hex160, bool>> a;
             if (QueryType == typeof(District))
-                a = _ => ((Hex160)_).Districts.Any(d => Query.Contains(d));
+                a = _ => _.Districts.Any(d => Query.Cast<District>().Contains(d));
             else if (QueryType == typeof(Watershed))
-                a = _ => ((Hex160)_).Watersheds.Any(d => Query.Contains(d));
+                a = _ => _.Watersheds.Any(d => Query.Cast<Watershed>().Contains(d));
             else if (QueryType == typeof(Quad75))
-                a = _ => ((Hex160)_).Quad75s.Any(d => Query.Contains(d));
+                a = _ => _.Quad75s.Any(d => Query.Cast<Quad75>().Contains(d));
             else
-                a = _ => Query.Contains(((Hex160)_));
+                a = _ => Query.Contains(_);
             return a;
         }
     }
