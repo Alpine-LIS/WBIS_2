@@ -1,5 +1,6 @@
 ﻿using DevExpress.Xpf.Core;
 using DevExpress.Xpf.Docking;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +31,10 @@ namespace WBIS_2.Views
         {
             InitializeComponent();
 
-
+            WBIS2Model wBIS2Model = new WBIS2Model();
+            //wBIS2Model.ApplicationUsers.Add(new ApplicationUser() { ApplicationGroup = wBIS2Model.ApplicationGroups.First(), UserName = "Tyler D. Suran" });
+            //wBIS2Model.SaveChanges();
+            CurrentUser.User = wBIS2Model.ApplicationUsers.Include(_=>_.ApplicationGroup).First();
             //RMS_3.DataModel.CurrentUser.CurrentUserChanged += CurrentUserChanged;
             //Application.Current.MainWindow.Closing += MainWindow_Closing;
             //Application.Current.MainWindow.Loaded += MainWindow_Loaded;            

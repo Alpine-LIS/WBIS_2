@@ -6,7 +6,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class BirdSpecies
+    public class BirdSpecies : IInformationType
     {
         [Key,Column("guid")]
         public Guid Guid { get; set; }
@@ -17,5 +17,24 @@ namespace WBIS_2.DataModel
         [InverseProperty("SpeciesFound")]
         public ICollection<SiteCalling> SpeciesFound { get; set; }
         public ICollection<Hex160RequiredPass> PassSpecies { get; set; }
+
+        [NotMapped, Display(Order = -1)]
+        public string DisplayName { get { return "Bird Species"; } }
+
+        [NotMapped]
+        public IInformationType[] AvailibleChildren
+        {
+            get
+            { return new IInformationType[0]; }
+        }
+
+        public List<KeyValuePair<string, string>> DisplayFields
+        {
+            get
+            {
+                return new List<KeyValuePair<string, string>>()
+                { new KeyValuePair<string, string>("Species", "BirdSpecies")};
+            }
+        }
     }
 }

@@ -67,5 +67,14 @@ namespace WBIS_2.DataModel
                 a = _ => Query.Contains(_);
             return a;
         }
+
+        public List<KeyValuePair<string, string>> DisplayFields
+        {
+            get
+            {
+                return new List<KeyValuePair<string, string>>()
+                { new KeyValuePair<string, string>("Hex160ID", "Hex160")};
+            }
+        }
     }
 }

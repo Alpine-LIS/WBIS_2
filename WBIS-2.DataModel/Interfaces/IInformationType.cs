@@ -14,6 +14,10 @@ namespace WBIS_2.DataModel
         [NotMapped]
         public string DisplayName { get; }
         public IInformationType[] AvailibleChildren { get; }
+        /// <summary>
+        /// Fields to be displayed when in an alternate information type.
+        /// </summary>
+        public List<KeyValuePair<string, string>> DisplayFields { get; }
     }
     public interface IQueryStuff<T> where T : class
     {

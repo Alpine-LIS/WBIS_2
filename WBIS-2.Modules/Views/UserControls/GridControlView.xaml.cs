@@ -54,26 +54,19 @@ namespace WBIS_2.Modules.Views
                 MyGrid.TotalSummary.Clear();
                 MyGrid.GroupSummary.Clear();
 
-                //if (addColumns != null)
-                //{
-                //    foreach (GridColumn c in addColumns.Keys)
-                //    {
-                //        MyGrid.Columns.Remove(c);
-                //    }
-                //    addColumns = null;
-                //}
-               // DisplayFileds(MyGrid);
+            DisplayFileds(MyGrid);
 
-                //MyGrid.TotalSummary.Add(new GridSummaryItem() { SummaryType = DevExpress.Data.SummaryItemType.Count, FieldName = "Guid", DisplayFormat = "Records: {0:n0}", Alignment = GridSummaryItemAlignment.Right });
-                //MyGrid.GroupSummary.Add(new GridSummaryItem() { SummaryType = DevExpress.Data.SummaryItemType.Count, FieldName = "Guid", DisplayFormat = "Records: {0:n0}" });
+            MyGrid.TotalSummary.Add(new GridSummaryItem() { SummaryType = DevExpress.Data.SummaryItemType.Count, FieldName = "Guid", DisplayFormat = "Records: {0:n0}", Alignment = GridSummaryItemAlignment.Right });
+            MyGrid.GroupSummary.Add(new GridSummaryItem() { SummaryType = DevExpress.Data.SummaryItemType.Count, FieldName = "Guid", DisplayFormat = "Records: {0:n0}" });
 
-                //foreach (var c in MyGrid.Columns)
-                //{
-                //    if (c.FieldName.ToUpper().Contains("GUID")) c.Visible = false;
-                //    c.ColumnFilterMode = ColumnFilterMode.DisplayText;// = DevExpress.Utils.DefaultBoolean.True;
-                //    c.AllowIncrementalSearch = true;
-                //}
+            Dictionary<string, int> ActivityColumns = new Dictionary<string, int>();
+            foreach (var c in MyGrid.Columns)
+            {
+                if (c.FieldType == typeof(Guid)) c.Visible = false;
+                c.ColumnFilterMode = ColumnFilterMode.DisplayText;// = DevExpress.Utils.DefaultBoolean.True;
+                c.AllowIncrementalSearch = true;
             }
+        }
             private void DisplayFileds(GridControl gc)
             {
                 bool ShowDateTimes = ((WBISViewModelBase)this.DataContext).ShowDateTimes;
@@ -143,7 +136,33 @@ namespace WBIS_2.Modules.Views
             private List<KeyValuePair<string, string>> DisplayValues(GridColumn col)
             {
                 if (col.ActualVisibleIndex == -1) return null;
-                return null;
+
+            if (col.FieldType.GetInterfaces().Contains(typeof(IInformationType)))
+            {
+                IInformationType instance = (IInformationType)Activator.CreateInstance(col.FieldType);
+                return instance.DisplayFields;
+            }
+
+            //if (col.FieldType == typeof(District))
+            //    return new List<KeyValuePair<string, string>>()
+            //    { new KeyValuePair<string, string>("DistrictName", "District")};
+            //else if (col.FieldType == typeof(Watershed))
+            //    return new List<KeyValuePair<string, string>>()
+            //    { new KeyValuePair<string, string>("CountyName", "Watershed")};
+            //else if (col.FieldType == typeof(Quad75))
+            //    return new List<KeyValuePair<string, string>>()
+            //    { new KeyValuePair<string, string>("WatershedID", "Quad75")};
+            //else if (col.FieldType == typeof(Hex160))
+            //    return new List<KeyValuePair<string, string>>()
+            //    { new KeyValuePair<string, string>("CountyName", "Hex160")};
+            //else if (col.FieldType == typeof(BirdSpecies))
+            //    return new List<KeyValuePair<string, string>>()
+            //    { new KeyValuePair<string, string>("CountyName", "BirdSpecies")};
+            //else if (col.FieldType == typeof(ApplicationUser))
+            //    return new List<KeyValuePair<string, string>>()
+            //    { new KeyValuePair<string, string>("CountyName", "ApplicationUser")};
+
+            return null;
             }
 
         //Patch for EntityInstantFeedbackSource

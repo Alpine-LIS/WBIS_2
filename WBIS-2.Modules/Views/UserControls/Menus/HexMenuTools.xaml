@@ -7,7 +7,6 @@
              xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
              xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"
                 Glyph="{dx:DXImage SvgImages/XAF/Action_Printing_PageSetup.svg}" ToolTip="Hex160 Tools">
     
         <dxb:BarButtonItem Content="Manage Required Passes" Command="{Binding ManageRequiredPassesCommand}"/>

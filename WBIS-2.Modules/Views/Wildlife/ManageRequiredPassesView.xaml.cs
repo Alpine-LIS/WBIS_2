@@ -21,13 +21,14 @@ namespace WBIS_2.Modules.Views.Wildlife
     {
         public ManageRequiredPassesView()
         {
-            this.DataContext = new ManageRequiredPassesViewModel();
             InitializeComponent();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-
+            Window window = Window.GetWindow(this);
+            window.DialogResult = true;
+            window.Close();
         }
     }
 }

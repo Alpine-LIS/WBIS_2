@@ -47,5 +47,15 @@ namespace WBIS_2.DataModel
             Expression<Func<District, bool>> a = _ => Query.Contains(_);
             return a;
         }
+
+        public List<KeyValuePair<string, string>> DisplayFields
+        {
+            get
+            {
+                return new List<KeyValuePair<string, string>>()
+                { new KeyValuePair<string, string>("DistrictName", "District"),
+                new KeyValuePair<string, string>("ManagementArea", "District")};
+            }
+        }
     }
 }

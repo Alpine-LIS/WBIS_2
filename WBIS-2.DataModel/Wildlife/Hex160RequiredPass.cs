@@ -23,6 +23,7 @@ namespace WBIS_2.DataModel
         public DateTime DateAdded { get; set; }
         [Column("date_modified")]
         public DateTime DateModified { get; set; }
+        [Display(Order =-1)]
         public bool _delete { get; set; }
 
         [Required, Column("user_id")]
@@ -57,6 +58,14 @@ namespace WBIS_2.DataModel
             else
                 a = _ => Query.Contains(_);
             return a;
+        }
+
+        public List<KeyValuePair<string, string>> DisplayFields
+        {
+            get
+            {
+                return new List<KeyValuePair<string, string>>();
+            }
         }
     }
 }

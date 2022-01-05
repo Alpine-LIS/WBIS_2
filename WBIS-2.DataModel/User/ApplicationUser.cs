@@ -6,7 +6,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class ApplicationUser
+    public class ApplicationUser: IInformationType
     {
         [Key,Column("guid")]
         public Guid Guid { get; set; }
@@ -35,5 +35,24 @@ namespace WBIS_2.DataModel
         public ICollection<Hex160RequiredPass> Hex160RequiredPasses { get; set; }
         public ICollection<SiteCalling> SiteCallings { get; set; }
         public ICollection<District> Districts { get; set; }
+
+        [NotMapped, Display(Order = -1)]
+        public string DisplayName { get { return "Application User"; } }
+
+        [NotMapped]
+        public IInformationType[] AvailibleChildren
+        {
+            get
+            { return new IInformationType[0]; }
+        }
+
+        public List<KeyValuePair<string, string>> DisplayFields
+        {
+            get
+            {
+                return new List<KeyValuePair<string, string>>()
+                { new KeyValuePair<string, string>("UserName", "User")};
+            }
+        }
     }
 }

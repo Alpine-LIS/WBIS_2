@@ -17,6 +17,7 @@ using System.Collections.ObjectModel;
 using System.Collections;
 using WBIS_2.Modules.Tools;
 using WBIS_2.Modules.Views.Wildlife;
+using WBIS_2.Modules.ViewModels.Wildlife;
 
 namespace WBIS_2.Modules.ViewModels
 {
@@ -373,6 +374,7 @@ namespace WBIS_2.Modules.ViewModels
         private void ManageRequiredPassesClick()
         {
             ManageRequiredPassesView manageRequiredPassesView = new ManageRequiredPassesView();
+            manageRequiredPassesView.DataContext = new ManageRequiredPassesViewModel(SelectedItems.Cast<Hex160>().ToArray());
             CustomControlWindow userWindow = new CustomControlWindow(manageRequiredPassesView);
         }
         private void RemoveRequiredPassesClick()
