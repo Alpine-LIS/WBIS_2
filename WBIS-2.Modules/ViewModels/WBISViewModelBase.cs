@@ -379,7 +379,13 @@ namespace WBIS_2.Modules.ViewModels
         }
         private void RemoveRequiredPassesClick()
         {
-
+            Hex160RequiredPass[] hex160RequiredPasses = Database.Hex160RequiredPasses
+                .Include(_ => _.Hex160)
+                .Where(_ => SelectedItems.Cast<Hex160>().ToArray().Contains(_.Hex160)).ToArray();
+            foreach (Hex160RequiredPass hex160RequiredPass in hex160RequiredPasses)
+                Database.Hex160RequiredPasses.Remove(hex160RequiredPass);
+            Database.SaveChanges();
+            MessageBox.Show("Operation complete.");
         }
         private void DropHexagonsClick()
         {

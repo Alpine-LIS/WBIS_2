@@ -143,25 +143,6 @@ namespace WBIS_2.Modules.Views
                 return instance.DisplayFields;
             }
 
-            //if (col.FieldType == typeof(District))
-            //    return new List<KeyValuePair<string, string>>()
-            //    { new KeyValuePair<string, string>("DistrictName", "District")};
-            //else if (col.FieldType == typeof(Watershed))
-            //    return new List<KeyValuePair<string, string>>()
-            //    { new KeyValuePair<string, string>("CountyName", "Watershed")};
-            //else if (col.FieldType == typeof(Quad75))
-            //    return new List<KeyValuePair<string, string>>()
-            //    { new KeyValuePair<string, string>("WatershedID", "Quad75")};
-            //else if (col.FieldType == typeof(Hex160))
-            //    return new List<KeyValuePair<string, string>>()
-            //    { new KeyValuePair<string, string>("CountyName", "Hex160")};
-            //else if (col.FieldType == typeof(BirdSpecies))
-            //    return new List<KeyValuePair<string, string>>()
-            //    { new KeyValuePair<string, string>("CountyName", "BirdSpecies")};
-            //else if (col.FieldType == typeof(ApplicationUser))
-            //    return new List<KeyValuePair<string, string>>()
-            //    { new KeyValuePair<string, string>("CountyName", "ApplicationUser")};
-
             return null;
             }
 
@@ -173,22 +154,27 @@ namespace WBIS_2.Modules.Views
             {
                 return;
             }
+            if ((MyGrid.Columns.Count == 1 && MyGrid.Columns[0].FieldName == "Message"))
+                return;
             MyGrid.SelectedItems.Clear();
 
-            //bool Disabled = true;
-            //try
-            //{ Application.Current.MainWindow.IsEnabled = false; }
-            //catch (Exception)
-            //{ Disabled = false; }
-
-            //WaitWindowHandler w = new WaitWindowHandler();
-            //w.Start();
 
 
-            await GetRows(rows);
+            //If not all rows are loaded then load all selected rows.
+            foreach (int rowId in rows)
+            {
+                var row = MyGrid.GetRow(rowId);
 
-            //if (Disabled)
-            //    Application.Current.MainWindow.IsEnabled = true;
+                if (row is DevExpress.Data.NotLoadedObject)
+                {
+                    AsyncLoadRows(rows);
+                    return;
+                }
+                else
+                {
+                    MyGrid.SelectedItems.Add(row);
+                }
+            }
 
             if (DataContext is WBIS_2.Modules.Interfaces.IMapNavigation)
                 if (((WBISViewModelBase)DataContext).ToggleAutoZoom)
@@ -196,11 +182,47 @@ namespace WBIS_2.Modules.Views
             ((WBISViewModelBase)DataContext).UpdateSelection((IList<object>)MyGrid.SelectedItems);
            // w.Stop();
         }
+        private async void AsyncLoadRows(int[] rows)
+        {
+            bool Disabled = true;
+            try
+            { Application.Current.MainWindow.IsEnabled = false; }
+            catch (Exception)
+            { Disabled = false; }
+
+            WaitWindowHandler w = new WaitWindowHandler();
+            w.Start();
+
+            MyGrid.SelectedItems.Clear();
+            await GetRows(rows);
+
+            if (Disabled)
+                Application.Current.MainWindow.IsEnabled = true;
+
+            if (DataContext is WBIS_2.Modules.Interfaces.IMapNavigation)
+                if (((WBISViewModelBase)DataContext).ToggleAutoZoom)
+                    ((WBIS_2.Modules.Interfaces.IMapNavigation)DataContext).ZoomToLayer();
+            ((WBISViewModelBase)DataContext).UpdateSelection((IList<object>)MyGrid.SelectedItems);
+
+            w.Stop();
+        }
         private async Task GetRows(int[] rows)
         {
             foreach (int rowId in rows)
             {
-                var row = await MyGrid.GetRowAsync(rowId); 
+                var row = await MyGrid.GetRowAsync(rowId); //MyGrid.GetRow(rowId);
+                //while (row is DevExpress.Data.NotLoadedObject) { }
+                //if (row is DevExpress.Data.NotLoadedObject) //continue;
+                //{
+                //    //var task = MyGrid.GetRowAsync(rowId);
+                //    //task.Wait();
+                //    row = await MyGrid.GetRowAsync(rowId);
+                //    //MyGrid.GetRowAsync(rowId).Wait();
+                //    ////MyGrid.GetRowAsync(rowId).Wait().Wait();
+                //    //row = MyGrid.GetRow(rowId);
+                //}
+                //((DevExpress.Data.NotLoadedObject)row).
+                //MyGrid.DataController.EnsureRowLoaded(rowId, DevExpress.Data.OperationCompleted);//, DevExpress.Data.OperationCompleted..Combine());
                 MyGrid.SelectedItems.Add(row);
             }
         }
