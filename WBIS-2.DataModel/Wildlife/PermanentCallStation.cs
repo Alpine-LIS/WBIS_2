@@ -9,7 +9,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class ProtectionZone : UserDataValidator, IUserRecords
+    public class PermanentCallStation : UserDataValidator, IUserRecords
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
@@ -22,19 +22,20 @@ namespace WBIS_2.DataModel
         public Guid UserId { get; set; }
         public ApplicationUser User { get; set; } = CurrentUser.User;
 
-        [Column("geometry"), DataType("geometry(MultiPolygon,26710)")]
-        public MultiPolygon Geometry { get; set; }
+        [Column("geometry"), DataType("geometry(Point,26710)")]
+        public Point Geometry { get; set; }
 
-        [Column("pz_id")]
-        public string PZ_ID { get; set; }
+        [Column("pcs_id")]
+        public string PCS_ID { get; set; }
+
+        [Required, Column("hex160_id")]
+        public Guid Hex160Id { get; set; }
+        public Hex160 Hex160 { get; set; }
 
         public ICollection<SiteCalling> SiteCallings { get; set; }
-        public ICollection<Hex160> Hex160s { get; set; }
-        [InverseProperty("CurrentProtectionZone")]
-        public ICollection<Hex160> CurrentHex160s { get; set; }
 
         [NotMapped, Display(Order = -1)]
-        public string DisplayName { get { return "Proection Zone"; } }
+        public string DisplayName { get { return "Permanent Call Stations"; } }
 
         public IInformationType[] AvailibleChildren => throw new NotImplementedException();
 

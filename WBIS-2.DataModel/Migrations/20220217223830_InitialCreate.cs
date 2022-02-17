@@ -2,9 +2,11 @@
 using Microsoft.EntityFrameworkCore.Migrations;
 using NetTopologySuite.Geometries;
 
+#nullable disable
+
 namespace WBIS_2.DataModel.Migrations
 {
-    public partial class initialcreate : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -155,25 +157,6 @@ namespace WBIS_2.DataModel.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "hex160s",
-                columns: table => new
-                {
-                    guid = table.Column<Guid>(type: "uuid", nullable: false),
-                    hex160_id = table.Column<string>(type: "text", nullable: false),
-                    calling_responses = table.Column<int>(type: "integer", nullable: false),
-                    follow_ups = table.Column<int>(type: "integer", nullable: false),
-                    skips = table.Column<int>(type: "integer", nullable: false),
-                    drops = table.Column<int>(type: "integer", nullable: false),
-                    recent_activity = table.Column<string>(type: "text", nullable: true),
-                    latest_activity = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    geometry = table.Column<Polygon>(type: "geometry", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_hex160s", x => x.guid);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "quad75s",
                 columns: table => new
                 {
@@ -191,7 +174,7 @@ namespace WBIS_2.DataModel.Migrations
                     sensitive = table.Column<string>(type: "text", nullable: true),
                     perimeter = table.Column<double>(type: "double precision", nullable: false),
                     area = table.Column<double>(type: "double precision", nullable: false),
-                    geometry = table.Column<MultiPolygon>(type: "geometry", nullable: true)
+                    geometry = table.Column<Polygon>(type: "geometry", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -231,8 +214,8 @@ namespace WBIS_2.DataModel.Migrations
                     super_plan = table.Column<string>(type: "text", nullable: true),
                     threatend = table.Column<string>(type: "text", nullable: true),
                     asp_up = table.Column<string>(type: "text", nullable: true),
-                    toc = table.Column<bool>(type: "boolean", nullable: false),
-                    esu = table.Column<bool>(type: "boolean", nullable: false),
+                    toc = table.Column<bool>(type: "boolean", nullable: true),
+                    esu = table.Column<bool>(type: "boolean", nullable: true),
                     d303 = table.Column<string>(type: "text", nullable: true),
                     wshd_acres = table.Column<double>(type: "double precision", nullable: false),
                     spi_acres = table.Column<double>(type: "double precision", nullable: false),
@@ -273,11 +256,11 @@ namespace WBIS_2.DataModel.Migrations
                     user_name = table.Column<string>(type: "text", nullable: false),
                     email_default = table.Column<string>(type: "text", nullable: true),
                     hint = table.Column<string>(type: "text", nullable: true),
-                    deleted_ = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
-                    created_ = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
-                    modified_ = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    deleted_ = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    created_ = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    modified_ = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     password_sha = table.Column<string>(type: "text", nullable: true),
-                    password_time_stamp = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    password_time_stamp = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     user_id = table.Column<string>(type: "text", nullable: true),
                     application_group_id = table.Column<Guid>(type: "uuid", nullable: false)
                 },
@@ -343,31 +326,6 @@ namespace WBIS_2.DataModel.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "hex160s_districts",
-                schema: "public",
-                columns: table => new
-                {
-                    district_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    hex160_id = table.Column<Guid>(type: "uuid", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_hex160s_districts", x => new { x.district_id, x.hex160_id });
-                    table.ForeignKey(
-                        name: "FK_hex160s_districts_districts_district_id",
-                        column: x => x.district_id,
-                        principalTable: "districts",
-                        principalColumn: "guid",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_hex160s_districts_hex160s_hex160_id",
-                        column: x => x.hex160_id,
-                        principalTable: "hex160s",
-                        principalColumn: "guid",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "cdfw_spotted_owls_quad75s",
                 schema: "public",
                 columns: table => new
@@ -411,31 +369,6 @@ namespace WBIS_2.DataModel.Migrations
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_cnddb_occurrences_quad75s_quad75s_quad75_id",
-                        column: x => x.quad75_id,
-                        principalTable: "quad75s",
-                        principalColumn: "guid",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "hex160s_quad75s",
-                schema: "public",
-                columns: table => new
-                {
-                    hex160_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    quad75_id = table.Column<Guid>(type: "uuid", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_hex160s_quad75s", x => new { x.hex160_id, x.quad75_id });
-                    table.ForeignKey(
-                        name: "FK_hex160s_quad75s_hex160s_hex160_id",
-                        column: x => x.hex160_id,
-                        principalTable: "hex160s",
-                        principalColumn: "guid",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_hex160s_quad75s_quad75s_quad75_id",
                         column: x => x.quad75_id,
                         principalTable: "quad75s",
                         principalColumn: "guid",
@@ -493,31 +426,6 @@ namespace WBIS_2.DataModel.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "hex160s_watersheds",
-                schema: "public",
-                columns: table => new
-                {
-                    hex160_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    watershed_id = table.Column<Guid>(type: "uuid", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_hex160s_watersheds", x => new { x.hex160_id, x.watershed_id });
-                    table.ForeignKey(
-                        name: "FK_hex160s_watersheds_hex160s_hex160_id",
-                        column: x => x.hex160_id,
-                        principalTable: "hex160s",
-                        principalColumn: "guid",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_hex160s_watersheds_watersheds_watershed_id",
-                        column: x => x.watershed_id,
-                        principalTable: "watersheds",
-                        principalColumn: "guid",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "watersheds_districts",
                 schema: "public",
                 columns: table => new
@@ -543,81 +451,24 @@ namespace WBIS_2.DataModel.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "hex160_required_passes",
+                name: "protection_zone",
                 columns: table => new
                 {
                     guid = table.Column<Guid>(type: "uuid", nullable: false),
-                    required_passes = table.Column<int>(type: "integer", nullable: false),
-                    current_passes = table.Column<int>(type: "integer", nullable: false),
-                    dropped = table.Column<bool>(type: "boolean", nullable: false),
-                    date_added = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    date_modified = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    date_added = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    date_modified = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     _delete = table.Column<bool>(type: "boolean", nullable: false),
                     user_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    hex160_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    bird_species_id = table.Column<Guid>(type: "uuid", nullable: false)
+                    geometry = table.Column<MultiPolygon>(type: "geometry", nullable: true),
+                    pz_id = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_hex160_required_passes", x => x.guid);
+                    table.PrimaryKey("PK_protection_zone", x => x.guid);
                     table.ForeignKey(
-                        name: "FK_hex160_required_passes_application_users_user_id",
+                        name: "FK_protection_zone_application_users_user_id",
                         column: x => x.user_id,
                         principalTable: "application_users",
-                        principalColumn: "guid",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_hex160_required_passes_bird_species_bird_species_id",
-                        column: x => x.bird_species_id,
-                        principalTable: "bird_species",
-                        principalColumn: "guid",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_hex160_required_passes_hex160s_hex160_id",
-                        column: x => x.hex160_id,
-                        principalTable: "hex160s",
-                        principalColumn: "guid",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "site_callings",
-                columns: table => new
-                {
-                    guid = table.Column<Guid>(type: "uuid", nullable: false),
-                    date_added = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    date_modified = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    _delete = table.Column<bool>(type: "boolean", nullable: false),
-                    user_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    hex160_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    bird_species_survey_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    bird_species_found_id = table.Column<Guid>(type: "uuid", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_site_callings", x => x.guid);
-                    table.ForeignKey(
-                        name: "FK_site_callings_application_users_user_id",
-                        column: x => x.user_id,
-                        principalTable: "application_users",
-                        principalColumn: "guid",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_site_callings_bird_species_bird_species_found_id",
-                        column: x => x.bird_species_found_id,
-                        principalTable: "bird_species",
-                        principalColumn: "guid",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_site_callings_bird_species_bird_species_survey_id",
-                        column: x => x.bird_species_survey_id,
-                        principalTable: "bird_species",
-                        principalColumn: "guid",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_site_callings_hex160s_hex160_id",
-                        column: x => x.hex160_id,
-                        principalTable: "hex160s",
                         principalColumn: "guid",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -648,12 +499,312 @@ namespace WBIS_2.DataModel.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "hex160s",
+                columns: table => new
+                {
+                    guid = table.Column<Guid>(type: "uuid", nullable: false),
+                    hex160_id = table.Column<string>(type: "text", nullable: false),
+                    calling_responses = table.Column<int>(type: "integer", nullable: false),
+                    follow_ups = table.Column<int>(type: "integer", nullable: false),
+                    skips = table.Column<int>(type: "integer", nullable: false),
+                    drops = table.Column<int>(type: "integer", nullable: false),
+                    recent_activity = table.Column<string>(type: "text", nullable: true),
+                    latest_activity = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    geometry = table.Column<Polygon>(type: "geometry", nullable: true),
+                    current_preotection_zone_id = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_hex160s", x => x.guid);
+                    table.ForeignKey(
+                        name: "FK_hex160s_protection_zone_current_preotection_zone_id",
+                        column: x => x.current_preotection_zone_id,
+                        principalTable: "protection_zone",
+                        principalColumn: "guid",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "hex160_required_passes",
+                columns: table => new
+                {
+                    guid = table.Column<Guid>(type: "uuid", nullable: false),
+                    required_passes = table.Column<int>(type: "integer", nullable: false),
+                    current_passes = table.Column<int>(type: "integer", nullable: false),
+                    dropped = table.Column<bool>(type: "boolean", nullable: false),
+                    date_added = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    date_modified = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    _delete = table.Column<bool>(type: "boolean", nullable: false),
+                    user_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    hex160_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    bird_species_id = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_hex160_required_passes", x => x.guid);
+                    table.ForeignKey(
+                        name: "FK_hex160_required_passes_application_users_user_id",
+                        column: x => x.user_id,
+                        principalTable: "application_users",
+                        principalColumn: "guid",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_hex160_required_passes_bird_species_bird_species_id",
+                        column: x => x.bird_species_id,
+                        principalTable: "bird_species",
+                        principalColumn: "guid",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_hex160_required_passes_hex160s_hex160_id",
+                        column: x => x.hex160_id,
+                        principalTable: "hex160s",
+                        principalColumn: "guid",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "hex160s_districts",
+                schema: "public",
+                columns: table => new
+                {
+                    district_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    hex160_id = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_hex160s_districts", x => new { x.district_id, x.hex160_id });
+                    table.ForeignKey(
+                        name: "FK_hex160s_districts_districts_district_id",
+                        column: x => x.district_id,
+                        principalTable: "districts",
+                        principalColumn: "guid",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_hex160s_districts_hex160s_hex160_id",
+                        column: x => x.hex160_id,
+                        principalTable: "hex160s",
+                        principalColumn: "guid",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "hex160s_protection_zones",
+                schema: "public",
+                columns: table => new
+                {
+                    hex160_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    protection_zone_id = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_hex160s_protection_zones", x => new { x.hex160_id, x.protection_zone_id });
+                    table.ForeignKey(
+                        name: "FK_hex160s_protection_zones_hex160s_protection_zone_id",
+                        column: x => x.protection_zone_id,
+                        principalTable: "hex160s",
+                        principalColumn: "guid",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_hex160s_protection_zones_protection_zone_hex160_id",
+                        column: x => x.hex160_id,
+                        principalTable: "protection_zone",
+                        principalColumn: "guid",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "hex160s_quad75s",
+                schema: "public",
+                columns: table => new
+                {
+                    hex160_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    quad75_id = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_hex160s_quad75s", x => new { x.hex160_id, x.quad75_id });
+                    table.ForeignKey(
+                        name: "FK_hex160s_quad75s_hex160s_hex160_id",
+                        column: x => x.hex160_id,
+                        principalTable: "hex160s",
+                        principalColumn: "guid",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_hex160s_quad75s_quad75s_quad75_id",
+                        column: x => x.quad75_id,
+                        principalTable: "quad75s",
+                        principalColumn: "guid",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "hex160s_watersheds",
+                schema: "public",
+                columns: table => new
+                {
+                    hex160_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    watershed_id = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_hex160s_watersheds", x => new { x.hex160_id, x.watershed_id });
+                    table.ForeignKey(
+                        name: "FK_hex160s_watersheds_hex160s_hex160_id",
+                        column: x => x.hex160_id,
+                        principalTable: "hex160s",
+                        principalColumn: "guid",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_hex160s_watersheds_watersheds_watershed_id",
+                        column: x => x.watershed_id,
+                        principalTable: "watersheds",
+                        principalColumn: "guid",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "permanent_call_station",
+                columns: table => new
+                {
+                    guid = table.Column<Guid>(type: "uuid", nullable: false),
+                    date_added = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    date_modified = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    _delete = table.Column<bool>(type: "boolean", nullable: false),
+                    user_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    geometry = table.Column<Point>(type: "geometry", nullable: true),
+                    pcs_id = table.Column<string>(type: "text", nullable: true),
+                    hex160_id = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_permanent_call_station", x => x.guid);
+                    table.ForeignKey(
+                        name: "FK_permanent_call_station_application_users_user_id",
+                        column: x => x.user_id,
+                        principalTable: "application_users",
+                        principalColumn: "guid",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_permanent_call_station_hex160s_hex160_id",
+                        column: x => x.hex160_id,
+                        principalTable: "hex160s",
+                        principalColumn: "guid",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "site_callings",
+                columns: table => new
+                {
+                    guid = table.Column<Guid>(type: "uuid", nullable: false),
+                    hex160_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    user_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    starting_location = table.Column<Point>(type: "geometry", nullable: true),
+                    starting_lat = table.Column<double>(type: "double precision", nullable: false),
+                    starting_lon = table.Column<double>(type: "double precision", nullable: false),
+                    start_time = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    end_time = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    sunset_time = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    detection_type = table.Column<string>(type: "text", nullable: true),
+                    survey_type1 = table.Column<string>(type: "text", nullable: true),
+                    survey_type2 = table.Column<string>(type: "text", nullable: true),
+                    bird_species_survey_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    site_type = table.Column<string>(type: "text", nullable: true),
+                    site_id = table.Column<string>(type: "text", nullable: true),
+                    pass_number = table.Column<int>(type: "integer", nullable: false),
+                    preotection_zone_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    yearly_activity_center = table.Column<bool>(type: "boolean", nullable: false),
+                    wind = table.Column<string>(type: "text", nullable: true),
+                    precipitation = table.Column<string>(type: "text", nullable: true),
+                    detection_time = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    target_species_present = table.Column<bool>(type: "boolean", nullable: false),
+                    bird_species_found_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    detection_method = table.Column<string>(type: "text", nullable: true),
+                    detection_location = table.Column<Point>(type: "geometry", nullable: true),
+                    detection_lat = table.Column<double>(type: "double precision", nullable: false),
+                    detection_lon = table.Column<double>(type: "double precision", nullable: false),
+                    user_location = table.Column<Point>(type: "geometry", nullable: true),
+                    user_lat = table.Column<double>(type: "double precision", nullable: false),
+                    user_lon = table.Column<double>(type: "double precision", nullable: false),
+                    distance = table.Column<double>(type: "double precision", nullable: false),
+                    bearing = table.Column<double>(type: "double precision", nullable: false),
+                    estimated_location = table.Column<bool>(type: "boolean", nullable: false),
+                    sex = table.Column<string>(type: "text", nullable: true),
+                    age = table.Column<string>(type: "text", nullable: true),
+                    number_of_young = table.Column<int>(type: "integer", nullable: false),
+                    species_site = table.Column<string>(type: "text", nullable: true),
+                    male_banding_leg = table.Column<string>(type: "text", nullable: true),
+                    male_banding_pattern = table.Column<string>(type: "text", nullable: true),
+                    female_banding_leg = table.Column<string>(type: "text", nullable: true),
+                    female_banding_pattern = table.Column<string>(type: "text", nullable: true),
+                    occupancy_status = table.Column<string>(type: "text", nullable: true),
+                    nesting_status = table.Column<string>(type: "text", nullable: true),
+                    nest_tree = table.Column<bool>(type: "boolean", nullable: false),
+                    nest_type = table.Column<string>(type: "text", nullable: true),
+                    tree_species = table.Column<string>(type: "text", nullable: true),
+                    dbh = table.Column<double>(type: "double precision", nullable: false),
+                    nest_height = table.Column<double>(type: "double precision", nullable: false),
+                    tree_tagged = table.Column<bool>(type: "boolean", nullable: false),
+                    moused = table.Column<bool>(type: "boolean", nullable: false),
+                    area_description = table.Column<string>(type: "text", nullable: true),
+                    comments = table.Column<string>(type: "text", nullable: true),
+                    user_track = table.Column<LineString>(type: "geometry", nullable: true),
+                    date_added = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    date_modified = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    _delete = table.Column<bool>(type: "boolean", nullable: false),
+                    device_time = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    device_location = table.Column<Point>(type: "geometry", nullable: true),
+                    device_lat = table.Column<double>(type: "double precision", nullable: false),
+                    device_lon = table.Column<double>(type: "double precision", nullable: false),
+                    PermanentCallStationGuid = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_site_callings", x => x.guid);
+                    table.ForeignKey(
+                        name: "FK_site_callings_application_users_user_id",
+                        column: x => x.user_id,
+                        principalTable: "application_users",
+                        principalColumn: "guid",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_site_callings_bird_species_bird_species_found_id",
+                        column: x => x.bird_species_found_id,
+                        principalTable: "bird_species",
+                        principalColumn: "guid",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_site_callings_bird_species_bird_species_survey_id",
+                        column: x => x.bird_species_survey_id,
+                        principalTable: "bird_species",
+                        principalColumn: "guid",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_site_callings_hex160s_hex160_id",
+                        column: x => x.hex160_id,
+                        principalTable: "hex160s",
+                        principalColumn: "guid",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_site_callings_permanent_call_station_PermanentCallStationGu~",
+                        column: x => x.PermanentCallStationGuid,
+                        principalTable: "permanent_call_station",
+                        principalColumn: "guid");
+                    table.ForeignKey(
+                        name: "FK_site_callings_protection_zone_preotection_zone_id",
+                        column: x => x.preotection_zone_id,
+                        principalTable: "protection_zone",
+                        principalColumn: "guid",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "other_wildlife_records",
                 columns: table => new
                 {
                     guid = table.Column<Guid>(type: "uuid", nullable: false),
-                    date_added = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    date_modified = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    date_added = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    date_modified = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     _delete = table.Column<bool>(type: "boolean", nullable: false),
                     user_id = table.Column<Guid>(type: "uuid", nullable: false),
                     wildlife_species_id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -739,10 +890,21 @@ namespace WBIS_2.DataModel.Migrations
                 column: "user_id");
 
             migrationBuilder.CreateIndex(
+                name: "IX_hex160s_current_preotection_zone_id",
+                table: "hex160s",
+                column: "current_preotection_zone_id");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_hex160s_districts_hex160_id",
                 schema: "public",
                 table: "hex160s_districts",
                 column: "hex160_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_hex160s_protection_zones_protection_zone_id",
+                schema: "public",
+                table: "hex160s_protection_zones",
+                column: "protection_zone_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_hex160s_quad75s_quad75_id",
@@ -772,6 +934,21 @@ namespace WBIS_2.DataModel.Migrations
                 column: "wildlife_species_id");
 
             migrationBuilder.CreateIndex(
+                name: "IX_permanent_call_station_hex160_id",
+                table: "permanent_call_station",
+                column: "hex160_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_permanent_call_station_user_id",
+                table: "permanent_call_station",
+                column: "user_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_protection_zone_user_id",
+                table: "protection_zone",
+                column: "user_id");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_site_callings_bird_species_found_id",
                 table: "site_callings",
                 column: "bird_species_found_id");
@@ -785,6 +962,16 @@ namespace WBIS_2.DataModel.Migrations
                 name: "IX_site_callings_hex160_id",
                 table: "site_callings",
                 column: "hex160_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_site_callings_PermanentCallStationGuid",
+                table: "site_callings",
+                column: "PermanentCallStationGuid");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_site_callings_preotection_zone_id",
+                table: "site_callings",
+                column: "preotection_zone_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_site_callings_user_id",
@@ -841,6 +1028,10 @@ namespace WBIS_2.DataModel.Migrations
                 schema: "public");
 
             migrationBuilder.DropTable(
+                name: "hex160s_protection_zones",
+                schema: "public");
+
+            migrationBuilder.DropTable(
                 name: "hex160s_quad75s",
                 schema: "public");
 
@@ -881,13 +1072,19 @@ namespace WBIS_2.DataModel.Migrations
                 name: "watersheds");
 
             migrationBuilder.DropTable(
-                name: "application_users");
-
-            migrationBuilder.DropTable(
                 name: "bird_species");
 
             migrationBuilder.DropTable(
+                name: "permanent_call_station");
+
+            migrationBuilder.DropTable(
                 name: "hex160s");
+
+            migrationBuilder.DropTable(
+                name: "protection_zone");
+
+            migrationBuilder.DropTable(
+                name: "application_users");
 
             migrationBuilder.DropTable(
                 name: "application_groups");

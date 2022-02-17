@@ -45,12 +45,12 @@ namespace WBIS_2.DataModel
             modelBuilder.Entity<Hex160RequiredPass>().ToTable("hex160_required_passes");
             modelBuilder.Entity<OtherWildlife>().ToTable("other_wildlife_records");
             modelBuilder.Entity<SiteCalling>().ToTable("site_callings");
-
-
-            //modelBuilder.Entity<ApplicationUser>()
-            //    .HasMany(_ => _.Districts)
-            //    .WithMany(p => p.ApplicationUsers)
-            //    .UsingEntity(j => j.ToTable("users_districts"));
+            modelBuilder.Entity<ProtectionZone>().ToTable("protection_zones");
+            modelBuilder.Entity<PermanentCallStation>().ToTable("permanent_call_stations");
+            modelBuilder.Entity<DeletedGeometry>().ToTable("deleted_geometries");
+            modelBuilder.Entity<SiteCallingDetection>().ToTable("site_calling_detections");
+            modelBuilder.Entity<SiteCallingDeviceInfo>().ToTable("site_calling_device_infos");
+            modelBuilder.Entity<SiteCallingTrack>().ToTable("site_calling_tracks");
 
 
 
@@ -64,23 +64,6 @@ namespace WBIS_2.DataModel
                         x => x.ToTable("users_districts", "public"));
 
 
-
-            //modelBuilder.Entity<District>()
-            //    .HasMany(_ => _.Hex160s)
-            //    .WithMany(p => p.Districts)
-            //    .UsingEntity(j => j.ToTable("hex160s_districts"));
-            //modelBuilder.Entity<District>()
-            //    .HasMany(_ => _.Watersheds)
-            //    .WithMany(p => p.Districts)
-            //    .UsingEntity(j => j.ToTable("watersheds_districts"));
-            //modelBuilder.Entity<District>()
-            //    .HasMany(_ => _.CNDDBOccurrences)
-            //    .WithMany(p => p.Districts)
-            //    .UsingEntity(j => j.ToTable("cnddb_occurrences_districts"));
-            //modelBuilder.Entity<District>()
-            //    .HasMany(_ => _.CDFW_SpottedOwls)
-            //    .WithMany(p => p.Districts)
-            //    .UsingEntity(j => j.ToTable("cdfw_spotted_owls_districts"));
 
             modelBuilder.Entity<District>()
                 .HasMany(_ => _.Hex160s)
@@ -112,18 +95,6 @@ namespace WBIS_2.DataModel
                         x => x.ToTable("cdfw_spotted_owls_districts", "public"));
 
 
-            //modelBuilder.Entity<Quad75>()
-            //    .HasMany(_ => _.CDFW_SpottedOwls)
-            //    .WithMany(p => p.Quad75s)
-            //    .UsingEntity(j => j.ToTable("cdfw_spotted_owls_quad75s"));
-            //modelBuilder.Entity<Quad75>()
-            //    .HasMany(_ => _.CNDDBOccurrences)
-            //    .WithMany(p => p.Quad75s)
-            //    .UsingEntity(j => j.ToTable("cnddb_occurrences_quad75s"));
-            //modelBuilder.Entity<Quad75>()
-            //    .HasMany(_ => _.Hex160s)
-            //    .WithMany(p => p.Quad75s)
-            //    .UsingEntity(j => j.ToTable("hex160s_quad75s"));
 
             modelBuilder.Entity<Quad75>()
                 .HasMany(_ => _.CDFW_SpottedOwls)
@@ -149,19 +120,6 @@ namespace WBIS_2.DataModel
 
 
 
-            //modelBuilder.Entity<Watershed>()
-            //   .HasMany(_ => _.CDFW_SpottedOwls)
-            //   .WithMany(p => p.Watersheds)
-            //   .UsingEntity(j => j.ToTable("cdfw_spotted_owls_watersheds"));
-            //modelBuilder.Entity<Watershed>()
-            //    .HasMany(_ => _.CNDDBOccurrences)
-            //    .WithMany(p => p.Watersheds)
-            //    .UsingEntity(j => j.ToTable("cnddb_occurrences_watersheds"));
-            //modelBuilder.Entity<Watershed>()
-            //    .HasMany(_ => _.Hex160s)
-            //    .WithMany(p => p.Watersheds)
-            //    .UsingEntity(j => j.ToTable("hex160s_watersheds"));
-
             modelBuilder.Entity<Watershed>()
                 .HasMany(_ => _.CDFW_SpottedOwls)
                 .WithMany(p => p.Watersheds)
@@ -184,41 +142,13 @@ namespace WBIS_2.DataModel
                         x => x.HasOne<Watershed>().WithMany().HasForeignKey("watershed_id"),
                         x => x.ToTable("hex160s_watersheds", "public"));
 
-
-            //modelBuilder.Entity<OtherWildlife>().HasOne(_=>_.SiteCalling).WithMany(_=>_.OtherWildlifeRecords).
-
-
-            //modelBuilder.Entity<ApplicationUser>().ToTable("application_users")
-            //    .HasOne(_=>_.ApplicationGroup)
-            //    .WithMany(_=>_.ApplicationUsers).HasForeignKey(_=>_.Guid);
-
-
-            //modelBuilder.Entity<SiteCalling>()
-            //    .HasOne(_ => _.SurveySpecies)
-            //    .WithMany(_ => _.SurveySpecies).HasForeignKey(_ => _.Guid);
-            //modelBuilder.Entity<SiteCalling>()
-            //   .HasOne(_ => _.SpeciesFound)
-            //   .WithMany(_ => _.SpeciesFound).HasForeignKey(_ => _.Guid);
-            //modelBuilder.Entity<SiteCalling>()
-            //   .HasOne(_ => _.Hex160)
-            //   .WithMany(_ => _.SiteCallings).HasForeignKey(_ => _.Guid);
-
-            //modelBuilder.Entity<Hex160RequredPass>()
-            //   .HasOne(_ => _.BirdSpecies)
-            //   .WithMany(_ => _.PassSpecies).HasForeignKey(_ => _.Guid);
-            //modelBuilder.Entity<Hex160RequredPass>()
-            //  .HasOne(_ => _.Hex160)
-            //  .WithMany(_ => _.Hex160RequredPasses).HasForeignKey(_ => _.Guid);
-
-            //modelBuilder.Entity<OtherWildlife>()
-            //   .HasOne(_ => _.WildlifeSpecies)
-            //   .WithMany(_ => _.OtherWildlifeRecords).HasForeignKey(_ => _.Guid);
-            //modelBuilder.Entity<OtherWildlife>()
-            //  .HasOne(_ => _.SiteCalling)
-            //  .WithMany(_ => _.OtherWildlifeRecords).HasForeignKey(_ => _.Guid);
-
-
-
+            modelBuilder.Entity<Hex160>()
+                .HasMany(_=>_.ProtectionZones)
+                .WithMany(p=>p.Hex160s)
+                .UsingEntity<Dictionary<string, object>>("hex160s_protection_zones",
+                        x => x.HasOne<ProtectionZone>().WithMany().HasForeignKey("hex160_id"),
+                        x => x.HasOne<Hex160>().WithMany().HasForeignKey("protection_zone_id"),
+                        x => x.ToTable("hex160s_protection_zones", "public"));
 
         }
         public DbSet<District> Districts { get; set; }
@@ -235,6 +165,12 @@ namespace WBIS_2.DataModel
         public DbSet<Hex160RequiredPass> Hex160RequiredPasses { get; set; }
         public DbSet<OtherWildlife> OtherWildlifeRecords { get; set; }
         public DbSet<SiteCalling> SiteCallings { get; set; }
+        public DbSet<PermanentCallStation> PermanentCallStations { get; set; }
+        public DbSet<ProtectionZone> ProtectionZones { get; set; }
+        public DbSet<DeletedGeometry> DeletedGeometries { get; set; }
+        public DbSet<SiteCallingDetection> siteCallingDetections { get; set; }
+        public DbSet<SiteCallingTrack> siteCallingTracks { get; set; }
+        public DbSet<SiteCallingDeviceInfo> siteCallingDeviceInfos { get; set; }
 
         //public DbSet<Quad75> Quad75s { get; set; }
         //public DbSet<Watershed> Watersheds { get; set; }

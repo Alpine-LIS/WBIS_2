@@ -54,9 +54,8 @@ namespace WBIS_2.DataModel
         [Column("preotection_zone_id")]
         public Guid ProtectionZoneID { get; set; }
         public ProtectionZone ProtectionZone { get; set; }
-        [Column("yearly_activity_center_id")]
-        public Guid YearlyActivityCenterID { get; set; }
-        public YearlyActivityCenter YearlyActivityCenter { get; set; }
+        [Column("yearly_activity_center")]
+        public bool YearlyActivityCenter { get; set; }
         [Column("wind")]
         public string Wind { get; set; }
         [Column("precipitation")]
@@ -71,59 +70,19 @@ namespace WBIS_2.DataModel
 
 
 
-
-
-        [Column("detection_time")]
-        public DateTime DetectionTime { get; set; }
-
         [Column("target_species_present")]
         public bool TargetSpeciesPresent { get; set; }
-        [Required, Column("bird_species_found_id")]
-        public Guid SpeciesFoundId { get; set; }
-        public BirdSpecies SpeciesFound { get; set; }
-        [Column("detection_method")]
-        public string DetectionMethod { get; set; }
-
-        [Column("detection_location"), DataType("geometry(Point,26710)")]
-        public Point DetectionLocation { get; set; }
-        [Column("detection_lat")]
-        public double DetectionLat { get; set; }
-        [Column("detection_lon")]
-        public double DetectionLon { get; set; }
-        [Column("user_location"), DataType("geometry(Point,26710)")]
-        public Point UserLocation { get; set; }
-        [Column("user_lat")]
-        public double UserLat { get; set; }
-        [Column("user_lon")]
-        public double UserLon { get; set; }
+        [Column("site_calling_detection_id")]
+        public Guid SiteCallingDetectionID { get; set; }
+        public SiteCallingDetection SiteCallingDetection { get; set; }
 
 
-        [Column("distance")]
-        public double Distance { get; set; }
-        [Column("bearing")]
-        public double Bearing { get; set; }
-        [Column("estimated_location")]
-        public bool EstimatedLocation { get; set; }
-        [Column("sex")]
-        public string Sex { get; set; }
-        [Column("age")]
-        public string Age { get; set; }
-        [Column("number_of_young")]
-        public int NumberOfYoung { get; set; }
-        [Column("species_site")]
-        public string SpeciesSite { get; set; }
-        [Column("male_banding_leg")]
-        public string MaleBindingLeg { get; set; }
-        [Column("male_banding_pattern")]
-        public string MaleBindingPattern { get; set; }
-        [Column("female_banding_leg")]
-        public string FemaleBindingLeg { get; set; }
-        [Column("female_banding_pattern")]
-        public string FemaleBindingPattern { get; set; }
         [Column("occupancy_status")]
         public string OccupancyStatus { get; set; }
         [Column("nesting_status")]
         public string NestingStatus { get; set; }
+        [Column("reproductive_status")]
+        public string ReproductiveStatus { get; set; }
         [Column("nest_tree")]
         public bool NestTree { get; set; }
         [Column("nest_type")]
@@ -147,18 +106,13 @@ namespace WBIS_2.DataModel
         public string Comments { get; set; }
 
 
-        [Column("user_track"), DataType("geometry(LineString,26710)")]
-        public LineString UserTrack { get; set; }
 
-
-
-
-
-
-
-
-
-
+        [Column("site_calling_track_id")]
+        public Guid SiteCallingTrackID { get; set; }
+        public SiteCallingTrack SiteCallingTrack { get; set; }
+        [Column("site_calling_device_info_id")]
+        public Guid SiteCallingDeviceInfoID { get; set; }
+        public SiteCallingDeviceInfo SiteCallingDeviceInfo { get; set; }
 
 
 
@@ -171,32 +125,7 @@ namespace WBIS_2.DataModel
         public DateTime DateModified { get; set; }
         public bool _delete { get; set; }
        
-        [Column("device_time")]
-        public DateTime DeviceTime { get; set; }
-
-
-
-
-
-        
-        
-        [Column("device_location"), DataType("geometry(Point,26710)")]
-        public Point DeviceLocation { get; set; }
-        [Column("device_lat")]
-        public double DeviceLat { get; set; }
-        [Column("device_lon")]
-        public double DeviceLon { get; set; }
-        
-
-
-
-
-
-
-
-
-
-
+       
 
 
 

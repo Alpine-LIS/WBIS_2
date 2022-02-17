@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <RootNamespace>WBIS_2</RootNamespace>
     <UseWPF>true</UseWPF>
     <Platforms>AnyCPU;x64</Platforms>
@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DevExpress.Wpf" Version="21.1.4" />
+    <PackageReference Include="DevExpress.Wpf" Version="21.2.6-pre-22040" />
   </ItemGroup>
 
   <ItemGroup>

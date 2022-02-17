@@ -8,20 +8,203 @@ using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using WBIS_2.DataModel;
 
+#nullable disable
+
 namespace WBIS_2.DataModel.Migrations
 {
     [DbContext(typeof(WBIS2Model))]
-    [Migration("20211214184615_initialcreate")]
-    partial class initialcreate
+    [Migration("20220217223830_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasPostgresExtension("postgis")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63)
-                .HasAnnotation("ProductVersion", "5.0.8")
-                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                .HasAnnotation("ProductVersion", "6.0.2")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+
+            NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "postgis");
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("cdfw_spotted_owls_districts", b =>
+                {
+                    b.Property<Guid>("cdfw_spotted_owl_id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("district_id")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("cdfw_spotted_owl_id", "district_id");
+
+                    b.HasIndex("district_id");
+
+                    b.ToTable("cdfw_spotted_owls_districts", "public");
+                });
+
+            modelBuilder.Entity("cdfw_spotted_owls_quad75s", b =>
+                {
+                    b.Property<Guid>("cdfw_spotted_owl_id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("quad75_id")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("cdfw_spotted_owl_id", "quad75_id");
+
+                    b.HasIndex("quad75_id");
+
+                    b.ToTable("cdfw_spotted_owls_quad75s", "public");
+                });
+
+            modelBuilder.Entity("cdfw_spotted_owls_watersheds", b =>
+                {
+                    b.Property<Guid>("cdfw_spotted_owl_id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("watershed_id")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("cdfw_spotted_owl_id", "watershed_id");
+
+                    b.HasIndex("watershed_id");
+
+                    b.ToTable("cdfw_spotted_owls_watersheds", "public");
+                });
+
+            modelBuilder.Entity("cnddb_occurrences_districts", b =>
+                {
+                    b.Property<Guid>("cnddb_occurrence_id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("district_id")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("cnddb_occurrence_id", "district_id");
+
+                    b.HasIndex("district_id");
+
+                    b.ToTable("cnddb_occurrences_districts", "public");
+                });
+
+            modelBuilder.Entity("cnddb_occurrences_quad75s", b =>
+                {
+                    b.Property<Guid>("cnddb_occurrence_id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("quad75_id")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("cnddb_occurrence_id", "quad75_id");
+
+                    b.HasIndex("quad75_id");
+
+                    b.ToTable("cnddb_occurrences_quad75s", "public");
+                });
+
+            modelBuilder.Entity("cnddb_occurrences_watersheds", b =>
+                {
+                    b.Property<Guid>("cnddb_occurrence_id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("watershed_id")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("cnddb_occurrence_id", "watershed_id");
+
+                    b.HasIndex("watershed_id");
+
+                    b.ToTable("cnddb_occurrences_watersheds", "public");
+                });
+
+            modelBuilder.Entity("hex160s_districts", b =>
+                {
+                    b.Property<Guid>("district_id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("hex160_id")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("district_id", "hex160_id");
+
+                    b.HasIndex("hex160_id");
+
+                    b.ToTable("hex160s_districts", "public");
+                });
+
+            modelBuilder.Entity("hex160s_protection_zones", b =>
+                {
+                    b.Property<Guid>("hex160_id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("protection_zone_id")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("hex160_id", "protection_zone_id");
+
+                    b.HasIndex("protection_zone_id");
+
+                    b.ToTable("hex160s_protection_zones", "public");
+                });
+
+            modelBuilder.Entity("hex160s_quad75s", b =>
+                {
+                    b.Property<Guid>("hex160_id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("quad75_id")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("hex160_id", "quad75_id");
+
+                    b.HasIndex("quad75_id");
+
+                    b.ToTable("hex160s_quad75s", "public");
+                });
+
+            modelBuilder.Entity("hex160s_watersheds", b =>
+                {
+                    b.Property<Guid>("hex160_id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("watershed_id")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("hex160_id", "watershed_id");
+
+                    b.HasIndex("watershed_id");
+
+                    b.ToTable("hex160s_watersheds", "public");
+                });
+
+            modelBuilder.Entity("users_districts", b =>
+                {
+                    b.Property<Guid>("application_user_id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("district_id")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("application_user_id", "district_id");
+
+                    b.HasIndex("district_id");
+
+                    b.ToTable("users_districts", "public");
+                });
+
+            modelBuilder.Entity("watersheds_districts", b =>
+                {
+                    b.Property<Guid>("district_id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("watershed_id")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("district_id", "watershed_id");
+
+                    b.HasIndex("watershed_id");
+
+                    b.ToTable("watersheds_districts", "public");
+                });
 
             modelBuilder.Entity("WBIS_2.DataModel.ApplicationGroup", b =>
                 {
@@ -45,7 +228,7 @@ namespace WBIS_2.DataModel.Migrations
 
                     b.HasKey("Guid");
 
-                    b.ToTable("application_groups");
+                    b.ToTable("application_groups", (string)null);
                 });
 
             modelBuilder.Entity("WBIS_2.DataModel.ApplicationUser", b =>
@@ -72,7 +255,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnName("password_sha");
 
                     b.Property<DateTime?>("PasswordTimestamp")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("password_time_stamp");
 
                     b.Property<string>("UserID")
@@ -85,19 +268,19 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnName("user_name");
 
                     b.Property<DateTime?>("created_")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("deleted_")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("modified_")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Guid");
 
                     b.HasIndex("ApplicationGroupId");
 
-                    b.ToTable("application_users");
+                    b.ToTable("application_users", (string)null);
                 });
 
             modelBuilder.Entity("WBIS_2.DataModel.BirdSpecies", b =>
@@ -113,7 +296,7 @@ namespace WBIS_2.DataModel.Migrations
 
                     b.HasKey("Guid");
 
-                    b.ToTable("bird_species");
+                    b.ToTable("bird_species", (string)null);
                 });
 
             modelBuilder.Entity("WBIS_2.DataModel.CDFW_SpottedOwl", b =>
@@ -217,7 +400,7 @@ namespace WBIS_2.DataModel.Migrations
 
                     b.HasKey("Guid");
 
-                    b.ToTable("cdfw_spotted_owls");
+                    b.ToTable("cdfw_spotted_owls", (string)null);
                 });
 
             modelBuilder.Entity("WBIS_2.DataModel.CDFW_SpottedOwlDiagram", b =>
@@ -233,7 +416,7 @@ namespace WBIS_2.DataModel.Migrations
 
                     b.HasKey("Guid");
 
-                    b.ToTable("cdfw_spotted_owl_diagrams");
+                    b.ToTable("cdfw_spotted_owl_diagrams", (string)null);
                 });
 
             modelBuilder.Entity("WBIS_2.DataModel.CNDDBOccurrence", b =>
@@ -417,7 +600,7 @@ namespace WBIS_2.DataModel.Migrations
 
                     b.HasKey("Guid");
 
-                    b.ToTable("cnddb_occurrences");
+                    b.ToTable("cnddb_occurrences", (string)null);
                 });
 
             modelBuilder.Entity("WBIS_2.DataModel.District", b =>
@@ -443,7 +626,7 @@ namespace WBIS_2.DataModel.Migrations
 
                     b.HasKey("Guid");
 
-                    b.ToTable("districts");
+                    b.ToTable("districts", (string)null);
                 });
 
             modelBuilder.Entity("WBIS_2.DataModel.Hex160", b =>
@@ -456,6 +639,10 @@ namespace WBIS_2.DataModel.Migrations
                     b.Property<int>("CallingResponses")
                         .HasColumnType("integer")
                         .HasColumnName("calling_responses");
+
+                    b.Property<Guid>("CurrentProtectionZoneID")
+                        .HasColumnType("uuid")
+                        .HasColumnName("current_preotection_zone_id");
 
                     b.Property<int>("Drops")
                         .HasColumnType("integer")
@@ -475,7 +662,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnName("hex160_id");
 
                     b.Property<DateTime>("LatestActivity")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("latest_activity");
 
                     b.Property<string>("RecentActivity")
@@ -488,7 +675,9 @@ namespace WBIS_2.DataModel.Migrations
 
                     b.HasKey("Guid");
 
-                    b.ToTable("hex160s");
+                    b.HasIndex("CurrentProtectionZoneID");
+
+                    b.ToTable("hex160s", (string)null);
                 });
 
             modelBuilder.Entity("WBIS_2.DataModel.Hex160RequiredPass", b =>
@@ -507,11 +696,11 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnName("current_passes");
 
                     b.Property<DateTime>("DateAdded")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_added");
 
                     b.Property<DateTime>("DateModified")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_modified");
 
                     b.Property<bool>("Dropped")
@@ -541,7 +730,7 @@ namespace WBIS_2.DataModel.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("hex160_required_passes");
+                    b.ToTable("hex160_required_passes", (string)null);
                 });
 
             modelBuilder.Entity("WBIS_2.DataModel.OtherWildlife", b =>
@@ -552,11 +741,11 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnName("guid");
 
                     b.Property<DateTime>("DateAdded")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_added");
 
                     b.Property<DateTime>("DateModified")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_modified");
 
                     b.Property<Guid>("SiteCallingId")
@@ -582,7 +771,87 @@ namespace WBIS_2.DataModel.Migrations
 
                     b.HasIndex("WildlifeSpeciesId");
 
-                    b.ToTable("other_wildlife_records");
+                    b.ToTable("other_wildlife_records", (string)null);
+                });
+
+            modelBuilder.Entity("WBIS_2.DataModel.PermanentCallStation", b =>
+                {
+                    b.Property<Guid>("Guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("guid");
+
+                    b.Property<DateTime>("DateAdded")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("date_added");
+
+                    b.Property<DateTime>("DateModified")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("date_modified");
+
+                    b.Property<Point>("Geometry")
+                        .HasColumnType("geometry")
+                        .HasColumnName("geometry");
+
+                    b.Property<Guid>("Hex160Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("hex160_id");
+
+                    b.Property<string>("PCS_ID")
+                        .HasColumnType("text")
+                        .HasColumnName("pcs_id");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.Property<bool>("_delete")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("Guid");
+
+                    b.HasIndex("Hex160Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("permanent_call_station", (string)null);
+                });
+
+            modelBuilder.Entity("WBIS_2.DataModel.ProtectionZone", b =>
+                {
+                    b.Property<Guid>("Guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("guid");
+
+                    b.Property<DateTime>("DateAdded")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("date_added");
+
+                    b.Property<DateTime>("DateModified")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("date_modified");
+
+                    b.Property<MultiPolygon>("Geometry")
+                        .HasColumnType("geometry")
+                        .HasColumnName("geometry");
+
+                    b.Property<string>("PZ_ID")
+                        .HasColumnType("text")
+                        .HasColumnName("pz_id");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.Property<bool>("_delete")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("Guid");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("protection_zone", (string)null);
                 });
 
             modelBuilder.Entity("WBIS_2.DataModel.Quad75", b =>
@@ -608,7 +877,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("text")
                         .HasColumnName("cnps_code");
 
-                    b.Property<MultiPolygon>("Geometry")
+                    b.Property<Polygon>("Geometry")
                         .HasColumnType("geometry")
                         .HasColumnName("geometry");
 
@@ -652,7 +921,7 @@ namespace WBIS_2.DataModel.Migrations
 
                     b.HasKey("Guid");
 
-                    b.ToTable("quad75s");
+                    b.ToTable("quad75s", (string)null);
                 });
 
             modelBuilder.Entity("WBIS_2.DataModel.SiteCalling", b =>
@@ -662,29 +931,240 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("guid");
 
+                    b.Property<string>("Age")
+                        .HasColumnType("text")
+                        .HasColumnName("age");
+
+                    b.Property<string>("AreaDescription")
+                        .HasColumnType("text")
+                        .HasColumnName("area_description");
+
+                    b.Property<double>("Bearing")
+                        .HasColumnType("double precision")
+                        .HasColumnName("bearing");
+
+                    b.Property<string>("Comments")
+                        .HasColumnType("text")
+                        .HasColumnName("comments");
+
+                    b.Property<double>("DBH")
+                        .HasColumnType("double precision")
+                        .HasColumnName("dbh");
+
                     b.Property<DateTime>("DateAdded")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_added");
 
                     b.Property<DateTime>("DateModified")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_modified");
+
+                    b.Property<double>("DetectionLat")
+                        .HasColumnType("double precision")
+                        .HasColumnName("detection_lat");
+
+                    b.Property<Point>("DetectionLocation")
+                        .HasColumnType("geometry")
+                        .HasColumnName("detection_location");
+
+                    b.Property<double>("DetectionLon")
+                        .HasColumnType("double precision")
+                        .HasColumnName("detection_lon");
+
+                    b.Property<string>("DetectionMethod")
+                        .HasColumnType("text")
+                        .HasColumnName("detection_method");
+
+                    b.Property<DateTime>("DetectionTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("detection_time");
+
+                    b.Property<string>("DetectionType")
+                        .HasColumnType("text")
+                        .HasColumnName("detection_type");
+
+                    b.Property<double>("DeviceLat")
+                        .HasColumnType("double precision")
+                        .HasColumnName("device_lat");
+
+                    b.Property<Point>("DeviceLocation")
+                        .HasColumnType("geometry")
+                        .HasColumnName("device_location");
+
+                    b.Property<double>("DeviceLon")
+                        .HasColumnType("double precision")
+                        .HasColumnName("device_lon");
+
+                    b.Property<DateTime>("DeviceTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("device_time");
+
+                    b.Property<double>("Distance")
+                        .HasColumnType("double precision")
+                        .HasColumnName("distance");
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("end_time");
+
+                    b.Property<bool>("EstimatedLocation")
+                        .HasColumnType("boolean")
+                        .HasColumnName("estimated_location");
+
+                    b.Property<string>("FemaleBindingLeg")
+                        .HasColumnType("text")
+                        .HasColumnName("female_banding_leg");
+
+                    b.Property<string>("FemaleBindingPattern")
+                        .HasColumnType("text")
+                        .HasColumnName("female_banding_pattern");
 
                     b.Property<Guid>("Hex160Id")
                         .HasColumnType("uuid")
                         .HasColumnName("hex160_id");
 
+                    b.Property<string>("MaleBindingLeg")
+                        .HasColumnType("text")
+                        .HasColumnName("male_banding_leg");
+
+                    b.Property<string>("MaleBindingPattern")
+                        .HasColumnType("text")
+                        .HasColumnName("male_banding_pattern");
+
+                    b.Property<bool>("Moused")
+                        .HasColumnType("boolean")
+                        .HasColumnName("moused");
+
+                    b.Property<double>("NestHeight")
+                        .HasColumnType("double precision")
+                        .HasColumnName("nest_height");
+
+                    b.Property<bool>("NestTree")
+                        .HasColumnType("boolean")
+                        .HasColumnName("nest_tree");
+
+                    b.Property<string>("NestType")
+                        .HasColumnType("text")
+                        .HasColumnName("nest_type");
+
+                    b.Property<string>("NestingStatus")
+                        .HasColumnType("text")
+                        .HasColumnName("nesting_status");
+
+                    b.Property<int>("NumberOfYoung")
+                        .HasColumnType("integer")
+                        .HasColumnName("number_of_young");
+
+                    b.Property<string>("OccupancyStatus")
+                        .HasColumnType("text")
+                        .HasColumnName("occupancy_status");
+
+                    b.Property<int>("PassNumber")
+                        .HasColumnType("integer")
+                        .HasColumnName("pass_number");
+
+                    b.Property<Guid?>("PermanentCallStationGuid")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Precipitation")
+                        .HasColumnType("text")
+                        .HasColumnName("precipitation");
+
+                    b.Property<Guid>("ProtectionZoneID")
+                        .HasColumnType("uuid")
+                        .HasColumnName("preotection_zone_id");
+
+                    b.Property<string>("Sex")
+                        .HasColumnType("text")
+                        .HasColumnName("sex");
+
+                    b.Property<string>("SiteID")
+                        .HasColumnType("text")
+                        .HasColumnName("site_id");
+
+                    b.Property<string>("SiteType")
+                        .HasColumnType("text")
+                        .HasColumnName("site_type");
+
                     b.Property<Guid>("SpeciesFoundId")
                         .HasColumnType("uuid")
                         .HasColumnName("bird_species_found_id");
+
+                    b.Property<string>("SpeciesSite")
+                        .HasColumnType("text")
+                        .HasColumnName("species_site");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("start_time");
+
+                    b.Property<double>("StartingLat")
+                        .HasColumnType("double precision")
+                        .HasColumnName("starting_lat");
+
+                    b.Property<Point>("StartingLocation")
+                        .HasColumnType("geometry")
+                        .HasColumnName("starting_location");
+
+                    b.Property<double>("StartingLon")
+                        .HasColumnType("double precision")
+                        .HasColumnName("starting_lon");
+
+                    b.Property<DateTime>("SunsetTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("sunset_time");
 
                     b.Property<Guid>("SurveySpeciesId")
                         .HasColumnType("uuid")
                         .HasColumnName("bird_species_survey_id");
 
+                    b.Property<string>("SurveyType1")
+                        .HasColumnType("text")
+                        .HasColumnName("survey_type1");
+
+                    b.Property<string>("SurveyType2")
+                        .HasColumnType("text")
+                        .HasColumnName("survey_type2");
+
+                    b.Property<bool>("TargetSpeciesPresent")
+                        .HasColumnType("boolean")
+                        .HasColumnName("target_species_present");
+
+                    b.Property<string>("TreeSpecies")
+                        .HasColumnType("text")
+                        .HasColumnName("tree_species");
+
+                    b.Property<bool>("TreeTagged")
+                        .HasColumnType("boolean")
+                        .HasColumnName("tree_tagged");
+
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid")
                         .HasColumnName("user_id");
+
+                    b.Property<double>("UserLat")
+                        .HasColumnType("double precision")
+                        .HasColumnName("user_lat");
+
+                    b.Property<Point>("UserLocation")
+                        .HasColumnType("geometry")
+                        .HasColumnName("user_location");
+
+                    b.Property<double>("UserLon")
+                        .HasColumnType("double precision")
+                        .HasColumnName("user_lon");
+
+                    b.Property<LineString>("UserTrack")
+                        .HasColumnType("geometry")
+                        .HasColumnName("user_track");
+
+                    b.Property<string>("Wind")
+                        .HasColumnType("text")
+                        .HasColumnName("wind");
+
+                    b.Property<bool>("YearlyActivityCenter")
+                        .HasColumnType("boolean")
+                        .HasColumnName("yearly_activity_center");
 
                     b.Property<bool>("_delete")
                         .HasColumnType("boolean");
@@ -693,13 +1173,17 @@ namespace WBIS_2.DataModel.Migrations
 
                     b.HasIndex("Hex160Id");
 
+                    b.HasIndex("PermanentCallStationGuid");
+
+                    b.HasIndex("ProtectionZoneID");
+
                     b.HasIndex("SpeciesFoundId");
 
                     b.HasIndex("SurveySpeciesId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("site_callings");
+                    b.ToTable("site_callings", (string)null);
                 });
 
             modelBuilder.Entity("WBIS_2.DataModel.Watershed", b =>
@@ -737,7 +1221,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("text")
                         .HasColumnName("down_str_wshd");
 
-                    b.Property<bool>("ESU")
+                    b.Property<bool?>("ESU")
                         .HasColumnType("boolean")
                         .HasColumnName("esu");
 
@@ -821,7 +1305,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("text")
                         .HasColumnName("super_plan");
 
-                    b.Property<bool>("TOC")
+                    b.Property<bool?>("TOC")
                         .HasColumnType("boolean")
                         .HasColumnName("toc");
 
@@ -853,7 +1337,7 @@ namespace WBIS_2.DataModel.Migrations
 
                     b.HasKey("Guid");
 
-                    b.ToTable("watersheds");
+                    b.ToTable("watersheds", (string)null);
                 });
 
             modelBuilder.Entity("WBIS_2.DataModel.WildlifeSpecies", b =>
@@ -905,272 +1389,7 @@ namespace WBIS_2.DataModel.Migrations
 
                     b.HasKey("Guid");
 
-                    b.ToTable("wildlife_species");
-                });
-
-            modelBuilder.Entity("cdfw_spotted_owls_districts", b =>
-                {
-                    b.Property<Guid>("cdfw_spotted_owl_id")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("district_id")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("cdfw_spotted_owl_id", "district_id");
-
-                    b.HasIndex("district_id");
-
-                    b.ToTable("cdfw_spotted_owls_districts", "public");
-                });
-
-            modelBuilder.Entity("cdfw_spotted_owls_quad75s", b =>
-                {
-                    b.Property<Guid>("cdfw_spotted_owl_id")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("quad75_id")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("cdfw_spotted_owl_id", "quad75_id");
-
-                    b.HasIndex("quad75_id");
-
-                    b.ToTable("cdfw_spotted_owls_quad75s", "public");
-                });
-
-            modelBuilder.Entity("cdfw_spotted_owls_watersheds", b =>
-                {
-                    b.Property<Guid>("cdfw_spotted_owl_id")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("watershed_id")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("cdfw_spotted_owl_id", "watershed_id");
-
-                    b.HasIndex("watershed_id");
-
-                    b.ToTable("cdfw_spotted_owls_watersheds", "public");
-                });
-
-            modelBuilder.Entity("cnddb_occurrences_districts", b =>
-                {
-                    b.Property<Guid>("cnddb_occurrence_id")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("district_id")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("cnddb_occurrence_id", "district_id");
-
-                    b.HasIndex("district_id");
-
-                    b.ToTable("cnddb_occurrences_districts", "public");
-                });
-
-            modelBuilder.Entity("cnddb_occurrences_quad75s", b =>
-                {
-                    b.Property<Guid>("cnddb_occurrence_id")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("quad75_id")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("cnddb_occurrence_id", "quad75_id");
-
-                    b.HasIndex("quad75_id");
-
-                    b.ToTable("cnddb_occurrences_quad75s", "public");
-                });
-
-            modelBuilder.Entity("cnddb_occurrences_watersheds", b =>
-                {
-                    b.Property<Guid>("cnddb_occurrence_id")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("watershed_id")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("cnddb_occurrence_id", "watershed_id");
-
-                    b.HasIndex("watershed_id");
-
-                    b.ToTable("cnddb_occurrences_watersheds", "public");
-                });
-
-            modelBuilder.Entity("hex160s_districts", b =>
-                {
-                    b.Property<Guid>("district_id")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("hex160_id")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("district_id", "hex160_id");
-
-                    b.HasIndex("hex160_id");
-
-                    b.ToTable("hex160s_districts", "public");
-                });
-
-            modelBuilder.Entity("hex160s_quad75s", b =>
-                {
-                    b.Property<Guid>("hex160_id")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("quad75_id")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("hex160_id", "quad75_id");
-
-                    b.HasIndex("quad75_id");
-
-                    b.ToTable("hex160s_quad75s", "public");
-                });
-
-            modelBuilder.Entity("hex160s_watersheds", b =>
-                {
-                    b.Property<Guid>("hex160_id")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("watershed_id")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("hex160_id", "watershed_id");
-
-                    b.HasIndex("watershed_id");
-
-                    b.ToTable("hex160s_watersheds", "public");
-                });
-
-            modelBuilder.Entity("users_districts", b =>
-                {
-                    b.Property<Guid>("application_user_id")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("district_id")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("application_user_id", "district_id");
-
-                    b.HasIndex("district_id");
-
-                    b.ToTable("users_districts", "public");
-                });
-
-            modelBuilder.Entity("watersheds_districts", b =>
-                {
-                    b.Property<Guid>("district_id")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("watershed_id")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("district_id", "watershed_id");
-
-                    b.HasIndex("watershed_id");
-
-                    b.ToTable("watersheds_districts", "public");
-                });
-
-            modelBuilder.Entity("WBIS_2.DataModel.ApplicationUser", b =>
-                {
-                    b.HasOne("WBIS_2.DataModel.ApplicationGroup", "ApplicationGroup")
-                        .WithMany("ApplicationUsers")
-                        .HasForeignKey("ApplicationGroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ApplicationGroup");
-                });
-
-            modelBuilder.Entity("WBIS_2.DataModel.Hex160RequiredPass", b =>
-                {
-                    b.HasOne("WBIS_2.DataModel.BirdSpecies", "BirdSpecies")
-                        .WithMany("PassSpecies")
-                        .HasForeignKey("BirdSpeciesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WBIS_2.DataModel.Hex160", "Hex160")
-                        .WithMany("Hex160RequiredPasses")
-                        .HasForeignKey("Hex160Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WBIS_2.DataModel.ApplicationUser", "User")
-                        .WithMany("Hex160RequiredPasses")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("BirdSpecies");
-
-                    b.Navigation("Hex160");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("WBIS_2.DataModel.OtherWildlife", b =>
-                {
-                    b.HasOne("WBIS_2.DataModel.SiteCalling", "SiteCalling")
-                        .WithMany("OtherWildlifeRecords")
-                        .HasForeignKey("SiteCallingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WBIS_2.DataModel.ApplicationUser", "User")
-                        .WithMany("OtherWildlifeRecords")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WBIS_2.DataModel.WildlifeSpecies", "WildlifeSpecies")
-                        .WithMany("OtherWildlifeRecords")
-                        .HasForeignKey("WildlifeSpeciesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("SiteCalling");
-
-                    b.Navigation("User");
-
-                    b.Navigation("WildlifeSpecies");
-                });
-
-            modelBuilder.Entity("WBIS_2.DataModel.SiteCalling", b =>
-                {
-                    b.HasOne("WBIS_2.DataModel.Hex160", "Hex160")
-                        .WithMany("SiteCallings")
-                        .HasForeignKey("Hex160Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WBIS_2.DataModel.BirdSpecies", "SpeciesFound")
-                        .WithMany("SpeciesFound")
-                        .HasForeignKey("SpeciesFoundId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WBIS_2.DataModel.BirdSpecies", "SurveySpecies")
-                        .WithMany("SurveySpecies")
-                        .HasForeignKey("SurveySpeciesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WBIS_2.DataModel.ApplicationUser", "User")
-                        .WithMany("SiteCallings")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Hex160");
-
-                    b.Navigation("SpeciesFound");
-
-                    b.Navigation("SurveySpecies");
-
-                    b.Navigation("User");
+                    b.ToTable("wildlife_species", (string)null);
                 });
 
             modelBuilder.Entity("cdfw_spotted_owls_districts", b =>
@@ -1274,6 +1493,21 @@ namespace WBIS_2.DataModel.Migrations
                     b.HasOne("WBIS_2.DataModel.Hex160", null)
                         .WithMany()
                         .HasForeignKey("hex160_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("hex160s_protection_zones", b =>
+                {
+                    b.HasOne("WBIS_2.DataModel.ProtectionZone", null)
+                        .WithMany()
+                        .HasForeignKey("hex160_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WBIS_2.DataModel.Hex160", null)
+                        .WithMany()
+                        .HasForeignKey("protection_zone_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -1338,6 +1572,159 @@ namespace WBIS_2.DataModel.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("WBIS_2.DataModel.ApplicationUser", b =>
+                {
+                    b.HasOne("WBIS_2.DataModel.ApplicationGroup", "ApplicationGroup")
+                        .WithMany("ApplicationUsers")
+                        .HasForeignKey("ApplicationGroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationGroup");
+                });
+
+            modelBuilder.Entity("WBIS_2.DataModel.Hex160", b =>
+                {
+                    b.HasOne("WBIS_2.DataModel.ProtectionZone", "CurrentProtectionZone")
+                        .WithMany("CurrentHex160s")
+                        .HasForeignKey("CurrentProtectionZoneID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CurrentProtectionZone");
+                });
+
+            modelBuilder.Entity("WBIS_2.DataModel.Hex160RequiredPass", b =>
+                {
+                    b.HasOne("WBIS_2.DataModel.BirdSpecies", "BirdSpecies")
+                        .WithMany("PassSpecies")
+                        .HasForeignKey("BirdSpeciesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WBIS_2.DataModel.Hex160", "Hex160")
+                        .WithMany("Hex160RequiredPasses")
+                        .HasForeignKey("Hex160Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WBIS_2.DataModel.ApplicationUser", "User")
+                        .WithMany("Hex160RequiredPasses")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("BirdSpecies");
+
+                    b.Navigation("Hex160");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("WBIS_2.DataModel.OtherWildlife", b =>
+                {
+                    b.HasOne("WBIS_2.DataModel.SiteCalling", "SiteCalling")
+                        .WithMany("OtherWildlifeRecords")
+                        .HasForeignKey("SiteCallingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WBIS_2.DataModel.ApplicationUser", "User")
+                        .WithMany("OtherWildlifeRecords")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WBIS_2.DataModel.WildlifeSpecies", "WildlifeSpecies")
+                        .WithMany("OtherWildlifeRecords")
+                        .HasForeignKey("WildlifeSpeciesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("SiteCalling");
+
+                    b.Navigation("User");
+
+                    b.Navigation("WildlifeSpecies");
+                });
+
+            modelBuilder.Entity("WBIS_2.DataModel.PermanentCallStation", b =>
+                {
+                    b.HasOne("WBIS_2.DataModel.Hex160", "Hex160")
+                        .WithMany()
+                        .HasForeignKey("Hex160Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WBIS_2.DataModel.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Hex160");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("WBIS_2.DataModel.ProtectionZone", b =>
+                {
+                    b.HasOne("WBIS_2.DataModel.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("WBIS_2.DataModel.SiteCalling", b =>
+                {
+                    b.HasOne("WBIS_2.DataModel.Hex160", "Hex160")
+                        .WithMany("SiteCallings")
+                        .HasForeignKey("Hex160Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WBIS_2.DataModel.PermanentCallStation", null)
+                        .WithMany("SiteCallings")
+                        .HasForeignKey("PermanentCallStationGuid");
+
+                    b.HasOne("WBIS_2.DataModel.ProtectionZone", "ProtectionZone")
+                        .WithMany("SiteCallings")
+                        .HasForeignKey("ProtectionZoneID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WBIS_2.DataModel.BirdSpecies", "SpeciesFound")
+                        .WithMany("SpeciesFound")
+                        .HasForeignKey("SpeciesFoundId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WBIS_2.DataModel.BirdSpecies", "SurveySpecies")
+                        .WithMany("SurveySpecies")
+                        .HasForeignKey("SurveySpeciesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WBIS_2.DataModel.ApplicationUser", "User")
+                        .WithMany("SiteCallings")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Hex160");
+
+                    b.Navigation("ProtectionZone");
+
+                    b.Navigation("SpeciesFound");
+
+                    b.Navigation("SurveySpecies");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("WBIS_2.DataModel.ApplicationGroup", b =>
                 {
                     b.Navigation("ApplicationUsers");
@@ -1364,6 +1751,18 @@ namespace WBIS_2.DataModel.Migrations
             modelBuilder.Entity("WBIS_2.DataModel.Hex160", b =>
                 {
                     b.Navigation("Hex160RequiredPasses");
+
+                    b.Navigation("SiteCallings");
+                });
+
+            modelBuilder.Entity("WBIS_2.DataModel.PermanentCallStation", b =>
+                {
+                    b.Navigation("SiteCallings");
+                });
+
+            modelBuilder.Entity("WBIS_2.DataModel.ProtectionZone", b =>
+                {
+                    b.Navigation("CurrentHex160s");
 
                     b.Navigation("SiteCallings");
                 });

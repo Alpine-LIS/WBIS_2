@@ -167,7 +167,7 @@ namespace WBIS_2.Modules.ViewModels
                     .Include(_ => _.Hex160).ThenInclude(_ => _.Quad75s)
                     .Include(_ => _.Hex160).ThenInclude(_ => _.Watersheds)
                     .Include(_ => _.SurveySpecies)
-                    .Include(_ => _.SpeciesFound)
+                    .Include(_ => _.SiteCallingDetection).ThenInclude(_=>_.SpeciesFound)
                     .Include(_ => _.User)
                     .Where(((SiteCalling)CurrentChild).GetParentWhere(ParentQuery, ParentType.GetType()))
                     .AsNoTracking();

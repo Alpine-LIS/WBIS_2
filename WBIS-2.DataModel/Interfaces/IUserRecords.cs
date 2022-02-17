@@ -10,6 +10,7 @@ namespace WBIS_2.DataModel
         /// <summary>
         /// The user who created the record
         /// </summary>
+        public Guid UserId { get; set; }
         public ApplicationUser User { get; set; }
         public DateTime DateAdded { get; set; }
         public DateTime DateModified { get; set; }
