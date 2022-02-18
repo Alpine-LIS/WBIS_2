@@ -23,37 +23,45 @@ namespace WBIS_2.DataModel
         public ApplicationUser User { get; set; } = CurrentUser.User;
 
 
-        [Column("starting_location"), DataType("geometry(Point,26710)")]
+        [Required, Column("starting_location"), DataType("geometry(Point,26710)")]
         public Point StartingLocation { get; set; }
-        [Column("starting_lat")]
+        [Required, Column("starting_lat")]
         public double StartingLat { get; set; }
-        [Column("starting_lon")]
+        [Required, Column("starting_lon")]
         public double StartingLon { get; set; }
-        [Column("start_time")]
+        [Required, Column("start_time")]
         public DateTime StartTime { get; set; }
-        [Column("end_time")]
+        [Required, Column("end_time")]
         public DateTime EndTime { get; set; }
-        [Column("sunset_time")]
+        [Required, Column("sunset_time")]
         public DateTime SunsetTime { get; set; }
 
-        [Column("detection_type")]
-        public string DetectionType { get; set; }
-        [Column("survey_type1")]
+       
+        [Required, Column("survey_type1")]
         public string SurveyType1 { get; set; }
-        [Column("survey_type2")]
+        [Required, Column("survey_type2")]
         public string SurveyType2 { get; set; }
         [Required, Column("bird_species_survey_id")]
         public Guid SurveySpeciesId { get; set; }
         public BirdSpecies SurveySpecies { get; set; }
-        [Column("site_type")]
-        public string SiteType { get; set; }
+       
+       //site type is survey type1
         [Column("site_id")]
         public string SiteID { get; set; }
+        
         [Column("pass_number")]
         public int PassNumber { get; set; }
+
+        [Column("pz_pass_number")]
+        public int PZPassNumber { get; set; }
+
+        //Initially gotten by the hex pz. Can be edited. Must be retained when pz changes. 
         [Column("preotection_zone_id")]
         public Guid ProtectionZoneID { get; set; }
         public ProtectionZone ProtectionZone { get; set; }
+
+
+
         [Column("yearly_activity_center")]
         public bool YearlyActivityCenter { get; set; }
         [Column("wind")]
@@ -77,7 +85,7 @@ namespace WBIS_2.DataModel
         public SiteCallingDetection SiteCallingDetection { get; set; }
 
 
-        [Column("occupancy_status")]
+        [Required, Column("occupancy_status")]
         public string OccupancyStatus { get; set; }
         [Column("nesting_status")]
         public string NestingStatus { get; set; }

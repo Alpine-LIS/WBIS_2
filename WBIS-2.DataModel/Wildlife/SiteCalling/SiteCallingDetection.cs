@@ -19,40 +19,39 @@ namespace WBIS_2.DataModel
         public SiteCalling SiteCalling { get; set; }
 
 
-
-        [Column("detection_time")]
+        [Required, Column("detection_time")]
         public DateTime DetectionTime { get; set; }
 
         
         [Required, Column("bird_species_found_id")]
         public Guid SpeciesFoundId { get; set; }
         public BirdSpecies SpeciesFound { get; set; }
-        [Column("detection_method")]
+        [Required, Column("detection_method")]
         public string DetectionMethod { get; set; }
 
-        [Column("detection_location"), DataType("geometry(Point,26710)")]
+        [Required, Column("detection_location"), DataType("geometry(Point,26710)")]
         public Point DetectionLocation { get; set; }
-        [Column("detection_lat")]
+        [Required, Column("detection_lat")]
         public double DetectionLat { get; set; }
-        [Column("detection_lon")]
+        [Required, Column("detection_lon")]
         public double DetectionLon { get; set; }
-        [Column("user_location"), DataType("geometry(Point,26710)")]
+        [Required, Column("user_location"), DataType("geometry(Point,26710)")]
         public Point UserLocation { get; set; }
-        [Column("user_lat")]
+        [Required, Column("user_lat")]
         public double UserLat { get; set; }
-        [Column("user_lon")]
+        [Required, Column("user_lon")]
         public double UserLon { get; set; }
 
 
-        [Column("distance")]
+        [Required, Column("distance")]
         public double Distance { get; set; }
-        [Column("bearing")]
+        [Required, Column("bearing")]
         public double Bearing { get; set; }
-        [Column("estimated_location")]
-        public bool EstimatedLocation { get; set; }
-        [Column("sex")]
+        [Required, Column("estimated_location")]
+        public bool EstimatedLocation { get; set; } = false;
+        [Required, Column("sex")]
         public string Sex { get; set; }
-        [Column("age")]
+        [Required, Column("age")]
         public string Age { get; set; }
         [Column("number_of_young")]
         public int NumberOfYoung { get; set; }
