@@ -29,18 +29,17 @@ namespace WBIS_2.DataModel
         [Required, Column("detection_method")]
         public string DetectionMethod { get; set; }
 
-        [Required, Column("detection_location"), DataType("geometry(Point,26710)")]
-        public Point DetectionLocation { get; set; }
+        [Required, Column("geometry"), DataType("geometry(Point,26710)")]
+        public Point Geometry { get; set; }
         [Required, Column("detection_lat")]
         public double DetectionLat { get; set; }
         [Required, Column("detection_lon")]
         public double DetectionLon { get; set; }
-        [Required, Column("user_location"), DataType("geometry(Point,26710)")]
-        public Point UserLocation { get; set; }
-        [Required, Column("user_lat")]
-        public double UserLat { get; set; }
-        [Required, Column("user_lon")]
-        public double UserLon { get; set; }
+
+
+        [Column("user_location_id")]
+        public Guid UserLocationId { get; set; }
+        public UserLocation UserLocation { get; set; }
 
 
         [Required, Column("distance")]

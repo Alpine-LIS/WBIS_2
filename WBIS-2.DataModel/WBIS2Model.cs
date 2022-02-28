@@ -32,6 +32,7 @@ namespace WBIS_2.DataModel
             modelBuilder.HasPostgresExtension("postgis");
 
             modelBuilder.Entity<District>().ToTable("districts");
+            modelBuilder.Entity<DistrictExtendedGeometry>().ToTable("district_extended_geometry");
             modelBuilder.Entity<Quad75>().ToTable("quad75s");
             modelBuilder.Entity<Watershed>().ToTable("watersheds");
             modelBuilder.Entity<CDFW_SpottedOwl>().ToTable("cdfw_spotted_owls");
@@ -49,8 +50,9 @@ namespace WBIS_2.DataModel
             modelBuilder.Entity<PermanentCallStation>().ToTable("permanent_call_stations");
             modelBuilder.Entity<DeletedGeometry>().ToTable("deleted_geometries");
             modelBuilder.Entity<SiteCallingDetection>().ToTable("site_calling_detections");
-            modelBuilder.Entity<SiteCallingDeviceInfo>().ToTable("site_calling_device_infos");
+            modelBuilder.Entity<DeviceInfo>().ToTable("device_infos");
             modelBuilder.Entity<SiteCallingTrack>().ToTable("site_calling_tracks");
+            modelBuilder.Entity<UserLocation>().ToTable("user_locations");
 
 
 
@@ -80,6 +82,13 @@ namespace WBIS_2.DataModel
                         x => x.HasOne<District>().WithMany().HasForeignKey("district_id"),
                         x => x.ToTable("watersheds_districts", "public"));
             modelBuilder.Entity<District>()
+                .HasMany(_ => _.Quad75s)
+                .WithMany(p => p.Districts)
+                .UsingEntity<Dictionary<string, object>>("quad75s_districts",
+                        x => x.HasOne<Quad75>().WithMany().HasForeignKey("quad75_id"),
+                        x => x.HasOne<District>().WithMany().HasForeignKey("district_id"),
+                        x => x.ToTable("quad75s_districts", "public"));
+            modelBuilder.Entity<District>()
                 .HasMany(_ => _.CNDDBOccurrences)
                 .WithMany(p => p.Districts)
                 .UsingEntity<Dictionary<string, object>>("cnddb_occurrences_districts",
@@ -93,6 +102,13 @@ namespace WBIS_2.DataModel
                         x => x.HasOne<CDFW_SpottedOwl>().WithMany().HasForeignKey("cdfw_spotted_owl_id"),
                         x => x.HasOne<District>().WithMany().HasForeignKey("district_id"),
                         x => x.ToTable("cdfw_spotted_owls_districts", "public"));
+            modelBuilder.Entity<District>()
+                .HasMany(_ => _.CDFW_SpottedOwlDiagrams)
+                .WithMany(p => p.Districts)
+                .UsingEntity<Dictionary<string, object>>("cdfw_spotted_owl_diagrams_districts",
+                        x => x.HasOne<CDFW_SpottedOwlDiagram>().WithMany().HasForeignKey("cdfw_spotted_owl_diagram_id"),
+                        x => x.HasOne<District>().WithMany().HasForeignKey("district_id"),
+                        x => x.ToTable("cdfw_spotted_owl_diagrams_districts", "public"));
 
 
 
@@ -142,6 +158,8 @@ namespace WBIS_2.DataModel
                         x => x.HasOne<Watershed>().WithMany().HasForeignKey("watershed_id"),
                         x => x.ToTable("hex160s_watersheds", "public"));
 
+
+
             modelBuilder.Entity<Hex160>()
                 .HasMany(_=>_.ProtectionZones)
                 .WithMany(p=>p.Hex160s)
@@ -149,9 +167,24 @@ namespace WBIS_2.DataModel
                         x => x.HasOne<ProtectionZone>().WithMany().HasForeignKey("hex160_id"),
                         x => x.HasOne<Hex160>().WithMany().HasForeignKey("protection_zone_id"),
                         x => x.ToTable("hex160s_protection_zones", "public"));
+            modelBuilder.Entity<Hex160>()
+                .HasMany(_ => _.CDFW_SpottedOwls)
+                .WithMany(p => p.Hex160s)
+                .UsingEntity<Dictionary<string, object>>("cdfw_spotted_owls_hex160s",
+                        x => x.HasOne<CDFW_SpottedOwl>().WithMany().HasForeignKey("cdfw_spotted_owl_id"),
+                        x => x.HasOne<Hex160>().WithMany().HasForeignKey("hex160_id"),
+                        x => x.ToTable("cdfw_spotted_owls_hex160s", "public"));
+            modelBuilder.Entity<Hex160>()
+                .HasMany(_ => _.CNDDBOccurrences)
+                .WithMany(p => p.Hex160s)
+                .UsingEntity<Dictionary<string, object>>("cnddb_occurrences_hex160s",
+                        x => x.HasOne<CNDDBOccurrence>().WithMany().HasForeignKey("cnddb_occurrence_id"),
+                        x => x.HasOne<Hex160>().WithMany().HasForeignKey("hex160_id"),
+                        x => x.ToTable("cnddb_occurrences_hex160s", "public"));
 
         }
         public DbSet<District> Districts { get; set; }
+        public DbSet<DistrictExtendedGeometry> DistrictExtendedGeometries { get; set; }
         public DbSet<Quad75> Quad75s { get; set; }
         public DbSet<Watershed> Watersheds { get; set; }
         public DbSet<CDFW_SpottedOwl> CDFW_SpottedOwls { get; set; }
@@ -170,7 +203,8 @@ namespace WBIS_2.DataModel
         public DbSet<DeletedGeometry> DeletedGeometries { get; set; }
         public DbSet<SiteCallingDetection> siteCallingDetections { get; set; }
         public DbSet<SiteCallingTrack> siteCallingTracks { get; set; }
-        public DbSet<SiteCallingDeviceInfo> siteCallingDeviceInfos { get; set; }
+        public DbSet<DeviceInfo> DeviceInfos { get; set; }
+        public DbSet<UserLocation> GetUserLocations { get; set; }
 
         //public DbSet<Quad75> Quad75s { get; set; }
         //public DbSet<Watershed> Watersheds { get; set; }

@@ -106,6 +106,7 @@ namespace WBIS_2.DataModel
         public ICollection<District> Districts { get; set; }
         public ICollection<Watershed> Watersheds { get; set; }
         public ICollection<Quad75> Quad75s { get; set; }
+        public ICollection<Hex160> Hex160s { get; set; }
 
 
         [NotMapped, Display(Order = -1)]

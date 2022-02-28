@@ -31,10 +31,11 @@ namespace WBIS_2.DataModel
        public Guid ApplicationGroupId { get; set; }
         public ApplicationGroup ApplicationGroup { get; set; }
 
-        public ICollection<OtherWildlife> OtherWildlifeRecords { get; set; }
         public ICollection<Hex160RequiredPass> Hex160RequiredPasses { get; set; }
         public ICollection<SiteCalling> SiteCallings { get; set; }
         public ICollection<District> Districts { get; set; }
+        public ICollection<ProtectionZone> ProtectionZones { get; set; }
+        public ICollection<PermanentCallStation> PermanentCallStations { get; set; }
 
         [NotMapped, Display(Order = -1)]
         public string DisplayName { get { return "Application User"; } }

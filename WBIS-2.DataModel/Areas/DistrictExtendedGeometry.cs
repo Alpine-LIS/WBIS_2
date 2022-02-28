@@ -3,24 +3,24 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class SiteCallingTrack 
+    public class DistrictExtendedGeometry
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
 
-        [Required, Column("site_calling_id")]
-        public Guid SiteCallingId { get; set; }
-        public SiteCalling SiteCalling { get; set; }
 
-        [Column("geometry"), DataType("geometry(LineString,26710)")]
-        public LineString Geometry { get; set; }
+        [Required, Column("district_id")]
+        public Guid DistrictID { get; set; }
+        public District District { get; set; }
 
 
+        [Column("geometry"), DataType("geometry(MultiPolygon,26710)")]
+        public MultiPolygon Geometry { get; set; }
     }
 }

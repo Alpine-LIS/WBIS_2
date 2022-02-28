@@ -37,6 +37,7 @@ namespace WBIS_2.DataModel
         public Guid CurrentProtectionZoneID { get; set; }
         public ProtectionZone CurrentProtectionZone { get; set; }
         public ICollection<ProtectionZone> ProtectionZones { get; set; }
+        public ICollection<PermanentCallStation> PermanentCallStations { get; set; }
 
         public ICollection<Hex160RequiredPass> Hex160RequiredPasses { get; set; }
         public ICollection<SiteCalling> SiteCallings { get; set; }
@@ -46,7 +47,9 @@ namespace WBIS_2.DataModel
         public ICollection<Watershed> Watersheds { get; set; }
         public ICollection<Quad75> Quad75s { get; set; }
 
-       
+        public ICollection<CNDDBOccurrence> CNDDBOccurrences { get; set; }
+        public ICollection<CDFW_SpottedOwl> CDFW_SpottedOwls { get; set; }
+
 
         [NotMapped, Display(Order = -1)]
         public string DisplayName { get { return "Hex160"; } }

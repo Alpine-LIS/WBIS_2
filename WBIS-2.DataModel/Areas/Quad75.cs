@@ -48,6 +48,7 @@ namespace WBIS_2.DataModel
 
 
         public ICollection<Hex160> Hex160s { get; set; }
+        public ICollection<District> Districts { get; set; }
         public ICollection<CNDDBOccurrence> CNDDBOccurrences { get; set; }
         public ICollection<CDFW_SpottedOwl> CDFW_SpottedOwls { get; set; }
 

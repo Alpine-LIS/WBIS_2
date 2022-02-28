@@ -15,7 +15,7 @@ namespace WBIS_2.DataModel
         [InverseProperty("SurveySpecies")]
         public ICollection<SiteCalling> SurveySpecies { get; set; }
         [InverseProperty("SpeciesFound")]
-        public ICollection<SiteCalling> SpeciesFound { get; set; }
+        public ICollection<SiteCallingDetection> SpeciesFound { get; set; }
         public ICollection<Hex160RequiredPass> PassSpecies { get; set; }
 
         [NotMapped, Display(Order = -1)]

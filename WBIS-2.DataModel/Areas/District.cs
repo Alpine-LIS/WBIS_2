@@ -23,11 +23,17 @@ namespace WBIS_2.DataModel
         [Column("geometry"), DataType("geometry(MultiPolygon,26710)")]
         public MultiPolygon Geometry { get; set; }
 
+        [Column("district_extended_geometry_id")]
+        public Guid DistrictExtendedGeometryID { get; set; }
+        public DistrictExtendedGeometry DistrictExtendedGeometry { get; set; }
+
 
         public ICollection<Hex160> Hex160s { get; set; }
+        public ICollection<Quad75> Quad75s { get; set; }
         public ICollection<Watershed> Watersheds { get; set; }
         public ICollection<CNDDBOccurrence> CNDDBOccurrences { get; set; }
         public ICollection<CDFW_SpottedOwl> CDFW_SpottedOwls { get; set; }
+        public ICollection<CDFW_SpottedOwlDiagram> CDFW_SpottedOwlDiagrams { get; set; }
         public ICollection<ApplicationUser> ApplicationUsers { get; set; }
 
       
@@ -40,7 +46,7 @@ namespace WBIS_2.DataModel
         public IInformationType[] AvailibleChildren
         {
             get
-            { return new IInformationType[] { new Watershed(), new Hex160(), new SiteCalling(), new CNDDBOccurrence(), new CDFW_SpottedOwl() }; }
+            { return new IInformationType[] { new Watershed(), new Quad75(), new Hex160(), new SiteCalling(), new CNDDBOccurrence(), new CDFW_SpottedOwl() }; }
         }
         public Expression<Func<District, bool>> GetParentWhere(object[] Query, Type QueryType)
         {

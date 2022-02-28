@@ -32,7 +32,6 @@ namespace WBIS_2.DataModel
         public Guid Hex160Id { get; set; }
         public Hex160 Hex160 { get; set; }
 
-        public ICollection<SiteCalling> SiteCallings { get; set; }
 
         [NotMapped, Display(Order = -1)]
         public string DisplayName { get { return "Permanent Call Stations"; } }

@@ -35,6 +35,8 @@ namespace WBIS_2.DataModel
         [Required, Column("bird_species_id")]
         public Guid BirdSpeciesId { get; set; }
         public BirdSpecies BirdSpecies { get; set; }
+
+
         [NotMapped, Display(Order = -1)]
         public string DisplayName { get { return "Hex160 Required Passes"; } }
 

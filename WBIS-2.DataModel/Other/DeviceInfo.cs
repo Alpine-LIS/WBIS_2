@@ -9,7 +9,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class SiteCallingDeviceInfo
+    public class DeviceInfo
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
@@ -22,8 +22,8 @@ namespace WBIS_2.DataModel
         [Column("device_time")]
         public DateTime DeviceTime { get; set; }
         
-        [Column("device_location"), DataType("geometry(Point,26710)")]
-        public Point DeviceLocation { get; set; }
+        [Column("geometry"), DataType("geometry(Point,26710)")]
+        public Point Geometry { get; set; }
         [Column("device_lat")]
         public double DeviceLat { get; set; }
         [Column("device_lon")]

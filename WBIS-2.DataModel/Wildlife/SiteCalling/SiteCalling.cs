@@ -23,8 +23,8 @@ namespace WBIS_2.DataModel
         public ApplicationUser User { get; set; } = CurrentUser.User;
 
 
-        [Required, Column("starting_location"), DataType("geometry(Point,26710)")]
-        public Point StartingLocation { get; set; }
+        [Required, Column("geometry"), DataType("geometry(Point,26710)")]
+        public Point Geometry { get; set; }
         [Required, Column("starting_lat")]
         public double StartingLat { get; set; }
         [Required, Column("starting_lon")]
@@ -118,9 +118,9 @@ namespace WBIS_2.DataModel
         [Column("site_calling_track_id")]
         public Guid SiteCallingTrackID { get; set; }
         public SiteCallingTrack SiteCallingTrack { get; set; }
-        [Column("site_calling_device_info_id")]
-        public Guid SiteCallingDeviceInfoID { get; set; }
-        public SiteCallingDeviceInfo SiteCallingDeviceInfo { get; set; }
+        [Column("device_info_id")]
+        public Guid DeviceInfoID { get; set; }
+        public DeviceInfo DeviceInfo { get; set; }
 
 
 
