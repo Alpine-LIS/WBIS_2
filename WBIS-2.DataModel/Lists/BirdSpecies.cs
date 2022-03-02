@@ -26,6 +26,7 @@ namespace WBIS_2.DataModel
         public ICollection<SiteCallingRepositoryDetection> SpeciesFoundRepository { get; set; }
 
 
+        public ICollection<OwlBanding> OwlBandings { get; set; }
         public ICollection<Hex160RequiredPass> PassSpecies { get; set; }
 
         [NotMapped, Display(Order = -1)]

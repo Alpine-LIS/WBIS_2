@@ -14,13 +14,18 @@ namespace WBIS_2.DataModel
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
 
-        [Required, Column("site_calling_id"),ForeignKey("SiteCalling")]
+        [Column("site_calling_id"),ForeignKey("SiteCalling")]
         public Guid SiteCallingId { get; set; }
         public SiteCalling SiteCalling { get; set; }
 
-        [Required, Column("site_calling_repository_id"), ForeignKey("SiteCallingRepository")]
+        [Column("site_calling_repository_id"), ForeignKey("SiteCallingRepository")]
         public Guid SiteCallingRepositoryId { get; set; }
         public SiteCallingRepository SiteCallingRepository { get; set; }
+
+
+        [Column("owl_banding_id"), ForeignKey("OwlBanding")]
+        public Guid OwlBandingId { get; set; }
+        public OwlBanding OwlBanding { get; set; }
 
 
         [Column("device_time")]

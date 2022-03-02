@@ -33,6 +33,7 @@ namespace WBIS_2.DataModel
 
         public ICollection<SiteCalling> SiteCallings { get; set; }
         public ICollection<SiteCallingRepository> SiteCallingRepositories { get; set; }
+        public ICollection<OwlBanding> OwlBandings { get; set; }
         public ICollection<Hex160> Hex160s { get; set; }
         [InverseProperty("CurrentProtectionZone")]
         public ICollection<Hex160> CurrentHex160s { get; set; }

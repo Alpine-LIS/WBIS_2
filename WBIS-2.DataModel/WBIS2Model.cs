@@ -45,6 +45,7 @@ namespace WBIS_2.DataModel
             modelBuilder.Entity<Hex160>().ToTable("hex160s");
             modelBuilder.Entity<Hex160RequiredPass>().ToTable("hex160_required_passes");
             modelBuilder.Entity<OtherWildlife>().ToTable("other_wildlife_records");
+            modelBuilder.Entity<OwlBanding>().ToTable("owl_bandings");
             modelBuilder.Entity<SiteCalling>().ToTable("site_callings");
             modelBuilder.Entity<SiteCallingRepository>().ToTable("site_calling_repositories");
             modelBuilder.Entity<ProtectionZone>().ToTable("protection_zones");
@@ -200,6 +201,7 @@ namespace WBIS_2.DataModel
         public DbSet<Hex160> Hex160s { get; set; }
         public DbSet<Hex160RequiredPass> Hex160RequiredPasses { get; set; }
         public DbSet<OtherWildlife> OtherWildlifeRecords { get; set; }
+        public DbSet<OwlBanding> OwlBandings { get; set; }
         public DbSet<SiteCalling> SiteCallings { get; set; }
         public DbSet<SiteCallingRepository> SiteCallingRepositories { get; set; }
         public DbSet<PermanentCallStation> PermanentCallStations { get; set; }
@@ -211,18 +213,5 @@ namespace WBIS_2.DataModel
         public DbSet<SiteCallingRepositoryTrack> siteCallingRepositoryTracks { get; set; }
         public DbSet<DeviceInfo> DeviceInfos { get; set; }
         public DbSet<UserLocation> GetUserLocations { get; set; }
-
-        //public DbSet<Quad75> Quad75s { get; set; }
-        //public DbSet<Watershed> Watersheds { get; set; }
-        //public DbSet<CDFW_SpottedOwl> CDFW_SpottedOwls { get; set; }
-        //public DbSet<CDFW_SpottedOwlDiagram> CDFW_SpottedOwlDiagrams { get; set; }
-        //public DbSet<CNDDBOccurrence> CNDDBOccurrences { get; set; }
-        //public DbSet<BirdSpecies> BirdSpecies { get; set; }
-        //public DbSet<WildlifeSpecies> WildlifeSpecies { get; set; }
-        //public DbSet<ApplicationGroup> ApplicationGroups { get; set; }
-        //public DbSet<ApplicationUser> ApplicationUsers { get; set; }
-        //public DbSet<Hex160> Hex160s { get; set; }
-        //public DbSet<Hex160RequredPass> Hex160RequredPasses { get; set; }
-        //public DbSet<SiteCalling> SiteCallings { get; set; }
     }
 }
