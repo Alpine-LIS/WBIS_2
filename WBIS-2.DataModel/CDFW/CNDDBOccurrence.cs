@@ -100,7 +100,7 @@ namespace WBIS_2.DataModel
         public string SymbologyText { get; set; }
 
        
-        [Column("geometry"),DataType("geometry(MultiPolygon,26710)")]
+        [Column("geometry", TypeName = "geometry(MultiPolygon,26710)")]
         public MultiPolygon Geometry { get; set; }
 
         public ICollection<District> Districts { get; set; }

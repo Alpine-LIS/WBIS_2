@@ -19,17 +19,25 @@ namespace WBIS_2.DataModel
         public DateTime DateModified { get; set; }
         public bool _delete { get; set; }
        
-        [Required, Column("user_id")]
+        [Column("user_id")]
         public Guid UserId { get; set; }
         public ApplicationUser User { get; set; } = CurrentUser.User;
+
+
+
 
         [Required, Column("wildlife_species_id")]
         public Guid WildlifeSpeciesId { get; set; }
         public WildlifeSpecies WildlifeSpecies { get; set; }
         
-        [Required, Column("site_calling_id"), ]
+        [Column("site_calling_id"), ]
         public Guid SiteCallingId { get; set; }
         public SiteCalling SiteCalling { get; set; }
+
+        [Column("site_calling_repository_id"),]
+        public Guid SiteCallingRepositoryId { get; set; }
+        public SiteCallingRepository SiteCallingRepository { get; set; }
+
         [NotMapped, Display(Order = -1)]
         public string DisplayName { get { return "Other Wildlife"; } }
 

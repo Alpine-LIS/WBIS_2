@@ -9,9 +9,9 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class SiteCallingDetection
+    public class SiteCallingDetection:ISiteCallingDetection
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid"), ForeignKey("SiteCalling")]
         public Guid Guid { get; set; }
 
         [Required, Column("site_calling_id")]
@@ -29,12 +29,14 @@ namespace WBIS_2.DataModel
         [Required, Column("detection_method")]
         public string DetectionMethod { get; set; }
 
-        [Required, Column("geometry"), DataType("geometry(Point,26710)")]
+        [Required, Column("geometry", TypeName = "geometry(Point,26710)")]
         public Point Geometry { get; set; }
         [Required, Column("detection_lat")]
         public double DetectionLat { get; set; }
         [Required, Column("detection_lon")]
         public double DetectionLon { get; set; }
+        [Column("datum")]
+        public string Datum { get; set; }
 
 
         [Column("user_location_id")]

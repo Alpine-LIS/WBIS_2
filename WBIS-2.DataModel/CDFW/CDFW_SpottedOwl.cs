@@ -61,7 +61,7 @@ namespace WBIS_2.DataModel
 
 
        
-        [Column("geometry"), DataType("geometry(Point,26710)")]
+        [Column("geometry", TypeName = "geometry(Point,26710)")]
         public Point Geometry { get; set; }
 
         public ICollection<District> Districts { get; set; }

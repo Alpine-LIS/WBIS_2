@@ -18,17 +18,21 @@ namespace WBIS_2.DataModel
         [Column("date_modified")]
         public DateTime DateModified { get; set; }
         public bool _delete { get; set; }
-        [Required, Column("user_id")]
+        [Column("user_id")]
         public Guid UserId { get; set; }
         public ApplicationUser User { get; set; } = CurrentUser.User;
 
-        [Column("geometry"), DataType("geometry(MultiPolygon,26710)")]
+
+
+
+        [Column("geometry", TypeName = "geometry(MultiPolygon,26710)")]
         public MultiPolygon Geometry { get; set; }
 
         [Column("pz_id")]
         public string PZ_ID { get; set; }
 
         public ICollection<SiteCalling> SiteCallings { get; set; }
+        public ICollection<SiteCallingRepository> SiteCallingRepositories { get; set; }
         public ICollection<Hex160> Hex160s { get; set; }
         [InverseProperty("CurrentProtectionZone")]
         public ICollection<Hex160> CurrentHex160s { get; set; }

@@ -18,11 +18,14 @@ namespace WBIS_2.DataModel
         [Column("date_modified")]
         public DateTime DateModified { get; set; }
         public bool _delete { get; set; }
-        [Required, Column("user_id")]
+        [Column("user_id")]
         public Guid UserId { get; set; }
         public ApplicationUser User { get; set; } = CurrentUser.User;
 
-        [Column("geometry"), DataType("geometry(Point,26710)")]
+
+
+
+        [Column("geometry", TypeName = "geometry(Point,26710)")]
         public Point Geometry { get; set; }
 
         [Column("pcs_id")]

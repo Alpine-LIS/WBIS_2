@@ -9,7 +9,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class SiteCalling : UserDataValidator, IUserRecords, IQueryStuff<SiteCalling>
+    public class SiteCalling : ISiteCalling
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
@@ -18,17 +18,22 @@ namespace WBIS_2.DataModel
         public Guid Hex160Id { get; set; }
         public Hex160 Hex160 { get; set; }
 
-        [Required, Column("user_id")]
+        [Column("user_id")]
         public Guid UserId { get; set; }
         public ApplicationUser User { get; set; } = CurrentUser.User;
 
 
-        [Required, Column("geometry"), DataType("geometry(Point,26710)")]
+
+
+
+        [Required, Column("geometry", TypeName = "geometry(Point,26710)")]
         public Point Geometry { get; set; }
         [Required, Column("starting_lat")]
         public double StartingLat { get; set; }
         [Required, Column("starting_lon")]
         public double StartingLon { get; set; }
+        [Column("datum")]
+        public string Datum { get; set; }
         [Required, Column("start_time")]
         public DateTime StartTime { get; set; }
         [Required, Column("end_time")]
@@ -149,9 +154,9 @@ namespace WBIS_2.DataModel
             get
             { return new IInformationType[0]; }
         }
-        public Expression<Func<SiteCalling, bool>> GetParentWhere(object[] Query, Type QueryType)
+        public Expression<Func<ISiteCalling, bool>> GetParentWhere(object[] Query, Type QueryType)
         {
-            Expression<Func<SiteCalling, bool>> a;
+            Expression<Func<ISiteCalling, bool>> a;
             if (QueryType == typeof(District))
                 a = _ => _.Hex160.Districts.Any(d => Query.Cast<District>().Contains(d));
             else if (QueryType == typeof(Watershed))

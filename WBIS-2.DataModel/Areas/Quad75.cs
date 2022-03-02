@@ -43,7 +43,7 @@ namespace WBIS_2.DataModel
 
 
 
-        [Column("geometry"), DataType("geometry(Polygon,26710)")]
+        [Column("geometry", TypeName = "geometry(Polygon,26710)")]
         public Polygon Geometry { get; set; }
 
 
@@ -62,7 +62,7 @@ namespace WBIS_2.DataModel
         public IInformationType[] AvailibleChildren
         {
             get
-            { return new IInformationType[] { new Hex160(), new SiteCalling(), new CNDDBOccurrence(), new CDFW_SpottedOwl() }; }
+            { return new IInformationType[] { new Hex160(), new SiteCalling(), new SiteCallingRepository(), new CNDDBOccurrence(), new CDFW_SpottedOwl() }; }
         }
         public Expression<Func<Quad75, bool>> GetParentWhere(object[] Query, Type QueryType)
         {

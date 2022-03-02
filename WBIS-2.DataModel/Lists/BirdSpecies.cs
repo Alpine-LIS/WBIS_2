@@ -12,10 +12,20 @@ namespace WBIS_2.DataModel
         public Guid Guid { get; set; }
         [Column("species")]
         public string Species { get; set; }
+        
+        
         [InverseProperty("SurveySpecies")]
         public ICollection<SiteCalling> SurveySpecies { get; set; }
         [InverseProperty("SpeciesFound")]
         public ICollection<SiteCallingDetection> SpeciesFound { get; set; }
+
+
+        [InverseProperty("SurveySpecies")]
+        public ICollection<SiteCallingRepository> SurveySpeciesRepository { get; set; }
+        [InverseProperty("SpeciesFound")]
+        public ICollection<SiteCallingRepositoryDetection> SpeciesFoundRepository { get; set; }
+
+
         public ICollection<Hex160RequiredPass> PassSpecies { get; set; }
 
         [NotMapped, Display(Order = -1)]

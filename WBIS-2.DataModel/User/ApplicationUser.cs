@@ -13,13 +13,17 @@ namespace WBIS_2.DataModel
         [Required,Column("user_name")]
         public string UserName { get; set; }
        
-        [Column("email_default")]
+        [Column("email")]
         public string EmailDefault { get; set; }
         [Column("hint")]
         public string Hint { get; set; }
-        public DateTime? deleted_ { get; set; }
-        public DateTime? created_ { get; set; }
-        public DateTime? modified_ { get; set; }
+
+        [Column("date_added")]
+        public DateTime DateAdded { get; set; }
+        [Column("date_modified")]
+        public DateTime DateModified { get; set; }
+        public bool _delete { get; set; }
+
         [Display(Order = -1), Column("password_sha")]
         public string PasswordSHA { get; set; }
         [Column("password_time_stamp")]
@@ -31,8 +35,14 @@ namespace WBIS_2.DataModel
        public Guid ApplicationGroupId { get; set; }
         public ApplicationGroup ApplicationGroup { get; set; }
 
+        [Column("modified_user_id")]
+        public Guid AdminId { get; set; }
+        public ApplicationUser Admin { get; set; }
+
+        public ICollection<ApplicationUser> Contractors { get; set; }
         public ICollection<Hex160RequiredPass> Hex160RequiredPasses { get; set; }
         public ICollection<SiteCalling> SiteCallings { get; set; }
+        public ICollection<SiteCallingRepository> SiteCallingRepositories { get; set; }
         public ICollection<District> Districts { get; set; }
         public ICollection<ProtectionZone> ProtectionZones { get; set; }
         public ICollection<PermanentCallStation> PermanentCallStations { get; set; }

@@ -46,12 +46,15 @@ namespace WBIS_2.DataModel
             modelBuilder.Entity<Hex160RequiredPass>().ToTable("hex160_required_passes");
             modelBuilder.Entity<OtherWildlife>().ToTable("other_wildlife_records");
             modelBuilder.Entity<SiteCalling>().ToTable("site_callings");
+            modelBuilder.Entity<SiteCallingRepository>().ToTable("site_calling_repositories");
             modelBuilder.Entity<ProtectionZone>().ToTable("protection_zones");
             modelBuilder.Entity<PermanentCallStation>().ToTable("permanent_call_stations");
             modelBuilder.Entity<DeletedGeometry>().ToTable("deleted_geometries");
             modelBuilder.Entity<SiteCallingDetection>().ToTable("site_calling_detections");
+            modelBuilder.Entity<SiteCallingRepositoryDetection>().ToTable("site_calling_repository_detections");
             modelBuilder.Entity<DeviceInfo>().ToTable("device_infos");
             modelBuilder.Entity<SiteCallingTrack>().ToTable("site_calling_tracks");
+            modelBuilder.Entity<SiteCallingRepositoryTrack>().ToTable("site_calling_repository_tracks");
             modelBuilder.Entity<UserLocation>().ToTable("user_locations");
 
 
@@ -198,11 +201,14 @@ namespace WBIS_2.DataModel
         public DbSet<Hex160RequiredPass> Hex160RequiredPasses { get; set; }
         public DbSet<OtherWildlife> OtherWildlifeRecords { get; set; }
         public DbSet<SiteCalling> SiteCallings { get; set; }
+        public DbSet<SiteCallingRepository> SiteCallingRepositories { get; set; }
         public DbSet<PermanentCallStation> PermanentCallStations { get; set; }
         public DbSet<ProtectionZone> ProtectionZones { get; set; }
         public DbSet<DeletedGeometry> DeletedGeometries { get; set; }
         public DbSet<SiteCallingDetection> siteCallingDetections { get; set; }
+        public DbSet<SiteCallingRepositoryDetection> siteCallingRepositoryDetections { get; set; }
         public DbSet<SiteCallingTrack> siteCallingTracks { get; set; }
+        public DbSet<SiteCallingRepositoryTrack> siteCallingRepositoryTracks { get; set; }
         public DbSet<DeviceInfo> DeviceInfos { get; set; }
         public DbSet<UserLocation> GetUserLocations { get; set; }
 

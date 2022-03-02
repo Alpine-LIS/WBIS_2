@@ -30,7 +30,7 @@ namespace WBIS_2.DataModel
 
 
 
-        [Column("geometry"), DataType("geometry(Polygon,26710)")]
+        [Column("geometry", TypeName = "geometry(Polygon,26710)")]
         public Polygon Geometry { get; set; }
 
         [Column("current_preotection_zone_id")]
@@ -41,6 +41,7 @@ namespace WBIS_2.DataModel
 
         public ICollection<Hex160RequiredPass> Hex160RequiredPasses { get; set; }
         public ICollection<SiteCalling> SiteCallings { get; set; }
+        public ICollection<SiteCallingRepository> SiteCallingRepositories { get; set; }
 
 
         public ICollection<District> Districts { get; set; }
@@ -58,7 +59,7 @@ namespace WBIS_2.DataModel
         public IInformationType[] AvailibleChildren
         {
             get
-            { return new IInformationType[] { new SiteCalling(), new Hex160RequiredPass(), }; }
+            { return new IInformationType[] { new SiteCalling(), new SiteCallingRepository(), new Hex160RequiredPass(), }; }
         }
         public Expression<Func<Hex160, bool>> GetParentWhere(object[] Query, Type QueryType)
         {

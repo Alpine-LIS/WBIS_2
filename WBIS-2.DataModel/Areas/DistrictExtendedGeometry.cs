@@ -11,7 +11,7 @@ namespace WBIS_2.DataModel
 {
     public class DistrictExtendedGeometry
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid"),ForeignKey("District")]
         public Guid Guid { get; set; }
 
 
@@ -20,7 +20,7 @@ namespace WBIS_2.DataModel
         public District District { get; set; }
 
 
-        [Column("geometry"), DataType("geometry(MultiPolygon,26710)")]
+        [Column("geometry", TypeName = "geometry(MultiPolygon,26710)")]
         public MultiPolygon Geometry { get; set; }
     }
 }

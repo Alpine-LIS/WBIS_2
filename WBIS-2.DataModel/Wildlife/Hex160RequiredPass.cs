@@ -26,9 +26,11 @@ namespace WBIS_2.DataModel
         [Display(Order =-1)]
         public bool _delete { get; set; }
 
-        [Required, Column("user_id")]
+        [Column("user_id")]
         public Guid UserId { get; set; }
         public ApplicationUser User { get; set; } = CurrentUser.User;
+
+
         [Required, Column("hex160_id")]
         public Guid Hex160Id { get; set; }
         public Hex160 Hex160 { get; set; }

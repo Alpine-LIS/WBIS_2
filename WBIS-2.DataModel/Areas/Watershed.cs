@@ -84,7 +84,7 @@ namespace WBIS_2.DataModel
         public double Perimeter { get; set; }
              
 
-        [Column("geometry"), DataType("geometry(MultiPolygon,26710)")]
+        [Column("geometry", TypeName ="geometry(MultiPolygon,26710)")]
         public MultiPolygon Geometry { get; set; }
 
 
@@ -102,7 +102,7 @@ namespace WBIS_2.DataModel
         public IInformationType[] AvailibleChildren
         {
             get
-            { return new IInformationType[] { new Hex160(), new SiteCalling(), new CNDDBOccurrence(), new CDFW_SpottedOwl() }; }
+            { return new IInformationType[] { new Hex160(), new SiteCalling(), new SiteCallingRepository(), new CNDDBOccurrence(), new CDFW_SpottedOwl() }; }
         }
         public Expression<Func<Watershed, bool>> GetParentWhere(object[] Query, Type QueryType)
         {
