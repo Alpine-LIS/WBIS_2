@@ -140,17 +140,17 @@ namespace WBIS_2.Modules.ViewModels
                 {
                     district = new District() { DistrictName = feat.DataRow["Name"].ToString(), ManagementArea = GetManagmentArea(feat.DataRow["Name"].ToString()) };
 
-                    if (feat.Geometry is NetTopologySuite.Geometries.Polygon) district.Geometry = new MultiPolygon(new Polygon[] { (Polygon)feat.Geometry });
-                    else district.Geometry = (MultiPolygon)feat.Geometry;
-                    if (district.Geometry.SRID == 0) district.Geometry.SRID = 26710;
+                    //if (feat.Geometry is NetTopologySuite.Geometries.Polygon) district.Geometry = new MultiPolygon(new Polygon[] { (Polygon)feat.Geometry });
+                    //else district.Geometry = (MultiPolygon)feat.Geometry;
+                    //if (district.Geometry.SRID == 0) district.Geometry.SRID = 26710;
 
                     Database.Districts.Add(district);
                 }
                 else
                 {
-                    if (feat.Geometry is NetTopologySuite.Geometries.Polygon) district.Geometry = new MultiPolygon(new Polygon[] { (Polygon)feat.Geometry });
-                    else district.Geometry = (MultiPolygon)feat.Geometry;
-                    if (district.Geometry.SRID == 0) district.Geometry.SRID = 26710;
+                    //if (feat.Geometry is NetTopologySuite.Geometries.Polygon) district.Geometry = new MultiPolygon(new Polygon[] { (Polygon)feat.Geometry });
+                    //else district.Geometry = (MultiPolygon)feat.Geometry;
+                    //if (district.Geometry.SRID == 0) district.Geometry.SRID = 26710;
 
                     Database.Districts.Update(district);
                 }
@@ -201,7 +201,7 @@ namespace WBIS_2.Modules.ViewModels
             var CNDDBOccurrences = Database.CNDDBOccurrences
                     .Include(_ => _.Districts).ToList();
             var CDFW_SpottedOwls = Database.CDFW_SpottedOwls
-                    .Include(_ => _.Districts).ToList();
+                    .Include(_ => _.District).ToList();
 
             foreach (var district in districts)
             {
@@ -210,14 +210,14 @@ namespace WBIS_2.Modules.ViewModels
                 district.CNDDBOccurrences = new List<CNDDBOccurrence>();
                 district.CDFW_SpottedOwls = new List<CDFW_SpottedOwl>();
 
-                district.Watersheds = Watersheds
-                    .Where(_ => _.Geometry.IsWithinDistance(district.Geometry, 1)).ToList();
-                //district.Hex160s = Hex160s
+                //district.Watersheds = Watersheds
                 //    .Where(_ => _.Geometry.IsWithinDistance(district.Geometry, 1)).ToList();
-                district.CNDDBOccurrences = CNDDBOccurrences
-                    .Where(_ => _.Geometry.IsWithinDistance(district.Geometry, 1)).ToList();
-                district.CDFW_SpottedOwls = CDFW_SpottedOwls
-                    .Where(_ => _.Geometry.IsWithinDistance(district.Geometry, 1)).ToList();
+                ////district.Hex160s = Hex160s
+                ////    .Where(_ => _.Geometry.IsWithinDistance(district.Geometry, 1)).ToList();
+                //district.CNDDBOccurrences = CNDDBOccurrences
+                //    .Where(_ => _.Geometry.IsWithinDistance(district.Geometry, 1)).ToList();
+                //district.CDFW_SpottedOwls = CDFW_SpottedOwls
+                //    .Where(_ => _.Geometry.IsWithinDistance(district.Geometry, 1)).ToList();
 
                 Database.Districts.Update(district);
             }

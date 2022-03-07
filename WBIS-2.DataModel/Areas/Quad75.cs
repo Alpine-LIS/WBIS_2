@@ -47,12 +47,19 @@ namespace WBIS_2.DataModel
         public Polygon Geometry { get; set; }
 
 
-        public ICollection<Hex160> Hex160s { get; set; }
         public ICollection<District> Districts { get; set; }
+        public ICollection<Hex160> Hex160s { get; set; }
+        public ICollection<Watershed> Watersheds { get; set; }
         public ICollection<CNDDBOccurrence> CNDDBOccurrences { get; set; }
         public ICollection<CDFW_SpottedOwl> CDFW_SpottedOwls { get; set; }
 
-        
+        public ICollection<SiteCalling> SiteCallings { get; set; }
+        public ICollection<SiteCallingRepository> SiteCallingRepositories { get; set; }
+        public ICollection<OwlBanding> OwlBandings { get; set; }
+        public ICollection<SPIPlantPolygon> SPIPlantPolygons { get; set; }
+        public ICollection<SPIPlantPoint> SPIPlantPoints { get; set; }
+        public ICollection<AmphibianSurvey> AmphibianSurveys { get; set; }
+        public ICollection<AmphibianElement> AmphibianElements { get; set; }
 
 
         [NotMapped, Display(Order = -1)]

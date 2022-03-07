@@ -64,6 +64,16 @@ namespace WBIS_2.DataModel
             modelBuilder.Entity<AmphibianLocationFound>().ToTable("amphibian_locations_found");
             modelBuilder.Entity<AmphibianPointOfInterest>().ToTable("amphibian_points_of_interest");
 
+            modelBuilder.Entity<SPIPlantPolygon>().ToTable("spi_plant_polygons");
+            modelBuilder.Entity<SPIPlantPoint>().ToTable("spi_plant_points");
+            modelBuilder.Entity<FloweringTimeline>().ToTable("flowering_timelines");
+            modelBuilder.Entity<PlantProtectionSummary>().ToTable("plant_protection_summaries");
+            modelBuilder.Entity<PlantSpecies>().ToTable("plant_species");
+            modelBuilder.Entity<Region>().ToTable("regions");
+            modelBuilder.Entity<RegionalPlantList>().ToTable("regional_plant_lists");
+
+
+
 
 
 
@@ -107,13 +117,6 @@ namespace WBIS_2.DataModel
                         x => x.HasOne<District>().WithMany().HasForeignKey("district_id"),
                         x => x.ToTable("cnddb_occurrences_districts", "public"));
             modelBuilder.Entity<District>()
-                .HasMany(_ => _.CDFW_SpottedOwls)
-                .WithMany(p => p.Districts)
-                .UsingEntity<Dictionary<string, object>>("cdfw_spotted_owls_districts",
-                        x => x.HasOne<CDFW_SpottedOwl>().WithMany().HasForeignKey("cdfw_spotted_owl_id"),
-                        x => x.HasOne<District>().WithMany().HasForeignKey("district_id"),
-                        x => x.ToTable("cdfw_spotted_owls_districts", "public"));
-            modelBuilder.Entity<District>()
                 .HasMany(_ => _.CDFW_SpottedOwlDiagrams)
                 .WithMany(p => p.Districts)
                 .UsingEntity<Dictionary<string, object>>("cdfw_spotted_owl_diagrams_districts",
@@ -123,13 +126,21 @@ namespace WBIS_2.DataModel
 
 
 
+
             modelBuilder.Entity<Quad75>()
-                .HasMany(_ => _.CDFW_SpottedOwls)
+                .HasMany(_ => _.Hex160s)
                 .WithMany(p => p.Quad75s)
-                .UsingEntity<Dictionary<string, object>>("cdfw_spotted_owls_quad75s",
-                        x => x.HasOne<CDFW_SpottedOwl>().WithMany().HasForeignKey("cdfw_spotted_owl_id"),
+                .UsingEntity<Dictionary<string, object>>("hex160s_quad75s",
+                        x => x.HasOne<Hex160>().WithMany().HasForeignKey("hex160_id"),
                         x => x.HasOne<Quad75>().WithMany().HasForeignKey("quad75_id"),
-                        x => x.ToTable("cdfw_spotted_owls_quad75s", "public"));
+                        x => x.ToTable("hex160s_quad75s", "public"));
+            modelBuilder.Entity<Quad75>()
+                .HasMany(_ => _.Watersheds)
+                .WithMany(p => p.Quad75s)
+                .UsingEntity<Dictionary<string, object>>("hex160s_quad75s",
+                        x => x.HasOne<Watershed>().WithMany().HasForeignKey("watershed_id"),
+                        x => x.HasOne<Quad75>().WithMany().HasForeignKey("quad75_id"),
+                        x => x.ToTable("watersheds_quad75s", "public"));
             modelBuilder.Entity<Quad75>()
                 .HasMany(_ => _.CNDDBOccurrences)
                 .WithMany(p => p.Quad75s)
@@ -138,22 +149,23 @@ namespace WBIS_2.DataModel
                         x => x.HasOne<Quad75>().WithMany().HasForeignKey("quad75_id"),
                         x => x.ToTable("cnddb_occurrences_quad75s", "public"));
             modelBuilder.Entity<Quad75>()
-                .HasMany(_ => _.Hex160s)
+                .HasMany(_ => _.SPIPlantPolygons)
                 .WithMany(p => p.Quad75s)
-                .UsingEntity<Dictionary<string, object>>("hex160s_quad75s",
-                        x => x.HasOne<Hex160>().WithMany().HasForeignKey("hex160_id"),
+                .UsingEntity<Dictionary<string, object>>("spi_plant_polygons_quad75s",
+                        x => x.HasOne<SPIPlantPolygon>().WithMany().HasForeignKey("spi_plant_polygon_id"),
                         x => x.HasOne<Quad75>().WithMany().HasForeignKey("quad75_id"),
-                        x => x.ToTable("hex160s_quad75s", "public"));
+                        x => x.ToTable("spi_plant_polygons_quad75s", "public"));
+            modelBuilder.Entity<Quad75>()
+                .HasMany(_ => _.AmphibianSurveys)
+                .WithMany(p => p.Quad75s)
+                .UsingEntity<Dictionary<string, object>>("amphibian_surveys_quad75s",
+                        x => x.HasOne<AmphibianSurvey>().WithMany().HasForeignKey("amphibian_survey_id"),
+                        x => x.HasOne<Quad75>().WithMany().HasForeignKey("quad75_id"),
+                        x => x.ToTable("amphibian_surveys_quad75s", "public"));
 
 
 
-            modelBuilder.Entity<Watershed>()
-                .HasMany(_ => _.CDFW_SpottedOwls)
-                .WithMany(p => p.Watersheds)
-                .UsingEntity<Dictionary<string, object>>("cdfw_spotted_owls_watersheds",
-                        x => x.HasOne<CDFW_SpottedOwl>().WithMany().HasForeignKey("cdfw_spotted_owl_id"),
-                        x => x.HasOne<Watershed>().WithMany().HasForeignKey("watershed_id"),
-                        x => x.ToTable("cdfw_spotted_owls_watersheds", "public"));
+
             modelBuilder.Entity<Watershed>()
                 .HasMany(_ => _.CNDDBOccurrences)
                 .WithMany(p => p.Watersheds)
@@ -168,6 +180,20 @@ namespace WBIS_2.DataModel
                         x => x.HasOne<Hex160>().WithMany().HasForeignKey("hex160_id"),
                         x => x.HasOne<Watershed>().WithMany().HasForeignKey("watershed_id"),
                         x => x.ToTable("hex160s_watersheds", "public"));
+            modelBuilder.Entity<Watershed>()
+               .HasMany(_ => _.SPIPlantPolygons)
+               .WithMany(p => p.Watersheds)
+               .UsingEntity<Dictionary<string, object>>("spi_plant_polygons_watersheds",
+                       x => x.HasOne<SPIPlantPolygon>().WithMany().HasForeignKey("spi_plant_polygon_id"),
+                       x => x.HasOne<Watershed>().WithMany().HasForeignKey("watershed_id"),
+                       x => x.ToTable("spi_plant_polygons_watersheds", "public"));
+            modelBuilder.Entity<Watershed>()
+                .HasMany(_ => _.AmphibianSurveys)
+                .WithMany(p => p.Watersheds)
+                .UsingEntity<Dictionary<string, object>>("amphibian_surveys_watersheds",
+                        x => x.HasOne<AmphibianSurvey>().WithMany().HasForeignKey("amphibian_survey_id"),
+                        x => x.HasOne<Watershed>().WithMany().HasForeignKey("watershed_id"),
+                        x => x.ToTable("amphibian_surveys_watersheds", "public"));
 
 
 
@@ -178,13 +204,6 @@ namespace WBIS_2.DataModel
                         x => x.HasOne<ProtectionZone>().WithMany().HasForeignKey("hex160_id"),
                         x => x.HasOne<Hex160>().WithMany().HasForeignKey("protection_zone_id"),
                         x => x.ToTable("hex160s_protection_zones", "public"));
-            modelBuilder.Entity<Hex160>()
-                .HasMany(_ => _.CDFW_SpottedOwls)
-                .WithMany(p => p.Hex160s)
-                .UsingEntity<Dictionary<string, object>>("cdfw_spotted_owls_hex160s",
-                        x => x.HasOne<CDFW_SpottedOwl>().WithMany().HasForeignKey("cdfw_spotted_owl_id"),
-                        x => x.HasOne<Hex160>().WithMany().HasForeignKey("hex160_id"),
-                        x => x.ToTable("cdfw_spotted_owls_hex160s", "public"));
             modelBuilder.Entity<Hex160>()
                 .HasMany(_ => _.CNDDBOccurrences)
                 .WithMany(p => p.Hex160s)
@@ -199,6 +218,13 @@ namespace WBIS_2.DataModel
                         x => x.HasOne<AmphibianSurvey>().WithMany().HasForeignKey("amphibian_survey_id"),
                         x => x.HasOne<Hex160>().WithMany().HasForeignKey("hex160_id"),
                         x => x.ToTable("amphibian_surveys_hex160s", "public"));
+            modelBuilder.Entity<Hex160>()
+                .HasMany(_ => _.SPIPlantPolygons)
+                .WithMany(p => p.Hex160s)
+                .UsingEntity<Dictionary<string, object>>("spi_plant_polygons_hex160s",
+                        x => x.HasOne<SPIPlantPolygon>().WithMany().HasForeignKey("spi_plant_polygon_id"),
+                        x => x.HasOne<Hex160>().WithMany().HasForeignKey("hex160_id"),
+                        x => x.ToTable("spi_plant_polygons_hex160s", "public"));
 
         }
         public DbSet<District> Districts { get; set; }
@@ -232,6 +258,13 @@ namespace WBIS_2.DataModel
         public DbSet<AmphibianElement> AmphibianElements { get; set; }
         public DbSet<AmphibianLocationFound> AmphibianLocationsFound { get; set; }
         public DbSet<AmphibianPointOfInterest> AmphibianPointsOfInterest { get; set; }
+        public DbSet<SPIPlantPolygon> SPIPlantPolygons { get; set; }
+        public DbSet<SPIPlantPoint> SPIPlantPoints { get; set; }
+        public DbSet<FloweringTimeline> FloweringTimelines { get; set; }
+        public DbSet<PlantProtectionSummary> PlantProtectionSummaries { get; set; }
+        public DbSet<PlantSpecies> PlantSpecies { get; set; }
+        public DbSet<Region> Regions { get; set; }
+        public DbSet<RegionalPlantList> RegionalPlantLists { get; set; }
 
     }
 }

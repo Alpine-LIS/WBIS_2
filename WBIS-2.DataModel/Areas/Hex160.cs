@@ -45,6 +45,8 @@ namespace WBIS_2.DataModel
         public ICollection<OwlBanding> OwlBandings { get; set; }
         public ICollection<AmphibianSurvey> AmphibianSurveys { get; set; }
         public ICollection<AmphibianElement> AmphibianElements { get; set; }
+        public ICollection<SPIPlantPolygon> SPIPlantPolygons { get; set; }
+        public ICollection<SPIPlantPoint> SPIPlantPoints { get; set; }
 
 
         public ICollection<District> Districts { get; set; }

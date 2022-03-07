@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Botany\" />
     <Folder Include="Support\" />
   </ItemGroup>
 

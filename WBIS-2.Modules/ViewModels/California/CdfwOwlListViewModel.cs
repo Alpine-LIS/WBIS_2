@@ -120,7 +120,7 @@ namespace WBIS_2.Modules.ViewModels
             var b = Database.CNDDBOccurrences.Include(_ => _.Districts).Where(_ => _.Districts.Count == 0).ToArray();
 
             //var c = Database.CDFW_SpottedOwls.Include(_ => _.Districts).Where(_ => _.Districts == null).ToArray();
-            var d = Database.CDFW_SpottedOwls.Include(_ => _.Districts).Where(_ => _.Districts.Count == 0).ToArray();
+            var d = Database.CDFW_SpottedOwls.Include(_ => _.District).Where(_ => _.District != null).ToArray();
 
 
 
@@ -238,9 +238,9 @@ namespace WBIS_2.Modules.ViewModels
         private void UpdateConnections()
         {
             var owls = Database.CDFW_SpottedOwls
-                .Include(_ => _.Watersheds)
-                .Include(_ => _.Districts)
-                .Include(_ => _.Quad75s);
+                .Include(_ => _.Watershed)
+                .Include(_ => _.District)
+                .Include(_ => _.Quad75);
 
             var Watersheds = Database.Watersheds
                     .Include(_ => _.CDFW_SpottedOwls).ToList();
@@ -251,16 +251,16 @@ namespace WBIS_2.Modules.ViewModels
 
             foreach (var owl in owls)
             {
-                owl.Watersheds = new List<Watershed>();
-                owl.Districts = new List<District>();
-                owl.Quad75s = new List<Quad75>();
+                //owl.Watersheds = new List<Watershed>();
+                //owl.Districts = new List<District>();
+                //owl.Quad75s = new List<Quad75>();
 
-                owl.Watersheds = Watersheds
-                    .Where(_ => _.Geometry.IsWithinDistance(owl.Geometry, 1)).ToList();
-                owl.Districts = Districts
-                    .Where(_ => _.Geometry.IsWithinDistance(owl.Geometry, 1)).ToList();
-                owl.Quad75s = Quad75s
-                    .Where(_ => _.Geometry.IsWithinDistance(owl.Geometry, 1)).ToList();
+                //owl.Watersheds = Watersheds
+                //    .Where(_ => _.Geometry.IsWithinDistance(owl.Geometry, 1)).ToList();
+                //owl.Districts = Districts
+                //    .Where(_ => _.Geometry.IsWithinDistance(owl.Geometry, 1)).ToList();
+                //owl.Quad75s = Quad75s
+                //    .Where(_ => _.Geometry.IsWithinDistance(owl.Geometry, 1)).ToList();
 
                 Database.CDFW_SpottedOwls.Update(owl);
             }
@@ -286,14 +286,14 @@ namespace WBIS_2.Modules.ViewModels
 
                 if (point != null)
                 {
-                    if (!districts.Any(_ => _.Geometry.Contains(point)))
-                    {
-                        removeFeatures.Add(i);
-                    }
-                    else
-                    {
-                        if (Owl.Length > 3) { TouchingOwl.Add(Owl); }
-                    }
+                    //if (!districts.Any(_ => _.Geometry.Contains(point)))
+                    //{
+                    //    removeFeatures.Add(i);
+                    //}
+                    //else
+                    //{
+                    //    if (Owl.Length > 3) { TouchingOwl.Add(Owl); }
+                    //}
                 }
                 else { removeFeatures.Add(i); }
             }

@@ -189,7 +189,7 @@ namespace WBIS_2.Modules.ViewModels
             var CNDDBOccurrences = Database.CNDDBOccurrences
                 .Include(_ => _.Quad75s).ToList();
             var CDFW_SpottedOwls = Database.CDFW_SpottedOwls
-                .Include(_ => _.Quad75s).ToList();
+                .Include(_ => _.Quad75).ToList();
 
             foreach (var quad in quads)
             {

@@ -9,13 +9,12 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class AmphibianSurvey : UserDataValidator, IUserRecords, IQueryStuff<Hex160RequiredPass>
+    public class AmphibianSurvey : UserDataValidator, IUserRecords, IQueryStuff<AmphibianSurvey>, INonPointParents
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
 
-      public ICollection<Hex160> Hex160s { get; set; }
-
+    
 
         public ICollection<AmphibianElement> AmphibianElements { get; set; }
 
@@ -106,8 +105,19 @@ namespace WBIS_2.DataModel
 
 
 
+        [Column("district_id")]
+        public Guid DistrictId { get; set; }
+        public District District { get; set; }
+        public ICollection<Watershed> Watersheds { get; set; }
+        public ICollection<Quad75> Quad75s { get; set; }
+        public ICollection<Hex160> Hex160s { get; set; }
+
+
+
+
+
         [NotMapped, Display(Order = -1)]
-        public string DisplayName { get { return "Owl Banding"; } }
+        public string DisplayName { get { return "Amphibian Survay"; } }
 
         [NotMapped]
         public IInformationType[] AvailibleChildren
@@ -115,17 +125,17 @@ namespace WBIS_2.DataModel
             get
             { return new IInformationType[0]; }
         }
-        public Expression<Func<Hex160RequiredPass, bool>> GetParentWhere(object[] Query, Type QueryType)
+        public Expression<Func<AmphibianSurvey, bool>> GetParentWhere(object[] Query, Type QueryType)
         {
-            Expression<Func<Hex160RequiredPass, bool>> a;
+            Expression<Func<AmphibianSurvey, bool>> a;
             if (QueryType == typeof(District))
-                a = _ => _.Hex160.Districts.Any(d => Query.Cast<District>().Contains(d));
+                a = _ => Query.Cast<District>().Contains(_.District);
             else if (QueryType == typeof(Watershed))
-                a = _ => _.Hex160.Watersheds.Any(d => Query.Cast<Watershed>().Contains(d));
+                a = _ => _.Watersheds.Any(d => Query.Cast<Watershed>().Contains(d));
             else if (QueryType == typeof(Quad75))
-                a = _ => _.Hex160.Quad75s.Any(d => Query.Cast<Quad75>().Contains(d));
+                a = _ => _.Quad75s.Any(d => Query.Cast<Quad75>().Contains(d));
             else if (QueryType == typeof(Hex160))
-                a = _ => Query.Cast<Hex160>().Contains(_.Hex160);
+                a = _ => _.Hex160s.Any(d => Query.Cast<Hex160>().Contains(d));
             else
                 a = _ => Query.Contains(_);
             return a;

@@ -9,7 +9,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class CDFW_SpottedOwl : IInformationType, IQueryStuff<CDFW_SpottedOwl>
+    public class CDFW_SpottedOwl : IInformationType, IQueryStuff<CDFW_SpottedOwl>, IPointParents
     {
         [Key, Column("guid")]
         public Guid Guid { get; set; }
@@ -64,10 +64,19 @@ namespace WBIS_2.DataModel
         [Column("geometry", TypeName = "geometry(Point,26710)")]
         public Point Geometry { get; set; }
 
-        public ICollection<District> Districts { get; set; }
-        public ICollection<Watershed> Watersheds { get; set; }
-        public ICollection<Quad75> Quad75s { get; set; }
-        public ICollection<Hex160> Hex160s { get; set; }
+
+        [Column("district_id")]
+        public Guid DistrictId { get; set; }
+        public District District { get; set; }
+        [Column("watershed_id")]
+        public Guid WatershedId { get; set; }
+        public Watershed Watershed { get; set; }
+        [Column("quad75_id")]
+        public Guid Quad75Id { get; set; }
+        public Quad75 Quad75 { get; set; }
+        [Column("hex160_id")]
+        public Guid Hex160Id { get; set; }
+        public Hex160 Hex160 { get; set; }
 
 
         [NotMapped, Display(Order = -1)]
@@ -83,11 +92,13 @@ namespace WBIS_2.DataModel
         {
             Expression<Func<CDFW_SpottedOwl, bool>> a;
             if (QueryType == typeof(District))
-                a = _ => _.Districts.Any(d => Query.Cast<District>().Contains(d));
+                a = _ => Query.Cast<District>().Contains(_.District);
             else if (QueryType == typeof(Watershed))
-                a = _ => _.Watersheds.Any(d => Query.Cast<Watershed>().Contains(d));
+                a = _ => Query.Cast<Watershed>().Contains(_.Watershed);
             else if (QueryType == typeof(Quad75))
-                a = _ => _.Quad75s.Any(d => Query.Cast<Quad75>().Contains(d));
+                a = _ => Query.Cast<Quad75>().Contains(_.Quad75);
+            else if (QueryType == typeof(Hex160))
+                a = _ => Query.Cast<Hex160>().Contains(_.Hex160);
             else
                 a = _ => Query.Contains(_);
             return a;

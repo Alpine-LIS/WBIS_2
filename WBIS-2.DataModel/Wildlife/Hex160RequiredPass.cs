@@ -39,6 +39,11 @@ namespace WBIS_2.DataModel
         public BirdSpecies BirdSpecies { get; set; }
 
 
+        //For thematics and such
+        [Column("geometry", TypeName = "geometry(Polygon,26710)")]
+        public Polygon Geometry { get; set; }
+
+
         [NotMapped, Display(Order = -1)]
         public string DisplayName { get { return "Hex160 Required Passes"; } }
 
@@ -51,15 +56,15 @@ namespace WBIS_2.DataModel
         public Expression<Func<Hex160RequiredPass, bool>> GetParentWhere(object[] Query, Type QueryType)
         {
             Expression<Func<Hex160RequiredPass, bool>> a;
-            if (QueryType == typeof(District))
-                a = _ => _.Hex160.Districts.Any(d => Query.Cast<District>().Contains(d));
-            else if (QueryType == typeof(Watershed))
-                a = _ => _.Hex160.Watersheds.Any(d => Query.Cast<Watershed>().Contains(d));
-            else if (QueryType == typeof(Quad75))
-                a = _ => _.Hex160.Quad75s.Any(d => Query.Cast<Quad75>().Contains(d));
-            else if (QueryType == typeof(Hex160))
-                a = _ => Query.Cast<Hex160>().Contains(_.Hex160);
-            else
+            //if (QueryType == typeof(District))
+            //    a = _ => _.Hex160.Districts.Any(d => Query.Cast<District>().Contains(d));
+            //else if (QueryType == typeof(Watershed))
+            //    a = _ => _.Hex160.Watersheds.Any(d => Query.Cast<Watershed>().Contains(d));
+            //else if (QueryType == typeof(Quad75))
+            //    a = _ => _.Hex160.Quad75s.Any(d => Query.Cast<Quad75>().Contains(d));
+            //else if (QueryType == typeof(Hex160))
+            //    a = _ => Query.Cast<Hex160>().Contains(_.Hex160);
+            //else
                 a = _ => Query.Contains(_);
             return a;
         }

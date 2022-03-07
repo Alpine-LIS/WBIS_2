@@ -260,7 +260,7 @@ namespace WBIS_2.Modules.ViewModels
             var CNDDBOccurrences = Database.CNDDBOccurrences
                 .Include(_ => _.Watersheds).ToList();
             var CDFW_SpottedOwls = Database.CDFW_SpottedOwls
-                .Include(_ => _.Watersheds).ToList();
+                .Include(_ => _.Watershed).ToList();
 
             foreach (var watershed in watersheds)
             {
@@ -269,8 +269,8 @@ namespace WBIS_2.Modules.ViewModels
                 watershed.CNDDBOccurrences = new List<CNDDBOccurrence>();
                 watershed.CDFW_SpottedOwls = new List<CDFW_SpottedOwl>();
 
-                watershed.Districts = Districts
-                    .Where(_ => _.Geometry.IsWithinDistance(watershed.Geometry, 1)).ToList();
+                //watershed.Districts = Districts
+                  //  .Where(_ => _.Geometry.IsWithinDistance(watershed.Geometry, 1)).ToList();
                 watershed.Hex160s = Hex160s
                     .Where(_ => _.Geometry.IsWithinDistance(watershed.Geometry, 1)).ToList();
                 watershed.CNDDBOccurrences = CNDDBOccurrences

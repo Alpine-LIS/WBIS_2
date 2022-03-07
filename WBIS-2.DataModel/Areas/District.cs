@@ -20,8 +20,8 @@ namespace WBIS_2.DataModel
 
 
 
-        [Column("geometry", TypeName = "geometry(MultiPolygon,26710)")]
-        public MultiPolygon Geometry { get; set; }
+        //[Column("geometry", TypeName = "geometry(MultiPolygon,26710)")]
+        //public MultiPolygon Geometry { get; set; }
 
         [Column("district_extended_geometry_id")]
         public Guid DistrictExtendedGeometryID { get; set; }
@@ -35,8 +35,12 @@ namespace WBIS_2.DataModel
         public ICollection<CDFW_SpottedOwl> CDFW_SpottedOwls { get; set; }
         public ICollection<CDFW_SpottedOwlDiagram> CDFW_SpottedOwlDiagrams { get; set; }
         public ICollection<ApplicationUser> ApplicationUsers { get; set; }
+        public ICollection<SiteCalling> SiteCallings { get; set; }
+        public ICollection<SiteCallingRepository> SiteCallingRepositories { get; set; }
+        public ICollection<SPIPlantPolygon> SPIPlantPolygons { get; set; }
+        public ICollection<AmphibianSurvey> AmphibianSurveys { get; set; }
+        public ICollection<AmphibianElement> AmphibianElements { get; set; }
 
-      
 
 
         [NotMapped, Display(Order = -1)]

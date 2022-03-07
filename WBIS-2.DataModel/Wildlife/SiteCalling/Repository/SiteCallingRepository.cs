@@ -14,9 +14,7 @@ namespace WBIS_2.DataModel
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
 
-        [Required, Column("hex160_id")]
-        public Guid Hex160Id { get; set; }
-        public Hex160 Hex160 { get; set; }
+
 
         [Column("user_id")]
         public Guid UserId { get; set; }
@@ -137,9 +135,23 @@ namespace WBIS_2.DataModel
         [Column("date_modified")]
         public DateTime DateModified { get; set; }
         public bool _delete { get; set; }
-       
-       
 
+
+
+
+
+        [Column("district_id")]
+        public Guid DistrictId { get; set; }
+        public District District { get; set; }
+        [Column("watershed_id")]
+        public Guid WatershedId { get; set; }
+        public Watershed Watershed { get; set; }
+        [Column("quad75_id")]
+        public Guid Quad75Id { get; set; }
+        public Quad75 Quad75 { get; set; }
+        [Column("hex160_id")]
+        public Guid Hex160Id { get; set; }
+        public Hex160 Hex160 { get; set; }
 
 
 

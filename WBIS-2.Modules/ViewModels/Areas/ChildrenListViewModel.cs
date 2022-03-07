@@ -195,9 +195,9 @@ namespace WBIS_2.Modules.ViewModels
             else if (CurrentChild.GetType() == typeof(CDFW_SpottedOwl))
             {
                 e.QueryableSource = Database.Set<CDFW_SpottedOwl>()
-                    .Include(_ => _.Districts)
-                    .Include(_ => _.Watersheds)
-                    .Include(_ => _.Quad75s)
+                    .Include(_ => _.District)
+                    .Include(_ => _.Watershed)
+                    .Include(_ => _.Quad75)
                     .Where(((CDFW_SpottedOwl)CurrentChild).GetParentWhere(ParentQuery, ParentType.GetType()))
                     .AsNoTracking();
             }

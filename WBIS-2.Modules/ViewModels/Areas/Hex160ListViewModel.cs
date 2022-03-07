@@ -178,8 +178,8 @@ namespace WBIS_2.Modules.ViewModels
 
                 hex.Watersheds = Watersheds
                     .Where(_ => _.Geometry.IsWithinDistance(hex.Geometry, 1)).ToList();
-                hex.Districts = Districts
-                    .Where(_ => _.Geometry.IsWithinDistance(hex.Geometry, 1)).ToList();
+                //hex.Districts = Districts
+                //    .Where(_ => _.Geometry.IsWithinDistance(hex.Geometry, 1)).ToList();
                 hex.Quad75s = Quad75s
                     .Where(_ => _.Geometry.IsWithinDistance(hex.Geometry, 1)).ToList();
 

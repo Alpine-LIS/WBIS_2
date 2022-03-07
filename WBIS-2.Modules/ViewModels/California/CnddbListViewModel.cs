@@ -329,8 +329,8 @@ namespace WBIS_2.Modules.ViewModels
 
                 cnddb.Watersheds = Watersheds
                     .Where(_ => _.Geometry.IsWithinDistance(cnddb.Geometry, 1)).ToList();
-                cnddb.Districts = Districts
-                    .Where(_ => _.Geometry.IsWithinDistance(cnddb.Geometry, 1)).ToList();
+                //cnddb.Districts = Districts
+                  //  .Where(_ => _.Geometry.IsWithinDistance(cnddb.Geometry, 1)).ToList();
                 cnddb.Quad75s = Quad75s
                     .Where(_ => _.Geometry.IsWithinDistance(cnddb.Geometry, 1)).ToList();
 
