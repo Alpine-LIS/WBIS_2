@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,10 @@ using WBIS_2.DataModel;
 namespace WBIS_2.DataModel.Migrations
 {
     [DbContext(typeof(WBIS2Model))]
-    partial class WBIS2ModelModelSnapshot : ModelSnapshot
+    [Migration("20220304195340_AddedAmphibianSurveys")]
+    partial class AddedAmphibianSurveys
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -23,21 +25,6 @@ namespace WBIS_2.DataModel.Migrations
 
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "postgis");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("amphibian_surveys_hex160s", b =>
-                {
-                    b.Property<Guid>("amphibian_survey_id")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("hex160_id")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("amphibian_survey_id", "hex160_id");
-
-                    b.HasIndex("hex160_id");
-
-                    b.ToTable("amphibian_surveys_hex160s", "public");
-                });
 
             modelBuilder.Entity("cdfw_spotted_owl_diagrams_districts", b =>
                 {
@@ -361,6 +348,9 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("amphibian_species_id");
 
+                    b.Property<Guid?>("AmphibianSurveyGuid")
+                        .HasColumnType("uuid");
+
                     b.Property<bool>("Aural")
                         .HasColumnType("boolean")
                         .HasColumnName("aural");
@@ -414,6 +404,8 @@ namespace WBIS_2.DataModel.Migrations
 
                     b.HasIndex("AmphibianSpeciesId");
 
+                    b.HasIndex("AmphibianSurveyGuid");
+
                     b.ToTable("amphibian_locations_found", (string)null);
                 });
 
@@ -427,6 +419,9 @@ namespace WBIS_2.DataModel.Migrations
                     b.Property<Guid>("AmphibianElementId")
                         .HasColumnType("uuid")
                         .HasColumnName("amphibian_element_id");
+
+                    b.Property<Guid?>("AmphibianSurveyGuid")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Datum")
                         .HasColumnType("text")
@@ -458,6 +453,8 @@ namespace WBIS_2.DataModel.Migrations
 
                     b.HasIndex("AmphibianElementId")
                         .IsUnique();
+
+                    b.HasIndex("AmphibianSurveyGuid");
 
                     b.HasIndex("OtherWildlifeId");
 
@@ -491,24 +488,24 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("guid");
 
-                    b.Property<double>("AirTemp")
-                        .HasColumnType("double precision")
+                    b.Property<string>("AirTemp")
+                        .HasColumnType("text")
                         .HasColumnName("air_temp");
 
-                    b.Property<double>("Bedrock")
-                        .HasColumnType("double precision")
+                    b.Property<string>("Bedrock")
+                        .HasColumnType("text")
                         .HasColumnName("bedrock");
 
-                    b.Property<double>("Boulders")
-                        .HasColumnType("double precision")
+                    b.Property<string>("Boulders")
+                        .HasColumnType("text")
                         .HasColumnName("boulders");
 
-                    b.Property<double>("CanopyClosure")
-                        .HasColumnType("double precision")
+                    b.Property<string>("CanopyClosure")
+                        .HasColumnType("text")
                         .HasColumnName("canopy_closure");
 
-                    b.Property<double>("Cobble")
-                        .HasColumnType("double precision")
+                    b.Property<string>("Cobble")
+                        .HasColumnType("text")
                         .HasColumnName("cobble");
 
                     b.Property<string>("County")
@@ -523,8 +520,8 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_modified");
 
-                    b.Property<DateTime>("DateTime")
-                        .HasColumnType("timestamp with time zone")
+                    b.Property<string>("DateTime")
+                        .HasColumnType("text")
                         .HasColumnName("date_time");
 
                     b.Property<Guid>("DeviceInfoID")
@@ -535,8 +532,8 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("text")
                         .HasColumnName("elevation");
 
-                    b.Property<double>("EstAvgStreamWidth")
-                        .HasColumnType("double precision")
+                    b.Property<string>("EstAvgStreamWidth")
+                        .HasColumnType("text")
                         .HasColumnName("est_avg_stream_width");
 
                     b.Property<string>("Flow")
@@ -548,9 +545,13 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("geometry(LineString,26710)")
                         .HasColumnName("geometry");
 
-                    b.Property<double>("Gravel")
-                        .HasColumnType("double precision")
+                    b.Property<string>("Gravel")
+                        .HasColumnType("text")
                         .HasColumnName("gravel");
+
+                    b.Property<Guid>("Hex160Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("hex160_id");
 
                     b.Property<string>("LakeStreamName")
                         .HasColumnType("text")
@@ -568,28 +569,28 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("text")
                         .HasColumnName("planning_watershed");
 
-                    b.Property<double>("Pool")
-                        .HasColumnType("double precision")
+                    b.Property<string>("Pool")
+                        .HasColumnType("text")
                         .HasColumnName("pool");
 
-                    b.Property<double>("Riffle")
-                        .HasColumnType("double precision")
+                    b.Property<string>("Riffle")
+                        .HasColumnType("text")
                         .HasColumnName("riffle");
 
-                    b.Property<double>("Run")
-                        .HasColumnType("double precision")
+                    b.Property<string>("Run")
+                        .HasColumnType("text")
                         .HasColumnName("run");
 
-                    b.Property<double>("Sand")
-                        .HasColumnType("double precision")
+                    b.Property<string>("Sand")
+                        .HasColumnType("text")
                         .HasColumnName("sand");
 
                     b.Property<string>("SeasonalityOfFlow")
                         .HasColumnType("text")
                         .HasColumnName("seasonality_if_flow");
 
-                    b.Property<double>("Silt")
-                        .HasColumnType("double precision")
+                    b.Property<string>("Silt")
+                        .HasColumnType("text")
                         .HasColumnName("silt");
 
                     b.Property<string>("SiteID")
@@ -610,8 +611,8 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("user_id");
 
-                    b.Property<double>("WaterTemp")
-                        .HasColumnType("double precision")
+                    b.Property<string>("WaterTemp")
+                        .HasColumnType("text")
                         .HasColumnName("water_temp");
 
                     b.Property<string>("WaterType")
@@ -632,6 +633,8 @@ namespace WBIS_2.DataModel.Migrations
                     b.HasKey("Guid");
 
                     b.HasIndex("DeviceInfoID");
+
+                    b.HasIndex("Hex160Id");
 
                     b.HasIndex("UserId");
 
@@ -2483,21 +2486,6 @@ namespace WBIS_2.DataModel.Migrations
                     b.ToTable("wildlife_species", (string)null);
                 });
 
-            modelBuilder.Entity("amphibian_surveys_hex160s", b =>
-                {
-                    b.HasOne("WBIS_2.DataModel.AmphibianSurvey", null)
-                        .WithMany()
-                        .HasForeignKey("amphibian_survey_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WBIS_2.DataModel.Hex160", null)
-                        .WithMany()
-                        .HasForeignKey("hex160_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("cdfw_spotted_owl_diagrams_districts", b =>
                 {
                     b.HasOne("WBIS_2.DataModel.CDFW_SpottedOwlDiagram", null)
@@ -2741,7 +2729,7 @@ namespace WBIS_2.DataModel.Migrations
             modelBuilder.Entity("WBIS_2.DataModel.AmphibianElement", b =>
                 {
                     b.HasOne("WBIS_2.DataModel.AmphibianSurvey", "AmphibianSurvey")
-                        .WithMany("AmphibianElements")
+                        .WithMany()
                         .HasForeignKey("AmphibianSurveyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -2787,6 +2775,10 @@ namespace WBIS_2.DataModel.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("WBIS_2.DataModel.AmphibianSurvey", null)
+                        .WithMany("AmphibianLocationsFound")
+                        .HasForeignKey("AmphibianSurveyGuid");
+
                     b.Navigation("AmphibianElement");
 
                     b.Navigation("AmphibianSpecies");
@@ -2799,6 +2791,10 @@ namespace WBIS_2.DataModel.Migrations
                         .HasForeignKey("WBIS_2.DataModel.AmphibianPointOfInterest", "AmphibianElementId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("WBIS_2.DataModel.AmphibianSurvey", null)
+                        .WithMany("AmphibianPointsOfInterest")
+                        .HasForeignKey("AmphibianSurveyGuid");
 
                     b.HasOne("WBIS_2.DataModel.AmphibianSpecies", "OtherWildlife")
                         .WithMany("AmphibianPointsOfInterest")
@@ -2819,6 +2815,12 @@ namespace WBIS_2.DataModel.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("WBIS_2.DataModel.Hex160", "Hex160")
+                        .WithMany("AmphibianSurveys")
+                        .HasForeignKey("Hex160Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("WBIS_2.DataModel.ApplicationUser", "User")
                         .WithMany("AmphibianSurveys")
                         .HasForeignKey("UserId")
@@ -2826,6 +2828,8 @@ namespace WBIS_2.DataModel.Migrations
                         .IsRequired();
 
                     b.Navigation("DeviceInfo");
+
+                    b.Navigation("Hex160");
 
                     b.Navigation("User");
                 });
@@ -3190,7 +3194,9 @@ namespace WBIS_2.DataModel.Migrations
 
             modelBuilder.Entity("WBIS_2.DataModel.AmphibianSurvey", b =>
                 {
-                    b.Navigation("AmphibianElements");
+                    b.Navigation("AmphibianLocationsFound");
+
+                    b.Navigation("AmphibianPointsOfInterest");
                 });
 
             modelBuilder.Entity("WBIS_2.DataModel.ApplicationGroup", b =>
@@ -3242,6 +3248,8 @@ namespace WBIS_2.DataModel.Migrations
             modelBuilder.Entity("WBIS_2.DataModel.Hex160", b =>
                 {
                     b.Navigation("AmphibianElements");
+
+                    b.Navigation("AmphibianSurveys");
 
                     b.Navigation("Hex160RequiredPasses");
 

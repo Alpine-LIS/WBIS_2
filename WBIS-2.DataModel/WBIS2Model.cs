@@ -58,10 +58,17 @@ namespace WBIS_2.DataModel
             modelBuilder.Entity<SiteCallingRepositoryTrack>().ToTable("site_calling_repository_tracks");
             modelBuilder.Entity<UserLocation>().ToTable("user_locations");
 
+            modelBuilder.Entity<AmphibianSpecies>().ToTable("amphibian_species");
+            modelBuilder.Entity<AmphibianSurvey>().ToTable("amphibian_surveys");
+            modelBuilder.Entity<AmphibianElement>().ToTable("amphibian_elements");
+            modelBuilder.Entity<AmphibianLocationFound>().ToTable("amphibian_locations_found");
+            modelBuilder.Entity<AmphibianPointOfInterest>().ToTable("amphibian_points_of_interest");
 
 
 
-            modelBuilder.Entity<ApplicationUser>()
+
+
+        modelBuilder.Entity<ApplicationUser>()
                 .HasMany(_ => _.Districts)
                 .WithMany(p => p.ApplicationUsers)
                 .UsingEntity<Dictionary<string, object>>("users_districts",
@@ -185,6 +192,13 @@ namespace WBIS_2.DataModel
                         x => x.HasOne<CNDDBOccurrence>().WithMany().HasForeignKey("cnddb_occurrence_id"),
                         x => x.HasOne<Hex160>().WithMany().HasForeignKey("hex160_id"),
                         x => x.ToTable("cnddb_occurrences_hex160s", "public"));
+            modelBuilder.Entity<Hex160>()
+                .HasMany(_ => _.AmphibianSurveys)
+                .WithMany(p => p.Hex160s)
+                .UsingEntity<Dictionary<string, object>>("amphibian_surveys_hex160s",
+                        x => x.HasOne<AmphibianSurvey>().WithMany().HasForeignKey("amphibian_survey_id"),
+                        x => x.HasOne<Hex160>().WithMany().HasForeignKey("hex160_id"),
+                        x => x.ToTable("amphibian_surveys_hex160s", "public"));
 
         }
         public DbSet<District> Districts { get; set; }
@@ -212,6 +226,12 @@ namespace WBIS_2.DataModel
         public DbSet<SiteCallingTrack> siteCallingTracks { get; set; }
         public DbSet<SiteCallingRepositoryTrack> siteCallingRepositoryTracks { get; set; }
         public DbSet<DeviceInfo> DeviceInfos { get; set; }
-        public DbSet<UserLocation> GetUserLocations { get; set; }
+        public DbSet<UserLocation> UserLocations { get; set; }
+        public DbSet<AmphibianSpecies> AmphibianSpecies { get; set; }
+        public DbSet<AmphibianSurvey> AmphibianSurveys { get; set; }
+        public DbSet<AmphibianElement> AmphibianElements { get; set; }
+        public DbSet<AmphibianLocationFound> AmphibianLocationsFound { get; set; }
+        public DbSet<AmphibianPointOfInterest> AmphibianPointsOfInterest { get; set; }
+
     }
 }

@@ -65,10 +65,10 @@ namespace WBIS_2.DataModel
         public ProtectionZone ProtectionZone { get; set; }
         [Required, Column("geometry", TypeName = "geometry(Point,26710)")]
         public Point Geometry { get; set; }
-        [Required, Column("starting_lat")]
-        public double StartingLat { get; set; }
-        [Required, Column("starting_lon")]
-        public double StartingLon { get; set; }
+        [Column("lat")]
+        public double Lat { get; set; }
+        [Column("lon")]
+        public double Lon { get; set; }
         [Column("datum")]
         public string Datum { get; set; }
 

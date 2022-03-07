@@ -28,9 +28,9 @@ namespace WBIS_2.DataModel
 
         [Required, Column("geometry", TypeName = "geometry(Point,26710)")]
         public Point Geometry { get; set; }
-        [Required, Column("starting_lat")]
+        [Column("starting_lat")]
         public double StartingLat { get; set; }
-        [Required, Column("starting_lon")]
+        [Column("starting_lon")]
         public double StartingLon { get; set; }
         [Column("datum")]
         public string Datum { get; set; }
