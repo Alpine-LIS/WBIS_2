@@ -56,6 +56,10 @@ namespace WBIS_2.DataModel
         public ICollection<CNDDBOccurrence> CNDDBOccurrences { get; set; }
         public ICollection<CDFW_SpottedOwl> CDFW_SpottedOwls { get; set; }
 
+        public ICollection<BotanicalSurveyArea> BotanicalSurveyAreas { get; set; }
+        public ICollection<BotanicalSurvey> BotanicalSurveys { get; set; }
+        public ICollection<BotanicalElement> BotanicalElements { get; set; }
+
 
         [NotMapped, Display(Order = -1)]
         public string DisplayName { get { return "Hex160"; } }

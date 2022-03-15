@@ -79,7 +79,8 @@ namespace WBIS_2.DataModel
 
 
 
-
+        [Column("species_present")]
+        public bool SpeciesPresent { get; set; }
         [Column("target_species_present")]
         public bool TargetSpeciesPresent { get; set; }
 

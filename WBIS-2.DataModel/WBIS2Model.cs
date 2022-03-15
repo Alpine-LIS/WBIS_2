@@ -72,11 +72,16 @@ namespace WBIS_2.DataModel
             modelBuilder.Entity<Region>().ToTable("regions");
             modelBuilder.Entity<RegionalPlantList>().ToTable("regional_plant_lists");
 
+            modelBuilder.Entity<THP_Area>().ToTable("thp_areas");
+            modelBuilder.Entity<BotanicalElement>().ToTable("botanical_elements");
+            modelBuilder.Entity<BotanicalPlantOfInterest>().ToTable("botanical_plants_of_interest");
+            modelBuilder.Entity<BotanicalPointOfInterest>().ToTable("botanical_points_of_interest");
+            modelBuilder.Entity<BotanicalPlantList>().ToTable("botanical_plants_list");
+            modelBuilder.Entity<BotanicalSurvey>().ToTable("botanical_surveys");
+            modelBuilder.Entity<BotanicalSurveyArea>().ToTable("botanical_survey_areas");
+            modelBuilder.Entity<BotanicalScoping>().ToTable("botanical_scopings");
 
-
-
-
-
+               
 
         modelBuilder.Entity<ApplicationUser>()
                 .HasMany(_ => _.Districts)
@@ -123,6 +128,14 @@ namespace WBIS_2.DataModel
                         x => x.HasOne<CDFW_SpottedOwlDiagram>().WithMany().HasForeignKey("cdfw_spotted_owl_diagram_id"),
                         x => x.HasOne<District>().WithMany().HasForeignKey("district_id"),
                         x => x.ToTable("cdfw_spotted_owl_diagrams_districts", "public"));
+            modelBuilder.Entity<District>()
+                .HasMany(_ => _.BotanicalScopings)
+                .WithMany(p => p.Districts)
+                .UsingEntity<Dictionary<string, object>>("botanical_scopings_districts",
+                        x => x.HasOne<BotanicalScoping>().WithMany().HasForeignKey("botanical_scoping_id"),
+                        x => x.HasOne<District>().WithMany().HasForeignKey("district_id"),
+                        x => x.ToTable("botanical_scopings_districts", "public"));
+           
 
 
 
@@ -162,6 +175,27 @@ namespace WBIS_2.DataModel
                         x => x.HasOne<AmphibianSurvey>().WithMany().HasForeignKey("amphibian_survey_id"),
                         x => x.HasOne<Quad75>().WithMany().HasForeignKey("quad75_id"),
                         x => x.ToTable("amphibian_surveys_quad75s", "public"));
+            modelBuilder.Entity<Quad75>()
+              .HasMany(_ => _.BotanicalScopings)
+              .WithMany(p => p.Quad75s)
+              .UsingEntity<Dictionary<string, object>>("botanical_scopings_quad75s",
+                      x => x.HasOne<BotanicalScoping>().WithMany().HasForeignKey("botanical_scoping_id"),
+                      x => x.HasOne<Quad75>().WithMany().HasForeignKey("quad75_id"),
+                      x => x.ToTable("botanical_scopings_quad75s", "public"));
+            modelBuilder.Entity<Quad75>()
+                .HasMany(_ => _.BotanicalSurveyAreas)
+                .WithMany(p => p.Quad75s)
+                .UsingEntity<Dictionary<string, object>>("botanical_survey_areas_quad75s",
+                        x => x.HasOne<BotanicalSurveyArea>().WithMany().HasForeignKey("botanical_survey_area_id"),
+                        x => x.HasOne<Quad75>().WithMany().HasForeignKey("quad75_id"),
+                        x => x.ToTable("botanical_survey_areas_quad75s", "public"));
+            modelBuilder.Entity<Quad75>()
+                .HasMany(_ => _.BotanicalSurveys)
+                .WithMany(p => p.Quad75s)
+                .UsingEntity<Dictionary<string, object>>("botanical_surveys_quad75s",
+                        x => x.HasOne<BotanicalSurvey>().WithMany().HasForeignKey("botanical_survey_id"),
+                        x => x.HasOne<Quad75>().WithMany().HasForeignKey("quad75_id"),
+                        x => x.ToTable("botanical_surveys_quad75s", "public"));
 
 
 
@@ -194,6 +228,27 @@ namespace WBIS_2.DataModel
                         x => x.HasOne<AmphibianSurvey>().WithMany().HasForeignKey("amphibian_survey_id"),
                         x => x.HasOne<Watershed>().WithMany().HasForeignKey("watershed_id"),
                         x => x.ToTable("amphibian_surveys_watersheds", "public"));
+            modelBuilder.Entity<Watershed>()
+               .HasMany(_ => _.BotanicalScopings)
+               .WithMany(p => p.Watersheds)
+               .UsingEntity<Dictionary<string, object>>("botanical_scopings_watersheds",
+                       x => x.HasOne<BotanicalScoping>().WithMany().HasForeignKey("botanical_scoping_id"),
+                       x => x.HasOne<Watershed>().WithMany().HasForeignKey("watershed_id"),
+                       x => x.ToTable("botanical_scopings_watersheds", "public"));
+            modelBuilder.Entity<Watershed>()
+                .HasMany(_ => _.BotanicalSurveyAreas)
+                .WithMany(p => p.Watersheds)
+                .UsingEntity<Dictionary<string, object>>("botanical_survey_areas_watersheds",
+                        x => x.HasOne<BotanicalSurveyArea>().WithMany().HasForeignKey("botanical_survey_area_id"),
+                        x => x.HasOne<Watershed>().WithMany().HasForeignKey("watershed_id"),
+                        x => x.ToTable("botanical_survey_areas_watersheds", "public"));
+            modelBuilder.Entity<Watershed>()
+                .HasMany(_ => _.BotanicalSurveys)
+                .WithMany(p => p.Watersheds)
+                .UsingEntity<Dictionary<string, object>>("botanical_surveys_watersheds",
+                        x => x.HasOne<BotanicalSurvey>().WithMany().HasForeignKey("botanical_survey_id"),
+                        x => x.HasOne<Watershed>().WithMany().HasForeignKey("watershed_id"),
+                        x => x.ToTable("botanical_surveys_watersheds", "public"));
 
 
 
@@ -225,6 +280,20 @@ namespace WBIS_2.DataModel
                         x => x.HasOne<SPIPlantPolygon>().WithMany().HasForeignKey("spi_plant_polygon_id"),
                         x => x.HasOne<Hex160>().WithMany().HasForeignKey("hex160_id"),
                         x => x.ToTable("spi_plant_polygons_hex160s", "public"));
+            modelBuilder.Entity<Hex160>()
+               .HasMany(_ => _.BotanicalSurveyAreas)
+               .WithMany(p => p.Hex160s)
+               .UsingEntity<Dictionary<string, object>>("botanical_survey_areas_hex160s",
+                       x => x.HasOne<BotanicalSurveyArea>().WithMany().HasForeignKey("botanical_survey_area_id"),
+                       x => x.HasOne<Hex160>().WithMany().HasForeignKey("hex160_id"),
+                       x => x.ToTable("botanical_survey_areas_hex160s", "public"));
+            modelBuilder.Entity<Hex160>()
+                .HasMany(_ => _.BotanicalSurveys)
+                .WithMany(p => p.Hex160s)
+                .UsingEntity<Dictionary<string, object>>("botanical_surveys_hex160s",
+                        x => x.HasOne<BotanicalSurvey>().WithMany().HasForeignKey("botanical_survey_id"),
+                        x => x.HasOne<Hex160>().WithMany().HasForeignKey("hex160_id"),
+                        x => x.ToTable("botanical_surveys_hex160s", "public"));
 
         }
         public DbSet<District> Districts { get; set; }
@@ -266,5 +335,13 @@ namespace WBIS_2.DataModel
         public DbSet<Region> Regions { get; set; }
         public DbSet<RegionalPlantList> RegionalPlantLists { get; set; }
 
+        public DbSet<THP_Area> THP_Areas { get; set; }
+        public DbSet<BotanicalElement> BotanicalElements { get; set; }
+        public DbSet<BotanicalPlantOfInterest> BotanicalPlantsOfInterest { get; set; }
+        public DbSet<BotanicalPointOfInterest> BotanicalPointsOfInterest { get; set; }
+        public DbSet<BotanicalPlantList> BotanicalPlantsList { get; set; }
+        public DbSet<BotanicalSurvey> BotanicalSurveys { get; set; }
+        public DbSet<BotanicalSurveyArea> BotanicalSurveyAreas { get; set; }
+        public DbSet<BotanicalScoping> BotanicalScopings { get; set; }
     }
 }

@@ -27,6 +27,17 @@ namespace WBIS_2.DataModel
         public Guid OwlBandingId { get; set; }
         public OwlBanding OwlBanding { get; set; }
 
+        [Column("amphibian_survey_id"), ForeignKey("AmphibianSurvey")]
+        public Guid AmphibianSurveyId { get; set; }
+        public AmphibianSurvey AmphibianSurvey { get; set; }
+        [Column("amphibian_element_id"), ForeignKey("AmphibianElement")]
+        public Guid AmphibianElementId { get; set; }
+        public AmphibianElement AmphibianElement { get; set; }
+        [Column("botanical_element_id"), ForeignKey("BotanicalElement")]
+        public Guid BotanicalElementId { get; set; }
+        public BotanicalElement BotanicalElement { get; set; }
+
+
 
         [Column("device_time")]
         public DateTime DeviceTime { get; set; }
@@ -40,6 +51,7 @@ namespace WBIS_2.DataModel
         [Column("datum")]
         public string Datum { get; set; }
 
-
+        [Column("horizontal_accuracy")]
+        public double HorizontalAccuracy { get; set; }
     }
 }

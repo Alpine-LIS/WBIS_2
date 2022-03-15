@@ -103,6 +103,11 @@ namespace WBIS_2.DataModel
         public ICollection<AmphibianSurvey> AmphibianSurveys { get; set; }
         public ICollection<AmphibianElement> AmphibianElements { get; set; }
 
+        public ICollection<BotanicalScoping> BotanicalScopings { get; set; }
+        public ICollection<BotanicalSurveyArea> BotanicalSurveyAreas { get; set; }
+        public ICollection<BotanicalSurvey> BotanicalSurveys { get; set; }
+        public ICollection<BotanicalElement> BotanicalElements { get; set; }
+
 
         [NotMapped, Display(Order = -1)]
         public string DisplayName { get { return "Watershed"; } }

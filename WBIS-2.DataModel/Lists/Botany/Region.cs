@@ -16,5 +16,6 @@ namespace WBIS_2.DataModel
         public string RegionName { get; set; }
 
         public ICollection<RegionalPlantList> RegionalPlantLists { get; set; }
+        public ICollection<BotanicalScoping> BotanicalScopings { get; set; }
     }
 }
