@@ -84,9 +84,11 @@ namespace WBIS_2.DataModel
         public bool SpeciesPresent { get; set; }
         [Column("target_species_present")]
         public bool TargetSpeciesPresent { get; set; }
-        [Column("site_calling_detection_id")]
-        public Guid SiteCallingDetectionID { get; set; }
-        public SiteCallingDetection SiteCallingDetection { get; set; }
+
+        public ICollection<SiteCallingDetection> SiteCallingDetections { get; set;}
+        //[Column("site_calling_detection_id")]
+        //public Guid SiteCallingDetectionID { get; set; }
+        //public SiteCallingDetection SiteCallingDetection { get; set; }
 
 
         [Required, Column("occupancy_status")]

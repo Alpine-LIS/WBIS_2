@@ -25,15 +25,5 @@ namespace WBIS_2.DataModel
         [Column("other_wildlife_id")]
         public Guid OtherWildlifeId { get; set; }
         public AmphibianSpecies OtherWildlife { get; set; }
-
-
-        [Required, Column("geometry", TypeName = "geometry(Point,26710)")]
-        public Point Geometry { get; set; }
-        [Column("lat")]
-        public double Lat { get; set; }
-        [Column("lon")]
-        public double Lon { get; set; }
-        [Column("datum")]
-        public string Datum { get; set; }
     }
 }

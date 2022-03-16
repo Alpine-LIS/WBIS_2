@@ -40,16 +40,5 @@ namespace WBIS_2.DataModel
         public bool Visual { get; set; }
         [Column("aural")]
         public bool Aural { get; set; }
-
-
-
-        [Required, Column("geometry", TypeName = "geometry(Point,26710)")]
-        public Point Geometry { get; set; }
-        [Column("lat")]
-        public double Lat { get; set; }
-        [Column("lon")]
-        public double Lon { get; set; }
-        [Column("datum")]
-        public string Datum { get; set; }
     }
 }

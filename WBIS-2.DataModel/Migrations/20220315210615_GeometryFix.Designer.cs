@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,10 @@ using WBIS_2.DataModel;
 namespace WBIS_2.DataModel.Migrations
 {
     [DbContext(typeof(WBIS2Model))]
-    partial class WBIS2ModelModelSnapshot : ModelSnapshot
+    [Migration("20220315210615_GeometryFix")]
+    partial class GeometryFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2707,6 +2709,10 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("text")
                         .HasColumnName("reproductive_status");
 
+                    b.Property<Guid>("SiteCallingDetectionID")
+                        .HasColumnType("uuid")
+                        .HasColumnName("site_calling_detection_id");
+
                     b.Property<Guid>("SiteCallingTrackID")
                         .HasColumnType("uuid")
                         .HasColumnName("site_calling_track_id");
@@ -2997,6 +3003,10 @@ namespace WBIS_2.DataModel.Migrations
                     b.Property<string>("ReproductiveStatus")
                         .HasColumnType("text")
                         .HasColumnName("reproductive_status");
+
+                    b.Property<Guid>("SiteCallingRepositoryDetectionID")
+                        .HasColumnType("uuid")
+                        .HasColumnName("site_calling_repository_detection_id");
 
                     b.Property<Guid>("SiteCallingRepositoryTrackID")
                         .HasColumnType("uuid")
@@ -4809,8 +4819,8 @@ namespace WBIS_2.DataModel.Migrations
             modelBuilder.Entity("WBIS_2.DataModel.SiteCallingDetection", b =>
                 {
                     b.HasOne("WBIS_2.DataModel.SiteCalling", "SiteCalling")
-                        .WithMany("SiteCallingDetections")
-                        .HasForeignKey("Guid")
+                        .WithOne("SiteCallingDetection")
+                        .HasForeignKey("WBIS_2.DataModel.SiteCallingDetection", "Guid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -4887,8 +4897,8 @@ namespace WBIS_2.DataModel.Migrations
             modelBuilder.Entity("WBIS_2.DataModel.SiteCallingRepositoryDetection", b =>
                 {
                     b.HasOne("WBIS_2.DataModel.SiteCallingRepository", "SiteCallingRepository")
-                        .WithMany("SiteCallingRepositoryDetections")
-                        .HasForeignKey("Guid")
+                        .WithOne("SiteCallingRepositoryDetection")
+                        .HasForeignKey("WBIS_2.DataModel.SiteCallingRepositoryDetection", "Guid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -5203,7 +5213,7 @@ namespace WBIS_2.DataModel.Migrations
 
                     b.Navigation("OtherWildlifeRecords");
 
-                    b.Navigation("SiteCallingDetections");
+                    b.Navigation("SiteCallingDetection");
 
                     b.Navigation("SiteCallingTrack");
                 });
@@ -5219,7 +5229,7 @@ namespace WBIS_2.DataModel.Migrations
 
                     b.Navigation("OtherWildlifeRecords");
 
-                    b.Navigation("SiteCallingRepositoryDetections");
+                    b.Navigation("SiteCallingRepositoryDetection");
 
                     b.Navigation("SiteCallingRepositoryTrack");
                 });

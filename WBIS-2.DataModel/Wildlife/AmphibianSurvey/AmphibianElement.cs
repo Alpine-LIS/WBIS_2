@@ -80,6 +80,17 @@ namespace WBIS_2.DataModel
 
 
 
+        [Required, Column("geometry", TypeName = "geometry(Point,26710)")]
+        public Point Geometry { get; set; }
+        [Column("lat")]
+        public double Lat { get; set; }
+        [Column("lon")]
+        public double Lon { get; set; }
+        [Column("datum")]
+        public string Datum { get; set; }
+
+
+
 
 
         [NotMapped, Display(Order = -1)]
