@@ -9,7 +9,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class OtherWildlife : UserDataValidator, IUserRecords
+    public class OtherWildlife : UserDataValidator//, IUserRecords
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
@@ -19,11 +19,7 @@ namespace WBIS_2.DataModel
         public DateTime DateModified { get; set; }
         public bool _delete { get; set; }
        
-        [Column("user_id")]
-        public Guid UserId { get; set; }
-        public ApplicationUser User { get; set; } = CurrentUser.User;
-
-
+      
 
 
         [Required, Column("wildlife_species_id")]

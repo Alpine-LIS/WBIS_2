@@ -45,8 +45,8 @@ namespace WBIS_2.DataModel
         public string SpeciesCode { get; set; }
 
         //public ICollection<BotanicalScopingSpecies> BotanicalScopingSpecies { get; set; }
-        //public ICollection<BotanicalPlantOfInterest> BotanicalPlantsOfInterest { get; set; }
-        //public ICollection<BotanicalPlantList> BotanicalPlantsList { get; set; }
+        public ICollection<BotanicalPlantOfInterest> BotanicalPlantsOfInterest { get; set; }
+        public ICollection<BotanicalPlantList> BotanicalPlantsList { get; set; }
         public ICollection<RegionalPlantList> RegionalPlantLists { get; set; }
         public ICollection<FloweringTimeline> FloweringTimelines { get; set; }
         public ICollection<PlantProtectionSummary> PlantProtectionSummaries { get; set; }

@@ -49,6 +49,10 @@ namespace WBIS_2.DataModel
         public ICollection<District> Districts { get; set; }
         public ICollection<ProtectionZone> ProtectionZones { get; set; }
         public ICollection<PermanentCallStation> PermanentCallStations { get; set; }
+        public ICollection<BotanicalElement> BotanicalElements { get; set; }
+        public ICollection<BotanicalScoping> BotanicalScopings { get; set; }
+        public ICollection<BotanicalSurvey> BotanicalSurveys { get; set; }
+        public ICollection<BotanicalSurveyArea> BotanicalSurveyAreas { get; set; }
 
         [NotMapped, Display(Order = -1)]
         public string DisplayName { get { return "Application User"; } }

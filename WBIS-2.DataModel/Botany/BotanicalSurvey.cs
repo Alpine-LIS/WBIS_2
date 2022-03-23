@@ -19,6 +19,10 @@ namespace WBIS_2.DataModel
         public Guid BotanicalSurveyAreaId { get; set; }
         public BotanicalSurveyArea BotanicalSurveyArea { get; set; }
 
+        [Column("botanical_scoping_id")]
+        public Guid BotanicalScopingId { get; set; }
+        public BotanicalScoping BotanicalScoping { get; set; }
+
         public ICollection<BotanicalElement> BotanicalElement { get; set; }
 
 
