@@ -9,7 +9,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class AmphibianElement : UserDataValidator, IUserRecords, IQueryStuff<AmphibianElement>, IPointParents
+    public class AmphibianElement : UserDataValidator, IUserRecords, IQueryStuff<AmphibianElement>, IPointParents, IPointLayer
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
@@ -49,6 +49,8 @@ namespace WBIS_2.DataModel
         public DateTime DateModified { get; set; }
         [Display(Order = -1)]
         public bool _delete { get; set; }
+        [Column("repository")]
+        public bool Repository { get; set; }
 
         [Column("user_id")]
         public Guid UserId { get; set; }

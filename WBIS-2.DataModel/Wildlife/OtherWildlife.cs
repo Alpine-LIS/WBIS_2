@@ -13,10 +13,6 @@ namespace WBIS_2.DataModel
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
-        [Column("date_added")]
-        public DateTime DateAdded { get; set; }
-        [Column("date_modified")]
-        public DateTime DateModified { get; set; }
         public bool _delete { get; set; }
        
       
@@ -30,9 +26,7 @@ namespace WBIS_2.DataModel
         public Guid SiteCallingId { get; set; }
         public SiteCalling SiteCalling { get; set; }
 
-        [Column("site_calling_repository_id"),]
-        public Guid SiteCallingRepositoryId { get; set; }
-        public SiteCallingRepository SiteCallingRepository { get; set; }
+      
 
         [NotMapped, Display(Order = -1)]
         public string DisplayName { get { return "Other Wildlife"; } }

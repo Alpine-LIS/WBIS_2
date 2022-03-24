@@ -41,7 +41,6 @@ namespace WBIS_2.DataModel
 
         public ICollection<Hex160RequiredPass> Hex160RequiredPasses { get; set; }
         public ICollection<SiteCalling> SiteCallings { get; set; }
-        public ICollection<SiteCallingRepository> SiteCallingRepositories { get; set; }
         public ICollection<OwlBanding> OwlBandings { get; set; }
         public ICollection<AmphibianSurvey> AmphibianSurveys { get; set; }
         public ICollection<AmphibianElement> AmphibianElements { get; set; }
@@ -68,7 +67,7 @@ namespace WBIS_2.DataModel
         public IInformationType[] AvailibleChildren
         {
             get
-            { return new IInformationType[] { new SiteCalling(), new SiteCallingRepository(), new Hex160RequiredPass(), }; }
+            { return new IInformationType[] { new SiteCalling(),  new Hex160RequiredPass(), }; }
         }
         public Expression<Func<Hex160, bool>> GetParentWhere(object[] Query, Type QueryType)
         {

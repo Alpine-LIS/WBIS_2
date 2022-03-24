@@ -14,6 +14,8 @@ namespace WBIS_2.DataModel
        
         [Column("geometry", TypeName = "geometry(LineString,26710)")]
         public LineString Geometry { get; set; }
-        public ICollection<District> Districts { get; set; }
+        [Column("district_id")]
+        public Guid DistrictId { get; set; }
+        public District District { get; set; }
     }
 }

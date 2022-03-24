@@ -18,6 +18,8 @@ namespace WBIS_2.DataModel
         [Column("date_modified")]
         public DateTime DateModified { get; set; }
         public bool _delete { get; set; }
+        [Column("repository")]
+        public bool Repository { get; set; }
         [Column("user_id")]
         public Guid UserId { get; set; }
         public ApplicationUser User { get; set; } = CurrentUser.User;

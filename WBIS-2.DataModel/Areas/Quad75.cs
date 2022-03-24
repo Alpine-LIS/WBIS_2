@@ -54,7 +54,6 @@ namespace WBIS_2.DataModel
         public ICollection<CDFW_SpottedOwl> CDFW_SpottedOwls { get; set; }
 
         public ICollection<SiteCalling> SiteCallings { get; set; }
-        public ICollection<SiteCallingRepository> SiteCallingRepositories { get; set; }
         public ICollection<OwlBanding> OwlBandings { get; set; }
         public ICollection<SPIPlantPolygon> SPIPlantPolygons { get; set; }
         public ICollection<SPIPlantPoint> SPIPlantPoints { get; set; }
@@ -74,7 +73,7 @@ namespace WBIS_2.DataModel
         public IInformationType[] AvailibleChildren
         {
             get
-            { return new IInformationType[] { new Hex160(), new SiteCalling(), new SiteCallingRepository(), new CNDDBOccurrence(), new CDFW_SpottedOwl() }; }
+            { return new IInformationType[] { new Hex160(), new SiteCalling(),  new CNDDBOccurrence(), new CDFW_SpottedOwl() }; }
         }
         public Expression<Func<Quad75, bool>> GetParentWhere(object[] Query, Type QueryType)
         {

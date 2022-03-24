@@ -42,7 +42,6 @@ namespace WBIS_2.DataModel
         public ICollection<ApplicationUser> Contractors { get; set; }
         public ICollection<Hex160RequiredPass> Hex160RequiredPasses { get; set; }
         public ICollection<SiteCalling> SiteCallings { get; set; }
-        public ICollection<SiteCallingRepository> SiteCallingRepositories { get; set; }
         public ICollection<OwlBanding> OwlBandings { get; set; }
         public ICollection<AmphibianSurvey> AmphibianSurveys { get; set; }
         public ICollection<AmphibianElement> AmphibianElements { get; set; }

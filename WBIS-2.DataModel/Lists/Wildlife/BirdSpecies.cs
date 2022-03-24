@@ -20,12 +20,6 @@ namespace WBIS_2.DataModel
         public ICollection<SiteCallingDetection> SpeciesFound { get; set; }
 
 
-        [InverseProperty("SurveySpecies")]
-        public ICollection<SiteCallingRepository> SurveySpeciesRepository { get; set; }
-        [InverseProperty("SpeciesFound")]
-        public ICollection<SiteCallingRepositoryDetection> SpeciesFoundRepository { get; set; }
-
-
         public ICollection<OwlBanding> OwlBandings { get; set; }
         public ICollection<Hex160RequiredPass> PassSpecies { get; set; }
 

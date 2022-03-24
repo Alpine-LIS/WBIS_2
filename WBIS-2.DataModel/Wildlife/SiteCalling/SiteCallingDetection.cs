@@ -9,7 +9,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class SiteCallingDetection:ISiteCallingDetection
+    public class SiteCallingDetection: IPointLayer
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid"), ForeignKey("SiteCalling")]
         public Guid Guid { get; set; }
@@ -29,14 +29,24 @@ namespace WBIS_2.DataModel
         [Required, Column("detection_method")]
         public string DetectionMethod { get; set; }
 
+
+
         [Required, Column("geometry", TypeName = "geometry(Point,26710)")]
         public Point Geometry { get; set; }
-        [Required, Column("detection_lat")]
-        public double DetectionLat { get; set; }
-        [Required, Column("detection_lon")]
-        public double DetectionLon { get; set; }
+        /// <summary>
+        /// Detection Lat
+        /// </summary>
+        [Column("lat")]
+        public double Lat { get; set; }
+        /// <summary>
+        /// Detection Lon
+        /// </summary>
+        [Column("lon")]
+        public double Lon { get; set; }
         [Column("datum")]
         public string Datum { get; set; }
+
+
 
 
         [Column("user_location_id")]

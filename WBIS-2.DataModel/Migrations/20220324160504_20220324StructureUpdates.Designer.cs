@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,10 @@ using WBIS_2.DataModel;
 namespace WBIS_2.DataModel.Migrations
 {
     [DbContext(typeof(WBIS2Model))]
-    partial class WBIS2ModelModelSnapshot : ModelSnapshot
+    [Migration("20220324160504_20220324StructureUpdates")]
+    partial class _20220324StructureUpdates
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1260,58 +1262,6 @@ namespace WBIS_2.DataModel.Migrations
                     b.ToTable("botanical_scopings", (string)null);
                 });
 
-            modelBuilder.Entity("WBIS_2.DataModel.BotanicalScopingSpecies", b =>
-                {
-                    b.Property<Guid>("Guid")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("guid");
-
-                    b.Property<Guid>("BotanicalScopingId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("botanical_scoping_id");
-
-                    b.Property<bool>("Exclude")
-                        .HasColumnType("boolean")
-                        .HasColumnName("exclude");
-
-                    b.Property<bool>("ExcludeReport")
-                        .HasColumnType("boolean")
-                        .HasColumnName("exclude_report");
-
-                    b.Property<string>("ExcludeText")
-                        .HasColumnType("text")
-                        .HasColumnName("exclude_text");
-
-                    b.Property<string>("HabitatDescription")
-                        .HasColumnType("text")
-                        .HasColumnName("habitat_description");
-
-                    b.Property<string>("NddbHabitatDescription")
-                        .HasColumnType("text")
-                        .HasColumnName("nddb_habitat_description");
-
-                    b.Property<Guid>("PlantSpeciesId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("plant_species_id");
-
-                    b.Property<string>("ProtectionSummary")
-                        .HasColumnType("text")
-                        .HasColumnName("protection_summary");
-
-                    b.Property<string>("SpiHabitatDescription")
-                        .HasColumnType("text")
-                        .HasColumnName("spi_habitat_description");
-
-                    b.HasKey("Guid");
-
-                    b.HasIndex("BotanicalScopingId");
-
-                    b.HasIndex("PlantSpeciesId");
-
-                    b.ToTable("botanical_scoping_species", (string)null);
-                });
-
             modelBuilder.Entity("WBIS_2.DataModel.BotanicalSurvey", b =>
                 {
                     b.Property<Guid>("Guid")
@@ -1919,26 +1869,25 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("text")
                         .HasColumnName("datum");
 
+                    b.Property<double>("DeviceLat")
+                        .HasColumnType("double precision")
+                        .HasColumnName("device_lat");
+
+                    b.Property<double>("DeviceLon")
+                        .HasColumnType("double precision")
+                        .HasColumnName("device_lon");
+
                     b.Property<DateTime>("DeviceTime")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("device_time");
 
                     b.Property<Point>("Geometry")
-                        .IsRequired()
                         .HasColumnType("geometry(Point,26710)")
                         .HasColumnName("geometry");
 
                     b.Property<double>("HorizontalAccuracy")
                         .HasColumnType("double precision")
                         .HasColumnName("horizontal_accuracy");
-
-                    b.Property<double>("Lat")
-                        .HasColumnType("double precision")
-                        .HasColumnName("lat");
-
-                    b.Property<double>("Lon")
-                        .HasColumnType("double precision")
-                        .HasColumnName("lon");
 
                     b.Property<Guid>("OwlBandingId")
                         .HasColumnType("uuid")
@@ -2735,14 +2684,6 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("hex160_id");
 
-                    b.Property<double>("Lat")
-                        .HasColumnType("double precision")
-                        .HasColumnName("lat");
-
-                    b.Property<double>("Lon")
-                        .HasColumnType("double precision")
-                        .HasColumnName("lon");
-
                     b.Property<bool>("Moused")
                         .HasColumnType("boolean")
                         .HasColumnName("moused");
@@ -2811,6 +2752,14 @@ namespace WBIS_2.DataModel.Migrations
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("start_time");
+
+                    b.Property<double>("StartingLat")
+                        .HasColumnType("double precision")
+                        .HasColumnName("starting_lat");
+
+                    b.Property<double>("StartingLon")
+                        .HasColumnType("double precision")
+                        .HasColumnName("starting_lon");
 
                     b.Property<DateTime>("SunsetTime")
                         .HasColumnType("timestamp with time zone")
@@ -2900,6 +2849,14 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("text")
                         .HasColumnName("datum");
 
+                    b.Property<double>("DetectionLat")
+                        .HasColumnType("double precision")
+                        .HasColumnName("detection_lat");
+
+                    b.Property<double>("DetectionLon")
+                        .HasColumnType("double precision")
+                        .HasColumnName("detection_lon");
+
                     b.Property<string>("DetectionMethod")
                         .IsRequired()
                         .HasColumnType("text")
@@ -2929,14 +2886,6 @@ namespace WBIS_2.DataModel.Migrations
                         .IsRequired()
                         .HasColumnType("geometry(Point,26710)")
                         .HasColumnName("geometry");
-
-                    b.Property<double>("Lat")
-                        .HasColumnType("double precision")
-                        .HasColumnName("lat");
-
-                    b.Property<double>("Lon")
-                        .HasColumnType("double precision")
-                        .HasColumnName("lon");
 
                     b.Property<string>("MaleBindingLeg")
                         .HasColumnType("text")
@@ -3215,17 +3164,17 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("geometry(Point,26710)")
                         .HasColumnName("geometry");
 
-                    b.Property<double>("Lat")
-                        .HasColumnType("double precision")
-                        .HasColumnName("lat");
-
-                    b.Property<double>("Lon")
-                        .HasColumnType("double precision")
-                        .HasColumnName("lon");
-
                     b.Property<Guid>("SiteCallingDetectionId")
                         .HasColumnType("uuid")
                         .HasColumnName("site_calling_detection_id");
+
+                    b.Property<double>("UserLat")
+                        .HasColumnType("double precision")
+                        .HasColumnName("user_lat");
+
+                    b.Property<double>("UserLon")
+                        .HasColumnType("double precision")
+                        .HasColumnName("user_lon");
 
                     b.HasKey("Guid");
 
@@ -4113,25 +4062,6 @@ namespace WBIS_2.DataModel.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("WBIS_2.DataModel.BotanicalScopingSpecies", b =>
-                {
-                    b.HasOne("WBIS_2.DataModel.BotanicalScoping", "BotanicalScoping")
-                        .WithMany("BotanicalScopingSpecies")
-                        .HasForeignKey("BotanicalScopingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WBIS_2.DataModel.PlantSpecies", "PlantSpecies")
-                        .WithMany("BotanicalScopingSpecies")
-                        .HasForeignKey("PlantSpeciesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("BotanicalScoping");
-
-                    b.Navigation("PlantSpecies");
-                });
-
             modelBuilder.Entity("WBIS_2.DataModel.BotanicalSurvey", b =>
                 {
                     b.HasOne("WBIS_2.DataModel.BotanicalScoping", "BotanicalScoping")
@@ -4754,8 +4684,6 @@ namespace WBIS_2.DataModel.Migrations
                 {
                     b.Navigation("BotanicalElements");
 
-                    b.Navigation("BotanicalScopingSpecies");
-
                     b.Navigation("BotanicalSurveyAreas");
 
                     b.Navigation("BotanicalSurveys");
@@ -4831,8 +4759,6 @@ namespace WBIS_2.DataModel.Migrations
                     b.Navigation("BotanicalPlantsList");
 
                     b.Navigation("BotanicalPlantsOfInterest");
-
-                    b.Navigation("BotanicalScopingSpecies");
 
                     b.Navigation("FloweringTimelines");
 

@@ -32,7 +32,7 @@ namespace WBIS_2.DataModel
             modelBuilder.HasPostgresExtension("postgis");
 
             modelBuilder.Entity<District>().ToTable("districts");
-            modelBuilder.Entity<DistrictExtendedGeometry>().ToTable("district_extended_geometry");
+            modelBuilder.Entity<DistrictExtendedGeometry>().ToTable("district_extended_geometries");
             modelBuilder.Entity<Quad75>().ToTable("quad75s");
             modelBuilder.Entity<Watershed>().ToTable("watersheds");
             modelBuilder.Entity<CDFW_SpottedOwl>().ToTable("cdfw_spotted_owls");
@@ -47,15 +47,12 @@ namespace WBIS_2.DataModel
             modelBuilder.Entity<OtherWildlife>().ToTable("other_wildlife_records");
             modelBuilder.Entity<OwlBanding>().ToTable("owl_bandings");
             modelBuilder.Entity<SiteCalling>().ToTable("site_callings");
-            modelBuilder.Entity<SiteCallingRepository>().ToTable("site_calling_repositories");
             modelBuilder.Entity<ProtectionZone>().ToTable("protection_zones");
             modelBuilder.Entity<PermanentCallStation>().ToTable("permanent_call_stations");
             modelBuilder.Entity<DeletedGeometry>().ToTable("deleted_geometries");
             modelBuilder.Entity<SiteCallingDetection>().ToTable("site_calling_detections");
-            modelBuilder.Entity<SiteCallingRepositoryDetection>().ToTable("site_calling_repository_detections");
             modelBuilder.Entity<DeviceInfo>().ToTable("device_infos");
             modelBuilder.Entity<SiteCallingTrack>().ToTable("site_calling_tracks");
-            modelBuilder.Entity<SiteCallingRepositoryTrack>().ToTable("site_calling_repository_tracks");
             modelBuilder.Entity<UserLocation>().ToTable("user_locations");
 
             modelBuilder.Entity<AmphibianSpecies>().ToTable("amphibian_species");
@@ -80,8 +77,9 @@ namespace WBIS_2.DataModel
             modelBuilder.Entity<BotanicalSurvey>().ToTable("botanical_surveys");
             modelBuilder.Entity<BotanicalSurveyArea>().ToTable("botanical_survey_areas");
             modelBuilder.Entity<BotanicalScoping>().ToTable("botanical_scopings");
+            modelBuilder.Entity<BotanicalScopingSpecies>().ToTable("botanical_scoping_species");
 
-               
+
 
         modelBuilder.Entity<ApplicationUser>()
                 .HasMany(_ => _.Districts)
@@ -121,13 +119,6 @@ namespace WBIS_2.DataModel
                         x => x.HasOne<CNDDBOccurrence>().WithMany().HasForeignKey("cnddb_occurrence_id"),
                         x => x.HasOne<District>().WithMany().HasForeignKey("district_id"),
                         x => x.ToTable("cnddb_occurrences_districts", "public"));
-            modelBuilder.Entity<District>()
-                .HasMany(_ => _.CDFW_SpottedOwlDiagrams)
-                .WithMany(p => p.Districts)
-                .UsingEntity<Dictionary<string, object>>("cdfw_spotted_owl_diagrams_districts",
-                        x => x.HasOne<CDFW_SpottedOwlDiagram>().WithMany().HasForeignKey("cdfw_spotted_owl_diagram_id"),
-                        x => x.HasOne<District>().WithMany().HasForeignKey("district_id"),
-                        x => x.ToTable("cdfw_spotted_owl_diagrams_districts", "public"));
             modelBuilder.Entity<District>()
                 .HasMany(_ => _.BotanicalScopings)
                 .WithMany(p => p.Districts)
@@ -312,14 +303,11 @@ namespace WBIS_2.DataModel
         public DbSet<OtherWildlife> OtherWildlifeRecords { get; set; }
         public DbSet<OwlBanding> OwlBandings { get; set; }
         public DbSet<SiteCalling> SiteCallings { get; set; }
-        public DbSet<SiteCallingRepository> SiteCallingRepositories { get; set; }
         public DbSet<PermanentCallStation> PermanentCallStations { get; set; }
         public DbSet<ProtectionZone> ProtectionZones { get; set; }
         public DbSet<DeletedGeometry> DeletedGeometries { get; set; }
         public DbSet<SiteCallingDetection> siteCallingDetections { get; set; }
-        public DbSet<SiteCallingRepositoryDetection> siteCallingRepositoryDetections { get; set; }
         public DbSet<SiteCallingTrack> siteCallingTracks { get; set; }
-        public DbSet<SiteCallingRepositoryTrack> siteCallingRepositoryTracks { get; set; }
         public DbSet<DeviceInfo> DeviceInfos { get; set; }
         public DbSet<UserLocation> UserLocations { get; set; }
         public DbSet<AmphibianSpecies> AmphibianSpecies { get; set; }
@@ -343,5 +331,6 @@ namespace WBIS_2.DataModel
         public DbSet<BotanicalSurvey> BotanicalSurveys { get; set; }
         public DbSet<BotanicalSurveyArea> BotanicalSurveyAreas { get; set; }
         public DbSet<BotanicalScoping> BotanicalScopings { get; set; }
+        public DbSet<BotanicalScopingSpecies> BotanicalScopingSpecies { get; set; }
     }
 }

@@ -9,12 +9,12 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class SiteCallingRepository : ISiteCalling
+    public class SiteCalling : IUserRecords, IQueryStuff<SiteCalling>, IPointParents, IPointLayer
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
 
-
+       
 
         [Column("user_id")]
         public Guid UserId { get; set; }
@@ -26,10 +26,16 @@ namespace WBIS_2.DataModel
 
         [Required, Column("geometry", TypeName = "geometry(Point,26710)")]
         public Point Geometry { get; set; }
-        [Column("starting_lat")]
-        public double StartingLat { get; set; }
-        [Column("starting_lon")]
-        public double StartingLon { get; set; }
+        /// <summary>
+        /// Starting Lat
+        /// </summary>
+        [Column("lat")]
+        public double Lat { get; set; }
+        /// <summary>
+        /// Starting Lon
+        /// </summary>
+        [Column("lon")]
+        public double Lon { get; set; }
         [Column("datum")]
         public string Datum { get; set; }
         [Required, Column("start_time")]
@@ -84,11 +90,11 @@ namespace WBIS_2.DataModel
         public bool SpeciesPresent { get; set; }
         [Column("target_species_present")]
         public bool TargetSpeciesPresent { get; set; }
-        public ICollection<SiteCallingRepositoryDetection> SiteCallingRepositoryDetections { get; set; }
 
-        //[Column("site_calling_repository_detection_id")]
-        //public Guid SiteCallingRepositoryDetectionID { get; set; }
-        //public SiteCallingRepositoryDetection SiteCallingRepositoryDetection { get; set; }
+        public ICollection<SiteCallingDetection> SiteCallingDetections { get; set;}
+        //[Column("site_calling_detection_id")]
+        //public Guid SiteCallingDetectionID { get; set; }
+        //public SiteCallingDetection SiteCallingDetection { get; set; }
 
 
         [Required, Column("occupancy_status")]
@@ -121,9 +127,9 @@ namespace WBIS_2.DataModel
 
 
 
-        [Column("site_calling_repository_track_id")]
-        public Guid SiteCallingRepositoryTrackID { get; set; }
-        public SiteCallingRepositoryTrack SiteCallingRepositoryTrack { get; set; }
+        [Column("site_calling_track_id")]
+        public Guid SiteCallingTrackID { get; set; }
+        public SiteCallingTrack SiteCallingTrack { get; set; }
         [Column("device_info_id")]
         public Guid DeviceInfoID { get; set; }
         public DeviceInfo DeviceInfo { get; set; }
@@ -138,7 +144,8 @@ namespace WBIS_2.DataModel
         [Column("date_modified")]
         public DateTime DateModified { get; set; }
         public bool _delete { get; set; }
-
+        [Column("repository")]
+        public bool Repository { get; set; }
 
 
 
@@ -159,9 +166,10 @@ namespace WBIS_2.DataModel
 
 
 
+
         public ICollection<OtherWildlife> OtherWildlifeRecords { get; set; }
         [NotMapped, Display(Order = -1)]
-        public string DisplayName { get { return "Site Calling Repository"; } }
+        public string DisplayName { get { return "Site Calling"; } }
 
         [NotMapped]
         public IInformationType[] AvailibleChildren
@@ -169,9 +177,9 @@ namespace WBIS_2.DataModel
             get
             { return new IInformationType[0]; }
         }
-        public Expression<Func<ISiteCalling, bool>> GetParentWhere(object[] Query, Type QueryType)
+        public Expression<Func<SiteCalling, bool>> GetParentWhere(object[] Query, Type QueryType)
         {
-            Expression<Func<ISiteCalling, bool>> a;
+            Expression<Func<SiteCalling, bool>> a;
             if (QueryType == typeof(District))
                 a = _ => _.Hex160.Districts.Any(d => Query.Cast<District>().Contains(d));
             else if (QueryType == typeof(Watershed))

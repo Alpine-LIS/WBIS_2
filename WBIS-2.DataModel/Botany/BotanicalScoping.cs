@@ -20,6 +20,7 @@ namespace WBIS_2.DataModel
         public ICollection<BotanicalElement> BotanicalElements { get; set; }
         public ICollection<BotanicalSurvey> BotanicalSurveys { get; set; }
         public ICollection<BotanicalSurveyArea> BotanicalSurveyAreas { get; set; }
+        public ICollection<BotanicalScopingSpecies> BotanicalScopingSpecies { get; set; }
 
 
         [Column("thp_area_id")]
@@ -53,6 +54,8 @@ namespace WBIS_2.DataModel
         public DateTime DateModified { get; set; }
         [Display(Order = -1)]
         public bool _delete { get; set; }
+        [Column("repository")]
+        public bool Repository { get; set; }
 
         [Column("user_id")]
         public Guid UserId { get; set; }
