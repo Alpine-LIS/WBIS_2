@@ -12,8 +12,13 @@ namespace WBIS_2.DataModel
         public Guid Guid { get; set; }
         [Column("species")]
         public string Species { get; set; }
-        
-        
+
+        [Column("is_surveyable")]
+        public bool IsSurveyable { get; set; }
+        [Column("is_findable")]
+        public bool IsFindable { get; set; }
+
+
         [InverseProperty("SurveySpecies")]
         public ICollection<SiteCalling> SurveySpecies { get; set; }
         [InverseProperty("SpeciesFound")]

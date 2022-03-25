@@ -39,19 +39,67 @@ namespace WBIS_2.DataModel
         public Guid AdminId { get; set; }
         public ApplicationUser Admin { get; set; }
 
+       
+        
+        
         public ICollection<ApplicationUser> Contractors { get; set; }
-        public ICollection<Hex160RequiredPass> Hex160RequiredPasses { get; set; }
-        public ICollection<SiteCalling> SiteCallings { get; set; }
-        public ICollection<OwlBanding> OwlBandings { get; set; }
-        public ICollection<AmphibianSurvey> AmphibianSurveys { get; set; }
-        public ICollection<AmphibianElement> AmphibianElements { get; set; }
         public ICollection<District> Districts { get; set; }
+
+
+        [InverseProperty("User")]
+        public ICollection<Hex160RequiredPass> Hex160RequiredPasses { get; set; }
+        [InverseProperty("User")]
+        public ICollection<SiteCalling> SiteCallings { get; set; }
+        [InverseProperty("User")]
+        public ICollection<OwlBanding> OwlBandings { get; set; }
+        [InverseProperty("User")]
+        public ICollection<AmphibianSurvey> AmphibianSurveys { get; set; }
+        [InverseProperty("User")]
+        public ICollection<AmphibianElement> AmphibianElements { get; set; }
+        [InverseProperty("User")]
         public ICollection<ProtectionZone> ProtectionZones { get; set; }
+        [InverseProperty("User")]
         public ICollection<PermanentCallStation> PermanentCallStations { get; set; }
+        [InverseProperty("User")]
         public ICollection<BotanicalElement> BotanicalElements { get; set; }
+        [InverseProperty("User")]
         public ICollection<BotanicalScoping> BotanicalScopings { get; set; }
+        [InverseProperty("User")]
         public ICollection<BotanicalSurvey> BotanicalSurveys { get; set; }
+        [InverseProperty("User")]
         public ICollection<BotanicalSurveyArea> BotanicalSurveyAreas { get; set; }
+
+
+
+        
+        [InverseProperty("UserModified")]
+        public ICollection<Hex160RequiredPass> Hex160RequiredPassesModified { get; set; }
+        [InverseProperty("UserModified")]
+        public ICollection<SiteCalling> SiteCallingsModified { get; set; }
+        [InverseProperty("UserModified")]
+        public ICollection<OwlBanding> OwlBandingsModified { get; set; }
+        [InverseProperty("UserModified")]
+        public ICollection<AmphibianSurvey> AmphibianSurveysModified { get; set; }
+        [InverseProperty("UserModified")]
+        public ICollection<AmphibianElement> AmphibianElementsModified { get; set; }
+        [InverseProperty("UserModified")]
+        public ICollection<ProtectionZone> ProtectionZonesModified { get; set; }
+        [InverseProperty("UserModified")]
+        public ICollection<PermanentCallStation> PermanentCallStationsModified { get; set; }
+        [InverseProperty("UserModified")]
+        public ICollection<BotanicalElement> BotanicalElementsModified { get; set; }
+        [InverseProperty("UserModified")]
+        public ICollection<BotanicalScoping> BotanicalScopingsModified { get; set; }
+        [InverseProperty("UserModified")]
+        public ICollection<BotanicalSurvey> BotanicalSurveysModified { get; set; }
+        [InverseProperty("UserModified")]
+        public ICollection<BotanicalSurveyArea> BotanicalSurveyAreasModified { get; set; }
+
+
+
+
+
+
 
         [NotMapped, Display(Order = -1)]
         public string DisplayName { get { return "Application User"; } }

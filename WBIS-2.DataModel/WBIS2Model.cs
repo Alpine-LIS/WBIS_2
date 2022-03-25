@@ -78,10 +78,11 @@ namespace WBIS_2.DataModel
             modelBuilder.Entity<BotanicalSurveyArea>().ToTable("botanical_survey_areas");
             modelBuilder.Entity<BotanicalScoping>().ToTable("botanical_scopings");
             modelBuilder.Entity<BotanicalScopingSpecies>().ToTable("botanical_scoping_species");
+            modelBuilder.Entity<Picture>().ToTable("pictures");
 
 
 
-        modelBuilder.Entity<ApplicationUser>()
+            modelBuilder.Entity<ApplicationUser>()
                 .HasMany(_ => _.Districts)
                 .WithMany(p => p.ApplicationUsers)
                 .UsingEntity<Dictionary<string, object>>("users_districts",
@@ -332,5 +333,6 @@ namespace WBIS_2.DataModel
         public DbSet<BotanicalSurveyArea> BotanicalSurveyAreas { get; set; }
         public DbSet<BotanicalScoping> BotanicalScopings { get; set; }
         public DbSet<BotanicalScopingSpecies> BotanicalScopingSpecies { get; set; }
+        public DbSet<Picture> Pictures { get; set; }
     }
 }

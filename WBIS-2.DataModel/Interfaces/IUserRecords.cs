@@ -12,6 +12,7 @@ namespace WBIS_2.DataModel
         /// </summary>
         public Guid UserId { get; set; }
         public ApplicationUser User { get; set; }
+        public ApplicationUser UserModified { get; set; }
         public DateTime DateAdded { get; set; }
         public DateTime DateModified { get; set; }
         public bool _delete { get; set; }

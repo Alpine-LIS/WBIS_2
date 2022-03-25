@@ -75,11 +75,21 @@ namespace WBIS_2.DataModel
         [Column("repository")]
         public bool Repository { get; set; }
 
+
+
+
+
         [Column("user_id")]
         public Guid UserId { get; set; }
-        public ApplicationUser User { get; set; } = CurrentUser.User;
+        public ApplicationUser User { get; set; }
+        [Column("user_modified_id")]
+        public Guid UserModifiedId { get; set; }
+        public ApplicationUser UserModified { get; set; }
 
-       
+
+
+
+
         [Required, Column("geometry", TypeName = "geometry(MultiPolygon,26710)")]
         public MultiPolygon Geometry { get; set; }
 

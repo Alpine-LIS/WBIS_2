@@ -52,9 +52,18 @@ namespace WBIS_2.DataModel
         [Column("repository")]
         public bool Repository { get; set; }
 
+
+
+
         [Column("user_id")]
         public Guid UserId { get; set; }
-        public ApplicationUser User { get; set; } = CurrentUser.User;
+        public ApplicationUser User { get; set; }
+        [Column("user_modified_id")]
+        public Guid UserModifiedId { get; set; }
+        public ApplicationUser UserModified { get; set; }
+
+
+
 
 
         [Required, Column("date_time")]
@@ -91,6 +100,7 @@ namespace WBIS_2.DataModel
         [Column("datum")]
         public string Datum { get; set; }
 
+        public ICollection<Picture> Pictures { get; set; }
 
 
 

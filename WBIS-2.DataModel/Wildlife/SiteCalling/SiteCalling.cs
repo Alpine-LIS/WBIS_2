@@ -18,10 +18,13 @@ namespace WBIS_2.DataModel
 
         [Column("user_id")]
         public Guid UserId { get; set; }
-        public ApplicationUser User { get; set; } = CurrentUser.User;
+        public ApplicationUser User { get; set; }
+        [Column("user_modified_id")]
+        public Guid UserModifiedId { get; set; }
+        public ApplicationUser UserModified { get; set; }
 
-
-
+        [Column("record_type")]
+        public string RecordType { get; set; }
 
 
         [Required, Column("geometry", TypeName = "geometry(Point,26710)")]
@@ -60,6 +63,8 @@ namespace WBIS_2.DataModel
         
         [Column("pass_number")]
         public int PassNumber { get; set; }
+        [Column("manual_pass_changed"), Display(Order = -1)]
+        public bool ManualPassChanged { get; set; } = false;
 
         [Column("pz_pass_number")]
         public int PZPassNumber { get; set; }
@@ -168,6 +173,10 @@ namespace WBIS_2.DataModel
 
 
         public ICollection<OtherWildlife> OtherWildlifeRecords { get; set; }
+        public ICollection<Picture> Pictures { get; set; }
+
+
+
         [NotMapped, Display(Order = -1)]
         public string DisplayName { get { return "Site Calling"; } }
 
