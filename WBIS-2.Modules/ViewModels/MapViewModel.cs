@@ -11,6 +11,7 @@ using Npgsql;
 //using Atlas3.Controls.Compatibility.MapFunctions;
 using WBIS_2.Modules.Views;
 using Atlas.Controls.Atlas3.MapFunctions;
+using NetTopologySuite.Geometries;
 
 namespace WBIS_2.Modules.ViewModels
 {
@@ -50,6 +51,7 @@ namespace WBIS_2.Modules.ViewModels
         private void UxMap_SelectionChanged(object sender, EventArgs e)
         {
             //throw new NotImplementedException();
+            ResetAFS();
             MapDataPasser.MapSelectionChanged(MapControl.Selection.ToFeatureList());
         }
 
@@ -64,16 +66,19 @@ namespace WBIS_2.Modules.ViewModels
 
         protected MapViewModel()
         {
-            Messenger.Default.Register<FeatureEditedMessage>(this, OnFeatureEdited);
+            //Messenger.Default.Register<FeatureEditedMessage>(this, OnFeatureEdited);
 
         }
 
         public MapViewModel(bool temp)
         {
-            Messenger.Default.Register<FeatureEditedMessage>(this, OnFeatureEdited);
+            //Messenger.Default.Register<FeatureEditedMessage>(this, OnFeatureEdited);
             MapDataPasser.ZoomToLayerEvent += ZoomToLayer;
+            MapDataPasser.ZoomToFeatureEvent += ZoomToSingle;
             MapDataPasser.RefreshLayersEvent += RefreshLayers;
             MapDataPasser.MapDrawFeatureEvent += DrawActivity;
+            MapDataPasser.MapShowAFSEvent += MapDataPasser_MapShowAFSEvent;
+            MapDataPasser.UserDistrictsChangedEvent += MapDataPasser_UserDistrictsChanged;
         }
 
         public void ZoomToLayer(string layerName)
@@ -84,57 +89,34 @@ namespace WBIS_2.Modules.ViewModels
         }
 
 
-        private void OnFeatureEdited(FeatureEditedMessage obj)
-        {
-            if (obj.Feature.DataRow.Table.Columns.Contains("Guid"))
-            {
-                string tbl = obj.Feature.ParentFeatureSet.Name;
-                //if (tbl)
-                //tbl = tbl.Substring(0, tbl.Length - 1);
+        //private void OnFeatureEdited(FeatureEditedMessage obj)
+        //{
+        //    if (obj.Feature.DataRow.Table.Columns.Contains("Guid"))
+        //    {
+        //        string tbl = obj.Feature.ParentFeatureSet.Name;
+        //        //if (tbl)
+        //        //tbl = tbl.Substring(0, tbl.Length - 1);
 
-                NetTopologySuite.Geometries.MultiPolygon geo = null;
-                var database = new WBIS_2.DataModel.WBIS2Model();
-                //if (tbl == "Regens")
-                //{
-                //    tbl = "Regen";
-                //    geo = database.Regens.First(_ => _.Guid == (Guid)obj.Feature.DataRow["Guid"]).Geometry;
-                //}
-                //else if (tbl == "Fuelbreaks")
-                //{
-                //    tbl = "Fuelbreak";
-                //    geo = database.Fuelbreaks.First(_ => _.Guid == (Guid)obj.Feature.DataRow["Guid"]).Geometry;
-                //}
-                //else if (tbl == "Activities")
-                //{
-                //    tbl = "Activity";
-                //    geo = database.Activities.First(_ => _.Guid == (Guid)obj.Feature.DataRow["Guid"]).Geometry;
-                //}
-                //database.InsertRecordChange((Guid)obj.Feature.DataRow["Guid"], tbl, "Geometry", geo, obj.Feature.Geometry);
-            }
-        }
-
-        public void ZoomToLayer(string layerName, string keyField, List<object> keyFields)
-        {
-            if (MapControl == null)
-            {
-                return;
-            }
-            var layer = MapControl.GetLayer(layerName);
-            layer.SelectionEnabled = true;
-            if (keyFields.Count == 0)
-            {
-                return;
-            }
-            var q = $"{keyField} = {keyFields[0]}";
-            //layer.SelectByAttribute(q);
-            var allKeys = String.Join(",", keyFields);
-            var q2 = $"[{keyField}] IN ({allKeys})";
-            MapControl.ActiveLayer = layer;
-            layer.SelectByAttribute(q2);
-            layer.ZoomToSelectedFeatures();
-            //((IMapFeatureLayer)layer).SelectAll();
-        }
-
+        //        NetTopologySuite.Geometries.MultiPolygon geo = null;
+        //        var database = new RMS_3.DataModel.RMS3Model();
+        //        if (tbl == "Regens")
+        //        {
+        //            tbl = "Regen";
+        //            geo = database.Regens.First(_ => _.Guid == (Guid)obj.Feature.DataRow["Guid"]).Geometry;
+        //        }
+        //        else if (tbl == "Fuelbreaks")
+        //        {
+        //            tbl = "Fuelbreak";
+        //            geo = database.Fuelbreaks.First(_ => _.Guid == (Guid)obj.Feature.DataRow["Guid"]).Geometry;
+        //        }
+        //        else if (tbl == "Activities")
+        //        {
+        //            tbl = "Activity";
+        //            geo = database.Activities.First(_ => _.Guid == (Guid)obj.Feature.DataRow["Guid"]).Geometry;
+        //        }
+        //        database.InsertRecordChange((Guid)obj.Feature.DataRow["Guid"], tbl, "Geometry", geo, obj.Feature.Geometry);
+        //    }
+        //}
 
         public void ZoomToLayer(object sender, EventArgs e)
         {
@@ -145,19 +127,87 @@ namespace WBIS_2.Modules.ViewModels
             var layer = MapControl.GetLayer(MapDataPasser.ZoomLayerName);
             if (layer == null) return;
             layer.SelectionEnabled = true;
-            if (MapDataPasser.ZoomKeyFields.Count == 0)
+            if (MapDataPasser.ZoomKeyValues.Count == 0)
             {
+                layer.ClearSelection();
                 return;
             }
             MapDataPasser.SelectionFromGrid = true;
-            var q = $"{MapDataPasser.ZoomKeyField} = {MapDataPasser.ZoomKeyFields[0]}";
+            var q = $"{MapDataPasser.ZoomKeyField} = {MapDataPasser.ZoomKeyValues[0]}";
             //layer.SelectByAttribute(q);
-            var allKeys = String.Join(",", MapDataPasser.ZoomKeyFields);
+            var allKeys = String.Join(",", MapDataPasser.ZoomKeyValues);
             var q2 = $"[{MapDataPasser.ZoomKeyField}] IN ({allKeys})";
             MapControl.ActiveLayer = layer;
             layer.SelectByAttribute(q2);
-            layer.ZoomToSelectedFeatures();
+            if ((bool)sender) layer.ZoomToSelectedFeatures();
             MapDataPasser.SelectionFromGrid = false;
+        }
+        public void ZoomToSingle(object sender, EventArgs e)
+        {
+            if (MapControl == null)
+            {
+                return;
+            }
+            var layer = MapControl.GetLayer(MapDataPasser.ZoomLayerName);
+            if (layer == null) return;
+            layer.SelectionEnabled = true;
+            if (MapDataPasser.ZoomKeyValueSingle == null)
+                return;
+            MapDataPasser.SelectionFromGrid = true;
+
+            MapControl.ActiveLayer = layer;
+            var f = layer.DataSet.Features.First(_ => (string)_.DataRow[MapDataPasser.ZoomKeyField] == MapDataPasser.ZoomKeyValueSingle);
+
+            Extent extent = new Extent();
+            foreach (Coordinate c in f.Geometry.Envelope.Coordinates)
+            {
+                extent.ExpandToInclude(c.X, c.Y);
+            }
+            MapControl.UxMap.ViewExtents = extent;
+            MapControl.UxMap.MapFrame.Invalidate();
+
+            MapDataPasser.SelectionFromGrid = false;
+        }
+
+        private void MapDataPasser_MapShowAFSEvent(object sender, EventArgs e)
+        {
+            if (MapControl == null)
+            {
+                return;
+            }
+
+            ResetAFS();
+            AfsLayer = new KeyValuePair<IMapFeatureLayer, string>(MapControl.GetLayer(MapDataPasser.ZoomLayerName), MapDataPasser.ZoomKeyField);
+            if (AfsLayer.Key == null) return;
+            AfsLayer.Key.SelectionEnabled = true;
+            PreAfsCategory.Clear();
+
+            //IFeatureCategory newCat = new PolygonCategory(System.Drawing.Color.FromArgb(150,244,233,0), System.Drawing.Color.Yellow, 2);
+            foreach (var key in MapDataPasser.ZoomKeyValues)
+            {
+                var f = AfsLayer.Key.DataSet.Features.First(_ => (string)_.DataRow[MapDataPasser.ZoomKeyField] == (string)key);
+                var a = (PolygonCategory)AfsLayer.Key.GetCategory(f.Fid).Clone();
+                a.Symbolizer.SetFillColorEx(System.Drawing.Color.FromArgb(250, 244, 233, 0));
+                a.Symbolizer.SetOutline(System.Drawing.Color.Yellow, 1);
+                a.SelectionSymbolizer.SetFillColorEx(System.Drawing.Color.FromArgb(50, 244, 233, 0));
+                a.SelectionSymbolizer.SetOutline(System.Drawing.Color.Yellow, 1);
+                PreAfsCategory.Add((string)key, AfsLayer.Key.GetCategory(f.Fid));
+                AfsLayer.Key.SetCategory(f.Fid, a);
+            }
+            MapControl.UxMap.MapFrame.Invalidate();
+        }
+
+        KeyValuePair<IMapFeatureLayer, string> AfsLayer = new KeyValuePair<IMapFeatureLayer, string>();
+        //IMapFeatureLayer AfsLayer;
+        Dictionary<string, IFeatureCategory> PreAfsCategory = new Dictionary<string, IFeatureCategory>();
+        private void ResetAFS()
+        {
+            foreach (KeyValuePair<string, IFeatureCategory> keyValuePair in PreAfsCategory)
+            {
+                var f = AfsLayer.Key.DataSet.Features.First(_ => (string)_.DataRow[AfsLayer.Value] == keyValuePair.Key);
+                AfsLayer.Key.SetCategory(f.Fid, keyValuePair.Value);
+            }
+            MapControl.UxMap.MapFrame.Invalidate();
         }
 
 
@@ -222,28 +272,7 @@ namespace WBIS_2.Modules.ViewModels
                 e.Feature.DataRow["guid"] = GuidDrawing;// Guid.NewGuid();
             }
 
-            //.Parse("TEMP0000-0000-0000-0000-000000000000");
-
-            //MapControl.UxMap.ActiveLayer.DataSet.DataTable.Rows.RemoveAt(MapControl.UxMap.ActiveLayer.DataSet.DataTable.Rows.Count - 1);
-            //MapControl.UxMap.ActiveLayer.DataSet.Features.Remove(e.Feature);
-            //MapControl.UxMap.ActiveLayer.Save();
-
             MapDataPasser.ActivityDrawn(g);
-
-
-            //MapControl.UxMap.FunctionMode = FunctionMode.Select;
-            //PGFeatureSet
-            //e.Feature.DataRow[0] = "1";
-            //MapControl.UxMap.ActiveLayer.DataSet.Edit(MapControl.UxMap.ActiveLayerFeaturesCount(), e.Feature.DataRow);
-            //MapControl.UxMap.ActiveLayer.Save();
-
-            //string tempPath = ODOS.Models.Parent.GettempPath();
-            //ShapeFileFeatureLayer shapeFileFeatureLayer = new ShapeFileFeatureLayer(tempPath + "\\TempShapes\\temp.shp");
-            //shapeFileFeatureLayer.RequireIndex = false;
-            //shapeFileFeatureLayer.Open();
-            //newGeometry = e.Feature.Geometry;
-            //newFeature = shapeFileFeatureLayer.QueryTools.GetAllFeatures(ReturningColumnsType.NoColumns)[0];
-            //shapeFileFeatureLayer.Close();
         }
 
 
@@ -267,17 +296,43 @@ namespace WBIS_2.Modules.ViewModels
                 else if (startingStr.ToUpper().Contains("SITE")) lyrStr = "ACTIVITIES";
 
                 var layer = MapControl.GetLayer(lyrStr);
-                if (layer == null) return;
+                if (layer == null) continue;
                 //MapControl.UxMap.ActiveLayer = layer;
                 PGFeatureSet pGFeatureSet = (PGFeatureSet)layer.DataSet;
                 //MapControl.UxMap.ActiveLayer.DataSet = new PGFeatureSet(pGFeatureSet.Server, pGFeatureSet.Table, "Geometry", "Guid");
                 //MapControl.UxMap.ActiveLayer.Selection.Configure();
                 layer.DataSet = new PGFeatureSet(pGFeatureSet.Server, pGFeatureSet.Table, "Geometry", "Guid");
                 layer.Selection.Configure();
+                layer.AssignFastDrawnStates();
             }
 
-
             MapControl.UxMap.MapFrame.Initialize();
+            MapDataPasser_UserDistrictsChanged(new object(), new EventArgs());
+        }
+
+
+        private void MapDataPasser_UserDistrictsChanged(object sender, EventArgs e)
+        {
+            if (MapControl == null) return;
+
+            Guid[] districtGuids = CurrentUser.Districts.Select(_ => _.Guid).ToArray();
+
+            //string[] layers = new string[] { "REGENS" };
+            string[] layers = new string[] { "REGENS", "FUELBREAKS" };
+            foreach (string layer in layers)
+            {
+                var featureLayer = MapControl.GetLayer(layer);
+                foreach (var f in featureLayer.DataSet.Features)
+                {
+                    //featureLayer.SetVisible(f, (string)f.DataRow["DISTRICT"] == "Redding");
+                    if (layer == "FUELBREAKS")
+                        featureLayer.SetVisible(f, districtGuids.Contains((Guid)f.DataRow["DistrictGuid"]) &&
+                            (!(bool)f.DataRow["FuelTreatment"] || (bool)f.DataRow["FuelTreatment"] == MapDataPasser.ViewFuelTreatments));
+                    else
+                        featureLayer.SetVisible(f, districtGuids.Contains((Guid)f.DataRow["DistrictGuid"]));
+                }
+            }
+            MapControl.UxMap.MapFrame.Invalidate();
         }
     }
 }

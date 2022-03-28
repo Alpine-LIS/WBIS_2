@@ -45,7 +45,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Views\Areas\ChildrenListView.xaml.cs">
+    <Compile Update="Views\GeneralLists\ParentListView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\GeneralLists\ChildrenListView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\Areas\Hex160sListView.xaml.cs">
@@ -72,7 +75,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Views\Areas\ChildrenListView.xaml">
+    <Page Update="Views\GeneralLists\ParentListView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\GeneralLists\ChildrenListView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

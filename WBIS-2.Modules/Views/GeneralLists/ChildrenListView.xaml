@@ -23,7 +23,7 @@
             Grid.Row="0"
             Grid.Column="0"
             Margin="5"
-            Content="District Child:"/>
+            Content="Available Children:"/>
         <dxe:ComboBoxEdit 
             Grid.Row="0"
             Grid.Column="1"

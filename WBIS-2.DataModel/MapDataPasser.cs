@@ -7,14 +7,23 @@ namespace WBIS_2.DataModel
     {
         public static string ZoomLayerName { get; set; }
         public static string ZoomKeyField { get; set; }
-        public static List<object> ZoomKeyFields { get; set; }
+        public static string ZoomKeyValueSingle { get; set; }
+        public static List<object> ZoomKeyValues { get; set; }
         public static event EventHandler ZoomToLayerEvent;
-        public static void ZoomToLayer(string layerName, string keyField, List<object> keyFields)
+        public static event EventHandler ZoomToFeatureEvent;
+        public static void ZoomToLayer(string layerName, string keyField, List<object> keyFields, bool PerformZoom)
         {
             ZoomLayerName = layerName;
             ZoomKeyField = keyField;
-            ZoomKeyFields = keyFields;
-            ZoomToLayerEvent?.Invoke(new object(), new EventArgs());
+            ZoomKeyValues = keyFields;
+            ZoomToLayerEvent?.Invoke(PerformZoom, new EventArgs());
+        }
+        public static void ZoomToFeature(string layerName, string keyField, string value)
+        {
+            ZoomLayerName = layerName;
+            ZoomKeyField = keyField;
+            ZoomKeyValueSingle = value;
+            ZoomToFeatureEvent?.Invoke(new object(), new EventArgs());
         }
 
         public static event EventHandler RefreshLayersEvent;
@@ -52,5 +61,24 @@ namespace WBIS_2.DataModel
 
 
         public static bool SelectionFromGrid = false;
+
+
+
+
+        public static event EventHandler MapShowAFSEvent;
+        public static void MapShowAFS(string layerName, string keyField, List<object> keyFields)
+        {
+            ZoomLayerName = layerName;
+            ZoomKeyField = keyField;
+            ZoomKeyValues = keyFields;
+            MapShowAFSEvent?.Invoke(new object(), new EventArgs());
+        }
+
+        public static event EventHandler UserDistrictsChangedEvent;
+        public static void UserDistrictsChanged()
+        {
+            UserDistrictsChangedEvent?.Invoke(new object(), new EventArgs());
+        }
+        public static bool ViewFuelTreatments = false;
     }
 }

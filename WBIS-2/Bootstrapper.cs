@@ -39,7 +39,7 @@ namespace WBIS_2
         protected virtual void ConfigureTypeLocators()
         {
             var mainAssembly = typeof(MainViewModel).Assembly;
-            var modulesAssembly = typeof(DistrictsListViewModel).Assembly;
+            var modulesAssembly = typeof(ParentListView).Assembly;
             var assemblies = new[] { mainAssembly, modulesAssembly };
             ViewModelLocator.Default = new ViewModelLocator(assemblies);
             ViewLocator.Default = new ViewLocator(assemblies);
@@ -67,19 +67,19 @@ namespace WBIS_2
             //Manager.Register(Regions.Documents, new Module(AppModules.ModuleAdminUser,
             //  () => ApplicationUserAdminViewModel.Create(), typeof(ApplicationUserAdminView)));
 
-            Manager.Register(Regions.Documents, new Module(AppModules.ModuleDistricts,
-                () => DistrictsListViewModel.Create("Districts", "Districts"), typeof(DistrictsListView)));
-            Manager.Register(Regions.Documents, new Module(AppModules.ModuleWatersheds,
-                () => WatershedsListViewModel.Create("Watersheds", "Watersheds"), typeof(WatershedsListView)));
-            Manager.Register(Regions.Documents, new Module(AppModules.ModuleHex160s,
-                () => Hex160sListViewModel.Create("Hex160s", "Hex160s"), typeof(Hex160sListView)));
-            Manager.Register(Regions.Documents, new Module(AppModules.ModuleQuad75s,
-                () => Quad75sListViewModel.Create("Quad75s", "Quad75s"), typeof(Quad75sListView)));
+            //Manager.Register(Regions.Documents, new Module(AppModules.ModuleDistricts,
+            //    () => DistrictsListViewModel.Create("Districts", "Districts"), typeof(DistrictsListView)));
+            //Manager.Register(Regions.Documents, new Module(AppModules.ModuleWatersheds,
+            //    () => WatershedsListViewModel.Create("Watersheds", "Watersheds"), typeof(WatershedsListView)));
+            //Manager.Register(Regions.Documents, new Module(AppModules.ModuleHex160s,
+            //    () => Hex160sListViewModel.Create("Hex160s", "Hex160s"), typeof(Hex160sListView)));
+            //Manager.Register(Regions.Documents, new Module(AppModules.ModuleQuad75s,
+            //    () => Quad75sListViewModel.Create("Quad75s", "Quad75s"), typeof(Quad75sListView)));
 
-            Manager.Register(Regions.Documents, new Module(AppModules.ModuleCnddbOccurrence,
-               () => CnddbsListViewModel.Create("CnddbOccurrence", "CnddbOccurrence"), typeof(CnddbsListView)));
-            Manager.Register(Regions.Documents, new Module(AppModules.ModuleCdfwSpottedOwl,
-               () => CdfwOwlsListViewModel.Create("CdfwSpottedOwl", "CdfwSpottedOwl"), typeof(CdfwOwlsListView)));
+            //Manager.Register(Regions.Documents, new Module(AppModules.ModuleCnddbOccurrence,
+            //   () => CnddbsListViewModel.Create("CnddbOccurrence", "CnddbOccurrence"), typeof(CnddbsListView)));
+            //Manager.Register(Regions.Documents, new Module(AppModules.ModuleCdfwSpottedOwl,
+            //   () => CdfwOwlsListViewModel.Create("CdfwSpottedOwl", "CdfwSpottedOwl"), typeof(CdfwOwlsListView)));
         }
 
 

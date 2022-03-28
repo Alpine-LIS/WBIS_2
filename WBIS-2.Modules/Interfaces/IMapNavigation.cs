@@ -10,6 +10,8 @@ namespace WBIS_2.Modules.Interfaces
         string LayerKeyField { get; }
         string LayerName { get; }
         void ZoomToLayer();
-        
+        void ZoomToFeature(object ZoomObject);
+        void MapShowAFS(Dictionary<Guid, string> selection);
+
     }
 }

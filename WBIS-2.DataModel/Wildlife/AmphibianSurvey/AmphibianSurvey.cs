@@ -129,7 +129,7 @@ namespace WBIS_2.DataModel
 
 
         [NotMapped, Display(Order = -1)]
-        public string DisplayName { get { return "Amphibian Survay"; } }
+        public string DisplayName { get { return "Amphibian Survey"; } }
 
         [NotMapped]
         public IInformationType[] AvailibleChildren

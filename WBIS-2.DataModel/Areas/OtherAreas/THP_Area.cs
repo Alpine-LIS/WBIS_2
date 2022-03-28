@@ -47,7 +47,7 @@ namespace WBIS_2.DataModel
             get
             {
                 return new List<KeyValuePair<string, string>>()
-                { new KeyValuePair<string, string>("Hex160ID", "Hex160")};
+                { new KeyValuePair<string, string>("THPName", "THP_Area")};
             }
         }
     }

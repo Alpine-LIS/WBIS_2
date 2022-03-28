@@ -18,6 +18,7 @@ using System.Collections;
 using WBIS_2.Modules.Tools;
 using WBIS_2.Modules.Views.Wildlife;
 using WBIS_2.Modules.ViewModels.Wildlife;
+using System.IO;
 
 namespace WBIS_2.Modules.ViewModels
 {
@@ -390,6 +391,118 @@ namespace WBIS_2.Modules.ViewModels
         private void DropHexagonsClick()
         {
 
+
+
+        }
+
+
+
+
+        public ICommand ExportToXlsxCommand { get; set; }
+        public event EventHandler ExportToXlsxEvent;
+        public void ExportToXlsxClick()
+        {
+            ExportToXlsxEvent?.Invoke(new object(), new EventArgs());
+        }
+
+        public ICommand FilterFromGridSelectionCommand { get; set; }
+        public event EventHandler FilterFromGridSelection;
+        private void FilterFromGridSelectionClick()
+        {
+            FilterFromGridSelection?.Invoke(new object(), new EventArgs());
+        }
+
+
+
+        public event EventHandler SaveGridLayoutEvent;
+        public void SaveGridLayout()
+        {
+            if (DontSaveLayout || Tracker.ChangesSaving) return;
+            SaveGridLayoutEvent?.Invoke(new object(), new EventArgs());
+        }
+
+        private string _TableName = "";
+        public string TableName
+        {
+            get => _TableName;
+            set
+            {
+                if (_TableName != value)
+                {
+                    _TableName = value;
+                    if (_TableName == null)
+                        RestoreGridColumnDefaultVisable = false;
+                    else if (_TableName == "")
+                        RestoreGridColumnDefaultVisable = false;
+                    else
+                        RestoreGridColumnDefaultVisable = true;
+                    RaisePropertyChanged(nameof(RestoreGridColumnDefaultVisable));
+                }
+            }
+        }
+        public bool RestoreGridColumnDefaultVisable { get; set; }
+        public ICommand RestoreGridColumnDefaultCommand { get; set; }
+        bool DontSaveLayout = false;
+        public void DoRestoreGridColumnDefault()
+        {
+            DontSaveLayout = true;
+            string path = @$"{AppDomain.CurrentDomain.BaseDirectory}\GridLayouts";
+            if (File.Exists($@"{ path}\{ TableName}.xml")) File.Delete($@"{ path}\{ TableName}.xml");
+            RefreshDataSource();
+            DontSaveLayout = false;
+        }
+
+        private bool _ViewSpecificRecord = false;
+        public bool ViewSpecificRecord
+        {
+            get { return _ViewSpecificRecord; }
+            set
+            {
+                _ViewSpecificRecord = value;
+                RefreshDataSource();
+                RaisePropertyChanged(nameof(Records));
+            }
+        }
+    }
+
+
+    public class ColumnVisClass : BindableBase
+    {
+        public WBISViewModelBase WBISViewModelBase { get; set; }
+        public ColumnVisClass(WBISViewModelBase wBISViewModelBase) => WBISViewModelBase = wBISViewModelBase;
+        private bool _IsVisable;
+        public bool IsVisable
+        {
+            get => _IsVisable;
+            set
+            {
+                if (_IsVisable != value)
+                {
+                    _IsVisable = value;
+                    SaveGridLayout();//RMSViewModelBase.SaveGridLayout();
+                }
+            }
+        }
+        private int _VisableIndex;
+        public int VisableIndex
+        {
+            get => _VisableIndex;
+            set
+            {
+                if (_VisableIndex != value)
+                {
+                    _VisableIndex = value;
+                    SaveGridLayout();// RMSViewModelBase.SaveGridLayout();
+                }
+            }
+        }
+        private void SaveGridLayout()
+        {
+            //IsVisable = _IsVisable;
+            //RaisePropertyChanged(nameof(IsVisable));
+            //VisableIndex = _VisableIndex;
+            //RaisePropertyChanged(nameof(VisableIndex));
+            WBISViewModelBase.SaveGridLayout();
         }
     }
 }
