@@ -128,7 +128,21 @@ namespace WBIS_2.DataModel
         public Expression<Func<BotanicalElement, bool>> GetParentWhere(object[] Query, Type QueryType)
         {
             Expression<Func<BotanicalElement, bool>> a;
-
+            if (QueryType == typeof(District))
+                a = _ => Query.Cast<District>().Contains(_.District);
+            else if (QueryType == typeof(Watershed))
+                a = _ => Query.Cast<Watershed>().Contains(_.Watershed);
+            else if (QueryType == typeof(Quad75))
+                a = _ => Query.Cast<Quad75>().Contains(_.Quad75);
+            else if (QueryType == typeof(Hex160))
+                a = _ => Query.Cast<Hex160>().Contains(_.Hex160);
+            else if (QueryType == typeof(BotanicalScoping))
+                a = _ => Query.Cast<BotanicalScoping>().Contains(_.BotanicalScoping);
+            else if (QueryType == typeof(BotanicalSurveyArea))
+                a = _ => Query.Cast<BotanicalSurveyArea>().Contains(_.BotanicalSurveyArea);
+            else if (QueryType == typeof(BotanicalSurvey))
+                a = _ => Query.Cast<BotanicalSurvey>().Contains(_.BotanicalSurvey);
+            else
                 a = _ => Query.Contains(_);
             return a;
         }

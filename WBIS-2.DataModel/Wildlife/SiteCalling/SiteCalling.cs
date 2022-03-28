@@ -102,12 +102,16 @@ namespace WBIS_2.DataModel
         //public SiteCallingDetection SiteCallingDetection { get; set; }
 
 
-        [Required, Column("occupancy_status")]
-        public string OccupancyStatus { get; set; }
+        //Following three come from tables but no link is established. Kevin Roberts changes these more regularly so old options are not maintained but string value remaines. 
+        [Required, Column("spow_occupancy_status")]
+        public string SPOW_OccupancyStatus { get; set; }
         [Column("nesting_status")]
         public string NestingStatus { get; set; }
         [Column("reproductive_status")]
         public string ReproductiveStatus { get; set; }
+
+
+
         [Column("nest_tree")]
         public bool NestTree { get; set; }
         [Column("nest_type")]
@@ -184,7 +188,7 @@ namespace WBIS_2.DataModel
         public IInformationType[] AvailibleChildren
         {
             get
-            { return new IInformationType[0]; }
+            { return new IInformationType[] { new SiteCallingDetection() }; }
         }
         public Expression<Func<SiteCalling, bool>> GetParentWhere(object[] Query, Type QueryType)
         {

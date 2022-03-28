@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,10 @@ using WBIS_2.DataModel;
 namespace WBIS_2.DataModel.Migrations
 {
     [DbContext(typeof(WBIS2Model))]
-    partial class WBIS2ModelModelSnapshot : ModelSnapshot
+    [Migration("20220328145600_UnmigratedStuff")]
+    partial class UnmigratedStuff
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -892,10 +894,6 @@ namespace WBIS_2.DataModel.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("guid");
-
-                    b.Property<bool>("BandingSpecies")
-                        .HasColumnType("boolean")
-                        .HasColumnName("banding_species");
 
                     b.Property<bool>("IsFindable")
                         .HasColumnType("boolean")
@@ -2209,15 +2207,6 @@ namespace WBIS_2.DataModel.Migrations
                     b.ToTable("hex160_required_passes", (string)null);
                 });
 
-            modelBuilder.Entity("WBIS_2.DataModel.NestingStatus", b =>
-                {
-                    b.Property<string>("Status")
-                        .HasColumnType("text")
-                        .HasColumnName("status");
-
-                    b.ToTable("nesting_status", (string)null);
-                });
-
             modelBuilder.Entity("WBIS_2.DataModel.OtherWildlife", b =>
                 {
                     b.Property<Guid>("Guid")
@@ -2804,15 +2793,6 @@ namespace WBIS_2.DataModel.Migrations
                     b.ToTable("regional_plant_lists", (string)null);
                 });
 
-            modelBuilder.Entity("WBIS_2.DataModel.ReproductiveStatus", b =>
-                {
-                    b.Property<string>("Status")
-                        .HasColumnType("text")
-                        .HasColumnName("status");
-
-                    b.ToTable("reproductive_status", (string)null);
-                });
-
             modelBuilder.Entity("WBIS_2.DataModel.SiteCalling", b =>
                 {
                     b.Property<Guid>("Guid")
@@ -2897,6 +2877,11 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("text")
                         .HasColumnName("nesting_status");
 
+                    b.Property<string>("OccupancyStatus")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("occupancy_status");
+
                     b.Property<int>("PZPassNumber")
                         .HasColumnType("integer")
                         .HasColumnName("pz_pass_number");
@@ -2928,11 +2913,6 @@ namespace WBIS_2.DataModel.Migrations
                     b.Property<string>("ReproductiveStatus")
                         .HasColumnType("text")
                         .HasColumnName("reproductive_status");
-
-                    b.Property<string>("SPOW_OccupancyStatus")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("spow_occupancy_status");
 
                     b.Property<Guid>("SiteCallingTrackID")
                         .HasColumnType("uuid")
@@ -3324,15 +3304,6 @@ namespace WBIS_2.DataModel.Migrations
                     b.HasIndex("PlantSpeciesId");
 
                     b.ToTable("spi_plant_polygons", (string)null);
-                });
-
-            modelBuilder.Entity("WBIS_2.DataModel.SPOW_OccupancyStatus", b =>
-                {
-                    b.Property<string>("Status")
-                        .HasColumnType("text")
-                        .HasColumnName("status");
-
-                    b.ToTable("spow_occupancy_status", (string)null);
                 });
 
             modelBuilder.Entity("WBIS_2.DataModel.THP_Area", b =>

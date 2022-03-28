@@ -151,10 +151,6 @@ namespace WBIS_2.DataModel
             get
             { return new IInformationType[0]; }
         }
-        public Expression<Func<OwlBanding, bool>> GetParentWhere(object[] Query, Type QueryType)
-        {
-            throw new NotImplementedException();
-        }
 
         public List<KeyValuePair<string, string>> DisplayFields
         {
@@ -163,5 +159,22 @@ namespace WBIS_2.DataModel
                 return new List<KeyValuePair<string, string>>();
             }
         }
+
+        public Expression<Func<OwlBanding, bool>> GetParentWhere(object[] Query, Type QueryType)
+        {
+            Expression<Func<OwlBanding, bool>> a;
+            if (QueryType == typeof(District))
+                a = _ => Query.Cast<District>().Contains(_.District);
+            else if (QueryType == typeof(Watershed))
+                a = _ => Query.Cast<Watershed>().Contains(_.Watershed);
+            else if (QueryType == typeof(Quad75))
+                a = _ => Query.Cast<Quad75>().Contains(_.Quad75);
+            else if (QueryType == typeof(Hex160))
+                a = _ => Query.Cast<Hex160>().Contains(_.Hex160);
+            a = _ => Query.Contains(_);
+            return a;
+        }
+
+
     }
 }

@@ -17,6 +17,8 @@ namespace WBIS_2.DataModel
         public bool IsSurveyable { get; set; }
         [Column("is_findable")]
         public bool IsFindable { get; set; }
+        [Column("banding_species")]
+        public bool BandingSpecies { get; set; }
 
 
         [InverseProperty("SurveySpecies")]

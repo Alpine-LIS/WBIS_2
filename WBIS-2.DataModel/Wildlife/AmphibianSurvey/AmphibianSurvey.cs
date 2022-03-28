@@ -135,7 +135,7 @@ namespace WBIS_2.DataModel
         public IInformationType[] AvailibleChildren
         {
             get
-            { return new IInformationType[0]; }
+            { return new IInformationType[] { new AmphibianElement() }; }
         }
         public Expression<Func<AmphibianSurvey, bool>> GetParentWhere(object[] Query, Type QueryType)
         {

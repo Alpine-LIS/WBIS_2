@@ -128,6 +128,8 @@ namespace WBIS_2.DataModel
                 a = _ => _.Watersheds.Any(d => Query.Cast<Watershed>().Contains(d));
             else if (QueryType == typeof(Quad75))
                 a = _ => _.Quad75s.Any(d => Query.Cast<Quad75>().Contains(d));
+            else if (QueryType == typeof(Hex160))
+                a = _ => _.Hex160s.Any(d => Query.Cast<Hex160>().Contains(d));
             else
                 a = _ => Query.Contains(_);
             return a;

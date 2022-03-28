@@ -48,18 +48,6 @@
     <Compile Update="Views\Areas\ChildrenListView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Areas\Hex160ChildrenView.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="Views\Areas\Quad75ChildrenView.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="Views\Areas\WatershedChildrenView.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="Views\Areas\DistrictChildrenView.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Update="Views\Areas\Hex160sListView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -85,22 +73,6 @@
 
   <ItemGroup>
     <Page Update="Views\Areas\ChildrenListView.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\Areas\Hex160ChildrenView.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\Areas\Quad75ChildrenView.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\Areas\WatershedChildrenView.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\Areas\DistrictChildrenView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

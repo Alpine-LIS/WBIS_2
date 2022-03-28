@@ -9,7 +9,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class ProtectionZone : UserDataValidator, IUserRecords
+    public class ProtectionZone : UserDataValidator, IUserRecords, IQueryStuff<ProtectionZone>
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
@@ -48,8 +48,29 @@ namespace WBIS_2.DataModel
         [NotMapped, Display(Order = -1)]
         public string DisplayName { get { return "Proection Zone"; } }
 
-        public IInformationType[] AvailibleChildren => throw new NotImplementedException();
+        [NotMapped]
+        public IInformationType[] AvailibleChildren
+        {
+            get
+            { return new IInformationType[0]; }
+        }
 
-        public List<KeyValuePair<string, string>> DisplayFields => throw new NotImplementedException();
+        [NotMapped]
+        public List<KeyValuePair<string, string>> DisplayFields
+        {
+            get
+            {
+                return new List<KeyValuePair<string, string>>();
+            }
+        }
+
+        public Expression<Func<ProtectionZone, bool>> GetParentWhere(object[] Query, Type QueryType)
+        {
+            Expression<Func<ProtectionZone, bool>> a;
+            if (QueryType == typeof(Hex160))
+                a = _ => _.Hex160s.Any(d => Query.Cast<Hex160>().Contains(d));
+            a = _ => Query.Contains(_);
+            return a;
+        }
     }
 }

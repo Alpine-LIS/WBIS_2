@@ -9,7 +9,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class BotanicalSurveyArea : UserDataValidator, IUserRecords, IQueryStuff<AmphibianSurvey>, INonPointParents
+    public class BotanicalSurveyArea : UserDataValidator, IUserRecords, IQueryStuff<BotanicalSurveyArea>, INonPointParents
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
@@ -106,17 +106,17 @@ namespace WBIS_2.DataModel
 
 
         [NotMapped, Display(Order = -1)]
-        public string DisplayName { get { return "Amphibian Survay"; } }
+        public string DisplayName { get { return "Botanical Survey Area"; } }
 
         [NotMapped]
         public IInformationType[] AvailibleChildren
         {
             get
-            { return new IInformationType[0]; }
+            { return new IInformationType[] { new BotanicalSurvey(), new BotanicalElement() }; }
         }
-        public Expression<Func<AmphibianSurvey, bool>> GetParentWhere(object[] Query, Type QueryType)
+        public Expression<Func<BotanicalSurveyArea, bool>> GetParentWhere(object[] Query, Type QueryType)
         {
-            Expression<Func<AmphibianSurvey, bool>> a;
+            Expression<Func<BotanicalSurveyArea, bool>> a;
             if (QueryType == typeof(District))
                 a = _ => Query.Cast<District>().Contains(_.District);
             else if (QueryType == typeof(Watershed))
@@ -125,6 +125,8 @@ namespace WBIS_2.DataModel
                 a = _ => _.Quad75s.Any(d => Query.Cast<Quad75>().Contains(d));
             else if (QueryType == typeof(Hex160))
                 a = _ => _.Hex160s.Any(d => Query.Cast<Hex160>().Contains(d));
+            else if (QueryType == typeof(BotanicalScoping))
+                a = _ => Query.Cast<BotanicalScoping>().Contains(_.BotanicalScoping);
             else
                 a = _ => Query.Contains(_);
             return a;

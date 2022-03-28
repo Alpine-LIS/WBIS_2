@@ -80,6 +80,9 @@ namespace WBIS_2.DataModel
             modelBuilder.Entity<BotanicalScopingSpecies>().ToTable("botanical_scoping_species");
             modelBuilder.Entity<Picture>().ToTable("pictures");
 
+            modelBuilder.Entity<SPOW_OccupancyStatus>().ToTable("spow_occupancy_status");
+            modelBuilder.Entity<NestingStatus>().ToTable("nesting_status");
+            modelBuilder.Entity<ReproductiveStatus>().ToTable("reproductive_status");
 
 
             modelBuilder.Entity<ApplicationUser>()
@@ -334,5 +337,11 @@ namespace WBIS_2.DataModel
         public DbSet<BotanicalScoping> BotanicalScopings { get; set; }
         public DbSet<BotanicalScopingSpecies> BotanicalScopingSpecies { get; set; }
         public DbSet<Picture> Pictures { get; set; }
+
+
+        public DbSet<SPOW_OccupancyStatus> SPOW_OccupancyStatuses { get; set; }
+        public DbSet<NestingStatus> NestingStatuses { get; set; }
+        public DbSet<ReproductiveStatus> ReproductiveStatuses { get; set; }
+
     }
 }

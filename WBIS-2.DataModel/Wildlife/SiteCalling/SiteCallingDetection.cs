@@ -9,7 +9,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class SiteCallingDetection: IPointLayer
+    public class SiteCallingDetection: IPointLayer, IInformationType
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid"), ForeignKey("SiteCalling")]
         public Guid Guid { get; set; }
@@ -75,6 +75,26 @@ namespace WBIS_2.DataModel
         [Column("female_banding_leg")]
         public string FemaleBindingLeg { get; set; }
         [Column("female_banding_pattern")]
-        public string FemaleBindingPattern { get; set; }     
+        public string FemaleBindingPattern { get; set; }
+
+
+
+
+        [NotMapped, Display(Order = -1)]
+        public string DisplayName { get { return "Site Calling Detection"; } }
+
+        [NotMapped]
+        public IInformationType[] AvailibleChildren
+        {
+            get
+            { return new IInformationType[0]; }
+        }
+        public List<KeyValuePair<string, string>> DisplayFields
+        {
+            get
+            {
+                return new List<KeyValuePair<string, string>>();
+            }
+        }
     }
 }

@@ -55,7 +55,8 @@ namespace WBIS_2.DataModel
         public IInformationType[] AvailibleChildren
         {
             get
-            { return new IInformationType[] { new Watershed(), new Quad75(), new Hex160(), new SiteCalling(),  new CNDDBOccurrence(), new CDFW_SpottedOwl() }; }
+            { return new IInformationType[] { new Quad75(),new Watershed(), new Hex160(), new CNDDBOccurrence(), new CDFW_SpottedOwl(), new SiteCalling(), new OwlBanding(), new SPIPlantPolygon(),
+                new SPIPlantPoint(), new AmphibianSurvey(), new AmphibianElement(), new BotanicalScoping(), new BotanicalSurveyArea(), new BotanicalSurvey(), new BotanicalElement() }; }
         }
         public Expression<Func<District, bool>> GetParentWhere(object[] Query, Type QueryType)
         {

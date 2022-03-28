@@ -9,7 +9,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class PermanentCallStation : UserDataValidator, IUserRecords
+    public class PermanentCallStation : UserDataValidator, IUserRecords, IQueryStuff<PermanentCallStation>
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
@@ -47,8 +47,29 @@ namespace WBIS_2.DataModel
         [NotMapped, Display(Order = -1)]
         public string DisplayName { get { return "Permanent Call Stations"; } }
 
-        public IInformationType[] AvailibleChildren => throw new NotImplementedException();
+        [NotMapped]
+        public IInformationType[] AvailibleChildren
+        {
+            get
+            { return new IInformationType[0]; }
+        }
 
-        public List<KeyValuePair<string, string>> DisplayFields => throw new NotImplementedException();
+        [NotMapped]
+        public List<KeyValuePair<string, string>> DisplayFields
+        {
+            get
+            {
+                return new List<KeyValuePair<string, string>>();
+            }
+        }
+
+        public Expression<Func<PermanentCallStation, bool>> GetParentWhere(object[] Query, Type QueryType)
+        {
+            Expression<Func<PermanentCallStation, bool>> a;
+            if (QueryType == typeof(Hex160))
+                a = _ => Query.Cast<Hex160>().Contains(_.Hex160);
+            a = _ => Query.Contains(_);
+            return a;
+        }
     }
 }

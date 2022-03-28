@@ -67,19 +67,23 @@ namespace WBIS_2.DataModel
         public IInformationType[] AvailibleChildren
         {
             get
-            { return new IInformationType[] { new SiteCalling(),  new Hex160RequiredPass(), }; }
+            {
+                return new IInformationType[] { new ProtectionZone(), new PermanentCallStation(), new Hex160RequiredPass(), new SiteCalling(), new OwlBanding(),
+                new AmphibianSurvey(), new AmphibianElement(), new SPIPlantPolygon(), new SPIPlantPoint(),
+            new CNDDBOccurrence(),new CDFW_SpottedOwl(),new BotanicalSurveyArea(),new BotanicalSurvey(),new BotanicalElement()};
+            }
         }
         public Expression<Func<Hex160, bool>> GetParentWhere(object[] Query, Type QueryType)
         {
             Expression<Func<Hex160, bool>> a;
             if (QueryType == typeof(District))
-                a = _ => _.Districts.Any(d => Query.Cast<District>().Contains(d));
+                a = _ => (_).Districts.Any(d => Query.Cast<District>().Contains(d));
             else if (QueryType == typeof(Watershed))
-                a = _ => _.Watersheds.Any(d => Query.Cast<Watershed>().Contains(d));
+                a = _ => (_).Watersheds.Any(d => Query.Cast<Watershed>().Contains(d));
             else if (QueryType == typeof(Quad75))
-                a = _ => _.Quad75s.Any(d => Query.Cast<Quad75>().Contains(d));
+                a = _ => (_).Quad75s.Any(d => Query.Cast<Quad75>().Contains(d));
             else
-                a = _ => Query.Contains(_);
+                a = _ => Query.Contains((_));
             return a;
         }
 

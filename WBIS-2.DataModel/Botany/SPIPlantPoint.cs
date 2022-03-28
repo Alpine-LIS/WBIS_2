@@ -46,13 +46,34 @@ namespace WBIS_2.DataModel
         [NotMapped, Display(Order = -1)]
         public string DisplayName { get { return "SPI Plant Point"; } }
 
-        public IInformationType[] AvailibleChildren => throw new NotImplementedException();
-
-        public List<KeyValuePair<string, string>> DisplayFields => throw new NotImplementedException();
-
+        [NotMapped]
+        public IInformationType[] AvailibleChildren
+        {
+            get
+            { return new IInformationType[0]; }
+        }
         public Expression<Func<SPIPlantPoint, bool>> GetParentWhere(object[] Query, Type QueryType)
         {
-            throw new NotImplementedException();
+            Expression<Func<SPIPlantPoint, bool>> a;
+            if (QueryType == typeof(District))
+                a = _ => Query.Cast<District>().Contains(_.District);
+            else if (QueryType == typeof(Watershed))
+                a = _ => Query.Cast<Watershed>().Contains(_.Watershed);
+            else if (QueryType == typeof(Quad75))
+                a = _ => Query.Cast<Quad75>().Contains(_.Quad75);
+            else if (QueryType == typeof(Hex160))
+                a = _ => Query.Cast<Hex160>().Contains(_.Hex160);
+            else
+                a = _ => Query.Contains(_);
+            return a;
+        }
+
+        public List<KeyValuePair<string, string>> DisplayFields
+        {
+            get
+            {
+                return new List<KeyValuePair<string, string>>();
+            }
         }
     }
 }

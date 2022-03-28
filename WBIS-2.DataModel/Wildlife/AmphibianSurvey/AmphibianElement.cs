@@ -125,6 +125,8 @@ namespace WBIS_2.DataModel
                 a = _ => Query.Cast<Quad75>().Contains(_.Quad75);
             else if (QueryType == typeof(Hex160))
                 a = _ => Query.Cast<Hex160>().Contains(_.Hex160);
+            else if (QueryType == typeof(AmphibianSurvey))
+                a = _ => Query.Cast<AmphibianSurvey>().Contains(_.AmphibianSurvey);
             else
                 a = _ => Query.Contains(_);
             return a;
