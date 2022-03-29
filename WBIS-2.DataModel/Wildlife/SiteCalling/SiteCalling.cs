@@ -136,11 +136,11 @@ namespace WBIS_2.DataModel
 
 
 
-        [Column("site_calling_track_id")]
-        public Guid SiteCallingTrackID { get; set; }
+        //[Column("site_calling_track_id")]
+        //public Guid SiteCallingTrackID { get; set; }
         public SiteCallingTrack SiteCallingTrack { get; set; }
-        [Column("device_info_id")]
-        public Guid DeviceInfoID { get; set; }
+        //[Column("device_info_id")]
+        //public Guid DeviceInfoID { get; set; }
         public DeviceInfo DeviceInfo { get; set; }
 
 

@@ -108,8 +108,8 @@ namespace WBIS_2.DataModel
 
 
 
-        [Column("device_info_id")]
-        public Guid DeviceInfoID { get; set; }
+        //[Column("device_info_id")]
+        //public Guid DeviceInfoID { get; set; }
         public DeviceInfo DeviceInfo { get; set; }
 
 

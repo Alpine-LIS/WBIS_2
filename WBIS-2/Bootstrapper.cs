@@ -60,21 +60,21 @@ namespace WBIS_2
             Manager.Register(Regions.NavigationAreas, new Module(AppModules.ModuleQuad75s, () => new NavigationItem("Quad75s")));
             Manager.Register(Regions.NavigationAreas, new Module(AppModules.ModuleHex160s, () => new NavigationItem("Hex160s")));
 
-            Manager.Register(Regions.NavigationCalifornia, new Module(AppModules.ModuleCnddbOccurrence, () => new NavigationItem("CnddbOccurrence")));
-            Manager.Register(Regions.NavigationCalifornia, new Module(AppModules.ModuleCdfwSpottedOwl, () => new NavigationItem("CdfwSpottedOwl")));
+            //Manager.Register(Regions.NavigationCalifornia, new Module(AppModules.ModuleCnddbOccurrence, () => new NavigationItem("CnddbOccurrence")));
+            //Manager.Register(Regions.NavigationCalifornia, new Module(AppModules.ModuleCdfwSpottedOwl, () => new NavigationItem("CdfwSpottedOwl")));
             //Manager.Register(Regions.Documents, new Module(AppModules.ModuleUser,
             //   () => ApplicationUserViewModel.Create(CurrentUser.User), typeof(ApplicationUserView)));
             //Manager.Register(Regions.Documents, new Module(AppModules.ModuleAdminUser,
             //  () => ApplicationUserAdminViewModel.Create(), typeof(ApplicationUserAdminView)));
 
-            //Manager.Register(Regions.Documents, new Module(AppModules.ModuleDistricts,
-            //    () => DistrictsListViewModel.Create("Districts", "Districts"), typeof(DistrictsListView)));
-            //Manager.Register(Regions.Documents, new Module(AppModules.ModuleWatersheds,
-            //    () => WatershedsListViewModel.Create("Watersheds", "Watersheds"), typeof(WatershedsListView)));
-            //Manager.Register(Regions.Documents, new Module(AppModules.ModuleHex160s,
-            //    () => Hex160sListViewModel.Create("Hex160s", "Hex160s"), typeof(Hex160sListView)));
-            //Manager.Register(Regions.Documents, new Module(AppModules.ModuleQuad75s,
-            //    () => Quad75sListViewModel.Create("Quad75s", "Quad75s"), typeof(Quad75sListView)));
+            Manager.Register(Regions.Documents, new Module(AppModules.ModuleDistricts,
+                () => ParentListViewModel.Create(new District()), typeof(ParentListView)));
+            Manager.Register(Regions.Documents, new Module(AppModules.ModuleWatersheds,
+                () => ParentListViewModel.Create(new Watershed()), typeof(ParentListView)));
+            Manager.Register(Regions.Documents, new Module(AppModules.ModuleHex160s,
+                () => ParentListViewModel.Create(new Hex160()), typeof(ParentListView)));
+            Manager.Register(Regions.Documents, new Module(AppModules.ModuleQuad75s,
+                () => ParentListViewModel.Create(new Quad75()), typeof(ParentListView)));
 
             //Manager.Register(Regions.Documents, new Module(AppModules.ModuleCnddbOccurrence,
             //   () => CnddbsListViewModel.Create("CnddbOccurrence", "CnddbOccurrence"), typeof(CnddbsListView)));
@@ -123,8 +123,8 @@ namespace WBIS_2
             Manager.Inject(Regions.NavigationAreas, AppModules.ModuleQuad75s);
             Manager.Inject(Regions.NavigationAreas, AppModules.ModuleHex160s);
 
-            Manager.Inject(Regions.NavigationCalifornia, AppModules.ModuleCnddbOccurrence);
-            Manager.Inject(Regions.NavigationCalifornia, AppModules.ModuleCdfwSpottedOwl);
+            //Manager.Inject(Regions.NavigationCalifornia, AppModules.ModuleCnddbOccurrence);
+            //Manager.Inject(Regions.NavigationCalifornia, AppModules.ModuleCdfwSpottedOwl);
         }
 
         protected virtual void ConfigureNavigation()

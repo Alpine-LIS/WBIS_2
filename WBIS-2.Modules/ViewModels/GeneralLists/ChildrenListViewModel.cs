@@ -63,7 +63,6 @@ namespace WBIS_2.Modules.ViewModels
         protected ChildrenListViewModel()
         {
             //Tracker.ChangesSaved += Tracker_ChangesSaved;
-            LockedRecord = !CurrentUser.AdminPrivileges;
             Privileges();
             RaisePropertyChanged(nameof(AvailibleChildren));
             SelectionUpdated += UpdateChildren;
@@ -140,7 +139,6 @@ namespace WBIS_2.Modules.ViewModels
                 {
                     _CurrentChild = value;
                     RefreshDataSource();
-                    SetListType(CurrentChild.GetType());
                 }
             }
         }
@@ -170,6 +168,7 @@ namespace WBIS_2.Modules.ViewModels
                     //.Include(_ => _.SiteCallingDetections).ThenInclude(_=>_.SpeciesFound)
                     .Include(_ => _.User)
                     .Where(((SiteCalling)CurrentChild).GetParentWhere(ParentQuery, ParentType.GetType()))
+                    .Where(_=>!_._delete && !_.Repository)
                     .AsNoTracking();
             }
             else if(CurrentChild.GetType() == typeof(Hex160RequiredPass))
@@ -235,9 +234,6 @@ namespace WBIS_2.Modules.ViewModels
         public override void DeleteRecord()
         {
            
-        }
-        public override void ViewEdits()
-        {
         }
 
 

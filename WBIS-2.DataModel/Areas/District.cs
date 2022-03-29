@@ -23,8 +23,8 @@ namespace WBIS_2.DataModel
         //[Column("geometry", TypeName = "geometry(MultiPolygon,26710)")]
         //public MultiPolygon Geometry { get; set; }
 
-        [Column("district_extended_geometry_id")]
-        public Guid DistrictExtendedGeometryID { get; set; }
+        //[Column("district_extended_geometry_id")]
+        //public Guid DistrictExtendedGeometryID { get; set; }
         public DistrictExtendedGeometry DistrictExtendedGeometry { get; set; }
 
 

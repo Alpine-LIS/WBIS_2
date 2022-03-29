@@ -35,14 +35,14 @@ namespace WBIS_2.DataModel
        public Guid ApplicationGroupId { get; set; }
         public ApplicationGroup ApplicationGroup { get; set; }
 
-        [Column("modified_user_id")]
-        public Guid AdminId { get; set; }
-        public ApplicationUser Admin { get; set; }
+        //[Column("admin_id")]
+        //public Guid AdminId { get; set; }
+        //public ApplicationUser Admin { get; set; }
 
        
         
         
-        public ICollection<ApplicationUser> Contractors { get; set; }
+        //public ICollection<ApplicationUser> Contractors { get; set; }
         public ICollection<District> Districts { get; set; }
 
 

@@ -14,8 +14,8 @@ namespace WBIS_2.DataModel
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid"), ForeignKey("SiteCalling")]
         public Guid Guid { get; set; }
 
-        [Required, Column("site_calling_id")]
-        public Guid SiteCallingId { get; set; }
+        //[Required, Column("site_calling_id"), ForeignKey("SiteCalling")]
+        //public Guid SiteCallingId { get; set; }
         public SiteCalling SiteCalling { get; set; }
 
         [Column("geometry", TypeName = "geometry(LineString,26710)")]

@@ -26,17 +26,17 @@ namespace WBIS_2.DataModel
         public Guid AmphibianSurveyId { get; set; }
         public AmphibianSurvey AmphibianSurvey { get; set; }
 
-        [Column("amphibian_location_found_id")]
-        public Guid AmphibianLocationFoundId { get; set; }
+        //[Column("amphibian_location_found_id")]
+        //public Guid AmphibianLocationFoundId { get; set; }
         public AmphibianLocationFound AmphibianLocationFound { get; set; }
 
-        [Column("amphibian_point_of_interest_id")]
-        public Guid AmphibianPointOfInterestId { get; set; }
+        //[Column("amphibian_point_of_interest_id")]
+        //public Guid AmphibianPointOfInterestId { get; set; }
         public AmphibianPointOfInterest AmphibianPointOfInterest { get; set; }
 
 
-        [Column("device_info_id")]
-        public Guid DeviceInfoID { get; set; }
+        //[Column("device_info_id")]
+        //public Guid DeviceInfoID { get; set; }
         public DeviceInfo DeviceInfo { get; set; }
 
 

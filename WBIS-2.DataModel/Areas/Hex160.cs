@@ -33,8 +33,8 @@ namespace WBIS_2.DataModel
         [Column("geometry", TypeName = "geometry(Polygon,26710)")]
         public Polygon Geometry { get; set; }
 
-        [Column("current_preotection_zone_id")]
-        public Guid CurrentProtectionZoneID { get; set; }
+        [Column("current_preotection_zone_id"), ForeignKey("ProtectionZone")]
+        public Guid? CurrentProtectionZoneID { get; set; }
         public ProtectionZone CurrentProtectionZone { get; set; }
         public ICollection<ProtectionZone> ProtectionZones { get; set; }
         public ICollection<PermanentCallStation> PermanentCallStations { get; set; }

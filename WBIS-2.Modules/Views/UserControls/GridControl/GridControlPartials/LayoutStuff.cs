@@ -217,7 +217,6 @@ namespace WBIS_2.Modules.Views
 
         private void DisplayFileds(GridControl gc)
         {
-            bool ShowDateTimes = ((WBISViewModelBase)this.DataContext).ShowDateTimes;
             addColumns = new Dictionary<GridColumn, int>();
 
             foreach (var col in gc.Columns)
@@ -241,7 +240,7 @@ namespace WBIS_2.Modules.Views
                 else
                 {
                     col.Header = col.FieldName;
-                    StandardColumnFormat(col, ShowDateTimes, gc);
+                    StandardColumnFormat(col,  gc);
                 }
             }
 
@@ -251,7 +250,7 @@ namespace WBIS_2.Modules.Views
             }
         }
 
-        private void StandardColumnFormat(GridColumn col, bool ShowDateTimes, GridControl gc)
+        private void StandardColumnFormat(GridColumn col, GridControl gc)
         {
             if (col.FieldName.ToString().Contains("Cost"))
             {

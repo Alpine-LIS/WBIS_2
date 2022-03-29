@@ -9,7 +9,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <dxb:ToolBarControl Grid.Row="2">
+        <dxb:ToolBarControl>
             <dxb:BarButtonItem 
                 KeyGesture="Insert"
                 ToolTip="{Binding AddRecordToolTip, UpdateSourceTrigger=PropertyChanged}"

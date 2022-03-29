@@ -11,11 +11,11 @@ namespace WBIS_2.DataModel
 {
     public class AmphibianPointOfInterest : UserDataValidator
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid"), ForeignKey("AmphibianElement")]
         public Guid Guid { get; set; }
 
-        [Required, Column("amphibian_element_id"),ForeignKey("AmphibianElement")]
-        public Guid AmphibianElementId { get; set; }
+        //[Required, Column("amphibian_element_id"),ForeignKey("AmphibianElement")]
+        //public Guid AmphibianElementId { get; set; }
         public AmphibianElement AmphibianElement { get; set; }
 
 

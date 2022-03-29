@@ -21,7 +21,7 @@ namespace WBIS_2.Modules.ViewModels
     {
         public object Title
         {
-            get { return $"{ParentType.DisplayName} Children"; }
+            get { return $"{ParentType.DisplayName}"; }
         }
         public IInformationType ParentType { get; set; }
 
@@ -29,11 +29,10 @@ namespace WBIS_2.Modules.ViewModels
         {
             return ViewModelSource.Create(() => new ParentListViewModel()
             {
-                Caption = $"{((IInformationType)parentType).DisplayName} Children",
-                Content = $"{((IInformationType)parentType).DisplayName} Children",
+                Caption = $"{(parentType).DisplayName}",
+                Content = $"{(parentType).DisplayName}",
                 SelectedItems = new ObservableCollection<object>(),
                 ParentType = parentType,
-                AvailibleChildren = parentType.AvailibleChildren
             });
         }
 
@@ -62,23 +61,9 @@ namespace WBIS_2.Modules.ViewModels
         protected ParentListViewModel()
         {
             //Tracker.ChangesSaved += Tracker_ChangesSaved;
-            LockedRecord = !CurrentUser.AdminPrivileges;
             Privileges();
-            RaisePropertyChanged(nameof(AvailibleChildren));
-            SelectionUpdated += UpdateChildren;
         }
-
-        private void UpdateChildren(object sender, EventArgs e)
-        {
-            IDocumentManagerService service = this.GetRequiredService<IDocumentManagerService>();
-            IDocument document = service.FindDocumentById(CurrentChild.DisplayName + " Children");
-            if (document != null)
-            {
-                var ChildrenView = (ChildrenListViewModel)document.Content;
-                ChildrenView.ParentQuery = SelectedItems.ToArray();
-                RaisePropertyChanged(nameof(ChildrenView));
-            }
-        }
+              
         public override void ShowDetails()
         {
             //if (CurrentRecord == null)
@@ -128,94 +113,21 @@ namespace WBIS_2.Modules.ViewModels
         }
 
 
-        public IInformationType[] AvailibleChildren { get; set; }
-        public IInformationType _CurrentChild;
-        public IInformationType CurrentChild
-        {
-            get { return _CurrentChild; }
-            set
-            {
-                if (_CurrentChild != value)
-                {
-                    _CurrentChild = value;
-                    RefreshDataSource();
-                    SetListType(CurrentChild.GetType());
-                }
-            }
-        }
-        public object[] ParentQuery
-        {
-            get
-            {
-                return GetProperty(() => ParentQuery);
-                //this.Caption = $"Regens {SelectedItems.Count}";
-            }
-            set { SetProperty(() => ParentQuery, value); 
-                RefreshDataSource(); }
-        }
-
-
+       
         public override void Records_GetQueryable(object sender, GetQueryableEventArgs e)
         {
-            if (CurrentChild == null) return;
-
-            if (CurrentChild.GetType() == typeof(SiteCalling))
-            {
-                e.QueryableSource = Database.Set<SiteCalling>()
-                    .Include(_ => _.Hex160).ThenInclude(_ => _.Districts)
-                    .Include(_ => _.Hex160).ThenInclude(_ => _.Quad75s)
-                    .Include(_ => _.Hex160).ThenInclude(_ => _.Watersheds)
-                    .Include(_ => _.SurveySpecies)
-                    //.Include(_ => _.SiteCallingDetections).ThenInclude(_=>_.SpeciesFound)
-                    .Include(_ => _.User)
-                    .Where(((SiteCalling)CurrentChild).GetParentWhere(ParentQuery, ParentType.GetType()))
+            if (ParentType is District)
+                e.QueryableSource = Database.Set<District>()
                     .AsNoTracking();
-            }
-            else if(CurrentChild.GetType() == typeof(Hex160RequiredPass))
-            {
-                e.QueryableSource = Database.Set<Hex160RequiredPass>()
-                    .Include(_ => _.Hex160).ThenInclude(_ => _.Districts)
-                    .Include(_ => _.Hex160).ThenInclude(_ => _.Quad75s)
-                    .Include(_ => _.Hex160).ThenInclude(_ => _.Watersheds)
-                    .Include(_ => _.BirdSpecies)
-                    .Include(_ => _.User)
-                    .Where(((Hex160RequiredPass)CurrentChild).GetParentWhere(ParentQuery, ParentType.GetType()))
-                    .AsNoTracking();
-            }
-            else if (CurrentChild.GetType() == typeof(CNDDBOccurrence))
-            {
-                e.QueryableSource = Database.Set<CNDDBOccurrence>()
-                    .Include(_ => _.Districts)
-                    .Include(_ => _.Watersheds)
-                    .Include(_ => _.Quad75s)
-                    .Where(((CNDDBOccurrence)CurrentChild).GetParentWhere(ParentQuery, ParentType.GetType()))
-                    .AsNoTracking();
-            }
-            else if (CurrentChild.GetType() == typeof(CDFW_SpottedOwl))
-            {
-                e.QueryableSource = Database.Set<CDFW_SpottedOwl>()
-                    .Include(_ => _.District)
-                    .Include(_ => _.Watershed)
-                    .Include(_ => _.Quad75)
-                    .Where(((CDFW_SpottedOwl)CurrentChild).GetParentWhere(ParentQuery, ParentType.GetType()))
-                    .AsNoTracking();
-            }
-            else if (CurrentChild.GetType() == typeof(Watershed))
-            {
+            else if (ParentType is Watershed)
                 e.QueryableSource = Database.Set<Watershed>()
-                    .Include(_ => _.Districts)
-                    .Where(((Watershed)CurrentChild).GetParentWhere(ParentQuery, ParentType.GetType()))
                     .AsNoTracking();
-            }
-            else if (CurrentChild.GetType() == typeof(Hex160))
-            {
+            else if (ParentType is Quad75)
+                e.QueryableSource = Database.Set<Quad75>()
+                    .AsNoTracking();
+            else if (ParentType is Hex160)
                 e.QueryableSource = Database.Set<Hex160>()
-                    .Include(_ => _.Districts)
-                    .Include(_ => _.Quad75s)
-                    .Include(_ => _.Watersheds)
-                    .Where(((Hex160)CurrentChild).GetParentWhere(ParentQuery, ParentType.GetType()))
                     .AsNoTracking();
-            }
         }
 
 
@@ -234,9 +146,6 @@ namespace WBIS_2.Modules.ViewModels
         public override void DeleteRecord()
         {
            
-        }
-        public override void ViewEdits()
-        {
         }
 
 

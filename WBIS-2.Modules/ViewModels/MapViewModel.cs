@@ -280,59 +280,59 @@ namespace WBIS_2.Modules.ViewModels
         private void RefreshLayers(object sender, EventArgs e)
         {
 
-            List<string> layers = (List<string>)sender;
+            //List<string> layers = (List<string>)sender;
 
-            foreach (string startingStr in layers)
-            {
-                string lyrStr = startingStr;
-                if (startingStr.ToUpper().Contains("REGEN")) lyrStr = "REGENS";
-                else if (startingStr.ToUpper().Contains("FUELBREAK")) lyrStr = "FUELBREAKS";
-                else if (startingStr.ToUpper().Contains("DISTRICT")) lyrStr = "DISTRICTS";
-                else if (startingStr.ToUpper().Contains("PLANTING")) lyrStr = "ACTIVITIES";
-                else if (startingStr.ToUpper().Contains("SPRAYING")) lyrStr = "ACTIVITIES";
-                else if (startingStr.ToUpper().Contains("EVALUATION")) lyrStr = "ACTIVITIES";
-                else if (startingStr.ToUpper().Contains("MISCELLANEOUS")) lyrStr = "ACTIVITIES";
-                else if (startingStr.ToUpper().Contains("COMMERCIAL")) lyrStr = "ACTIVITIES";
-                else if (startingStr.ToUpper().Contains("SITE")) lyrStr = "ACTIVITIES";
+            //foreach (string startingStr in layers)
+            //{
+            //    string lyrStr = startingStr;
+            //    if (startingStr.ToUpper().Contains("REGEN")) lyrStr = "REGENS";
+            //    else if (startingStr.ToUpper().Contains("FUELBREAK")) lyrStr = "FUELBREAKS";
+            //    else if (startingStr.ToUpper().Contains("DISTRICT")) lyrStr = "DISTRICTS";
+            //    else if (startingStr.ToUpper().Contains("PLANTING")) lyrStr = "ACTIVITIES";
+            //    else if (startingStr.ToUpper().Contains("SPRAYING")) lyrStr = "ACTIVITIES";
+            //    else if (startingStr.ToUpper().Contains("EVALUATION")) lyrStr = "ACTIVITIES";
+            //    else if (startingStr.ToUpper().Contains("MISCELLANEOUS")) lyrStr = "ACTIVITIES";
+            //    else if (startingStr.ToUpper().Contains("COMMERCIAL")) lyrStr = "ACTIVITIES";
+            //    else if (startingStr.ToUpper().Contains("SITE")) lyrStr = "ACTIVITIES";
 
-                var layer = MapControl.GetLayer(lyrStr);
-                if (layer == null) continue;
-                //MapControl.UxMap.ActiveLayer = layer;
-                PGFeatureSet pGFeatureSet = (PGFeatureSet)layer.DataSet;
-                //MapControl.UxMap.ActiveLayer.DataSet = new PGFeatureSet(pGFeatureSet.Server, pGFeatureSet.Table, "Geometry", "Guid");
-                //MapControl.UxMap.ActiveLayer.Selection.Configure();
-                layer.DataSet = new PGFeatureSet(pGFeatureSet.Server, pGFeatureSet.Table, "Geometry", "Guid");
-                layer.Selection.Configure();
-                layer.AssignFastDrawnStates();
-            }
+            //    var layer = MapControl.GetLayer(lyrStr);
+            //    if (layer == null) continue;
+            //    //MapControl.UxMap.ActiveLayer = layer;
+            //    PGFeatureSet pGFeatureSet = (PGFeatureSet)layer.DataSet;
+            //    //MapControl.UxMap.ActiveLayer.DataSet = new PGFeatureSet(pGFeatureSet.Server, pGFeatureSet.Table, "Geometry", "Guid");
+            //    //MapControl.UxMap.ActiveLayer.Selection.Configure();
+            //    layer.DataSet = new PGFeatureSet(pGFeatureSet.Server, pGFeatureSet.Table, "Geometry", "Guid");
+            //    layer.Selection.Configure();
+            //    layer.AssignFastDrawnStates();
+            //}
 
-            MapControl.UxMap.MapFrame.Initialize();
-            MapDataPasser_UserDistrictsChanged(new object(), new EventArgs());
+            //MapControl.UxMap.MapFrame.Initialize();
+            //MapDataPasser_UserDistrictsChanged(new object(), new EventArgs());
         }
 
 
         private void MapDataPasser_UserDistrictsChanged(object sender, EventArgs e)
         {
-            if (MapControl == null) return;
+            //if (MapControl == null) return;
 
-            Guid[] districtGuids = CurrentUser.Districts.Select(_ => _.Guid).ToArray();
+            //Guid[] districtGuids = CurrentUser.Districts.Select(_ => _.Guid).ToArray();
 
-            //string[] layers = new string[] { "REGENS" };
-            string[] layers = new string[] { "REGENS", "FUELBREAKS" };
-            foreach (string layer in layers)
-            {
-                var featureLayer = MapControl.GetLayer(layer);
-                foreach (var f in featureLayer.DataSet.Features)
-                {
-                    //featureLayer.SetVisible(f, (string)f.DataRow["DISTRICT"] == "Redding");
-                    if (layer == "FUELBREAKS")
-                        featureLayer.SetVisible(f, districtGuids.Contains((Guid)f.DataRow["DistrictGuid"]) &&
-                            (!(bool)f.DataRow["FuelTreatment"] || (bool)f.DataRow["FuelTreatment"] == MapDataPasser.ViewFuelTreatments));
-                    else
-                        featureLayer.SetVisible(f, districtGuids.Contains((Guid)f.DataRow["DistrictGuid"]));
-                }
-            }
-            MapControl.UxMap.MapFrame.Invalidate();
+            ////string[] layers = new string[] { "REGENS" };
+            //string[] layers = new string[] { "REGENS", "FUELBREAKS" };
+            //foreach (string layer in layers)
+            //{
+            //    var featureLayer = MapControl.GetLayer(layer);
+            //    foreach (var f in featureLayer.DataSet.Features)
+            //    {
+            //        //featureLayer.SetVisible(f, (string)f.DataRow["DISTRICT"] == "Redding");
+            //        if (layer == "FUELBREAKS")
+            //            featureLayer.SetVisible(f, districtGuids.Contains((Guid)f.DataRow["DistrictGuid"]) &&
+            //                (!(bool)f.DataRow["FuelTreatment"] || (bool)f.DataRow["FuelTreatment"] == MapDataPasser.ViewFuelTreatments));
+            //        else
+            //            featureLayer.SetVisible(f, districtGuids.Contains((Guid)f.DataRow["DistrictGuid"]));
+            //    }
+            //}
+            //MapControl.UxMap.MapFrame.Invalidate();
         }
     }
 }

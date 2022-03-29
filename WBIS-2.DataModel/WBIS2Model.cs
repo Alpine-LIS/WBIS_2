@@ -130,10 +130,8 @@ namespace WBIS_2.DataModel
                         x => x.HasOne<BotanicalScoping>().WithMany().HasForeignKey("botanical_scoping_id"),
                         x => x.HasOne<District>().WithMany().HasForeignKey("district_id"),
                         x => x.ToTable("botanical_scopings_districts", "public"));
-           
 
-
-
+          
 
             modelBuilder.Entity<Quad75>()
                 .HasMany(_ => _.Hex160s)

@@ -94,15 +94,9 @@ namespace WBIS_2.Modules.ViewModels
             DeleteRecordCommand = new DelegateCommand(DeleteRecord);
             RecordsRefreshCommand = new DelegateCommand(RecordsRefresh);
             ClosingFormCommand = new DelegateCommand(CloseForm);
-            ViewEditsCommand = new DelegateCommand(ViewEdits);
    
             SaveFilterCommand = new DelegateCommand(SaveFilterClick);
             LoadFilterCommand = new DelegateCommand(LoadFilterClick);
-
-
-            ManageRequiredPassesCommand = new DelegateCommand(ManageRequiredPassesClick);
-            RemoveRequiredPassesCommand = new DelegateCommand(RemoveRequiredPassesClick);
-            DropHexagonsCommand = new DelegateCommand(DropHexagonsClick);
 
         Privileges();
 
@@ -213,22 +207,7 @@ namespace WBIS_2.Modules.ViewModels
 
 
         #region "User control Visibilities/Formats"
-        //Should times be shown with date?
-        bool isSupport = false;
-        public virtual bool IsSupport
-        {
-            get
-            {
-                return isSupport;
-            }
-            set
-            {
-                isSupport = value;
-            }
-        }
-        public bool ShowDateTimes { get; set; } = false;
-
-    
+           
         private bool _AdminUser = false;
         public bool AdminUser
         {
@@ -239,24 +218,9 @@ namespace WBIS_2.Modules.ViewModels
             }
         }
 
-
-
-      
-
-
-        public bool LockedRecord { get; set; }
-
-     
-        public bool IsReadonlyEditField { get; set; }
-        public bool EnableDetailMenuItems { get; set; }
         public void Privileges()
         {
             if (CurrentUser.User == null) return;
-
-            EnableDetailMenuItems = !LockedRecord;
-            RaisePropertyChanged(nameof(EnableDetailMenuItems));
-            IsReadonlyEditField = LockedRecord;
-            RaisePropertyChanged(nameof(IsReadonlyEditField));
 
             AdminUser = CurrentUser.AdminPrivileges;
             RaisePropertyChanged(nameof(AdminUser));
@@ -268,14 +232,23 @@ namespace WBIS_2.Modules.ViewModels
 
         #region "Commands"
         public string AddRecordToolTip { get; set; }
-        public ICommand ViewEditsCommand { get; set; }
-        public ICommand ShowDetailsCommand { get; set; }
-        public ICommand SaveCommand { get; set; }
         public ICommand AddRecordCommand { get; set; }
+        public abstract void AddRecord();
+        public ICommand ShowDetailsCommand { get; set; }
+        public abstract void ShowDetails();
+        public ICommand SaveCommand { get; set; }
+        public abstract void Save();
         public ICommand DeleteRecordCommand { get; set; }
+        public abstract void DeleteRecord();
         public ICommand RecordsRefreshCommand { get; set; }
+        public void RecordsRefresh()
+        {
+            Records.Refresh();
+            RaisePropertyChanged(nameof(Records));
+        }
         public ICommand ClosingFormCommand { get; set; }
-        
+        public abstract void CloseForm();
+
         public ICommand SaveFilterCommand { get; set; }
         public event EventHandler SaveFilterEvent;
         public void SaveFilterClick()
@@ -288,20 +261,7 @@ namespace WBIS_2.Modules.ViewModels
         {
             LoadFilterEvent?.Invoke(new object(), new EventArgs());
         }
-
-
-        public abstract void Save();
-        public abstract void ShowDetails();
-        public abstract void AddRecord();
-        public abstract void DeleteRecord();
-        public void RecordsRefresh()
-        {
-            Records.Refresh();
-            RaisePropertyChanged(nameof(Records));
-        }
         public IDocumentOwner DocumentOwner { get; set; }
-        public abstract void CloseForm();
-        public abstract void ViewEdits();
         #endregion
 
        
@@ -309,9 +269,7 @@ namespace WBIS_2.Modules.ViewModels
 
         public bool ToggleAutoZoom { get; set; } = true;
         public bool HasPhotos { get; set; } = false;
-        public ICommand ViewEvaluationPhotosCommand { get; set; }
-        public bool IsActive { get; set; }
-
+        public ICommand ViewPhotosCommand { get; set; }
 
 
         public event EventHandler SelectionUpdated;
@@ -337,63 +295,34 @@ namespace WBIS_2.Modules.ViewModels
             }
         }
 
+      
 
-        public bool IsDistrictList { get; set; } = false;
-        public bool IsQuad75List { get; set; } = false;
-        public bool IsWatershedList { get; set; } = false;
-        public bool IsHex160List { get; set; } = false;
-        public bool IsHex160PassesList { get; set; } = false;
-        public bool IsSiteCallingList { get; set; } = false;
-        public bool IsCnddbOccurrenceList { get; set; } = false;
-        public bool IsCdfwSpottedOwlList { get; set; } = false;
-        public void SetListType(Type type)
-        {            
-            IsDistrictList = (type == typeof(District));
-            IsQuad75List = (type == typeof(Quad75));
-            IsWatershedList = (type == typeof(Watershed));
-            IsHex160List = (type == typeof(Hex160));
-            IsHex160PassesList = (type == typeof(Hex160RequiredPass));
-            IsSiteCallingList = (type == typeof(SiteCalling));
-            IsCnddbOccurrenceList = (type == typeof(CNDDBOccurrence));
-            IsCdfwSpottedOwlList = (type == typeof(CDFW_SpottedOwl));
 
-            RaisePropertyChanged(nameof(IsDistrictList));
-            RaisePropertyChanged(nameof(IsQuad75List));
-            RaisePropertyChanged(nameof(IsWatershedList));
-            RaisePropertyChanged(nameof(IsHex160List));
-            RaisePropertyChanged(nameof(IsHex160PassesList));
-            RaisePropertyChanged(nameof(IsSiteCallingList));
-            RaisePropertyChanged(nameof(IsCnddbOccurrenceList));
-            RaisePropertyChanged(nameof(IsCdfwSpottedOwlList));
-        }
+        //public ICommand ManageRequiredPassesCommand { get; set; }
+        //public ICommand RemoveRequiredPassesCommand { get; set; }
+        //public ICommand DropHexagonsCommand { get; set; }
+        //private void ManageRequiredPassesClick()
+        //{
+        //    ManageRequiredPassesView manageRequiredPassesView = new ManageRequiredPassesView();
+        //    manageRequiredPassesView.DataContext = new ManageRequiredPassesViewModel(SelectedItems.Cast<Hex160>().ToArray());
+        //    CustomControlWindow userWindow = new CustomControlWindow(manageRequiredPassesView);
+        //}
+        //private void RemoveRequiredPassesClick()
+        //{
+        //    Hex160RequiredPass[] hex160RequiredPasses = Database.Hex160RequiredPasses
+        //        .Include(_ => _.Hex160)
+        //        .Where(_ => SelectedItems.Cast<Hex160>().ToArray().Contains(_.Hex160)).ToArray();
+        //    foreach (Hex160RequiredPass hex160RequiredPass in hex160RequiredPasses)
+        //        Database.Hex160RequiredPasses.Remove(hex160RequiredPass);
+        //    Database.SaveChanges();
+        //    MessageBox.Show("Operation complete.");
+        //}
+        //private void DropHexagonsClick()
+        //{
 
 
 
-        public ICommand ManageRequiredPassesCommand { get; set; }
-        public ICommand RemoveRequiredPassesCommand { get; set; }
-        public ICommand DropHexagonsCommand { get; set; }
-        private void ManageRequiredPassesClick()
-        {
-            ManageRequiredPassesView manageRequiredPassesView = new ManageRequiredPassesView();
-            manageRequiredPassesView.DataContext = new ManageRequiredPassesViewModel(SelectedItems.Cast<Hex160>().ToArray());
-            CustomControlWindow userWindow = new CustomControlWindow(manageRequiredPassesView);
-        }
-        private void RemoveRequiredPassesClick()
-        {
-            Hex160RequiredPass[] hex160RequiredPasses = Database.Hex160RequiredPasses
-                .Include(_ => _.Hex160)
-                .Where(_ => SelectedItems.Cast<Hex160>().ToArray().Contains(_.Hex160)).ToArray();
-            foreach (Hex160RequiredPass hex160RequiredPass in hex160RequiredPasses)
-                Database.Hex160RequiredPasses.Remove(hex160RequiredPass);
-            Database.SaveChanges();
-            MessageBox.Show("Operation complete.");
-        }
-        private void DropHexagonsClick()
-        {
-
-
-
-        }
+        //}
 
 
 
@@ -450,18 +379,6 @@ namespace WBIS_2.Modules.ViewModels
             if (File.Exists($@"{ path}\{ TableName}.xml")) File.Delete($@"{ path}\{ TableName}.xml");
             RefreshDataSource();
             DontSaveLayout = false;
-        }
-
-        private bool _ViewSpecificRecord = false;
-        public bool ViewSpecificRecord
-        {
-            get { return _ViewSpecificRecord; }
-            set
-            {
-                _ViewSpecificRecord = value;
-                RefreshDataSource();
-                RaisePropertyChanged(nameof(Records));
-            }
         }
     }
 

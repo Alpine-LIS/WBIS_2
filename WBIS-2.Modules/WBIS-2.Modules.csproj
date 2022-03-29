@@ -12,7 +12,9 @@
   <ItemGroup>
     <Folder Include="ViewModels\Botany\" />
     <Folder Include="ViewModels\Users\" />
+    <Folder Include="Views\Areas\" />
     <Folder Include="Views\Botany\" />
+    <Folder Include="Views\California\" />
     <Folder Include="Views\Users\" />
   </ItemGroup>
 
@@ -51,21 +53,6 @@
     <Compile Update="Views\GeneralLists\ChildrenListView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Areas\Hex160sListView.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="Views\Areas\Quad75sListView.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="Views\Areas\WatershedsListView.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="Views\California\CdfwOwlsListView.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="Views\California\CnddbsListView.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Update="Views\UserControls\Menus\DetailMenuView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -80,26 +67,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\GeneralLists\ChildrenListView.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\Areas\Hex160sListView.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\Areas\Quad75sListView.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\Areas\WatershedsListView.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\California\CdfwOwlsListView.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\California\CnddbsListView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

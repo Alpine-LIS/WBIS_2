@@ -11,11 +11,11 @@ namespace WBIS_2.DataModel
 {
     public class BotanicalPlantList : UserDataValidator
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid"), ForeignKey("BotanicalElement")]
         public Guid Guid { get; set; }
 
-        [Required, Column("botanical_element_id"),ForeignKey("BotanicalElement")]
-        public Guid BotanicalElementId { get; set; }
+        //[Required, Column("botanical_element_id"),ForeignKey("BotanicalElement")]
+        //public Guid BotanicalElementId { get; set; }
         public BotanicalElement BotanicalElement { get; set; }
 
 

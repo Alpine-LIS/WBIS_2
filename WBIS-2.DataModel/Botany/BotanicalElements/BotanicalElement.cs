@@ -33,21 +33,21 @@ namespace WBIS_2.DataModel
         public Guid BotanicalSurveyId { get; set; }
         public BotanicalSurvey BotanicalSurvey { get; set; }
 
-        [Column("botanical_point_of_interest_id")]
-        public Guid BotanicalPointOfInterestId { get; set; }
+        //[Column("botanical_point_of_interest_id")]
+        //public Guid BotanicalPointOfInterestId { get; set; }
         public BotanicalPointOfInterest BotanicalPointOfInterest { get; set; }
 
-        [Column("botanical_plant_of_interest_id")]
-        public Guid BotanicalPlantOfInterestId { get; set; }
+        //[Column("botanical_plant_of_interest_id")]
+        //public Guid BotanicalPlantOfInterestId { get; set; }
         public BotanicalPlantOfInterest BotanicalPlantOfInterest { get; set; }
         
-        [Column("botanical_plant_list_id")]
-        public Guid BotanicalPlantListId { get; set; }
+        //[Column("botanical_plant_list_id")]
+        //public Guid BotanicalPlantListId { get; set; }
         public BotanicalPlantList BotanicalPlantList { get; set; }
 
 
-        [Column("device_info_id")]
-        public Guid DeviceInfoID { get; set; }
+        //[Column("device_info_id")]
+        //public Guid DeviceInfoID { get; set; }
         public DeviceInfo DeviceInfo { get; set; }
 
 

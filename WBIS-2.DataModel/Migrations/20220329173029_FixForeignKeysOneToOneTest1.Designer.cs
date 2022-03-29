@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,10 @@ using WBIS_2.DataModel;
 namespace WBIS_2.DataModel.Migrations
 {
     [DbContext(typeof(WBIS2Model))]
-    partial class WBIS2ModelModelSnapshot : ModelSnapshot
+    [Migration("20220329173029_FixForeignKeysOneToOneTest1")]
+    partial class FixForeignKeysOneToOneTest1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -426,6 +428,14 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("guid");
 
+                    b.Property<Guid>("AmphibianLocationFoundId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("amphibian_location_found_id");
+
+                    b.Property<Guid>("AmphibianPointOfInterestId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("amphibian_point_of_interest_id");
+
                     b.Property<Guid>("AmphibianSurveyId")
                         .HasColumnType("uuid")
                         .HasColumnName("amphibian_survey_id");
@@ -449,6 +459,10 @@ namespace WBIS_2.DataModel.Migrations
                     b.Property<string>("Datum")
                         .HasColumnType("text")
                         .HasColumnName("datum");
+
+                    b.Property<Guid>("DeviceInfoID")
+                        .HasColumnType("uuid")
+                        .HasColumnName("device_info_id");
 
                     b.Property<Guid>("DistrictId")
                         .HasColumnType("uuid")
@@ -524,6 +538,10 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("guid");
 
+                    b.Property<Guid>("AmphibianElementId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("amphibian_element_id");
+
                     b.Property<Guid>("AmphibianSpeciesId")
                         .HasColumnType("uuid")
                         .HasColumnName("amphibian_species_id");
@@ -559,6 +577,9 @@ namespace WBIS_2.DataModel.Migrations
 
                     b.HasKey("Guid");
 
+                    b.HasIndex("AmphibianElementId")
+                        .IsUnique();
+
                     b.HasIndex("AmphibianSpeciesId");
 
                     b.ToTable("amphibian_locations_found", (string)null);
@@ -571,6 +592,10 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("guid");
 
+                    b.Property<Guid>("AmphibianElementId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("amphibian_element_id");
+
                     b.Property<Guid>("OtherWildlifeId")
                         .HasColumnType("uuid")
                         .HasColumnName("other_wildlife_id");
@@ -581,6 +606,9 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnName("point_of_interest");
 
                     b.HasKey("Guid");
+
+                    b.HasIndex("AmphibianElementId")
+                        .IsUnique();
 
                     b.HasIndex("OtherWildlifeId");
 
@@ -649,6 +677,10 @@ namespace WBIS_2.DataModel.Migrations
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_time");
+
+                    b.Property<Guid>("DeviceInfoID")
+                        .HasColumnType("uuid")
+                        .HasColumnName("device_info_id");
 
                     b.Property<Guid>("DistrictId")
                         .HasColumnType("uuid")
@@ -885,6 +917,18 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("guid");
 
+                    b.Property<Guid>("BotanicalPlantListId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("botanical_plant_list_id");
+
+                    b.Property<Guid>("BotanicalPlantOfInterestId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("botanical_plant_of_interest_id");
+
+                    b.Property<Guid>("BotanicalPointOfInterestId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("botanical_point_of_interest_id");
+
                     b.Property<Guid>("BotanicalScopingId")
                         .HasColumnType("uuid")
                         .HasColumnName("botanical_scoping_id");
@@ -916,6 +960,10 @@ namespace WBIS_2.DataModel.Migrations
                     b.Property<string>("Datum")
                         .HasColumnType("text")
                         .HasColumnName("datum");
+
+                    b.Property<Guid>("DeviceInfoID")
+                        .HasColumnType("uuid")
+                        .HasColumnName("device_info_id");
 
                     b.Property<Guid>("DistrictId")
                         .HasColumnType("uuid")
@@ -995,11 +1043,18 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("guid");
 
+                    b.Property<Guid>("BotanicalElementId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("botanical_element_id");
+
                     b.Property<Guid>("PlantSpeciesId")
                         .HasColumnType("uuid")
                         .HasColumnName("plant_species_id");
 
                     b.HasKey("Guid");
+
+                    b.HasIndex("BotanicalElementId")
+                        .IsUnique();
 
                     b.HasIndex("PlantSpeciesId");
 
@@ -1012,6 +1067,10 @@ namespace WBIS_2.DataModel.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("guid");
+
+                    b.Property<Guid>("BotanicalElementId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("botanical_element_id");
 
                     b.Property<string>("Disturbances")
                         .HasColumnType("text")
@@ -1083,6 +1142,9 @@ namespace WBIS_2.DataModel.Migrations
 
                     b.HasKey("Guid");
 
+                    b.HasIndex("BotanicalElementId")
+                        .IsUnique();
+
                     b.HasIndex("PlantSpeciesId");
 
                     b.ToTable("botanical_plants_of_interest", (string)null);
@@ -1094,6 +1156,10 @@ namespace WBIS_2.DataModel.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("guid");
+
+                    b.Property<Guid>("BotanicalElementId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("botanical_element_id");
 
                     b.Property<string>("Gradient")
                         .HasColumnType("text")
@@ -1144,6 +1210,9 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnName("woody_vedetation");
 
                     b.HasKey("Guid");
+
+                    b.HasIndex("BotanicalElementId")
+                        .IsUnique();
 
                     b.ToTable("botanical_points_of_interest", (string)null);
                 });
@@ -1296,6 +1365,10 @@ namespace WBIS_2.DataModel.Migrations
                     b.Property<DateTime>("DateModified")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_modified");
+
+                    b.Property<Guid>("DeviceInfoID")
+                        .HasColumnType("uuid")
+                        .HasColumnName("device_info_id");
 
                     b.Property<Guid>("DistrictId")
                         .HasColumnType("uuid")
@@ -1970,11 +2043,17 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("guid");
 
+                    b.Property<Guid>("DistrictId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("district_id");
+
                     b.Property<MultiPolygon>("Geometry")
                         .HasColumnType("geometry(MultiPolygon,26710)")
                         .HasColumnName("geometry");
 
                     b.HasKey("Guid");
+
+                    b.HasIndex("DistrictId");
 
                     b.ToTable("district_extended_geometries", (string)null);
                 });
@@ -2016,7 +2095,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("calling_responses");
 
-                    b.Property<Guid?>("CurrentProtectionZoneID")
+                    b.Property<Guid>("CurrentProtectionZoneID")
                         .HasColumnType("uuid")
                         .HasColumnName("current_preotection_zone_id");
 
@@ -2218,6 +2297,10 @@ namespace WBIS_2.DataModel.Migrations
                     b.Property<string>("Datum")
                         .HasColumnType("text")
                         .HasColumnName("datum");
+
+                    b.Property<Guid>("DeviceInfoID")
+                        .HasColumnType("uuid")
+                        .HasColumnName("device_info_id");
 
                     b.Property<Guid>("DistrictId")
                         .HasColumnType("uuid")
@@ -2754,6 +2837,10 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("text")
                         .HasColumnName("datum");
 
+                    b.Property<Guid>("DeviceInfoID")
+                        .HasColumnType("uuid")
+                        .HasColumnName("device_info_id");
+
                     b.Property<Guid>("DistrictId")
                         .HasColumnType("uuid")
                         .HasColumnName("district_id");
@@ -2839,6 +2926,10 @@ namespace WBIS_2.DataModel.Migrations
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("spow_occupancy_status");
+
+                    b.Property<Guid>("SiteCallingTrackID")
+                        .HasColumnType("uuid")
+                        .HasColumnName("site_calling_track_id");
 
                     b.Property<string>("SiteID")
                         .HasColumnType("text")
@@ -3035,7 +3126,14 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("geometry(LineString,26710)")
                         .HasColumnName("geometry");
 
+                    b.Property<Guid>("SiteCallingId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("site_calling_id");
+
                     b.HasKey("Guid");
+
+                    b.HasIndex("SiteCallingId")
+                        .IsUnique();
 
                     b.ToTable("site_calling_tracks", (string)null);
                 });
@@ -3947,15 +4045,15 @@ namespace WBIS_2.DataModel.Migrations
 
             modelBuilder.Entity("WBIS_2.DataModel.AmphibianLocationFound", b =>
                 {
-                    b.HasOne("WBIS_2.DataModel.AmphibianSpecies", "AmphibianSpecies")
-                        .WithMany("AmphibianLocationsFound")
-                        .HasForeignKey("AmphibianSpeciesId")
+                    b.HasOne("WBIS_2.DataModel.AmphibianElement", "AmphibianElement")
+                        .WithOne("AmphibianLocationFound")
+                        .HasForeignKey("WBIS_2.DataModel.AmphibianLocationFound", "AmphibianElementId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WBIS_2.DataModel.AmphibianElement", "AmphibianElement")
-                        .WithOne("AmphibianLocationFound")
-                        .HasForeignKey("WBIS_2.DataModel.AmphibianLocationFound", "Guid")
+                    b.HasOne("WBIS_2.DataModel.AmphibianSpecies", "AmphibianSpecies")
+                        .WithMany("AmphibianLocationsFound")
+                        .HasForeignKey("AmphibianSpeciesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -3968,7 +4066,7 @@ namespace WBIS_2.DataModel.Migrations
                 {
                     b.HasOne("WBIS_2.DataModel.AmphibianElement", "AmphibianElement")
                         .WithOne("AmphibianPointOfInterest")
-                        .HasForeignKey("WBIS_2.DataModel.AmphibianPointOfInterest", "Guid")
+                        .HasForeignKey("WBIS_2.DataModel.AmphibianPointOfInterest", "AmphibianElementId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -4100,7 +4198,7 @@ namespace WBIS_2.DataModel.Migrations
                 {
                     b.HasOne("WBIS_2.DataModel.BotanicalElement", "BotanicalElement")
                         .WithOne("BotanicalPlantList")
-                        .HasForeignKey("WBIS_2.DataModel.BotanicalPlantList", "Guid")
+                        .HasForeignKey("WBIS_2.DataModel.BotanicalPlantList", "BotanicalElementId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -4119,7 +4217,7 @@ namespace WBIS_2.DataModel.Migrations
                 {
                     b.HasOne("WBIS_2.DataModel.BotanicalElement", "BotanicalElement")
                         .WithOne("BotanicalPlantOfInterest")
-                        .HasForeignKey("WBIS_2.DataModel.BotanicalPlantOfInterest", "Guid")
+                        .HasForeignKey("WBIS_2.DataModel.BotanicalPlantOfInterest", "BotanicalElementId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -4138,7 +4236,7 @@ namespace WBIS_2.DataModel.Migrations
                 {
                     b.HasOne("WBIS_2.DataModel.BotanicalElement", "BotanicalElement")
                         .WithOne("BotanicalPointOfInterest")
-                        .HasForeignKey("WBIS_2.DataModel.BotanicalPointOfInterest", "Guid")
+                        .HasForeignKey("WBIS_2.DataModel.BotanicalPointOfInterest", "BotanicalElementId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -4393,8 +4491,8 @@ namespace WBIS_2.DataModel.Migrations
             modelBuilder.Entity("WBIS_2.DataModel.DistrictExtendedGeometry", b =>
                 {
                     b.HasOne("WBIS_2.DataModel.District", "District")
-                        .WithOne("DistrictExtendedGeometry")
-                        .HasForeignKey("WBIS_2.DataModel.DistrictExtendedGeometry", "Guid")
+                        .WithMany()
+                        .HasForeignKey("DistrictId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -4416,7 +4514,9 @@ namespace WBIS_2.DataModel.Migrations
                 {
                     b.HasOne("WBIS_2.DataModel.ProtectionZone", "CurrentProtectionZone")
                         .WithMany("CurrentHex160s")
-                        .HasForeignKey("CurrentProtectionZoneID");
+                        .HasForeignKey("CurrentProtectionZoneID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("CurrentProtectionZone");
                 });
@@ -4751,7 +4851,7 @@ namespace WBIS_2.DataModel.Migrations
                 {
                     b.HasOne("WBIS_2.DataModel.SiteCalling", "SiteCalling")
                         .WithOne("SiteCallingTrack")
-                        .HasForeignKey("WBIS_2.DataModel.SiteCallingTrack", "Guid")
+                        .HasForeignKey("WBIS_2.DataModel.SiteCallingTrack", "SiteCallingId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -4972,8 +5072,6 @@ namespace WBIS_2.DataModel.Migrations
                     b.Navigation("CDFW_SpottedOwlDiagrams");
 
                     b.Navigation("CDFW_SpottedOwls");
-
-                    b.Navigation("DistrictExtendedGeometry");
 
                     b.Navigation("OwlBandings");
 
