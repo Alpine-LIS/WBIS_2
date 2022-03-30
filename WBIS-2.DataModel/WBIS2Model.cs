@@ -143,7 +143,7 @@ namespace WBIS_2.DataModel
             modelBuilder.Entity<Quad75>()
                 .HasMany(_ => _.Watersheds)
                 .WithMany(p => p.Quad75s)
-                .UsingEntity<Dictionary<string, object>>("hex160s_quad75s",
+                .UsingEntity<Dictionary<string, object>>("watersheds_quad75s",
                         x => x.HasOne<Watershed>().WithMany().HasForeignKey("watershed_id"),
                         x => x.HasOne<Quad75>().WithMany().HasForeignKey("quad75_id"),
                         x => x.ToTable("watersheds_quad75s", "public"));

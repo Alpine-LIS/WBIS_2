@@ -415,10 +415,6 @@ namespace WBIS_2.Modules.ViewModels
         }
         private void SaveGridLayout()
         {
-            //IsVisable = _IsVisable;
-            //RaisePropertyChanged(nameof(IsVisable));
-            //VisableIndex = _VisableIndex;
-            //RaisePropertyChanged(nameof(VisableIndex));
             WBISViewModelBase.SaveGridLayout();
         }
     }
