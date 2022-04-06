@@ -9,7 +9,7 @@ using System.Linq.Expressions;
 
 namespace WBIS_2.DataModel
 {
-    public class District : IInformationType, IQueryStuff<District>
+    public class District : IInformationType, IQueryStuff
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
@@ -58,7 +58,16 @@ namespace WBIS_2.DataModel
             { return new IInformationType[] { new Quad75(),new Watershed(), new Hex160(), new CNDDBOccurrence(), new CDFW_SpottedOwl(), new SiteCalling(), new OwlBanding(), new SPIPlantPolygon(),
                 new SPIPlantPoint(), new AmphibianSurvey(), new AmphibianElement(), new BotanicalScoping(), new BotanicalSurveyArea(), new BotanicalSurvey(), new BotanicalElement() }; }
         }
-        public Expression<Func<District, bool>> GetParentWhere(object[] Query, Type QueryType)
+
+
+        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
+        {
+            var returnVal = model.Set<District>();
+            var a = (Expression<Func<District, bool>>)GetParentWhere(Query, QueryType);
+
+            return returnVal.Where(a);
+        }
+        public Expression GetParentWhere(object[] Query, Type QueryType)
         {
             Expression<Func<District, bool>> a = _ => Query.Contains(_);
             return a;

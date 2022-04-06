@@ -1,4 +1,5 @@
-﻿using NetTopologySuite.Geometries;
+﻿using Microsoft.EntityFrameworkCore;
+using NetTopologySuite.Geometries;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,7 +10,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class PermanentCallStation : UserDataValidator, IUserRecords, IQueryStuff<PermanentCallStation>
+    public class PermanentCallStation : UserDataValidator, IUserRecords, IQueryStuff
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
@@ -63,7 +64,17 @@ namespace WBIS_2.DataModel
             }
         }
 
-        public Expression<Func<PermanentCallStation, bool>> GetParentWhere(object[] Query, Type QueryType)
+        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
+        {
+            var returnVal = model.Set<PermanentCallStation>();
+            var a = (Expression<Func<PermanentCallStation, bool>>)GetParentWhere(Query, QueryType);
+
+            if (QueryType == typeof(Hex160))
+                return returnVal.Include(_ => _.Hex160).Where(a);
+
+            return returnVal.Where(a);
+        }
+        public Expression GetParentWhere(object[] Query, Type QueryType)
         {
             Expression<Func<PermanentCallStation, bool>> a;
             if (QueryType == typeof(Hex160))

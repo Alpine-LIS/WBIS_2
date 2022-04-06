@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 
@@ -19,8 +21,13 @@ namespace WBIS_2.DataModel
         /// </summary>
         public List<KeyValuePair<string, string>> DisplayFields { get; }
     }
-    public interface IQueryStuff<T> where T : class
+    //public interface IQueryStuff<T> where T : class
+    //{
+    //    public abstract Expression<Func<T, bool>> GetParentWhere(object[] Query, Type QueryType);
+    //}
+    public interface IQueryStuff
     {
-        public abstract Expression<Func<T, bool>> GetParentWhere(object[] Query, Type QueryType);
+        public abstract IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model);
+        public abstract Expression GetParentWhere(object[] Query, Type QueryType);
     }
 }

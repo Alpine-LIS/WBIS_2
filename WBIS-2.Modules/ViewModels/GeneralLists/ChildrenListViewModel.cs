@@ -65,7 +65,6 @@ namespace WBIS_2.Modules.ViewModels
             //Tracker.ChangesSaved += Tracker_ChangesSaved;
             Privileges();
             RaisePropertyChanged(nameof(AvailibleChildren));
-            SelectionUpdated += UpdateChildren;
         }
 
         private void UpdateChildren(object sender, EventArgs e)
@@ -79,6 +78,13 @@ namespace WBIS_2.Modules.ViewModels
                 RaisePropertyChanged(nameof(ChildrenView));
             }
         }
+
+        public void UpdateParentQuery(object[] parentQuery)
+        {
+            ParentQuery = parentQuery;
+            RefreshDataSource();
+        }
+
         public override void ShowDetails()
         {
             if (CurrentRecord == null)
@@ -92,21 +98,7 @@ namespace WBIS_2.Modules.ViewModels
                 IDocument document = service.FindDocumentById(CurrentChild.DisplayName + " Children");
                 if (document == null)
                 {
-                    ChildrenListViewModel ChildrenView = new ChildrenListViewModel();
-                    if (CurrentChild.GetType() == typeof(Watershed))
-                        ChildrenView = ChildrenListViewModel.Create(SelectedItems.Cast<Watershed>().ToArray(), new Watershed());
-                    else if (CurrentChild.GetType() == typeof(Quad75))
-                        ChildrenView = ChildrenListViewModel.Create(SelectedItems.Cast<Quad75>().ToArray(), new Quad75());
-                    else if (CurrentChild.GetType() == typeof(Hex160))
-                        ChildrenView = ChildrenListViewModel.Create(SelectedItems.Cast<Hex160>().ToArray(), new Hex160());
-                    else if (CurrentChild.GetType() == typeof(Hex160RequiredPass))
-                        ChildrenView = ChildrenListViewModel.Create(SelectedItems.Cast<Hex160RequiredPass>().ToArray(), new Hex160RequiredPass());
-                    else if (CurrentChild.GetType() == typeof(SiteCalling))
-                        ChildrenView = ChildrenListViewModel.Create(SelectedItems.Cast<SiteCalling>().ToArray(), new SiteCalling());
-                    else if (CurrentChild.GetType() == typeof(CNDDBOccurrence))
-                        ChildrenView = ChildrenListViewModel.Create(SelectedItems.Cast<CNDDBOccurrence>().ToArray(), new CNDDBOccurrence());
-                    else if (CurrentChild.GetType() == typeof(CDFW_SpottedOwl))
-                        ChildrenView = ChildrenListViewModel.Create(SelectedItems.Cast<CDFW_SpottedOwl>().ToArray(), new CDFW_SpottedOwl());
+                    ChildrenListViewModel ChildrenView = ChildrenListViewModel.Create(SelectedItems.ToArray(), CurrentChild);
 
                     document = service.CreateDocument("ChildrenListView", ChildrenView, CurrentChild.DisplayName + " Children", this);
                     document.Id = CurrentChild.DisplayName + " Children";
@@ -157,65 +149,8 @@ namespace WBIS_2.Modules.ViewModels
         public override void Records_GetQueryable(object sender, GetQueryableEventArgs e)
         {
             if (CurrentChild == null) return;
-
-            if (CurrentChild.GetType() == typeof(SiteCalling))
-            {
-                e.QueryableSource = Database.Set<SiteCalling>()
-                    .Include(_ => _.Hex160).ThenInclude(_ => _.Districts)
-                    .Include(_ => _.Hex160).ThenInclude(_ => _.Quad75s)
-                    .Include(_ => _.Hex160).ThenInclude(_ => _.Watersheds)
-                    .Include(_ => _.SurveySpecies)
-                    //.Include(_ => _.SiteCallingDetections).ThenInclude(_=>_.SpeciesFound)
-                    .Include(_ => _.User)
-                    .Where(((SiteCalling)CurrentChild).GetParentWhere(ParentQuery, ParentType.GetType()))
-                    .Where(_=>!_._delete && !_.Repository)
-                    .AsNoTracking();
-            }
-            else if(CurrentChild.GetType() == typeof(Hex160RequiredPass))
-            {
-                e.QueryableSource = Database.Set<Hex160RequiredPass>()
-                    .Include(_ => _.Hex160).ThenInclude(_ => _.Districts)
-                    .Include(_ => _.Hex160).ThenInclude(_ => _.Quad75s)
-                    .Include(_ => _.Hex160).ThenInclude(_ => _.Watersheds)
-                    .Include(_ => _.BirdSpecies)
-                    .Include(_ => _.User)
-                    .Where(((Hex160RequiredPass)CurrentChild).GetParentWhere(ParentQuery, ParentType.GetType()))
-                    .AsNoTracking();
-            }
-            else if (CurrentChild.GetType() == typeof(CNDDBOccurrence))
-            {
-                e.QueryableSource = Database.Set<CNDDBOccurrence>()
-                    .Include(_ => _.Districts)
-                    .Include(_ => _.Watersheds)
-                    .Include(_ => _.Quad75s)
-                    .Where(((CNDDBOccurrence)CurrentChild).GetParentWhere(ParentQuery, ParentType.GetType()))
-                    .AsNoTracking();
-            }
-            else if (CurrentChild.GetType() == typeof(CDFW_SpottedOwl))
-            {
-                e.QueryableSource = Database.Set<CDFW_SpottedOwl>()
-                    .Include(_ => _.District)
-                    .Include(_ => _.Watershed)
-                    .Include(_ => _.Quad75)
-                    .Where(((CDFW_SpottedOwl)CurrentChild).GetParentWhere(ParentQuery, ParentType.GetType()))
-                    .AsNoTracking();
-            }
-            else if (CurrentChild.GetType() == typeof(Watershed))
-            {
-                e.QueryableSource = Database.Set<Watershed>()
-                    .Include(_ => _.Districts)
-                    .Where(((Watershed)CurrentChild).GetParentWhere(ParentQuery, ParentType.GetType()))
-                    .AsNoTracking();
-            }
-            else if (CurrentChild.GetType() == typeof(Hex160))
-            {
-                e.QueryableSource = Database.Set<Hex160>()
-                    .Include(_ => _.Districts)
-                    .Include(_ => _.Quad75s)
-                    .Include(_ => _.Watersheds)
-                    .Where(((Hex160)CurrentChild).GetParentWhere(ParentQuery, ParentType.GetType()))
-                    .AsNoTracking();
-            }
+                       
+            e.QueryableSource = ((IQueryStuff)CurrentChild).GetQueryable(ParentQuery, ParentType.GetType(), Database);
         }
 
 
@@ -249,12 +184,12 @@ namespace WBIS_2.Modules.ViewModels
             }
         }
         public bool ClosingFormEnabled = true;
-     
-        public string TableKeyField => throw new NotImplementedException();
 
-        public string LayerKeyField => throw new NotImplementedException();
+        public string TableKeyField { get { return ""; } }
 
-        public string LayerName => throw new NotImplementedException();
+        public string LayerKeyField { get { return ""; } }
+
+        public string LayerName { get { return ""; } }
 
         public void ZoomToLayer()
         {
@@ -271,6 +206,16 @@ namespace WBIS_2.Modules.ViewModels
         {
             MapDataPasser.MapShowAFS(LayerName, LayerKeyField, selection.Values.Cast<object>().Distinct().ToList());
             // MapDataPasser.MapShowAFS(LayerName, "Guid", selection.Cast<object>().ToList());
+        }
+
+        public override void SelectionChanged()
+        {
+            IDocumentManagerService service = this.GetRequiredService<IDocumentManagerService>();
+            IDocument document = service.FindDocumentById(ParentType.DisplayName + " Children");
+            if (document != null)
+            {
+                ((ChildrenListViewModel)document.Content).UpdateParentQuery(SelectedItems.ToArray());
+            }
         }
     }
 }

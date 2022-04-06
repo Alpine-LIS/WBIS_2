@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,10 @@ using WBIS_2.DataModel;
 namespace WBIS_2.DataModel.Migrations
 {
     [DbContext(typeof(WBIS2Model))]
-    partial class WBIS2ModelModelSnapshot : ModelSnapshot
+    [Migration("20220404173312_SpiPlantPolyForeignKeyIssue")]
+    partial class SpiPlantPolyForeignKeyIssue
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -460,7 +462,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("text")
                         .HasColumnName("datum");
 
-                    b.Property<Guid?>("DistrictId")
+                    b.Property<Guid>("DistrictId")
                         .HasColumnType("uuid")
                         .HasColumnName("district_id");
 
@@ -469,7 +471,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("geometry(Point,26710)")
                         .HasColumnName("geometry");
 
-                    b.Property<Guid?>("Hex160Id")
+                    b.Property<Guid>("Hex160Id")
                         .HasColumnType("uuid")
                         .HasColumnName("hex160_id");
 
@@ -481,7 +483,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("double precision")
                         .HasColumnName("lon");
 
-                    b.Property<Guid?>("Quad75Id")
+                    b.Property<Guid>("Quad75Id")
                         .HasColumnType("uuid")
                         .HasColumnName("quad75_id");
 
@@ -501,7 +503,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("user_modified_id");
 
-                    b.Property<Guid?>("WatershedId")
+                    b.Property<Guid>("WatershedId")
                         .HasColumnType("uuid")
                         .HasColumnName("watershed_id");
 
@@ -660,7 +662,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_time");
 
-                    b.Property<Guid?>("DistrictId")
+                    b.Property<Guid>("DistrictId")
                         .HasColumnType("uuid")
                         .HasColumnName("district_id");
 
@@ -927,7 +929,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("text")
                         .HasColumnName("datum");
 
-                    b.Property<Guid?>("DistrictId")
+                    b.Property<Guid>("DistrictId")
                         .HasColumnType("uuid")
                         .HasColumnName("district_id");
 
@@ -936,7 +938,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("geometry(Point,26710)")
                         .HasColumnName("geometry");
 
-                    b.Property<Guid?>("Hex160Id")
+                    b.Property<Guid>("Hex160Id")
                         .HasColumnType("uuid")
                         .HasColumnName("hex160_id");
 
@@ -948,7 +950,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("double precision")
                         .HasColumnName("lon");
 
-                    b.Property<Guid?>("Quad75Id")
+                    b.Property<Guid>("Quad75Id")
                         .HasColumnType("uuid")
                         .HasColumnName("quad75_id");
 
@@ -968,7 +970,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("user_modified_id");
 
-                    b.Property<Guid?>("WatershedId")
+                    b.Property<Guid>("WatershedId")
                         .HasColumnType("uuid")
                         .HasColumnName("watershed_id");
 
@@ -1307,7 +1309,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_modified");
 
-                    b.Property<Guid?>("DistrictId")
+                    b.Property<Guid>("DistrictId")
                         .HasColumnType("uuid")
                         .HasColumnName("district_id");
 
@@ -1415,7 +1417,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_modified");
 
-                    b.Property<Guid?>("DistrictId")
+                    b.Property<Guid>("DistrictId")
                         .HasColumnType("uuid")
                         .HasColumnName("district_id");
 
@@ -1537,7 +1539,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("text")
                         .HasColumnName("docid");
 
-                    b.Property<Guid?>("DistrictId")
+                    b.Property<Guid>("DistrictId")
                         .HasColumnType("uuid")
                         .HasColumnName("district_id");
 
@@ -1549,7 +1551,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("text")
                         .HasColumnName("highestuse");
 
-                    b.Property<Guid?>("Hex160Id")
+                    b.Property<Guid>("Hex160Id")
                         .HasColumnType("uuid")
                         .HasColumnName("hex160_id");
 
@@ -1593,7 +1595,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("text")
                         .HasColumnName("pair");
 
-                    b.Property<Guid?>("Quad75Id")
+                    b.Property<Guid>("Quad75Id")
                         .HasColumnType("uuid")
                         .HasColumnName("quad75_id");
 
@@ -1617,7 +1619,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("text")
                         .HasColumnName("typeobs");
 
-                    b.Property<Guid?>("WatershedId")
+                    b.Property<Guid>("WatershedId")
                         .HasColumnType("uuid")
                         .HasColumnName("watershed_id");
 
@@ -2229,7 +2231,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("text")
                         .HasColumnName("datum");
 
-                    b.Property<Guid?>("DistrictId")
+                    b.Property<Guid>("DistrictId")
                         .HasColumnType("uuid")
                         .HasColumnName("district_id");
 
@@ -2258,7 +2260,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("geometry(Point,26710)")
                         .HasColumnName("geometry");
 
-                    b.Property<Guid?>("Hex160Id")
+                    b.Property<Guid>("Hex160Id")
                         .HasColumnType("uuid")
                         .HasColumnName("hex160_id");
 
@@ -2278,7 +2280,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("preotection_zone_id");
 
-                    b.Property<Guid?>("Quad75Id")
+                    b.Property<Guid>("Quad75Id")
                         .HasColumnType("uuid")
                         .HasColumnName("quad75_id");
 
@@ -2326,7 +2328,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("user_modified_id");
 
-                    b.Property<Guid?>("WatershedId")
+                    b.Property<Guid>("WatershedId")
                         .HasColumnType("uuid")
                         .HasColumnName("watershed_id");
 
@@ -2764,7 +2766,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("text")
                         .HasColumnName("datum");
 
-                    b.Property<Guid?>("DistrictId")
+                    b.Property<Guid>("DistrictId")
                         .HasColumnType("uuid")
                         .HasColumnName("district_id");
 
@@ -2777,7 +2779,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("geometry(Point,26710)")
                         .HasColumnName("geometry");
 
-                    b.Property<Guid?>("Hex160Id")
+                    b.Property<Guid>("Hex160Id")
                         .HasColumnType("uuid")
                         .HasColumnName("hex160_id");
 
@@ -2829,7 +2831,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("preotection_zone_id");
 
-                    b.Property<Guid?>("Quad75Id")
+                    b.Property<Guid>("Quad75Id")
                         .HasColumnType("uuid")
                         .HasColumnName("quad75_id");
 
@@ -2900,7 +2902,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("user_modified_id");
 
-                    b.Property<Guid?>("WatershedId")
+                    b.Property<Guid>("WatershedId")
                         .HasColumnType("uuid")
                         .HasColumnName("watershed_id");
 
@@ -3136,15 +3138,11 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("text")
                         .HasColumnName("coord_source");
 
-                    b.Property<DateTime>("DateTime")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("date_time");
-
                     b.Property<string>("Datum")
                         .HasColumnType("text")
                         .HasColumnName("datum");
 
-                    b.Property<Guid?>("DistrictId")
+                    b.Property<Guid>("DistrictId")
                         .HasColumnType("uuid")
                         .HasColumnName("district_id");
 
@@ -3160,7 +3158,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("fruiting");
 
-                    b.Property<MultiPolygon>("Geometry")
+                    b.Property<Polygon>("Geometry")
                         .IsRequired()
                         .HasColumnType("geometry(Polygon,26710)")
                         .HasColumnName("geometry");
@@ -3921,15 +3919,21 @@ namespace WBIS_2.DataModel.Migrations
 
                     b.HasOne("WBIS_2.DataModel.District", "District")
                         .WithMany("AmphibianElements")
-                        .HasForeignKey("DistrictId");
+                        .HasForeignKey("DistrictId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WBIS_2.DataModel.Hex160", "Hex160")
                         .WithMany("AmphibianElements")
-                        .HasForeignKey("Hex160Id");
+                        .HasForeignKey("Hex160Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WBIS_2.DataModel.Quad75", "Quad75")
                         .WithMany("AmphibianElements")
-                        .HasForeignKey("Quad75Id");
+                        .HasForeignKey("Quad75Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WBIS_2.DataModel.ApplicationUser", "User")
                         .WithMany("AmphibianElements")
@@ -3945,7 +3949,9 @@ namespace WBIS_2.DataModel.Migrations
 
                     b.HasOne("WBIS_2.DataModel.Watershed", "Watershed")
                         .WithMany("AmphibianElements")
-                        .HasForeignKey("WatershedId");
+                        .HasForeignKey("WatershedId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("AmphibianSurvey");
 
@@ -4004,7 +4010,9 @@ namespace WBIS_2.DataModel.Migrations
                 {
                     b.HasOne("WBIS_2.DataModel.District", "District")
                         .WithMany("AmphibianSurveys")
-                        .HasForeignKey("DistrictId");
+                        .HasForeignKey("DistrictId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WBIS_2.DataModel.ApplicationUser", "User")
                         .WithMany("AmphibianSurveys")
@@ -4058,15 +4066,21 @@ namespace WBIS_2.DataModel.Migrations
 
                     b.HasOne("WBIS_2.DataModel.District", "District")
                         .WithMany("BotanicalElements")
-                        .HasForeignKey("DistrictId");
+                        .HasForeignKey("DistrictId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WBIS_2.DataModel.Hex160", "Hex160")
                         .WithMany("BotanicalElements")
-                        .HasForeignKey("Hex160Id");
+                        .HasForeignKey("Hex160Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WBIS_2.DataModel.Quad75", "Quad75")
                         .WithMany("BotanicalElements")
-                        .HasForeignKey("Quad75Id");
+                        .HasForeignKey("Quad75Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WBIS_2.DataModel.ApplicationUser", "User")
                         .WithMany("BotanicalElements")
@@ -4082,7 +4096,9 @@ namespace WBIS_2.DataModel.Migrations
 
                     b.HasOne("WBIS_2.DataModel.Watershed", "Watershed")
                         .WithMany("BotanicalElements")
-                        .HasForeignKey("WatershedId");
+                        .HasForeignKey("WatershedId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("BotanicalScoping");
 
@@ -4222,7 +4238,9 @@ namespace WBIS_2.DataModel.Migrations
 
                     b.HasOne("WBIS_2.DataModel.District", "District")
                         .WithMany("BotanicalSurveys")
-                        .HasForeignKey("DistrictId");
+                        .HasForeignKey("DistrictId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WBIS_2.DataModel.THP_Area", "THP_Area")
                         .WithMany()
@@ -4265,7 +4283,9 @@ namespace WBIS_2.DataModel.Migrations
 
                     b.HasOne("WBIS_2.DataModel.District", "District")
                         .WithMany("BotanicalSurveyAreas")
-                        .HasForeignKey("DistrictId");
+                        .HasForeignKey("DistrictId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WBIS_2.DataModel.THP_Area", "THP_Area")
                         .WithMany("BotanicalSurveyAreas")
@@ -4300,19 +4320,27 @@ namespace WBIS_2.DataModel.Migrations
                 {
                     b.HasOne("WBIS_2.DataModel.District", "District")
                         .WithMany("CDFW_SpottedOwls")
-                        .HasForeignKey("DistrictId");
+                        .HasForeignKey("DistrictId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WBIS_2.DataModel.Hex160", "Hex160")
                         .WithMany("CDFW_SpottedOwls")
-                        .HasForeignKey("Hex160Id");
+                        .HasForeignKey("Hex160Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WBIS_2.DataModel.Quad75", "Quad75")
                         .WithMany("CDFW_SpottedOwls")
-                        .HasForeignKey("Quad75Id");
+                        .HasForeignKey("Quad75Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WBIS_2.DataModel.Watershed", "Watershed")
                         .WithMany("CDFW_SpottedOwls")
-                        .HasForeignKey("WatershedId");
+                        .HasForeignKey("WatershedId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("District");
 
@@ -4480,11 +4508,15 @@ namespace WBIS_2.DataModel.Migrations
 
                     b.HasOne("WBIS_2.DataModel.District", "District")
                         .WithMany("OwlBandings")
-                        .HasForeignKey("DistrictId");
+                        .HasForeignKey("DistrictId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WBIS_2.DataModel.Hex160", "Hex160")
                         .WithMany("OwlBandings")
-                        .HasForeignKey("Hex160Id");
+                        .HasForeignKey("Hex160Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WBIS_2.DataModel.ProtectionZone", "ProtectionZone")
                         .WithMany("OwlBandings")
@@ -4494,7 +4526,9 @@ namespace WBIS_2.DataModel.Migrations
 
                     b.HasOne("WBIS_2.DataModel.Quad75", "Quad75")
                         .WithMany("OwlBandings")
-                        .HasForeignKey("Quad75Id");
+                        .HasForeignKey("Quad75Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WBIS_2.DataModel.ApplicationUser", "User")
                         .WithMany("OwlBandings")
@@ -4510,7 +4544,9 @@ namespace WBIS_2.DataModel.Migrations
 
                     b.HasOne("WBIS_2.DataModel.Watershed", "Watershed")
                         .WithMany("OwlBandings")
-                        .HasForeignKey("WatershedId");
+                        .HasForeignKey("WatershedId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("BirdSpecies");
 
@@ -4652,11 +4688,15 @@ namespace WBIS_2.DataModel.Migrations
                 {
                     b.HasOne("WBIS_2.DataModel.District", "District")
                         .WithMany("SiteCallings")
-                        .HasForeignKey("DistrictId");
+                        .HasForeignKey("DistrictId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WBIS_2.DataModel.Hex160", "Hex160")
                         .WithMany("SiteCallings")
-                        .HasForeignKey("Hex160Id");
+                        .HasForeignKey("Hex160Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WBIS_2.DataModel.ProtectionZone", "ProtectionZone")
                         .WithMany("SiteCallings")
@@ -4666,7 +4706,9 @@ namespace WBIS_2.DataModel.Migrations
 
                     b.HasOne("WBIS_2.DataModel.Quad75", "Quad75")
                         .WithMany("SiteCallings")
-                        .HasForeignKey("Quad75Id");
+                        .HasForeignKey("Quad75Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WBIS_2.DataModel.BirdSpecies", "SurveySpecies")
                         .WithMany("SurveySpecies")
@@ -4688,7 +4730,9 @@ namespace WBIS_2.DataModel.Migrations
 
                     b.HasOne("WBIS_2.DataModel.Watershed", "Watershed")
                         .WithMany("SiteCallings")
-                        .HasForeignKey("WatershedId");
+                        .HasForeignKey("WatershedId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("District");
 
@@ -4776,7 +4820,9 @@ namespace WBIS_2.DataModel.Migrations
                 {
                     b.HasOne("WBIS_2.DataModel.District", "District")
                         .WithMany("SPIPlantPolygons")
-                        .HasForeignKey("DistrictId");
+                        .HasForeignKey("DistrictId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WBIS_2.DataModel.PlantSpecies", "PlantSpecies")
                         .WithMany("SPIPlantPolys")

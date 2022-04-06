@@ -1,4 +1,5 @@
-﻿using NetTopologySuite.Geometries;
+﻿using Microsoft.EntityFrameworkCore;
+using NetTopologySuite.Geometries;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,7 +10,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class Hex160RequiredPass : UserDataValidator, IUserRecords, IQueryStuff<Hex160RequiredPass>
+    public class Hex160RequiredPass : UserDataValidator, IUserRecords, IQueryStuff
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; } 
@@ -64,8 +65,17 @@ namespace WBIS_2.DataModel
             { return new IInformationType[0]; }
         }
 
+        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
+        {
+            var returnVal = model.Set<Hex160RequiredPass>();
+            var a = (Expression<Func<Hex160RequiredPass, bool>>)GetParentWhere(Query, QueryType);
 
-        public Expression<Func<Hex160RequiredPass, bool>> GetParentWhere(object[] Query, Type QueryType)
+            if (QueryType == typeof(Hex160))
+                return returnVal.Include(_ => _.Hex160).Where(a);
+
+            return returnVal.Where(a);
+        }
+        public Expression GetParentWhere(object[] Query, Type QueryType)
         {
             Expression<Func<Hex160RequiredPass, bool>> a;
             if (QueryType == typeof(Hex160))

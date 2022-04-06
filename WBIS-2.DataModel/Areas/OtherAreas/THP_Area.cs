@@ -9,7 +9,7 @@ using System.Linq.Expressions;
 
 namespace WBIS_2.DataModel
 {
-    public class THP_Area : IInformationType, IQueryStuff<THP_Area>
+    public class THP_Area : IInformationType, IQueryStuff//<THP_Area>
     {
         [Key,DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
@@ -30,15 +30,16 @@ namespace WBIS_2.DataModel
             get
             { return new IInformationType[] { new BotanicalScoping(), new BotanicalSurveyArea() }; }
         }
-        public Expression<Func<THP_Area, bool>> GetParentWhere(object[] Query, Type QueryType)
+        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
         {
-            Expression<Func<THP_Area, bool>> a;
-            if (QueryType == typeof(BotanicalScoping))
-                a = _ => _.BotanicalScopins.Any(d => Query.Cast<BotanicalScoping>().Contains(d));
-            else if (QueryType == typeof(BotanicalSurveyArea))
-                a = _ => _.BotanicalSurveyAreas.Any(d => Query.Cast<BotanicalSurveyArea>().Contains(d));            
-            else
-                a = _ => Query.Contains(_);
+            var returnVal = model.Set<THP_Area>();
+            var a = (Expression<Func<THP_Area, bool>>)GetParentWhere(Query, QueryType);
+
+            return returnVal.Where(a);
+        }
+        public Expression GetParentWhere(object[] Query, Type QueryType)
+        {
+            Expression<Func<THP_Area, bool>> a = _ => Query.Contains(_);
             return a;
         }
 

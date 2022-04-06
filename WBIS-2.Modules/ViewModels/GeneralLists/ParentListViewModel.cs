@@ -31,7 +31,6 @@ namespace WBIS_2.Modules.ViewModels
             {
                 Caption = $"{(parentType).DisplayName}",
                 Content = $"{(parentType).DisplayName}",
-                SelectedItems = new ObservableCollection<object>(),
                 ParentType = parentType,
             });
         }
@@ -66,41 +65,27 @@ namespace WBIS_2.Modules.ViewModels
               
         public override void ShowDetails()
         {
-            //if (CurrentRecord == null)
-            //{
-            //    return;
-            //}
+            if (CurrentRecord == null)
+            {
+                return;
+            }
 
-            //if (CurrentChild.AvailibleChildren.Count() > 0)
-            //{
-            //    IDocumentManagerService service = this.GetRequiredService<IDocumentManagerService>();
-            //    IDocument document = service.FindDocumentById(CurrentChild.DisplayName + " Children");
-            //    if (document == null)
-            //    {
-            //        ChildrenListViewModel ChildrenView = new ChildrenListViewModel();
-            //        if (CurrentChild.GetType() == typeof(Watershed))
-            //            ChildrenView = ChildrenListViewModel.Create(SelectedItems.Cast<Watershed>().ToArray(), new Watershed());
-            //        else if (CurrentChild.GetType() == typeof(Quad75))
-            //            ChildrenView = ChildrenListViewModel.Create(SelectedItems.Cast<Quad75>().ToArray(), new Quad75());
-            //        else if (CurrentChild.GetType() == typeof(Hex160))
-            //            ChildrenView = ChildrenListViewModel.Create(SelectedItems.Cast<Hex160>().ToArray(), new Hex160());
-            //        else if (CurrentChild.GetType() == typeof(Hex160RequiredPass))
-            //            ChildrenView = ChildrenListViewModel.Create(SelectedItems.Cast<Hex160RequiredPass>().ToArray(), new Hex160RequiredPass());
-            //        else if (CurrentChild.GetType() == typeof(SiteCalling))
-            //            ChildrenView = ChildrenListViewModel.Create(SelectedItems.Cast<SiteCalling>().ToArray(), new SiteCalling());
-            //        else if (CurrentChild.GetType() == typeof(CNDDBOccurrence))
-            //            ChildrenView = ChildrenListViewModel.Create(SelectedItems.Cast<CNDDBOccurrence>().ToArray(), new CNDDBOccurrence());
-            //        else if (CurrentChild.GetType() == typeof(CDFW_SpottedOwl))
-            //            ChildrenView = ChildrenListViewModel.Create(SelectedItems.Cast<CDFW_SpottedOwl>().ToArray(), new CDFW_SpottedOwl());
+            if (ParentType.AvailibleChildren.Count() > 0)
+            {
+                IDocumentManagerService service = this.GetRequiredService<IDocumentManagerService>();
+                IDocument document = service.FindDocumentById(ParentType.DisplayName + " Children");
+                if (document == null)
+                {
+                    ChildrenListViewModel ChildrenView = ChildrenListViewModel.Create(SelectedItems.ToArray(), ParentType);
 
-            //        document = service.CreateDocument("ChildrenListView", ChildrenView, CurrentChild.DisplayName + " Children", this);
-            //        document.Id = CurrentChild.DisplayName + " Children";
-            //    }
-            //    document.Show();
-            //}
+                    document = service.CreateDocument("ChildrenListView", ChildrenView, ParentType.DisplayName + " Children", this);
+                    document.Id = ParentType.DisplayName + " Children";
+                }
+                document.Show();
+            }
             //else
             //{ }
-           
+
 
 
         }
@@ -116,18 +101,20 @@ namespace WBIS_2.Modules.ViewModels
        
         public override void Records_GetQueryable(object sender, GetQueryableEventArgs e)
         {
-            if (ParentType is District)
-                e.QueryableSource = Database.Set<District>()
-                    .AsNoTracking();
-            else if (ParentType is Watershed)
-                e.QueryableSource = Database.Set<Watershed>()
-                    .AsNoTracking();
-            else if (ParentType is Quad75)
-                e.QueryableSource = Database.Set<Quad75>()
-                    .AsNoTracking();
-            else if (ParentType is Hex160)
-                e.QueryableSource = Database.Set<Hex160>()
-                    .AsNoTracking();
+            e.QueryableSource = ((IQueryStuff)ParentType).GetQueryable(Database.Districts.ToArray(), ParentType.GetType(), Database);
+
+            //if (ParentType is District)
+            //    e.QueryableSource = Database.Set<District>()
+            //        .AsNoTracking();
+            //else if (ParentType is Watershed)
+            //    e.QueryableSource = Database.Set<Watershed>()
+            //        .AsNoTracking();
+            //else if (ParentType is Quad75)
+            //    e.QueryableSource = Database.Set<Quad75>()
+            //        .AsNoTracking();
+            //else if (ParentType is Hex160)
+            //    e.QueryableSource = Database.Set<Hex160>()
+            //        .AsNoTracking();
         }
 
 
@@ -162,11 +149,11 @@ namespace WBIS_2.Modules.ViewModels
         }
         public bool ClosingFormEnabled = true;
      
-        public string TableKeyField => throw new NotImplementedException();
+        public string TableKeyField { get { return ""; } }
 
-        public string LayerKeyField => throw new NotImplementedException();
+        public string LayerKeyField { get { return ""; } }
 
-        public string LayerName => throw new NotImplementedException();
+        public string LayerName { get { return ""; } }
 
         public void ZoomToLayer()
         {
@@ -183,6 +170,16 @@ namespace WBIS_2.Modules.ViewModels
         {
             MapDataPasser.MapShowAFS(LayerName, LayerKeyField, selection.Values.Cast<object>().Distinct().ToList());
             // MapDataPasser.MapShowAFS(LayerName, "Guid", selection.Cast<object>().ToList());
+        }
+
+        public override void SelectionChanged()
+        {
+            IDocumentManagerService service = this.GetRequiredService<IDocumentManagerService>();
+            IDocument document = service.FindDocumentById(ParentType.DisplayName + " Children");
+            if (document != null)
+            {
+                ((ChildrenListViewModel)document.Content).UpdateParentQuery(SelectedItems.ToArray());
+            }
         }
     }
 }

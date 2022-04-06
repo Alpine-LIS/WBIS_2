@@ -1,4 +1,5 @@
-﻿using NetTopologySuite.Geometries;
+﻿using Microsoft.EntityFrameworkCore;
+using NetTopologySuite.Geometries;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,7 +10,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class BotanicalScoping : UserDataValidator, IUserRecords, IQueryStuff<BotanicalScoping>
+    public class BotanicalScoping : UserDataValidator, IUserRecords, IQueryStuff
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
@@ -87,7 +88,25 @@ namespace WBIS_2.DataModel
             get
             { return new IInformationType[] { new BotanicalSurveyArea(), new BotanicalSurvey(), new BotanicalElement() }; }
         }
-        public Expression<Func<BotanicalScoping, bool>> GetParentWhere(object[] Query, Type QueryType)
+
+
+
+        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
+        {
+            var returnVal = model.Set<BotanicalScoping>();
+            var a = (Expression<Func<BotanicalScoping, bool>>)GetParentWhere(Query, QueryType);
+
+            if (QueryType == typeof(District))
+                return returnVal.Include(_ => _.Districts).Where(a);
+            else if (QueryType == typeof(Watershed))
+                return returnVal.Include(_ => _.Watersheds).Where(a);
+            else if (QueryType == typeof(Quad75))
+                return returnVal.Include(_ => _.Quad75s).Where(a);
+
+            return returnVal.Where(a);
+        }
+
+        public Expression GetParentWhere(object[] Query, Type QueryType)
         {
             Expression<Func<BotanicalScoping, bool>> a;
             if (QueryType == typeof(District))

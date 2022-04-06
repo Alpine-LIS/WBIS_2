@@ -16,7 +16,7 @@ namespace WBIS_2.DataModel
             var dbname = "WBIS2";
             var username = "postgres";
             var password = "i$mppWMB$I7Y4XoD";
-            return $"Server={hostname};Database={dbname};Username={username};Password={password}";
+            return $"Server={hostname};Database={dbname};Username={username};Password={password};Command Timeout=0";
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

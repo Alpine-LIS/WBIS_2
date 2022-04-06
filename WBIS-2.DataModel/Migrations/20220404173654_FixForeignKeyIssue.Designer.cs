@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,10 @@ using WBIS_2.DataModel;
 namespace WBIS_2.DataModel.Migrations
 {
     [DbContext(typeof(WBIS2Model))]
-    partial class WBIS2ModelModelSnapshot : ModelSnapshot
+    [Migration("20220404173654_FixForeignKeyIssue")]
+    partial class FixForeignKeyIssue
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -660,7 +662,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_time");
 
-                    b.Property<Guid?>("DistrictId")
+                    b.Property<Guid>("DistrictId")
                         .HasColumnType("uuid")
                         .HasColumnName("district_id");
 
@@ -1307,7 +1309,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_modified");
 
-                    b.Property<Guid?>("DistrictId")
+                    b.Property<Guid>("DistrictId")
                         .HasColumnType("uuid")
                         .HasColumnName("district_id");
 
@@ -1415,7 +1417,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_modified");
 
-                    b.Property<Guid?>("DistrictId")
+                    b.Property<Guid>("DistrictId")
                         .HasColumnType("uuid")
                         .HasColumnName("district_id");
 
@@ -3136,15 +3138,11 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("text")
                         .HasColumnName("coord_source");
 
-                    b.Property<DateTime>("DateTime")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("date_time");
-
                     b.Property<string>("Datum")
                         .HasColumnType("text")
                         .HasColumnName("datum");
 
-                    b.Property<Guid?>("DistrictId")
+                    b.Property<Guid>("DistrictId")
                         .HasColumnType("uuid")
                         .HasColumnName("district_id");
 
@@ -3160,7 +3158,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("fruiting");
 
-                    b.Property<MultiPolygon>("Geometry")
+                    b.Property<Polygon>("Geometry")
                         .IsRequired()
                         .HasColumnType("geometry(Polygon,26710)")
                         .HasColumnName("geometry");
@@ -4004,7 +4002,9 @@ namespace WBIS_2.DataModel.Migrations
                 {
                     b.HasOne("WBIS_2.DataModel.District", "District")
                         .WithMany("AmphibianSurveys")
-                        .HasForeignKey("DistrictId");
+                        .HasForeignKey("DistrictId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WBIS_2.DataModel.ApplicationUser", "User")
                         .WithMany("AmphibianSurveys")
@@ -4222,7 +4222,9 @@ namespace WBIS_2.DataModel.Migrations
 
                     b.HasOne("WBIS_2.DataModel.District", "District")
                         .WithMany("BotanicalSurveys")
-                        .HasForeignKey("DistrictId");
+                        .HasForeignKey("DistrictId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WBIS_2.DataModel.THP_Area", "THP_Area")
                         .WithMany()
@@ -4265,7 +4267,9 @@ namespace WBIS_2.DataModel.Migrations
 
                     b.HasOne("WBIS_2.DataModel.District", "District")
                         .WithMany("BotanicalSurveyAreas")
-                        .HasForeignKey("DistrictId");
+                        .HasForeignKey("DistrictId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WBIS_2.DataModel.THP_Area", "THP_Area")
                         .WithMany("BotanicalSurveyAreas")
@@ -4776,7 +4780,9 @@ namespace WBIS_2.DataModel.Migrations
                 {
                     b.HasOne("WBIS_2.DataModel.District", "District")
                         .WithMany("SPIPlantPolygons")
-                        .HasForeignKey("DistrictId");
+                        .HasForeignKey("DistrictId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WBIS_2.DataModel.PlantSpecies", "PlantSpecies")
                         .WithMany("SPIPlantPolys")

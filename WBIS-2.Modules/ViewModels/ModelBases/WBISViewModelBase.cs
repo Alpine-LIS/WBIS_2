@@ -82,7 +82,8 @@ namespace WBIS_2.Modules.ViewModels
             RefreshDataSource();
 
             Records.AreSourceRowsThreadSafe = true;
-            SelectedItems = new List<object>();
+            SelectedItems = new ObservableCollection<object>();
+            SelectedItems.CollectionChanged += SelectedItems_CollectionChanged;
 
             Tracker.ChangesSaved += Tracker_ChangesSaved;
             Tracker.ChangesSaved += Tracker_ChangesSavedUser;
@@ -101,6 +102,8 @@ namespace WBIS_2.Modules.ViewModels
         Privileges();
 
         }
+
+       
 
 
 
@@ -272,30 +275,15 @@ namespace WBIS_2.Modules.ViewModels
         public ICommand ViewPhotosCommand { get; set; }
 
 
-        public event EventHandler SelectionUpdated;
-        public void UpdateSelection(IList<object> newSelection)
-        {
-            SelectedItems = newSelection;
-            RaisePropertyChanged(nameof(SelectedItems));
-            SelectionUpdated?.Invoke(new object(), new EventArgs());
-        }
-        private IList<object> _SelectedItems;
-        public IList<object> SelectedItems
-        {
-            get
-            {
-                return _SelectedItems;
-            }
-            set
-            {
-                if (_SelectedItems != value)
-                {
-                    _SelectedItems = value;
-                }
-            }
-        }
 
-      
+        public ObservableCollection<object> SelectedItems { get; set; }
+        private void SelectedItems_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            SelectionChanged();
+        }
+        public abstract void SelectionChanged();
+
+
 
 
         //public ICommand ManageRequiredPassesCommand { get; set; }

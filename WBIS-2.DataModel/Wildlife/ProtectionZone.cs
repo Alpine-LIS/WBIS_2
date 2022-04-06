@@ -1,4 +1,5 @@
-﻿using NetTopologySuite.Geometries;
+﻿using Microsoft.EntityFrameworkCore;
+using NetTopologySuite.Geometries;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,7 +10,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class ProtectionZone : UserDataValidator, IUserRecords, IQueryStuff<ProtectionZone>
+    public class ProtectionZone : UserDataValidator, IUserRecords, IQueryStuff
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
@@ -64,7 +65,18 @@ namespace WBIS_2.DataModel
             }
         }
 
-        public Expression<Func<ProtectionZone, bool>> GetParentWhere(object[] Query, Type QueryType)
+
+        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
+        {
+            var returnVal = model.Set<ProtectionZone>();
+            var a = (Expression<Func<ProtectionZone, bool>>)GetParentWhere(Query, QueryType);
+
+            if (QueryType == typeof(Hex160))
+                return returnVal.Include(_ => _.Hex160s).Where(a);
+
+            return returnVal.Where(a);
+        }
+        public Expression GetParentWhere(object[] Query, Type QueryType)
         {
             Expression<Func<ProtectionZone, bool>> a;
             if (QueryType == typeof(Hex160))
