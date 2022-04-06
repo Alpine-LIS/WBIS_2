@@ -118,7 +118,8 @@ namespace WBIS_2.Modules.ViewModels
         {
             
         }
-        
+
+
         public IInformationType[] AvailibleChildren { get; set; }
         public IInformationType _CurrentChild;
         public IInformationType CurrentChild
