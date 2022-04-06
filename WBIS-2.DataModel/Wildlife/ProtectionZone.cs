@@ -10,7 +10,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class ProtectionZone : UserDataValidator, IUserRecords, IQueryStuff
+    public class ProtectionZone : UserDataValidator, IUserRecords, IQueryStuff, IChild
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
@@ -65,6 +65,14 @@ namespace WBIS_2.DataModel
             }
         }
 
+        [NotMapped]
+        public ICollection<Type> Parents
+        {
+            get 
+            { 
+                 return new List<Type> { typeof(Hex160) };
+            }
+        }
 
         public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
         {
@@ -84,5 +92,7 @@ namespace WBIS_2.DataModel
             a = _ => Query.Contains(_);
             return a;
         }
+
+        
     }
 }
