@@ -9,7 +9,7 @@ using System.Linq.Expressions;
 
 namespace WBIS_2.DataModel
 {
-    public class District : IInformationType, IQueryStuff
+    public class District : IInformationType, IQueryStuff, IParentChild
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
@@ -50,6 +50,22 @@ namespace WBIS_2.DataModel
 
         [NotMapped, Display(Order = -1)]
         public string DisplayName { get { return "District"; } }
+        [NotMapped]
+        public ICollection<IChild> Children
+        {
+            get
+            {
+                return ParentChildQuerries.GetChildren(this.GetType());
+            }
+        }
+        [NotMapped]
+        public ICollection<IParent> Parents
+        {
+            get
+            {
+                return ParentChildQuerries.GetParents(this.GetType());
+            }
+        }
 
         [NotMapped]
         public IInformationType[] AvailibleChildren

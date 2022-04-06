@@ -108,6 +108,22 @@ namespace WBIS_2.DataModel
 
         [NotMapped, Display(Order = -1)]
         public string DisplayName { get { return "Botanical Survey Area"; } }
+        [NotMapped]
+        public ICollection<IChild> Children
+        {
+            get
+            {
+                return ParentChildQuerries.GetChildren(this.GetType());
+            }
+        }
+        [NotMapped]
+        public ICollection<IParent> Parents
+        {
+            get
+            {
+                return ParentChildQuerries.GetParents(this.GetType());
+            }
+        }
 
         [NotMapped]
         public IInformationType[] AvailibleChildren

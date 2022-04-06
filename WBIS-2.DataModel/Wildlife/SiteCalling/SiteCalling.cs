@@ -184,13 +184,29 @@ namespace WBIS_2.DataModel
 
         [NotMapped, Display(Order = -1)]
         public string DisplayName { get { return "Site Calling"; } }
-
         [NotMapped]
-        public IInformationType[] AvailibleChildren
+        public ICollection<IChild> Children
         {
             get
-            { return new IInformationType[] { new SiteCallingDetection() }; }
+            {
+                return ParentChildQuerries.GetChildren(this.GetType());
+            }
         }
+        [NotMapped]
+        public ICollection<IParent> Parents
+        {
+            get
+            {
+                return ParentChildQuerries.GetParents(this.GetType());
+            }
+        }
+
+        //[NotMapped]
+        //public IInformationType[] AvailibleChildren
+        //{
+        //    get
+        //    { return new IInformationType[] { new SiteCallingDetection() }; }
+        //}
 
         public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
         {

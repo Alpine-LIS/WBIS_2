@@ -9,17 +9,8 @@ using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 
 namespace WBIS_2.DataModel
-{
-    public interface IChild
-    {
-        public ICollection<Type> Parents { get; }
-    }
-
-    public interface IParentModel
-    {
-        ICollection<IChild> Childrens { get; }
-    }
-    public class Hex160 : IInformationType, IQueryStuff, IParentModel//<Hex160>
+{   
+    public class Hex160 : IInformationType, IQueryStuff, IParentChild//<Hex160>
     {
         [Key,DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
@@ -71,19 +62,21 @@ namespace WBIS_2.DataModel
 
 
         [NotMapped, Display(Order = -1)]
-        public static string DisplayName { get { return "Hex160"; } }
+        public string DisplayName { get { return "Hex160"; } }
 
-        [NotMapped] 
-        public ICollection<IChild> Childrens
+        public ICollection<IChild> Children
         {
             get
             {
-                //return new List<IChild>();
-                WBIS2Model context = new WBIS2Model();
-                var s = context.Model.FindEntityTypes(typeof(IChild));
-                s = s.Where(_ => (_ as IChild).Parents.Contains(this.GetType()));
-                s = s.Where(_ => _.GetType().GetProperties().FirstOrDefault(_ => _.GetType() == typeof(Hex160) || _.GetType() == typeof(ICollection<Hex160>)) != null);
-                return (ICollection<IChild>)s;
+                return ParentChildQuerries.GetChildren(this.GetType());
+            }
+        }
+        [NotMapped]
+        public ICollection<IParent> Parents
+        {
+            get
+            {
+                return ParentChildQuerries.GetParents(this.GetType());
             }
         }
 

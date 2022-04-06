@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using System.Text;
 
 namespace WBIS_2.DataModel
@@ -22,6 +23,22 @@ namespace WBIS_2.DataModel
 
         [NotMapped, Display(Order = -1)]
         public string DisplayName { get { return "Amphibian Species"; } }
+        [NotMapped]
+        public ICollection<IChild> Children
+        {
+            get
+            {
+                return ParentChildQuerries.GetChildren(this.GetType());
+            }
+        }
+        [NotMapped]
+        public ICollection<IParent> Parents
+        {
+            get
+            {
+                return ParentChildQuerries.GetParents(this.GetType());
+            }
+        }
 
         [NotMapped]
         public IInformationType[] AvailibleChildren

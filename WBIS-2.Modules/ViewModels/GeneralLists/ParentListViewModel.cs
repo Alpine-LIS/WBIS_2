@@ -70,7 +70,7 @@ namespace WBIS_2.Modules.ViewModels
                 return;
             }
 
-            if (ParentType.AvailibleChildren.Count() > 0)
+            if (ParentType.Children.Count() > 0)
             {
                 IDocumentManagerService service = this.GetRequiredService<IDocumentManagerService>();
                 IDocument document = service.FindDocumentById(ParentType.DisplayName + " Children");

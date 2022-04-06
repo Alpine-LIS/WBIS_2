@@ -10,7 +10,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class ProtectionZone : UserDataValidator, IUserRecords, IQueryStuff, IChild
+    public class ProtectionZone : UserDataValidator, IUserRecords, IQueryStuff
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
@@ -48,6 +48,22 @@ namespace WBIS_2.DataModel
 
         [NotMapped, Display(Order = -1)]
         public string DisplayName { get { return "Proection Zone"; } }
+        [NotMapped]
+        public ICollection<IChild> Children
+        {
+            get
+            {
+                return ParentChildQuerries.GetChildren(this.GetType());
+            }
+        }
+        [NotMapped]
+        public ICollection<IParent> Parents
+        {
+            get
+            {
+                return ParentChildQuerries.GetParents(this.GetType());
+            }
+        }
 
         [NotMapped]
         public IInformationType[] AvailibleChildren
@@ -62,15 +78,6 @@ namespace WBIS_2.DataModel
             get
             {
                 return new List<KeyValuePair<string, string>>();
-            }
-        }
-
-        [NotMapped]
-        public ICollection<Type> Parents
-        {
-            get 
-            { 
-                 return new List<Type> { typeof(Hex160) };
             }
         }
 

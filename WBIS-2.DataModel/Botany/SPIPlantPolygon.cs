@@ -10,7 +10,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class SPIPlantPolygon: IInformationType, INonPointParents, IQueryStuff//<SPIPlantPolygon>
+    public class SPIPlantPolygon: IInformationType, INonPointParents, IQueryStuff, IParentChild//<SPIPlantPolygon>
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
@@ -87,6 +87,22 @@ namespace WBIS_2.DataModel
 
         [NotMapped, Display(Order = -1)]
         public string DisplayName { get { return "SPI Plant Polygon"; } }
+        [NotMapped]
+        public ICollection<IChild> Children
+        {
+            get
+            {
+                return ParentChildQuerries.GetChildren(this.GetType());
+            }
+        }
+        [NotMapped]
+        public ICollection<IParent> Parents
+        {
+            get
+            {
+                return ParentChildQuerries.GetParents(this.GetType());
+            }
+        }
 
         [NotMapped]
         public IInformationType[] AvailibleChildren

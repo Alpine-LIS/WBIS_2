@@ -10,7 +10,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class CDFW_SpottedOwl : IInformationType, IQueryStuff, IPointParents
+    public class CDFW_SpottedOwl : IInformationType, IQueryStuff, IPointParents, IParentChild
     {
         [Key, Column("guid")]
         public Guid Guid { get; set; }
@@ -82,6 +82,22 @@ namespace WBIS_2.DataModel
 
         [NotMapped, Display(Order = -1)]
         public string DisplayName { get { return "CDFW Spotted OWl"; } }
+        [NotMapped]
+        public ICollection<IChild> Children
+        {
+            get
+            {
+                return ParentChildQuerries.GetChildren(this.GetType());
+            }
+        }
+        [NotMapped]
+        public ICollection<IParent> Parents
+        {
+            get
+            {
+                return ParentChildQuerries.GetParents(this.GetType());
+            }
+        }
 
         [NotMapped]
         public IInformationType[] AvailibleChildren

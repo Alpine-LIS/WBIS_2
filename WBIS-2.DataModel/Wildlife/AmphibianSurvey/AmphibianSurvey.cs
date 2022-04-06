@@ -131,12 +131,28 @@ namespace WBIS_2.DataModel
 
         [NotMapped, Display(Order = -1)]
         public string DisplayName { get { return "Amphibian Survey"; } }
+        [NotMapped]
+        public ICollection<IChild> Children
+        {
+            get
+            {
+                return ParentChildQuerries.GetChildren(this.GetType());
+            }
+        }
+        [NotMapped]
+        public ICollection<IParent> Parents
+        {
+            get
+            {
+                return ParentChildQuerries.GetParents(this.GetType());
+            }
+        }
 
         [NotMapped]
         public IInformationType[] AvailibleChildren
         {
             get
-            { return new IInformationType[] { new AmphibianElement() }; }
+            { return new IInformationType[] { typeof(AmphibianElement) }; }
         }
 
         public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)

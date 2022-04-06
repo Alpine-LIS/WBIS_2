@@ -34,8 +34,8 @@ namespace WBIS_2.Modules.ViewModels
                 SelectedItems = new ObservableCollection<object>(),
                 ParentType = parentType,
                 ParentQuery = parentQuery,
-                AvailibleChildren = parentType.AvailibleChildren
-            });
+                AvailibleChildren = (IInformationType[])((IParent)parentType).Children
+            }) ;
         }
 
         public override void CloseForm()
@@ -92,7 +92,8 @@ namespace WBIS_2.Modules.ViewModels
                 return;
             }
 
-            if (CurrentChild.AvailibleChildren.Count() > 0)
+
+            if (((IParent)CurrentChild).Children.Count() > 0)
             {
                 IDocumentManagerService service = this.GetRequiredService<IDocumentManagerService>();
                 IDocument document = service.FindDocumentById(CurrentChild.DisplayName + " Children");
