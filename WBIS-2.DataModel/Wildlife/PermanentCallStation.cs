@@ -73,8 +73,10 @@ namespace WBIS_2.DataModel
             var returnVal = model.Set<PermanentCallStation>();
             var a = (Expression<Func<PermanentCallStation, bool>>)GetParentWhere(Query, QueryType);
 
-            if (QueryType == typeof(Hex160))
-                return returnVal.Include(_ => _.Hex160).Where(a);
+                return returnVal
+                    .Include(_ => _.Hex160)
+                .Include(_ => _.User)
+                .Include(_ => _.UserModified).Where(a);
 
             return returnVal.Where(a);
         }

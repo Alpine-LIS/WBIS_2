@@ -145,9 +145,9 @@ namespace WBIS_2.DataModel
         }
         public Expression GetParentWhere(object[] Query, Type QueryType)
         {
-            Expression<Func<SPIPlantPolygon, bool>> a;
+            Expression<Func<CNDDBOccurrence, bool>> a;
             if (QueryType == typeof(District))
-                a = _ => Query.Cast<District>().Contains(_.District);
+                a = _ => _.Districts.Any(d => Query.Cast<District>().Contains(d));
             else if (QueryType == typeof(Watershed))
                 a = _ => _.Watersheds.Any(d => Query.Cast<Watershed>().Contains(d));
             else if (QueryType == typeof(Quad75))

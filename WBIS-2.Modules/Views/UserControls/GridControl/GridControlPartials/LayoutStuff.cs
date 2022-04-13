@@ -138,92 +138,17 @@ namespace WBIS_2.Modules.Views
 
             DontSaveLayout = false;
         }
-       
-        private void FormatActivityColumns()
-        {
-            int vis = 0;
-
-            foreach (string col in ActivityColumns)
-            {
-                if (MyGrid.Columns.FirstOrDefault(_ => _.FieldName == col) is var a && a != null) { a.VisibleIndex = vis; vis++; }
-            }
-        }
-        private void FormatRegenOrFuelbreakColumns()
-        {
-            int vis = 0;
-
-            foreach (string col in RegenFuelColumns)
-            {
-                if (MyGrid.Columns.FirstOrDefault(_ => _.FieldName == col) is var a && a != null) { a.VisibleIndex = vis; vis++; }
-            }
-        }
-
-        private string[] ActivityColumns = new string[]
-        {
-            "Draft",
-            "Fuelbreak.FuelbreakID",
-            "Regen.RegenID",
-            "ActivityDate",
-              "Fuelbreak.ThpName",
-          "Regen.ThpName",
-            "ActivityOption.ActivityType.ActivityName",
-            "ActivityOption.ActivitySub",
-            "ActivityOption.ActivityDetail",
-            "TotalCost",
-            "ApplicationUser.UserName",
-            "UpdateUser.UserName"
-        };
-        private string[] RegenFuelColumns = new string[]
-       {
-           "ActiveUnit",
-           "RegenID",
-            "FuelbreakID",
-            "ThpName",
-            "ThpNumber",
-            "ThpUnitNumber",
-            "Silviculture",
-            "Status",
-            "Acres",
-            "Age",
-            "PCT",
-            "PlantYear",
-            "HarvestYear",
-            "MiscInfo",
-            "TotalCost",
-            "GSGC",
-            "Seedzone",
-            "ElevationLower",
-            "ElevationUpper",
-            "Aspect",
-            "Slope",
-            "CTHL",
-            "CAA",
-            "FireName",
-            "Grid",
-            "District.DistrictName",
-            "District.ManagementArea",
-            "Lat",
-            "Lon",
-            "County.CountyName",
-            "Watershed.WatershedName",
-            "Watershed.WatershedID",
-            "Stocking",
-            "Owner",
-            "AddedDate",
-            "EditedDate",
-            "RMS_ID",
-            "_delete"
-       };
-
+            
         private void DisplayFileds(GridControl gc)
         {
             addColumns = new Dictionary<GridColumn, int>();
 
             foreach (var col in gc.Columns)
             {
-                if (col.FieldType.Namespace == "RMS_3.DataModel")
+                if (col.FieldType.GetInterfaces().Contains(typeof(IInformationType)))
                 {
-                    var colValues = DisplayValues(col);
+                    IInformationType instance = (IInformationType)Activator.CreateInstance(col.FieldType);
+                    var colValues = instance.Manager.DisplayFields;
                     if (colValues != null)
                     {
                         for (int i = 0; i < colValues.Count; i++)
@@ -237,6 +162,10 @@ namespace WBIS_2.Modules.Views
                     }
                     col.Visible = false;
                 }
+                else if (col.FieldType == typeof(Guid) || col.FieldType == typeof(Guid?) || col.FieldType.BaseType == typeof(NetTopologySuite.Geometries.Geometry))
+                {
+                    col.Visible = false;
+                }
                 else
                 {
                     col.Header = col.FieldName;
@@ -246,42 +175,22 @@ namespace WBIS_2.Modules.Views
 
             foreach (var addCol in addColumns)
             {
-                gc.Columns.Insert(addCol.Value, addCol.Key);
+                gc.Columns.Add(addCol.Key);
+                //gc.Columns.Insert(addCol.Value, addCol.Key);
             }
         }
 
         private void StandardColumnFormat(GridColumn col, GridControl gc)
         {
-            if (col.FieldName.ToString().Contains("Cost"))
-            {
-                col.EditSettings = new TextEditSettings() { DisplayFormat = "C2" };
-                if (col.FieldName == "TotalCost")
-                {
-                    //if (gc.TotalSummary.Count == 0)
-                    //{
-                    gc.TotalSummary.Add(new GridSummaryItem() { SummaryType = DevExpress.Data.SummaryItemType.Sum, FieldName = "TotalCost", DisplayFormat = "Total Cost: {0:c2}", Alignment = GridSummaryItemAlignment.Right });
-                    gc.GroupSummary.Add(new GridSummaryItem() { SummaryType = DevExpress.Data.SummaryItemType.Sum, FieldName = "TotalCost", DisplayFormat = "Total Cost: {0:c2}" });
-                    //}
-                }
-            }
-            else if (col.FieldName.ToString() == "Volume" || col.FieldName.ToString().Contains("Acre"))
+            if (col.FieldName.ToUpper().Contains("ACRE"))
             {
                 col.EditSettings = new TextEditSettings() { DisplayFormat = "N2" };
             }
-            else if (col.FieldName.ToString() == "Lat" || col.FieldName.ToString() == "Lon")
+            else if ((col.FieldName.ToUpper().Contains("LAT") || col.FieldName.ToUpper().Contains("LON")) && col.FieldType == typeof(double))
             {
                 col.EditSettings = new TextEditSettings() { DisplayFormat = "N5" };
             }
-            else if (col.FieldType == typeof(DateTime))
-            {
-                col.FilterPopupMode = FilterPopupMode.Excel;
-
-            }
-            if ( col.FieldType == typeof(DateTime) && col.FieldName != "ActivityDate")
-            {
-                col.EditSettings = new DateEditSettings() { DisplayFormat = "MM/dd/yyyy HH:mm:ss" };
-            }
-            else if (col.FieldName == "_delete") col.VisibleIndex = 100;// = false;
+            else if (col.FieldName == "_delete") col.VisibleIndex = 100;
         }
 
         //Columns should show up in order of how they'll be displayed

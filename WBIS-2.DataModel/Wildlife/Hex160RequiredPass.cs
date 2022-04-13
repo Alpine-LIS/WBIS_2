@@ -75,10 +75,12 @@ namespace WBIS_2.DataModel
             var returnVal = model.Set<Hex160RequiredPass>();
             var a = (Expression<Func<Hex160RequiredPass, bool>>)GetParentWhere(Query, QueryType);
 
-            if (QueryType == typeof(Hex160))
-                return returnVal.Include(_ => _.Hex160).Where(a);
+                return returnVal
+                .Include(_ => _.Hex160)
+                .Include(_ => _.User)
+                .Include(_ => _.UserModified)
+                .Include(_=>_.BirdSpecies).Where(a);
 
-            return returnVal.Where(a);
         }
         public Expression GetParentWhere(object[] Query, Type QueryType)
         {

@@ -76,10 +76,10 @@ namespace WBIS_2.DataModel
             var returnVal = model.Set<ProtectionZone>();
             var a = (Expression<Func<ProtectionZone, bool>>)GetParentWhere(Query, QueryType);
 
-            if (QueryType == typeof(Hex160))
-                return returnVal.Include(_ => _.Hex160s).Where(a);
-
-            return returnVal.Where(a);
+            return returnVal
+                .Include(_ => _.Hex160s)
+                .Include(_=>_.User)
+                .Include(_=>_.UserModified).Where(a);
         }
         public Expression GetParentWhere(object[] Query, Type QueryType)
         {

@@ -199,17 +199,19 @@ namespace WBIS_2.DataModel
 
         public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
         {
-            var returnVal = model.Set<SiteCalling>();
+            var returnVal = model.Set<SiteCalling>()
+                .Include(_ => _.User)
+                .Include(_ => _.UserModified)
+                .Include(_ => _.SurveySpecies)
+                .Include(_ => _.ProtectionZone)
+                .Include(_ => _.District)
+                .Include(_ => _.Hex160);
             var a = (Expression<Func<SiteCalling, bool>>)GetParentWhere(Query, QueryType);
 
-            if (QueryType == typeof(District))
-                return returnVal.Include(_ => _.District).Where(a);
-            else if (QueryType == typeof(Watershed))
+            if (QueryType == typeof(Watershed))
                 return returnVal.Include(_ => _.Watershed).Where(a);
             else if (QueryType == typeof(Quad75))
                 return returnVal.Include(_ => _.Quad75).Where(a);
-            else if (QueryType == typeof(Hex160))
-                return returnVal.Include(_ => _.Hex160).Where(a);
 
             return returnVal.Where(a);
         }

@@ -64,16 +64,11 @@ namespace WBIS_2.DataModel
             var returnVal = model.Set<SPIPlantPoint>();
             var a = (Expression<Func<SPIPlantPoint, bool>>)GetParentWhere(Query, QueryType);
 
-            if (QueryType == typeof(District))
-                return returnVal.Include(_ => _.District).Where(a);
-            else if (QueryType == typeof(Watershed))
-                return returnVal.Include(_ => _.Watershed).Where(a);
-            else if (QueryType == typeof(Quad75))
-                return returnVal.Include(_ => _.Quad75).Where(a);
-            else if (QueryType == typeof(Hex160))
-                return returnVal.Include(_ => _.Hex160).Where(a);
-
-            return returnVal.Where(a);
+                return returnVal.Include(_ => _.District)
+                    .Include(_ => _.Watershed)
+                    .Include(_ => _.Quad75)
+                    .Include(_ => _.Hex160)
+                    .Include(_=>_.PlantSpecies).Where(a);
         }
         public Expression GetParentWhere(object[] Query, Type QueryType)
         {

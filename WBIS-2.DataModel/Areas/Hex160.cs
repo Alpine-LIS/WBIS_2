@@ -79,7 +79,7 @@ namespace WBIS_2.DataModel
         }
         public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
         {
-            var returnVal = model.Set<Hex160>();
+            var returnVal = model.Set<Hex160>().Include(_=>_.CurrentProtectionZone);
             var a = (Expression<Func<Hex160, bool>>)GetParentWhere(Query, QueryType);
 
             if (QueryType == typeof(District))

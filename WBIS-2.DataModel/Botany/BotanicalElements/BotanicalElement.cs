@@ -135,7 +135,12 @@ namespace WBIS_2.DataModel
 
         public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
         {
-            var returnVal = model.Set<BotanicalElement>();
+            var returnVal = model.Set<BotanicalElement>()
+                .Include(_ => _.District)
+                 .Include(_ => _.BotanicalSurvey)
+                .Include(_ => _.BotanicalSurveyArea)
+               .Include(_ => _.User)
+                .Include(_ => _.UserModified);
             var a = (Expression<Func<BotanicalElement, bool>>)GetParentWhere(Query, QueryType);
 
             if (QueryType == typeof(District))

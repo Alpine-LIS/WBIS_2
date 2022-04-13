@@ -102,12 +102,12 @@ namespace WBIS_2.DataModel
 
         public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
         {
-            var returnVal = model.Set<SPIPlantPolygon>();
+            var returnVal = model.Set<SPIPlantPolygon>()
+                .Include(_=>_.District)
+                .Include(_=>_.PlantSpecies);
             var a = (Expression<Func<SPIPlantPolygon, bool>>)GetParentWhere(Query, QueryType);
 
-            if (QueryType == typeof(District))
-                return returnVal.Include(_ => _.District).Where(a);
-            else if (QueryType == typeof(Watershed))
+             if (QueryType == typeof(Watershed))
                 return returnVal.Include(_ => _.Watersheds).Where(a);
             else if (QueryType == typeof(Quad75))
                 return returnVal.Include(_ => _.Quad75s).Where(a);
