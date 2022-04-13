@@ -57,7 +57,7 @@ namespace WBIS_2.DataModel
         }
 
         [NotMapped]
-        public List<KeyValuePair<string, string>> DisplayFields
+        public static List<KeyValuePair<string, string>> DisplayFields
         {
             get
             {

@@ -152,7 +152,7 @@ namespace WBIS_2.DataModel
                 a = _ => Query.Contains(_);
             return a;
         }
-        public List<KeyValuePair<string, string>> DisplayFields
+        public static List<KeyValuePair<string, string>> DisplayFields
         {
             get
             {

@@ -153,7 +153,7 @@ namespace WBIS_2.DataModel
             { return new IInformationType[0]; }
         }
 
-        public List<KeyValuePair<string, string>> DisplayFields
+        public static List<KeyValuePair<string, string>> DisplayFields
         {
             get
             {

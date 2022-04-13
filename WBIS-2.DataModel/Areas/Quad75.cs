@@ -12,7 +12,7 @@ namespace WBIS_2.DataModel
 {
     public class Quad75 : IInformationType, IQueryStuff//<Quad75>
     {
-        [Key,DatabaseGenerated(DatabaseGeneratedOption.Identity),Column("guid")]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
         [Required, Column("quad_code")]
         public string QuadCode { get; set; }
@@ -82,6 +82,8 @@ namespace WBIS_2.DataModel
             var returnVal = model.Set<Quad75>();
             var a = (Expression<Func<Quad75, bool>>)GetParentWhere(Query, QueryType);
 
+            List<KeyValuePair<string, string>> v = Hex160.DisplayFields;
+
             if (QueryType == typeof(District))
                 return returnVal.Include(_ => _.Districts).Where(a);
             else if (QueryType == typeof(Watershed))
@@ -105,7 +107,7 @@ namespace WBIS_2.DataModel
             return a;
         }
 
-        public List<KeyValuePair<string, string>> DisplayFields
+        public static List<KeyValuePair<string, string>> DisplayFields
         {
             get
             {
@@ -113,5 +115,10 @@ namespace WBIS_2.DataModel
                 { new KeyValuePair<string, string>("QuadCode", "Quad75")};
             }
         }
+    }
+
+    public class Quad75Manager
+    {
+
     }
 }

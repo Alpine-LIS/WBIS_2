@@ -19,7 +19,7 @@ namespace WBIS_2.DataModel
         /// <summary>
         /// Fields to be displayed when in an alternate information type.
         /// </summary>
-        public List<KeyValuePair<string, string>> DisplayFields { get; }
+        public static List<KeyValuePair<string, string>> DisplayFields { get; }
     }
     //public interface IQueryStuff<T> where T : class
     //{
