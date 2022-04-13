@@ -118,10 +118,10 @@ namespace WBIS_2.DataModel
 
 
         [NotMapped, Display(Order = -1)]
-        public IInfoTypeManager<IInformationType> Manager => (IInfoTypeManager<IInformationType>)new BotanicalElementManager();
+        public IInfoTypeManager Manager { get { return new BotanicalElementManager(); } }
     }
 
-    public class BotanicalElementManager : IInfoTypeManager<BotanicalElement>
+    public class BotanicalElementManager : IInfoTypeManager
     {
         public string DisplayName { get { return "Botanical Elements"; } }
 
@@ -133,7 +133,7 @@ namespace WBIS_2.DataModel
         }
 
 
-        public IQueryable<BotanicalElement> GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
+        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
         {
             var returnVal = model.Set<BotanicalElement>();
             var a = (Expression<Func<BotanicalElement, bool>>)GetParentWhere(Query, QueryType);
@@ -155,7 +155,7 @@ namespace WBIS_2.DataModel
 
             return returnVal.Where(a);
         }
-        public Expression<Func<BotanicalElement, bool>> GetParentWhere(object[] Query, Type QueryType)
+        public Expression GetParentWhere(object[] Query, Type QueryType)
         {
             Expression<Func<BotanicalElement, bool>> a;
             if (QueryType == typeof(District))

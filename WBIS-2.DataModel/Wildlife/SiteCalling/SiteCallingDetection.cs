@@ -81,10 +81,10 @@ namespace WBIS_2.DataModel
 
 
         [NotMapped, Display(Order = -1)]
-        public IInfoTypeManager<IInformationType> Manager => (IInfoTypeManager<IInformationType>)new SiteCallingDetectionManager();
+        public IInfoTypeManager Manager { get { return new SiteCallingDetectionManager(); } }
     }
 
-    public class SiteCallingDetectionManager : IInfoTypeManager<SiteCalling>
+    public class SiteCallingDetectionManager : IInfoTypeManager
     {
         public string DisplayName { get { return "Site Calling Detection"; } }
 
@@ -102,14 +102,14 @@ namespace WBIS_2.DataModel
             }
         }
 
-        public IQueryable<SiteCalling> GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
+        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
         {
             var returnVal = model.Set<SiteCalling>();
             var a = (Expression<Func<SiteCalling, bool>>)GetParentWhere(Query, QueryType);
 
             return returnVal.Where(a);
         }
-        public Expression<Func<SiteCalling, bool>> GetParentWhere(object[] Query, Type QueryType)
+        public Expression GetParentWhere(object[] Query, Type QueryType)
         {
             Expression<Func<SiteCalling, bool>> a = _ => Query.Contains(_);
             return a;

@@ -10,7 +10,7 @@ namespace WBIS_2.DataModel
 {
     public interface IInformationType
     {
-        public IInfoTypeManager<IInformationType> Manager { get; }
+        public IInfoTypeManager Manager { get; }
     }
     //public interface IQueryStuff
     //{
@@ -20,7 +20,7 @@ namespace WBIS_2.DataModel
     /// <summary>
     /// An information type manager contains and describes details about how an IInformationType interacts with the WBIS application.
     /// </summary>
-    public interface IInfoTypeManager<T> where T : class
+    public interface IInfoTypeManager
     {
         public string DisplayName { get; }
         public IInformationType[] AvailibleChildren { get; }
@@ -31,10 +31,10 @@ namespace WBIS_2.DataModel
         /// <summary>
         /// Return an IQueryable for the specified information type.
         /// </summary>
-        public abstract IQueryable<T> GetQueryable(object[] Query, Type QueryType, WBIS2Model model);
+        public abstract IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model);
         /// <summary>
         /// Returns a 'Where' statment depending on a provided parent information type.
         /// </summary>
-        public abstract Expression<Func<T, bool>> GetParentWhere(object[] Query, Type QueryType);
+        public abstract Expression GetParentWhere(object[] Query, Type QueryType);
     }
 }

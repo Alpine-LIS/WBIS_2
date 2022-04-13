@@ -130,10 +130,10 @@ namespace WBIS_2.DataModel
 
 
         [NotMapped, Display(Order = -1)]
-        public IInfoTypeManager<IInformationType> Manager => (IInfoTypeManager<IInformationType>)new AmphibianSurveyManager();
+        public IInfoTypeManager Manager { get { return new AmphibianSurveyManager(); } }
     }
 
-    public class AmphibianSurveyManager : IInfoTypeManager<AmphibianSurvey>
+    public class AmphibianSurveyManager : IInfoTypeManager
     {
         public string DisplayName { get { return "Amphibian Survey"; } }
 
@@ -144,7 +144,7 @@ namespace WBIS_2.DataModel
             { return new IInformationType[] { new AmphibianElement() }; }
         }
 
-        public IQueryable<AmphibianSurvey> GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
+        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
         {
             var returnVal = model.Set<AmphibianSurvey>();
             var a = (Expression<Func<AmphibianSurvey, bool>>)GetParentWhere(Query, QueryType);
@@ -160,7 +160,7 @@ namespace WBIS_2.DataModel
 
             return returnVal.Where(a);
         }
-        public Expression<Func<AmphibianSurvey, bool>> GetParentWhere(object[] Query, Type QueryType)
+        public Expression GetParentWhere(object[] Query, Type QueryType)
         {
             Expression<Func<AmphibianSurvey, bool>> a;
             if (QueryType == typeof(District))

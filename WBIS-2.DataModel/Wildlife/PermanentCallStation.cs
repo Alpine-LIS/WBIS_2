@@ -45,10 +45,10 @@ namespace WBIS_2.DataModel
         public Hex160 Hex160 { get; set; }
 
         [NotMapped, Display(Order = -1)]
-        public IInfoTypeManager<IInformationType> Manager => (IInfoTypeManager<IInformationType>)new PermanentCallStationManager();
+        public IInfoTypeManager Manager { get { return new PermanentCallStationManager(); } }
     }
 
-    public class PermanentCallStationManager : IInfoTypeManager<PermanentCallStation>
+    public class PermanentCallStationManager : IInfoTypeManager
     {
         public string DisplayName { get { return "Permanent Call Stations"; } }
 
@@ -68,7 +68,7 @@ namespace WBIS_2.DataModel
             }
         }
 
-        public IQueryable<PermanentCallStation> GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
+        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
         {
             var returnVal = model.Set<PermanentCallStation>();
             var a = (Expression<Func<PermanentCallStation, bool>>)GetParentWhere(Query, QueryType);
@@ -78,7 +78,7 @@ namespace WBIS_2.DataModel
 
             return returnVal.Where(a);
         }
-        public Expression<Func<PermanentCallStation, bool>> GetParentWhere(object[] Query, Type QueryType)
+        public Expression GetParentWhere(object[] Query, Type QueryType)
         {
             Expression<Func<PermanentCallStation, bool>> a;
             if (QueryType == typeof(Hex160))

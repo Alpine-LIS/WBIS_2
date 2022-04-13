@@ -36,20 +36,20 @@ namespace WBIS_2.DataModel
         public ICollection<OtherWildlife> OtherWildlifeRecords { get; set; }
 
         [NotMapped, Display(Order = -1)]
-        public IInfoTypeManager<IInformationType> Manager => (IInfoTypeManager<IInformationType>)new WildlifeSpeciesManager();
+        public IInfoTypeManager Manager => new WildlifeSpeciesManager();
     }
-    public class WildlifeSpeciesManager : IInfoTypeManager<WildlifeSpecies>
+    public class WildlifeSpeciesManager : IInfoTypeManager
     {
         public string DisplayName { get { return "Wildlife Species"; } }
 
-        public IQueryable<WildlifeSpecies> GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
+        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
         {
             var returnVal = model.Set<WildlifeSpecies>();
             var a = (Expression<Func<WildlifeSpecies, bool>>)GetParentWhere(Query, QueryType);
 
             return returnVal.Where(a);
         }
-        public Expression<Func<WildlifeSpecies, bool>> GetParentWhere(object[] Query, Type QueryType)
+        public Expression GetParentWhere(object[] Query, Type QueryType)
         {
             Expression<Func<WildlifeSpecies, bool>> a = _ => Query.Contains(_);
             return a;

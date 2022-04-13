@@ -112,10 +112,10 @@ namespace WBIS_2.DataModel
 
 
         [NotMapped, Display(Order = -1)]
-        public IInfoTypeManager<IInformationType> Manager => (IInfoTypeManager<IInformationType>)new CNDDBOccurrenceManager();
+        public IInfoTypeManager Manager { get { return new CNDDBOccurrenceManager(); } }
     }
 
-    public class CNDDBOccurrenceManager : IInfoTypeManager<CNDDBOccurrence>
+    public class CNDDBOccurrenceManager : IInfoTypeManager
     {
         public string DisplayName { get { return "CNDDB Occurrence"; } }
 
@@ -127,7 +127,7 @@ namespace WBIS_2.DataModel
             { return new IInformationType[0]; }
         }
 
-        public IQueryable<CNDDBOccurrence> GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
+        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
         {
             var returnVal = model.Set<CNDDBOccurrence>();
             var a = (Expression<Func<CNDDBOccurrence, bool>>)GetParentWhere(Query, QueryType);
@@ -143,11 +143,11 @@ namespace WBIS_2.DataModel
 
             return returnVal.Where(a);
         }
-        public Expression<Func<CNDDBOccurrence, bool>> GetParentWhere(object[] Query, Type QueryType)
+        public Expression GetParentWhere(object[] Query, Type QueryType)
         {
-            Expression<Func<CNDDBOccurrence, bool>> a;
+            Expression<Func<SPIPlantPolygon, bool>> a;
             if (QueryType == typeof(District))
-                a = _ => _.Districts.Any(d => Query.Cast<District>().Contains(d));
+                a = _ => Query.Cast<District>().Contains(_.District);
             else if (QueryType == typeof(Watershed))
                 a = _ => _.Watersheds.Any(d => Query.Cast<Watershed>().Contains(d));
             else if (QueryType == typeof(Quad75))

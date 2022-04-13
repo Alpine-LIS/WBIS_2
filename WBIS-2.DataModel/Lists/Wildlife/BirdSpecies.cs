@@ -33,21 +33,21 @@ namespace WBIS_2.DataModel
         public ICollection<Hex160RequiredPass> PassSpecies { get; set; }
 
         [NotMapped, Display(Order = -1)]
-        public IInfoTypeManager<IInformationType> Manager => (IInfoTypeManager<IInformationType>)new BirdSpeciesManager();
+        public IInfoTypeManager Manager => new BirdSpeciesManager();
     }
 
-    public class BirdSpeciesManager : IInfoTypeManager<AmphibianSpecies>
+    public class BirdSpeciesManager : IInfoTypeManager
     {
         public string DisplayName { get { return "Bird Species"; } }
 
-        public IQueryable<AmphibianSpecies> GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
+        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
         {
             var returnVal = model.Set<AmphibianSpecies>();
             var a = (Expression<Func<AmphibianSpecies, bool>>)GetParentWhere(Query, QueryType);
 
             return returnVal.Where(a);
         }
-        public Expression<Func<AmphibianSpecies, bool>> GetParentWhere(object[] Query, Type QueryType)
+        public Expression GetParentWhere(object[] Query, Type QueryType)
         {
             Expression<Func<AmphibianSpecies, bool>> a = _ => Query.Contains(_);
             return a;

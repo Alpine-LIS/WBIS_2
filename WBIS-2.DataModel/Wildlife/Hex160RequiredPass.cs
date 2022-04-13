@@ -56,10 +56,10 @@ namespace WBIS_2.DataModel
 
 
         [NotMapped, Display(Order = -1)]
-        public IInfoTypeManager<IInformationType> Manager => (IInfoTypeManager<IInformationType>)new Hex160RequiredPassManager();
+        public IInfoTypeManager Manager { get { return new Hex160RequiredPassManager(); } }
     }
 
-    public class Hex160RequiredPassManager : IInfoTypeManager<Hex160RequiredPass>
+    public class Hex160RequiredPassManager : IInfoTypeManager
     {
         public string DisplayName { get { return "Hex160 Required Passes"; } }
 
@@ -70,7 +70,7 @@ namespace WBIS_2.DataModel
             { return new IInformationType[0]; }
         }
 
-        public IQueryable<Hex160RequiredPass> GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
+        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
         {
             var returnVal = model.Set<Hex160RequiredPass>();
             var a = (Expression<Func<Hex160RequiredPass, bool>>)GetParentWhere(Query, QueryType);
@@ -80,7 +80,7 @@ namespace WBIS_2.DataModel
 
             return returnVal.Where(a);
         }
-        public Expression<Func<Hex160RequiredPass, bool>> GetParentWhere(object[] Query, Type QueryType)
+        public Expression GetParentWhere(object[] Query, Type QueryType)
         {
             Expression<Func<Hex160RequiredPass, bool>> a;
             if (QueryType == typeof(Hex160))

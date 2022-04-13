@@ -47,10 +47,10 @@ namespace WBIS_2.DataModel
         public ICollection<Hex160> CurrentHex160s { get; set; }
 
         [NotMapped, Display(Order = -1)]
-        public IInfoTypeManager<IInformationType> Manager => (IInfoTypeManager<IInformationType>)new ProtectionZoneManager();
+        public IInfoTypeManager Manager { get { return new ProtectionZoneManager(); } }
     }
 
-    public class ProtectionZoneManager : IInfoTypeManager<ProtectionZone>
+    public class ProtectionZoneManager : IInfoTypeManager
     {
         public string DisplayName { get { return "Proection Zone"; } }
 
@@ -71,7 +71,7 @@ namespace WBIS_2.DataModel
         }
 
 
-        public IQueryable<ProtectionZone> GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
+        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
         {
             var returnVal = model.Set<ProtectionZone>();
             var a = (Expression<Func<ProtectionZone, bool>>)GetParentWhere(Query, QueryType);
@@ -81,7 +81,7 @@ namespace WBIS_2.DataModel
 
             return returnVal.Where(a);
         }
-        public Expression<Func<ProtectionZone, bool>> GetParentWhere(object[] Query, Type QueryType)
+        public Expression GetParentWhere(object[] Query, Type QueryType)
         {
             Expression<Func<ProtectionZone, bool>> a;
             if (QueryType == typeof(Hex160))

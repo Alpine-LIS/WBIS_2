@@ -58,20 +58,20 @@ namespace WBIS_2.DataModel
 
 
         [NotMapped, Display(Order = -1)]
-        public IInfoTypeManager<IInformationType> Manager => (IInfoTypeManager<IInformationType>)new PlantSpeciesManager();
+        public IInfoTypeManager Manager => new PlantSpeciesManager();
     }
-    public class PlantSpeciesManager : IInfoTypeManager<PlantSpecies>
+    public class PlantSpeciesManager : IInfoTypeManager
     {
         public string DisplayName { get { return "Plant Species"; } }
 
-        public IQueryable<PlantSpecies> GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
+        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
         {
             var returnVal = model.Set<PlantSpecies>();
             var a = (Expression<Func<PlantSpecies, bool>>)GetParentWhere(Query, QueryType);
 
             return returnVal.Where(a);
         }
-        public Expression<Func<PlantSpecies, bool>> GetParentWhere(object[] Query, Type QueryType)
+        public Expression GetParentWhere(object[] Query, Type QueryType)
         {
             Expression<Func<PlantSpecies, bool>> a = _ => Query.Contains(_);
             return a;

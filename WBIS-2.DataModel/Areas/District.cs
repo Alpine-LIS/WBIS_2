@@ -49,10 +49,10 @@ namespace WBIS_2.DataModel
 
 
         [NotMapped, Display(Order = -1)]
-        public IInfoTypeManager<IInformationType> Manager => (IInfoTypeManager<IInformationType>)new DistrictManager();
+        public IInfoTypeManager Manager => new DistrictManager();
     }
 
-    public class DistrictManager : IInfoTypeManager<District>
+    public class DistrictManager : IInfoTypeManager
     {
         public string DisplayName { get { return "District"; } }
 
@@ -65,14 +65,14 @@ namespace WBIS_2.DataModel
         }
 
 
-        public IQueryable<District> GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
+        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
         {
             var returnVal = model.Set<District>();
-            var a = GetParentWhere(Query, QueryType);
+            var a = (Expression<Func<District, bool>>)GetParentWhere(Query, QueryType);
 
             return returnVal.Where(a);
         }
-        public Expression<Func<District, bool>> GetParentWhere(object[] Query, Type QueryType)
+        public Expression GetParentWhere(object[] Query, Type QueryType)
         {
             Expression<Func<District, bool>> a = _ => Query.Contains(_);
             return a;

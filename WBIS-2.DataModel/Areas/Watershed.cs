@@ -110,10 +110,10 @@ namespace WBIS_2.DataModel
 
 
         [NotMapped, Display(Order = -1)]
-        public IInfoTypeManager<IInformationType> Manager => (IInfoTypeManager<IInformationType>)new WatershedManager();
+        public IInfoTypeManager Manager { get { return new WatershedManager(); } }
     }
 
-    public class WatershedManager : IInfoTypeManager<Watershed>
+    public class WatershedManager : IInfoTypeManager
     {
         public string DisplayName { get { return "Watershed"; } }
 
@@ -124,7 +124,7 @@ namespace WBIS_2.DataModel
             { return new IInformationType[] { new Hex160(), new CNDDBOccurrence(), new CDFW_SpottedOwl(), new SiteCalling(), new OwlBanding(), new SPIPlantPolygon(), 
                 new SPIPlantPoint(), new AmphibianSurvey(), new AmphibianElement(), new BotanicalScoping(), new BotanicalSurveyArea(), new BotanicalSurvey(), new BotanicalElement() }; }
         }
-        public IQueryable<Watershed> GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
+        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
         {
             var returnVal = model.Set<Watershed>();
             var a = (Expression<Func<Watershed, bool>>)GetParentWhere(Query, QueryType);
@@ -138,7 +138,7 @@ namespace WBIS_2.DataModel
 
             return returnVal.Where(a);
         }
-        public Expression<Func<Watershed, bool>> GetParentWhere(object[] Query, Type QueryType)
+        public Expression GetParentWhere(object[] Query, Type QueryType)
         {
             Expression<Func<Watershed, bool>> a;
             if (QueryType == typeof(District))

@@ -86,10 +86,10 @@ namespace WBIS_2.DataModel
 
 
         [NotMapped, Display(Order = -1)]
-        public IInfoTypeManager<IInformationType> Manager => (IInfoTypeManager<IInformationType>)new SPIPlantPolygoManagern();
+        public IInfoTypeManager Manager { get { return new SPIPlantPolygoManagern(); } }
     }
 
-    public class SPIPlantPolygoManagern : IInfoTypeManager<SPIPlantPolygon>
+    public class SPIPlantPolygoManagern : IInfoTypeManager
     {
         public string DisplayName { get { return "SPI Plant Polygon"; } }
 
@@ -100,7 +100,7 @@ namespace WBIS_2.DataModel
             { return new IInformationType[0]; }
         }
 
-        public IQueryable<SPIPlantPolygon> GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
+        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
         {
             var returnVal = model.Set<SPIPlantPolygon>();
             var a = (Expression<Func<SPIPlantPolygon, bool>>)GetParentWhere(Query, QueryType);
@@ -116,7 +116,7 @@ namespace WBIS_2.DataModel
 
             return returnVal.Where(a);
         }
-        public Expression<Func<SPIPlantPolygon, bool>> GetParentWhere(object[] Query, Type QueryType)
+        public Expression GetParentWhere(object[] Query, Type QueryType)
         {
             Expression<Func<SPIPlantPolygon, bool>> a;
             if (QueryType == typeof(District))

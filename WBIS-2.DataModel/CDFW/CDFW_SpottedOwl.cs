@@ -82,10 +82,10 @@ namespace WBIS_2.DataModel
 
 
         [NotMapped, Display(Order = -1)]
-        public IInfoTypeManager<IInformationType> Manager => (IInfoTypeManager<IInformationType>)new CDFW_SpottedOwlManager();
+        public IInfoTypeManager Manager { get { return new CDFW_SpottedOwlManager(); } }
     }
 
-    public class CDFW_SpottedOwlManager : IInfoTypeManager<CDFW_SpottedOwl>
+    public class CDFW_SpottedOwlManager : IInfoTypeManager
     {
         public string DisplayName { get { return "CDFW Spotted OWl"; } }
 
@@ -95,7 +95,7 @@ namespace WBIS_2.DataModel
             get
             { return new IInformationType[0]; }
         }
-        public IQueryable<CDFW_SpottedOwl> GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
+        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
         {
             var returnVal = model.Set<CDFW_SpottedOwl>();
             var a = (Expression<Func<CDFW_SpottedOwl, bool>>)GetParentWhere(Query, QueryType);
@@ -111,7 +111,7 @@ namespace WBIS_2.DataModel
 
             return returnVal.Where(a);
         }
-        public Expression<Func<CDFW_SpottedOwl, bool>> GetParentWhere(object[] Query, Type QueryType)
+        public Expression GetParentWhere(object[] Query, Type QueryType)
         {
             Expression<Func<CDFW_SpottedOwl, bool>> a;
             if (QueryType == typeof(District))
