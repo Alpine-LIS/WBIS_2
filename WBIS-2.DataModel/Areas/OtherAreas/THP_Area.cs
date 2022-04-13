@@ -9,7 +9,7 @@ using System.Linq.Expressions;
 
 namespace WBIS_2.DataModel
 {
-    public class THP_Area : IInformationType, IQueryStuff//<THP_Area>
+    public class THP_Area : IInformationType
     {
         [Key,DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
@@ -22,6 +22,11 @@ namespace WBIS_2.DataModel
 
 
         [NotMapped, Display(Order = -1)]
+        public IInfoTypeManager Manager { get { return new THP_AreaManager(); } }
+    }
+
+    public class THP_AreaManager : IInfoTypeManager
+    {
         public string DisplayName { get { return "THP Area"; } }
 
         [NotMapped]
@@ -43,7 +48,7 @@ namespace WBIS_2.DataModel
             return a;
         }
 
-        public static List<KeyValuePair<string, string>> DisplayFields
+        public List<KeyValuePair<string, string>> DisplayFields
         {
             get
             {

@@ -10,7 +10,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class SiteCalling : IUserRecords, IQueryStuff, IPointParents, IPointLayer
+    public class SiteCalling : IUserRecords,  IPointParents, IPointLayer
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
@@ -183,6 +183,11 @@ namespace WBIS_2.DataModel
 
 
         [NotMapped, Display(Order = -1)]
+        public IInfoTypeManager Manager { get { return new SiteCallingManager(); } }
+    }
+
+    public class SiteCallingManager : IInfoTypeManager
+    {
         public string DisplayName { get { return "Site Calling"; } }
 
         [NotMapped]
@@ -224,7 +229,7 @@ namespace WBIS_2.DataModel
             return a;
         }
 
-        public static List<KeyValuePair<string, string>> DisplayFields
+        public List<KeyValuePair<string, string>> DisplayFields
         {
             get
             {

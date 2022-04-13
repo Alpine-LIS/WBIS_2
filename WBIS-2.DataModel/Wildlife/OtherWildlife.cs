@@ -26,24 +26,5 @@ namespace WBIS_2.DataModel
         public Guid SiteCallingId { get; set; }
         public SiteCalling SiteCalling { get; set; }
 
-      
-
-        [NotMapped, Display(Order = -1)]
-        public string DisplayName { get { return "Other Wildlife"; } }
-
-        [NotMapped]
-        public IInformationType[] AvailibleChildren
-        {
-            get
-            { return new IInformationType[0]; }
-        }
-      
-        public static List<KeyValuePair<string, string>> DisplayFields
-        {
-            get
-            {
-                return new List<KeyValuePair<string, string>>();
-            }
-        }
     }
 }

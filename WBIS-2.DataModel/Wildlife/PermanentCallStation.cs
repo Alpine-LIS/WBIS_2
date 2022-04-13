@@ -10,7 +10,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class PermanentCallStation : UserDataValidator, IUserRecords, IQueryStuff
+    public class PermanentCallStation : UserDataValidator, IUserRecords
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
@@ -44,8 +44,12 @@ namespace WBIS_2.DataModel
         public Guid Hex160Id { get; set; }
         public Hex160 Hex160 { get; set; }
 
-
         [NotMapped, Display(Order = -1)]
+        public IInfoTypeManager Manager { get { return new PermanentCallStationManager(); } }
+    }
+
+    public class PermanentCallStationManager : IInfoTypeManager
+    {
         public string DisplayName { get { return "Permanent Call Stations"; } }
 
         [NotMapped]
@@ -56,7 +60,7 @@ namespace WBIS_2.DataModel
         }
 
         [NotMapped]
-        public static List<KeyValuePair<string, string>> DisplayFields
+        public List<KeyValuePair<string, string>> DisplayFields
         {
             get
             {

@@ -10,7 +10,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class BotanicalElement : UserDataValidator, IUserRecords, IQueryStuff, IPointParents, IPointLayer
+    public class BotanicalElement : UserDataValidator, IUserRecords, IPointParents, IPointLayer
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
@@ -118,6 +118,11 @@ namespace WBIS_2.DataModel
 
 
         [NotMapped, Display(Order = -1)]
+        public IInfoTypeManager Manager { get { return new BotanicalElementManager(); } }
+    }
+
+    public class BotanicalElementManager : IInfoTypeManager
+    {
         public string DisplayName { get { return "Botanical Elements"; } }
 
         [NotMapped]
@@ -172,7 +177,7 @@ namespace WBIS_2.DataModel
             return a;
         }
 
-        public static List<KeyValuePair<string, string>> DisplayFields
+        public List<KeyValuePair<string, string>> DisplayFields
         {
             get
             {

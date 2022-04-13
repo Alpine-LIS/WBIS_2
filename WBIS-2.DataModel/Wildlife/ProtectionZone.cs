@@ -10,7 +10,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class ProtectionZone : UserDataValidator, IUserRecords, IQueryStuff
+    public class ProtectionZone : UserDataValidator, IUserRecords
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
@@ -47,6 +47,11 @@ namespace WBIS_2.DataModel
         public ICollection<Hex160> CurrentHex160s { get; set; }
 
         [NotMapped, Display(Order = -1)]
+        public IInfoTypeManager Manager { get { return new ProtectionZoneManager(); } }
+    }
+
+    public class ProtectionZoneManager : IInfoTypeManager
+    {
         public string DisplayName { get { return "Proection Zone"; } }
 
         [NotMapped]
@@ -57,7 +62,7 @@ namespace WBIS_2.DataModel
         }
 
         [NotMapped]
-        public static List<KeyValuePair<string, string>> DisplayFields
+        public List<KeyValuePair<string, string>> DisplayFields
         {
             get
             {

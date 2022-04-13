@@ -10,7 +10,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class OwlBanding : UserDataValidator, IUserRecords, IQueryStuff, IPointParents, IPointLayer
+    public class OwlBanding : UserDataValidator, IUserRecords, IPointParents, IPointLayer
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
@@ -144,6 +144,11 @@ namespace WBIS_2.DataModel
 
 
         [NotMapped, Display(Order = -1)]
+        public IInfoTypeManager Manager { get { return new OwlBandingManager(); } }
+    }
+
+    public class OwlBandingManager : IInfoTypeManager
+    {
         public string DisplayName { get { return "Owl Banding"; } }
 
         [NotMapped]
@@ -153,7 +158,7 @@ namespace WBIS_2.DataModel
             { return new IInformationType[0]; }
         }
 
-        public static List<KeyValuePair<string, string>> DisplayFields
+        public List<KeyValuePair<string, string>> DisplayFields
         {
             get
             {

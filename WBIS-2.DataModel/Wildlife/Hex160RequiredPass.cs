@@ -10,7 +10,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class Hex160RequiredPass : UserDataValidator, IUserRecords, IQueryStuff
+    public class Hex160RequiredPass : UserDataValidator, IUserRecords
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; } 
@@ -56,6 +56,11 @@ namespace WBIS_2.DataModel
 
 
         [NotMapped, Display(Order = -1)]
+        public IInfoTypeManager Manager { get { return new Hex160RequiredPassManager(); } }
+    }
+
+    public class Hex160RequiredPassManager : IInfoTypeManager
+    {
         public string DisplayName { get { return "Hex160 Required Passes"; } }
 
         [NotMapped]
@@ -84,7 +89,7 @@ namespace WBIS_2.DataModel
             return a;
         }
 
-        public static List<KeyValuePair<string, string>> DisplayFields
+        public List<KeyValuePair<string, string>> DisplayFields
         {
             get
             {

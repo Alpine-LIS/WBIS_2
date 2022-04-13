@@ -10,7 +10,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class CDFW_SpottedOwl : IInformationType, IQueryStuff, IPointParents
+    public class CDFW_SpottedOwl : IInformationType,  IPointParents
     {
         [Key, Column("guid")]
         public Guid Guid { get; set; }
@@ -80,7 +80,13 @@ namespace WBIS_2.DataModel
         public Hex160 Hex160 { get; set; }
 
 
+
         [NotMapped, Display(Order = -1)]
+        public IInfoTypeManager Manager { get { return new CDFW_SpottedOwlManager(); } }
+    }
+
+    public class CDFW_SpottedOwlManager : IInfoTypeManager
+    {
         public string DisplayName { get { return "CDFW Spotted OWl"; } }
 
         [NotMapped]
@@ -120,7 +126,7 @@ namespace WBIS_2.DataModel
                 a = _ => Query.Contains(_);
             return a;
         }
-        public static List<KeyValuePair<string, string>> DisplayFields
+        public List<KeyValuePair<string, string>> DisplayFields
         {
             get
             {

@@ -10,7 +10,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class CNDDBOccurrence : IInformationType, IQueryStuff
+    public class CNDDBOccurrence : IInformationType
     {
         [Key, Column("guid")]
         public Guid Guid { get; set; }
@@ -110,7 +110,13 @@ namespace WBIS_2.DataModel
         public ICollection<Hex160> Hex160s { get; set; }
 
 
+
         [NotMapped, Display(Order = -1)]
+        public IInfoTypeManager Manager { get { return new CNDDBOccurrenceManager(); } }
+    }
+
+    public class CNDDBOccurrenceManager : IInfoTypeManager
+    {
         public string DisplayName { get { return "CNDDB Occurrence"; } }
 
 
@@ -152,7 +158,7 @@ namespace WBIS_2.DataModel
                 a = _ => Query.Contains(_);
             return a;
         }
-        public static List<KeyValuePair<string, string>> DisplayFields
+        public List<KeyValuePair<string, string>> DisplayFields
         {
             get
             {

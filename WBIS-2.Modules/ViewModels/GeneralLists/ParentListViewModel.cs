@@ -21,7 +21,7 @@ namespace WBIS_2.Modules.ViewModels
     {
         public object Title
         {
-            get { return $"{ParentType.DisplayName}"; }
+            get { return $"{ParentType.Manager.DisplayName}"; }
         }
         public IInformationType ParentType { get; set; }
 
@@ -29,8 +29,8 @@ namespace WBIS_2.Modules.ViewModels
         {
             return ViewModelSource.Create(() => new ParentListViewModel()
             {
-                Caption = $"{(parentType).DisplayName}",
-                Content = $"{(parentType).DisplayName}",
+                Caption = $"{parentType.Manager.DisplayName}",
+                Content = $"{parentType.Manager.DisplayName}",
                 ParentType = parentType,
             });
         }
@@ -70,16 +70,16 @@ namespace WBIS_2.Modules.ViewModels
                 return;
             }
 
-            if (ParentType.AvailibleChildren.Count() > 0)
+            if (ParentType.Manager.AvailibleChildren.Count() > 0)
             {
                 IDocumentManagerService service = this.GetRequiredService<IDocumentManagerService>();
-                IDocument document = service.FindDocumentById(ParentType.DisplayName + " Children");
+                IDocument document = service.FindDocumentById(ParentType.Manager.DisplayName + " Children");
                 if (document == null)
                 {
                     ChildrenListViewModel ChildrenView = ChildrenListViewModel.Create(SelectedItems.ToArray(), ParentType);
 
-                    document = service.CreateDocument("ChildrenListView", ChildrenView, ParentType.DisplayName + " Children", this);
-                    document.Id = ParentType.DisplayName + " Children";
+                    document = service.CreateDocument("ChildrenListView", ChildrenView, ParentType.Manager.DisplayName + " Children", this);
+                    document.Id = ParentType.Manager.DisplayName + " Children";
                 }
                 document.Show();
             }
@@ -101,7 +101,7 @@ namespace WBIS_2.Modules.ViewModels
        
         public override void Records_GetQueryable(object sender, GetQueryableEventArgs e)
         {
-            e.QueryableSource = ((IQueryStuff)ParentType).GetQueryable(Database.Districts.ToArray(), ParentType.GetType(), Database);
+            e.QueryableSource = ParentType.Manager.GetQueryable(Database.Districts.ToArray(), ParentType.GetType(), Database);
 
             //if (ParentType is District)
             //    e.QueryableSource = Database.Set<District>()
@@ -175,7 +175,7 @@ namespace WBIS_2.Modules.ViewModels
         public override void SelectionChanged()
         {
             IDocumentManagerService service = this.GetRequiredService<IDocumentManagerService>();
-            IDocument document = service.FindDocumentById(ParentType.DisplayName + " Children");
+            IDocument document = service.FindDocumentById(ParentType.Manager.DisplayName + " Children");
             if (document != null)
             {
                 ((ChildrenListViewModel)document.Content).UpdateParentQuery(SelectedItems.ToArray());

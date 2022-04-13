@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+using System.Linq;
+using System.Linq.Expressions;
 
 namespace WBIS_2.DataModel
 {
-    public class PlantSpecies
+    public class PlantSpecies : IInformationType
     {
         [Key,Column("guid")]
         public Guid Guid { get; set; }
@@ -53,5 +55,42 @@ namespace WBIS_2.DataModel
         public ICollection<SPIPlantPoint> SPIPlantPoints { get; set; }
         public ICollection<SPIPlantPolygon> SPIPlantPolys { get; set; }
         public ICollection<BotanicalScopingSpecies> BotanicalScopingSpecies { get; set; }
+
+
+        [NotMapped, Display(Order = -1)]
+        public IInfoTypeManager Manager => new PlantSpeciesManager();
+    }
+    public class PlantSpeciesManager : IInfoTypeManager
+    {
+        public string DisplayName { get { return "Plant Species"; } }
+
+        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
+        {
+            var returnVal = model.Set<PlantSpecies>();
+            var a = (Expression<Func<PlantSpecies, bool>>)GetParentWhere(Query, QueryType);
+
+            return returnVal.Where(a);
+        }
+        public Expression GetParentWhere(object[] Query, Type QueryType)
+        {
+            Expression<Func<PlantSpecies, bool>> a = _ => Query.Contains(_);
+            return a;
+        }
+
+        public IInformationType[] AvailibleChildren
+        {
+            get
+            { return new IInformationType[0]; }
+        }
+
+        public List<KeyValuePair<string, string>> DisplayFields
+        {
+            get
+            {
+                return new List<KeyValuePair<string, string>>()
+                { new KeyValuePair<string, string>("SciName", "PlantSpecies"),
+                new KeyValuePair<string, string>("ComName", "PlantSpecies")};
+            }
+        }
     }
 }

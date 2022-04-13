@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace WBIS_2.DataModel
 {
-    public class Quad75 : IInformationType, IQueryStuff//<Quad75>
+    public class Quad75 : IInformationType
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
@@ -63,26 +63,29 @@ namespace WBIS_2.DataModel
         public ICollection<BotanicalScoping> BotanicalScopings { get; set; }
         public ICollection<BotanicalSurveyArea> BotanicalSurveyAreas { get; set; }
         public ICollection<BotanicalSurvey> BotanicalSurveys { get; set; }
-        public ICollection<BotanicalElement> BotanicalElements { get; set; }
-
-
+        public ICollection<BotanicalElement> BotanicalElements { get; set; }  
+        
         [NotMapped, Display(Order = -1)]
-        public string DisplayName { get { return "Quad75"; } }
+        public IInfoTypeManager Manager { get { return new Quad75Manager(); } }
+    }
 
-        [NotMapped]
+    public class Quad75Manager:IInfoTypeManager
+    {
+        public string DisplayName { get { return "Quad75"; } }
         public IInformationType[] AvailibleChildren
         {
             get
-            { return new IInformationType[] { new Hex160(), new CNDDBOccurrence(), new CDFW_SpottedOwl(), new SiteCalling(), new OwlBanding(), new SPIPlantPolygon(),
+            {
+                return new IInformationType[] { new Hex160(), new CNDDBOccurrence(), new CDFW_SpottedOwl(), new SiteCalling(), new OwlBanding(), new SPIPlantPolygon(),
                 new SPIPlantPoint(), new AmphibianSurvey(), new AmphibianElement(), new BotanicalScoping(), new BotanicalSurveyArea(), new BotanicalSurvey(), new BotanicalElement()
-            }; }
+            };
+            }
         }
+
         public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
         {
             var returnVal = model.Set<Quad75>();
             var a = (Expression<Func<Quad75, bool>>)GetParentWhere(Query, QueryType);
-
-            List<KeyValuePair<string, string>> v = Hex160.DisplayFields;
 
             if (QueryType == typeof(District))
                 return returnVal.Include(_ => _.Districts).Where(a);
@@ -93,6 +96,7 @@ namespace WBIS_2.DataModel
 
             return returnVal.Where(a);
         }
+
         public Expression GetParentWhere(object[] Query, Type QueryType)
         {
             Expression<Func<Quad75, bool>> a;
@@ -107,7 +111,7 @@ namespace WBIS_2.DataModel
             return a;
         }
 
-        public static List<KeyValuePair<string, string>> DisplayFields
+        public List<KeyValuePair<string, string>> DisplayFields
         {
             get
             {
@@ -115,10 +119,5 @@ namespace WBIS_2.DataModel
                 { new KeyValuePair<string, string>("QuadCode", "Quad75")};
             }
         }
-    }
-
-    public class Quad75Manager
-    {
-
     }
 }

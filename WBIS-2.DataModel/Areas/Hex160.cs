@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace WBIS_2.DataModel
 {
-    public class Hex160 : IInformationType, IQueryStuff//<Hex160>
+    public class Hex160 : IInformationType
     {
         [Key,DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
@@ -59,12 +59,15 @@ namespace WBIS_2.DataModel
         public ICollection<BotanicalSurveyArea> BotanicalSurveyAreas { get; set; }
         public ICollection<BotanicalSurvey> BotanicalSurveys { get; set; }
         public ICollection<BotanicalElement> BotanicalElements { get; set; }
-
-
+       
         [NotMapped, Display(Order = -1)]
+        public IInfoTypeManager Manager { get { return new Hex160Manager(); } }
+    }
+
+    public class Hex160Manager : IInfoTypeManager
+    { 
         public string DisplayName { get { return "Hex160"; } }
 
-        [NotMapped]
         public IInformationType[] AvailibleChildren
         {
             get
@@ -102,7 +105,7 @@ namespace WBIS_2.DataModel
             return a;
         }
 
-        public static List<KeyValuePair<string, string>> DisplayFields
+        public List<KeyValuePair<string, string>> DisplayFields
         {
             get
             {

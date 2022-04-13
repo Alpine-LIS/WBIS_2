@@ -21,20 +21,60 @@ namespace WBIS_2.Modules.ViewModels
     {
         public object Title
         {
-            get { return $"{ParentType.DisplayName} Children"; }
+            get { return $"{ParentType.Manager.DisplayName} Children"; }
         }
-        public IInformationType ParentType { get; set; }
+        public IInformationType ParentType
+        {
+            get
+            {
+                return GetProperty(() => ParentType);
+                //this.Caption = $"Regens {SelectedItems.Count}";
+            }
+            set
+            {
+                SetProperty(() => ParentType, value);
+                AvailibleChildren = ParentType.Manager.AvailibleChildren;
+            }
+        }
+
+        public IInformationType[] AvailibleChildren { get; set; }
+        public IInformationType CurrentChild
+        {
+            get
+            {
+                return GetProperty(() => CurrentChild);
+                //this.Caption = $"Regens {SelectedItems.Count}";
+            }
+            set
+            {
+                SetProperty(() => CurrentChild, value);
+                RefreshDataSource();
+            }
+        }
+        public object[] ParentQuery
+        {
+            get
+            {
+                return GetProperty(() => ParentQuery);
+                //this.Caption = $"Regens {SelectedItems.Count}";
+            }
+            set
+            {
+                SetProperty(() => ParentQuery, value);
+                RefreshDataSource();
+            }
+        }
+
 
         public static ChildrenListViewModel Create(object[] parentQuery, IInformationType parentType)
         {
             return ViewModelSource.Create(() => new ChildrenListViewModel()
             {
-                Caption = $"{((IInformationType)parentType).DisplayName} Children",
-                Content = $"{((IInformationType)parentType).DisplayName} Children",
+                Caption = $"{parentType.Manager.DisplayName} Children",
+                Content = $"{parentType.Manager.DisplayName} Children",
                 SelectedItems = new ObservableCollection<object>(),
                 ParentType = parentType,
                 ParentQuery = parentQuery,
-                AvailibleChildren = parentType.AvailibleChildren
             });
         }
 
@@ -70,7 +110,7 @@ namespace WBIS_2.Modules.ViewModels
         private void UpdateChildren(object sender, EventArgs e)
         {
             IDocumentManagerService service = this.GetRequiredService<IDocumentManagerService>();
-            IDocument document = service.FindDocumentById(CurrentChild.DisplayName + " Children");
+            IDocument document = service.FindDocumentById(CurrentChild.Manager.DisplayName + " Children");
             if (document != null)
             {
                 var ChildrenView = (ChildrenListViewModel)document.Content;
@@ -92,16 +132,16 @@ namespace WBIS_2.Modules.ViewModels
                 return;
             }
 
-            if (CurrentChild.AvailibleChildren.Count() > 0)
+            if (CurrentChild.Manager.AvailibleChildren.Count() > 0)
             {
                 IDocumentManagerService service = this.GetRequiredService<IDocumentManagerService>();
-                IDocument document = service.FindDocumentById(CurrentChild.DisplayName + " Children");
+                IDocument document = service.FindDocumentById(CurrentChild.Manager.DisplayName + " Children");
                 if (document == null)
                 {
                     ChildrenListViewModel ChildrenView = ChildrenListViewModel.Create(SelectedItems.ToArray(), CurrentChild);
 
-                    document = service.CreateDocument("ChildrenListView", ChildrenView, CurrentChild.DisplayName + " Children", this);
-                    document.Id = CurrentChild.DisplayName + " Children";
+                    document = service.CreateDocument("ChildrenListView", ChildrenView, CurrentChild.Manager.DisplayName + " Children", this);
+                    document.Id = CurrentChild.Manager.DisplayName + " Children";
                 }
                 document.Show();
             }
@@ -118,39 +158,12 @@ namespace WBIS_2.Modules.ViewModels
         {
             
         }
-
-
-        public IInformationType[] AvailibleChildren { get; set; }
-        public IInformationType _CurrentChild;
-        public IInformationType CurrentChild
-        {
-            get { return _CurrentChild; }
-            set
-            {
-                if (_CurrentChild != value)
-                {
-                    _CurrentChild = value;
-                    RefreshDataSource();
-                }
-            }
-        }
-        public object[] ParentQuery
-        {
-            get
-            {
-                return GetProperty(() => ParentQuery);
-                //this.Caption = $"Regens {SelectedItems.Count}";
-            }
-            set { SetProperty(() => ParentQuery, value); 
-                RefreshDataSource(); }
-        }
-
-
+            
         public override void Records_GetQueryable(object sender, GetQueryableEventArgs e)
         {
             if (CurrentChild == null) return;
                        
-            e.QueryableSource = ((IQueryStuff)CurrentChild).GetQueryable(ParentQuery, ParentType.GetType(), Database);
+            e.QueryableSource = CurrentChild.Manager.GetQueryable(ParentQuery, ParentType.GetType(), Database);
         }
 
 
@@ -211,7 +224,7 @@ namespace WBIS_2.Modules.ViewModels
         public override void SelectionChanged()
         {
             IDocumentManagerService service = this.GetRequiredService<IDocumentManagerService>();
-            IDocument document = service.FindDocumentById(ParentType.DisplayName + " Children");
+            IDocument document = service.FindDocumentById(ParentType.Manager.DisplayName + " Children");
             if (document != null)
             {
                 ((ChildrenListViewModel)document.Content).UpdateParentQuery(SelectedItems.ToArray());

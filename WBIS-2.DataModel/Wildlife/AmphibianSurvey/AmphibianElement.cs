@@ -10,7 +10,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class AmphibianElement : UserDataValidator, IUserRecords, IQueryStuff, IPointParents, IPointLayer
+    public class AmphibianElement : UserDataValidator, IUserRecords, IPointParents, IPointLayer
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
@@ -107,6 +107,11 @@ namespace WBIS_2.DataModel
 
 
         [NotMapped, Display(Order = -1)]
+        public IInfoTypeManager Manager { get { return new AmphibianElementManager(); } }
+    }
+
+    public class AmphibianElementManager : IInfoTypeManager
+    {
         public string DisplayName { get { return "Amphibian Elements"; } }
 
         [NotMapped]
@@ -154,7 +159,7 @@ namespace WBIS_2.DataModel
             return a;
         }
 
-        public static List<KeyValuePair<string, string>> DisplayFields
+        public List<KeyValuePair<string, string>> DisplayFields
         {
             get
             {

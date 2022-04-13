@@ -29,7 +29,7 @@
             Grid.Column="1"
             IsTextEditable="False" SelectedIndex="0"
             SelectedItem="{Binding CurrentChild, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
-            ItemsSource="{Binding AvailibleChildren}" DisplayMember="DisplayName"/>
+            ItemsSource="{Binding AvailibleChildren}" DisplayMember="Manager.DisplayName"/>
         <local:ListMenuView Grid.Row="1" Grid.ColumnSpan="6"/>
         <local:GridControlView Grid.Row="2" Grid.ColumnSpan="4"/>
     </Grid>
