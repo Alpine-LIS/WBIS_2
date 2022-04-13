@@ -22,10 +22,10 @@ namespace WBIS_2.DataModel
 
 
         [NotMapped, Display(Order = -1)]
-        public IInfoTypeManager Manager { get { return new THP_AreaManager(); } }
+        public IInfoTypeManager<IInformationType> Manager => (IInfoTypeManager<IInformationType>)new THP_AreaManager();
     }
 
-    public class THP_AreaManager : IInfoTypeManager
+    public class THP_AreaManager : IInfoTypeManager<THP_Area>
     {
         public string DisplayName { get { return "THP Area"; } }
 
@@ -35,14 +35,14 @@ namespace WBIS_2.DataModel
             get
             { return new IInformationType[] { new BotanicalScoping(), new BotanicalSurveyArea() }; }
         }
-        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
+        public IQueryable<THP_Area> GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
         {
             var returnVal = model.Set<THP_Area>();
             var a = (Expression<Func<THP_Area, bool>>)GetParentWhere(Query, QueryType);
 
             return returnVal.Where(a);
         }
-        public Expression GetParentWhere(object[] Query, Type QueryType)
+        public Expression<Func<THP_Area, bool>> GetParentWhere(object[] Query, Type QueryType)
         {
             Expression<Func<THP_Area, bool>> a = _ => Query.Contains(_);
             return a;

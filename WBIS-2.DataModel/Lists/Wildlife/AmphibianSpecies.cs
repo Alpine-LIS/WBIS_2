@@ -23,21 +23,21 @@ namespace WBIS_2.DataModel
         public ICollection<AmphibianPointOfInterest> AmphibianPointsOfInterest { get; set; }
 
         [NotMapped, Display(Order = -1)]
-        public IInfoTypeManager Manager => new AmphibianSpeciesManager();
+        public IInfoTypeManager<IInformationType> Manager => (IInfoTypeManager<IInformationType>)new AmphibianSpeciesManager();
     }
 
-    public class AmphibianSpeciesManager : IInfoTypeManager
+    public class AmphibianSpeciesManager : IInfoTypeManager<AmphibianSpecies>
     {
         public string DisplayName { get { return "Amphibian Species"; } }
 
-        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
+        public IQueryable<AmphibianSpecies> GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
         {
             var returnVal = model.Set<AmphibianSpecies>();
             var a = (Expression<Func<AmphibianSpecies, bool>>)GetParentWhere(Query, QueryType);
 
             return returnVal.Where(a);
         }
-        public Expression GetParentWhere(object[] Query, Type QueryType)
+        public Expression<Func<AmphibianSpecies, bool>> GetParentWhere(object[] Query, Type QueryType)
         {
             Expression<Func<AmphibianSpecies, bool>> a = _ => Query.Contains(_);
             return a;

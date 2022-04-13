@@ -66,10 +66,10 @@ namespace WBIS_2.DataModel
         public ICollection<BotanicalElement> BotanicalElements { get; set; }  
         
         [NotMapped, Display(Order = -1)]
-        public IInfoTypeManager Manager { get { return new Quad75Manager(); } }
+        public IInfoTypeManager<IInformationType> Manager => (IInfoTypeManager<IInformationType>)new Quad75Manager();
     }
 
-    public class Quad75Manager:IInfoTypeManager
+    public class Quad75Manager:IInfoTypeManager<Quad75>
     {
         public string DisplayName { get { return "Quad75"; } }
         public IInformationType[] AvailibleChildren
@@ -82,10 +82,10 @@ namespace WBIS_2.DataModel
             }
         }
 
-        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
+        public IQueryable<Quad75> GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
         {
             var returnVal = model.Set<Quad75>();
-            var a = (Expression<Func<Quad75, bool>>)GetParentWhere(Query, QueryType);
+            var a = GetParentWhere(Query, QueryType);
 
             if (QueryType == typeof(District))
                 return returnVal.Include(_ => _.Districts).Where(a);
@@ -97,7 +97,7 @@ namespace WBIS_2.DataModel
             return returnVal.Where(a);
         }
 
-        public Expression GetParentWhere(object[] Query, Type QueryType)
+        public Expression<Func<Quad75, bool>> GetParentWhere(object[] Query, Type QueryType)
         {
             Expression<Func<Quad75, bool>> a;
             if (QueryType == typeof(District))

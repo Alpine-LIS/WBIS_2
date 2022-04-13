@@ -61,10 +61,10 @@ namespace WBIS_2.DataModel
         public ICollection<BotanicalElement> BotanicalElements { get; set; }
        
         [NotMapped, Display(Order = -1)]
-        public IInfoTypeManager Manager { get { return new Hex160Manager(); } }
+        public IInfoTypeManager<IInformationType> Manager => (IInfoTypeManager<IInformationType>)new Hex160Manager();
     }
 
-    public class Hex160Manager : IInfoTypeManager
+    public class Hex160Manager : IInfoTypeManager<Hex160>
     { 
         public string DisplayName { get { return "Hex160"; } }
 
@@ -77,7 +77,7 @@ namespace WBIS_2.DataModel
             new CNDDBOccurrence(),new CDFW_SpottedOwl(),new BotanicalSurveyArea(),new BotanicalSurvey(),new BotanicalElement()};
             }
         }
-        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
+        public IQueryable<Hex160> GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
         {
             var returnVal = model.Set<Hex160>();
             var a = (Expression<Func<Hex160, bool>>)GetParentWhere(Query, QueryType);
@@ -91,7 +91,7 @@ namespace WBIS_2.DataModel
 
             return returnVal.Where(a);
         }
-        public Expression GetParentWhere(object[] Query, Type QueryType)
+        public Expression<Func<Hex160, bool>> GetParentWhere(object[] Query, Type QueryType)
         {
             Expression<Func<Hex160, bool>> a;
             if (QueryType == typeof(District))

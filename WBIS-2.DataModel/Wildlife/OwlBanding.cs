@@ -144,10 +144,10 @@ namespace WBIS_2.DataModel
 
 
         [NotMapped, Display(Order = -1)]
-        public IInfoTypeManager Manager { get { return new OwlBandingManager(); } }
+        public IInfoTypeManager<IInformationType> Manager => (IInfoTypeManager<IInformationType>)new OwlBandingManager();
     }
 
-    public class OwlBandingManager : IInfoTypeManager
+    public class OwlBandingManager : IInfoTypeManager<OwlBanding>
     {
         public string DisplayName { get { return "Owl Banding"; } }
 
@@ -166,7 +166,7 @@ namespace WBIS_2.DataModel
             }
         }
 
-        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
+        public IQueryable<OwlBanding> GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
         {
             var returnVal = model.Set<OwlBanding>();
             var a = (Expression<Func<OwlBanding, bool>>)GetParentWhere(Query, QueryType);
@@ -182,7 +182,7 @@ namespace WBIS_2.DataModel
 
             return returnVal.Where(a);
         }
-        public Expression GetParentWhere(object[] Query, Type QueryType)
+        public Expression<Func<OwlBanding, bool>> GetParentWhere(object[] Query, Type QueryType)
         {
             Expression<Func<OwlBanding, bool>> a;
             if (QueryType == typeof(District))
