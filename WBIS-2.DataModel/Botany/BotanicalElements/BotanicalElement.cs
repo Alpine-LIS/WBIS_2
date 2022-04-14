@@ -1,11 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using NetTopologySuite.Geometries;
+﻿using NetTopologySuite.Geometries;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Linq.Expressions;
 using System.Text;
 
 namespace WBIS_2.DataModel
@@ -119,75 +116,5 @@ namespace WBIS_2.DataModel
 
         [NotMapped, Display(Order = -1)]
         public IInfoTypeManager Manager { get { return new BotanicalElementManager(); } }
-    }
-
-    public class BotanicalElementManager : IInfoTypeManager
-    {
-        public string DisplayName { get { return "Botanical Elements"; } }
-
-        [NotMapped]
-        public IInformationType[] AvailibleChildren
-        {
-            get
-            { return new IInformationType[0]; }
-        }
-
-
-        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
-        {
-            var returnVal = model.Set<BotanicalElement>()
-                .Include(_ => _.District)
-                 .Include(_ => _.BotanicalSurvey)
-                .Include(_ => _.BotanicalSurveyArea)
-               .Include(_ => _.User)
-                .Include(_ => _.UserModified);
-            var a = (Expression<Func<BotanicalElement, bool>>)GetParentWhere(Query, QueryType);
-
-            if (QueryType == typeof(District))
-                return returnVal.Include(_ => _.District).Where(a);
-            else if (QueryType == typeof(Watershed))
-                return returnVal.Include(_ => _.Watershed).Where(a);
-            else if (QueryType == typeof(Quad75))
-                return returnVal.Include(_ => _.Quad75).Where(a);
-            else if (QueryType == typeof(Hex160))
-                return returnVal.Include(_ => _.Hex160).Where(a);
-            else if (QueryType == typeof(BotanicalScoping))
-                return returnVal.Include(_ => _.BotanicalScoping).Where(a);
-            else if (QueryType == typeof(BotanicalSurveyArea))
-                return returnVal.Include(_ => _.BotanicalSurveyArea).Where(a);
-            else if (QueryType == typeof(BotanicalSurvey))
-                return returnVal.Include(_ => _.BotanicalSurvey).Where(a);
-
-            return returnVal.Where(a);
-        }
-        public Expression GetParentWhere(object[] Query, Type QueryType)
-        {
-            Expression<Func<BotanicalElement, bool>> a;
-            if (QueryType == typeof(District))
-                a = _ => Query.Cast<District>().Contains(_.District);
-            else if (QueryType == typeof(Watershed))
-                a = _ => Query.Cast<Watershed>().Contains(_.Watershed);
-            else if (QueryType == typeof(Quad75))
-                a = _ => Query.Cast<Quad75>().Contains(_.Quad75);
-            else if (QueryType == typeof(Hex160))
-                a = _ => Query.Cast<Hex160>().Contains(_.Hex160);
-            else if (QueryType == typeof(BotanicalScoping))
-                a = _ => Query.Cast<BotanicalScoping>().Contains(_.BotanicalScoping);
-            else if (QueryType == typeof(BotanicalSurveyArea))
-                a = _ => Query.Cast<BotanicalSurveyArea>().Contains(_.BotanicalSurveyArea);
-            else if (QueryType == typeof(BotanicalSurvey))
-                a = _ => Query.Cast<BotanicalSurvey>().Contains(_.BotanicalSurvey);
-            else
-                a = _ => Query.Contains(_);
-            return a;
-        }
-
-        public List<KeyValuePair<string, string>> DisplayFields
-        {
-            get
-            {
-                return new List<KeyValuePair<string, string>>();
-            }
-        }
     }
 }

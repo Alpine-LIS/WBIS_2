@@ -76,12 +76,12 @@ namespace WBIS_2.Modules.Views
             if (DataContext == null) return;
             DataContextChanged -= GridControlView_DataContextChanged;
 
-            ((WBISViewModelBase)DataContext).ExportToXlsxEvent += GridControlView_ExportToXlsxEvent;
-            ((WBISViewModelBase)DataContext).SaveFilterEvent += GridControlView_SaveFilterEvent;
-            ((WBISViewModelBase)DataContext).LoadFilterEvent += GridControlView_LoadFilterEvent;
-            ((WBISViewModelBase)DataContext).FilterFromGridSelection += GridControlView_FilterFromGridSelection;
+            ((ListViewModelBase)DataContext).ExportToXlsxEvent += GridControlView_ExportToXlsxEvent;
+            //((ListViewModelBase)DataContext).SaveFilterEvent += GridControlView_SaveFilterEvent;
+            //((ListViewModelBase)DataContext).LoadFilterEvent += GridControlView_LoadFilterEvent;
+            ((ListViewModelBase)DataContext).FilterFromGridSelection += GridControlView_FilterFromGridSelection;
 
-            ((WBISViewModelBase)DataContext).SaveGridLayoutEvent += GridControlView_SaveGridLayoutEvent;
+            ((ListViewModelBase)DataContext).SaveGridLayoutEvent += GridControlView_SaveGridLayoutEvent;
         }
 
 
@@ -319,7 +319,7 @@ namespace WBIS_2.Modules.Views
             }
             else
             {
-                ((WBISViewModelBase)DataContext).ShowDetails();
+                ((ListViewModelBase)DataContext).ShowDetails();
             }
         }
         public void OnFocusedRowChanged(object sender, DevExpress.Xpf.Grid.FocusedRowChangedEventArgs e)

@@ -1,11 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using NetTopologySuite.Geometries;
+﻿using NetTopologySuite.Geometries;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Linq.Expressions;
 using System.Text;
 
 namespace WBIS_2.DataModel
@@ -48,46 +45,5 @@ namespace WBIS_2.DataModel
 
         [NotMapped, Display(Order = -1)]
         public IInfoTypeManager Manager { get { return new ProtectionZoneManager(); } }
-    }
-
-    public class ProtectionZoneManager : IInfoTypeManager
-    {
-        public string DisplayName { get { return "Proection Zone"; } }
-
-        [NotMapped]
-        public IInformationType[] AvailibleChildren
-        {
-            get
-            { return new IInformationType[0]; }
-        }
-
-        [NotMapped]
-        public List<KeyValuePair<string, string>> DisplayFields
-        {
-            get
-            {
-                return new List<KeyValuePair<string, string>>();
-            }
-        }
-
-
-        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
-        {
-            var returnVal = model.Set<ProtectionZone>();
-            var a = (Expression<Func<ProtectionZone, bool>>)GetParentWhere(Query, QueryType);
-
-            return returnVal
-                .Include(_ => _.Hex160s)
-                .Include(_=>_.User)
-                .Include(_=>_.UserModified).Where(a);
-        }
-        public Expression GetParentWhere(object[] Query, Type QueryType)
-        {
-            Expression<Func<ProtectionZone, bool>> a;
-            if (QueryType == typeof(Hex160))
-                a = _ => _.Hex160s.Any(d => Query.Cast<Hex160>().Contains(d));
-            a = _ => Query.Contains(_);
-            return a;
-        }
     }
 }

@@ -16,14 +16,20 @@
                 Command="{Binding AddRecordCommand}"
                 Glyph="{dx:DXImage SvgImages/Icon Builder/Actions_Add.svg}"
                 Content="Add"
-                IsEnabled="{Binding EnableListMenuItems, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                IsEnabled="{Binding AddRecordsEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <dxb:BarButtonItem 
                 KeyGesture="Delete"
-                ToolTip="Delete (delete)"
+                ToolTip="Delete Selected Record(s)"
                 Command="{Binding DeleteRecordCommand}"
                 Glyph="{dx:DXImage SvgImages/Dashboards/Delete.svg}"
                 Content="Delete"
-                IsEnabled="{Binding EnableListMenuItems, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                IsEnabled="{Binding DeleteRecordsEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <dxb:BarButtonItem 
+                ToolTip="Restore Selected Record(s)"
+                Command="{Binding RestoreRecordCommand}"
+                Glyph="{dx:DXImage SvgImages/Icon Builder/Actions_Arrow4Up.svg}"
+                Content="Restore"
+                IsEnabled="{Binding RestoreRecordsEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <dxb:BarButtonItem 
                 KeyGesture="F5"
                 ToolTip="Refresh (F5)"
@@ -43,19 +49,14 @@
                 ToolTip="View Deleted" 
                 IsChecked="{Binding ViewDeleted, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 IsEnabled="{Binding ViewDeletedEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                              IsVisible="{Binding AdminUser, UpdateSourceTrigger=PropertyChanged}"/>
-            <dxb:BarCheckItem Glyph="{dx:DXImage SvgImages/Icon Builder/Security_Visibility.svg}"
-                Content="View All Activities" 
-                ToolTip="View All Activities" 
-                IsChecked="{Binding ShowAllActivites, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                IsVisible="{Binding IsActivityList, UpdateSourceTrigger=PropertyChanged}"/>
+                              IsVisible="{Binding AdminUser, UpdateSourceTrigger=PropertyChanged}"/>           
             <dxb:BarCheckItem 
                 ToolTip="Toggle map auto zoom"
                 IsChecked="{Binding ToggleAutoZoom}"
                 IsVisible="{Binding IsIMapNavigationList}"
                 Content="Toggle map auto zoom" Glyph="{dx:DXImage SvgImages/Dashboards/GeoPointMaps.svg}"/>
 
-            <dxb:BarSubItem Glyph="{dx:DXImage SvgImages/Dashboards/EditFilter.svg}" ToolTip="Filter Tools">
+            <!--<dxb:BarSubItem Glyph="{dx:DXImage SvgImages/Dashboards/EditFilter.svg}" ToolTip="Filter Tools">
                 <dxb:BarButtonItem 
                     ToolTip="Save Filter"
                     Content="Save Filter"
@@ -64,11 +65,11 @@
                     ToolTip="Load Filter"
                     Content="Load Filter"
                     Command="{Binding LoadFilterCommand}"/>
-            </dxb:BarSubItem>
+            </dxb:BarSubItem>-->
 
 
 
-            <local:HexMenuTools IsVisible="{Binding IsHex160List, UpdateSourceTrigger =PropertyChanged}"/>
+            <!--<local:HexMenuTools IsVisible="{Binding IsHex160List, UpdateSourceTrigger =PropertyChanged}"/>-->
         </dxb:ToolBarControl>
     </Grid>
 </UserControl>

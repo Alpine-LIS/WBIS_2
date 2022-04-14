@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using NetTopologySuite.Geometries;
 
 
@@ -10,6 +11,67 @@ namespace WBIS_2.DataModel
 {
     public class WBIS2Model : DbContext
     {
+        public static string GetSqlQuery<T>(List<string> exlude)
+        {
+            var query = "Select ";
+            var entityType = typeof(T);
+            using var context = new WBIS2Model();
+
+            if (context.Model.FindEntityType(typeof(T)) is IEntityType et)
+            {
+                var properties = et.GetProperties();
+                //TODO:
+                /* 
+                var navs = et.GetIndexes();
+                var other = et.GetNavigations();
+                var fc = et.GetReferencingForeignKeys();
+                */
+                foreach (var prop in properties)
+                {
+                    if (exlude.Contains(prop.Name))
+                    {
+                        query += $"null as \"{prop.Name}\" ,";
+                        continue;
+                    }
+                    query += $"\"{prop.Name}\" ,";
+                }
+                query = query.Remove(query.Length - 1, 1);
+
+                query += $" from \"{et.GetSchemaQualifiedTableName()}\"";
+            }
+            return query;
+        }
+        public static string GetSqlQuery<T>(Type ExcludeType)
+        {
+            var query = "Select ";
+            var entityType = typeof(T);
+            using var context = new WBIS2Model();
+
+            if (context.Model.FindEntityType(typeof(T)) is IEntityType et)
+            {
+                var properties = et.GetProperties();
+                //TODO:
+                /* 
+                var navs = et.GetIndexes();
+                var other = et.GetNavigations();
+                var fc = et.GetReferencingForeignKeys();
+                */
+                foreach (var prop in properties)
+                {
+                    if (prop.ClrType.BaseType == ExcludeType || prop.ClrType == ExcludeType)
+                    {
+                        query += $"null as \"{prop.Name}\" ,";
+                        continue;
+                    }
+                    query += $"\"{prop.Name}\" ,";
+                }
+                query = query.Remove(query.Length - 1, 1);
+
+                query += $" from \"{et.GetSchemaQualifiedTableName()}\"";
+            }
+            return query;
+        }
+
         public static string GetRDSConnectionString()
         {
             var hostname = "alpine-database-1.cz1ugaicrz33.us-west-1.rds.amazonaws.com";
@@ -92,6 +154,21 @@ namespace WBIS_2.DataModel
                         x => x.HasOne<District>().WithMany().HasForeignKey("district_id"),
                         x => x.HasOne<ApplicationUser>().WithMany().HasForeignKey("application_user_id"),
                         x => x.ToTable("users_districts", "public"));
+            
+            modelBuilder.Entity<ApplicationUser>()
+                .HasMany(_ => _.ActiveBotanicalSurveyAreas)
+                .WithMany(p => p.ActiveUsers)
+                .UsingEntity<Dictionary<string, object>>("active_botanical_survey_areas",
+                        x => x.HasOne<BotanicalSurveyArea>().WithMany().HasForeignKey("botanical_survey_area_id"),
+                        x => x.HasOne<ApplicationUser>().WithMany().HasForeignKey("application_user_id"),
+                        x => x.ToTable("active_botanical_survey_areas", "public"));
+            modelBuilder.Entity<ApplicationUser>()
+                .HasMany(_ => _.ActiveHex160s)
+                .WithMany(p => p.ActiveUsers)
+                .UsingEntity<Dictionary<string, object>>("active_hex160s",
+                        x => x.HasOne<Hex160>().WithMany().HasForeignKey("hex160_id"),
+                        x => x.HasOne<ApplicationUser>().WithMany().HasForeignKey("application_user_id"),
+                        x => x.ToTable("active_hex160s", "public"));
 
 
 

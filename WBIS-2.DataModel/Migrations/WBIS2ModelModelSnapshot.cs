@@ -24,6 +24,36 @@ namespace WBIS_2.DataModel.Migrations
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "postgis");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("active_botanical_survey_areas", b =>
+                {
+                    b.Property<Guid>("application_user_id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("botanical_survey_area_id")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("application_user_id", "botanical_survey_area_id");
+
+                    b.HasIndex("botanical_survey_area_id");
+
+                    b.ToTable("active_botanical_survey_areas", "public");
+                });
+
+            modelBuilder.Entity("active_hex160s", b =>
+                {
+                    b.Property<Guid>("application_user_id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("hex160_id")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("application_user_id", "hex160_id");
+
+                    b.HasIndex("hex160_id");
+
+                    b.ToTable("active_hex160s", "public");
+                });
+
             modelBuilder.Entity("amphibian_surveys_hex160s", b =>
                 {
                     b.Property<Guid>("amphibian_survey_id")
@@ -3483,7 +3513,7 @@ namespace WBIS_2.DataModel.Migrations
 
                     b.Property<string>("Species")
                         .HasColumnType("text")
-                        .HasColumnName("pecies");
+                        .HasColumnName("species");
 
                     b.Property<string>("SubSpecies")
                         .HasColumnType("text")
@@ -3504,6 +3534,36 @@ namespace WBIS_2.DataModel.Migrations
                     b.HasKey("Guid");
 
                     b.ToTable("wildlife_species", (string)null);
+                });
+
+            modelBuilder.Entity("active_botanical_survey_areas", b =>
+                {
+                    b.HasOne("WBIS_2.DataModel.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("application_user_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WBIS_2.DataModel.BotanicalSurveyArea", null)
+                        .WithMany()
+                        .HasForeignKey("botanical_survey_area_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("active_hex160s", b =>
+                {
+                    b.HasOne("WBIS_2.DataModel.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("application_user_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WBIS_2.DataModel.Hex160", null)
+                        .WithMany()
+                        .HasForeignKey("hex160_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("amphibian_surveys_hex160s", b =>

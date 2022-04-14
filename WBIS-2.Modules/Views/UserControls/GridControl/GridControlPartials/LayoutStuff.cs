@@ -46,7 +46,7 @@ namespace WBIS_2.Modules.Views
         private void GridControlView_SaveGridLayoutEvent(object sender, EventArgs e)
         {
             if (DontSaveLayout) return;
-            string tableName = ((WBISViewModelBase)DataContext).TableName;
+            string tableName = ((ListViewModelBase)DataContext).TableName;
             if (tableName == null) return;
             if (tableName == "") return;
 
@@ -113,7 +113,7 @@ namespace WBIS_2.Modules.Views
                 //c.FilterPopupMode = FilterPopupMode.ExcelSmart;
             }
 
-            string tableName = ((WBISViewModelBase)DataContext).TableName;
+            string tableName = ((ListViewModelBase)DataContext).TableName;
             if (tableName == null) tableName = "";
 
             if (File.Exists($@"{ LayoutPath}\{ tableName}.xml"))

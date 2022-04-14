@@ -7,7 +7,12 @@
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=viewmodels:ParentListViewModel}"
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>        
-        <local:GridControlView Grid.Row="2" Grid.ColumnSpan="4"/>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <local:ListMenuView Grid.Row="0" Grid.ColumnSpan="6"/>
+        <local:GridControlView Grid.Row="1" Grid.ColumnSpan="4"/>
     </Grid>
 </UserControl>

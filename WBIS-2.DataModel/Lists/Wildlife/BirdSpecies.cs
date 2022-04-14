@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Linq.Expressions;
 using System.Text;
 
 namespace WBIS_2.DataModel
@@ -34,38 +32,5 @@ namespace WBIS_2.DataModel
 
         [NotMapped, Display(Order = -1)]
         public IInfoTypeManager Manager => new BirdSpeciesManager();
-    }
-
-    public class BirdSpeciesManager : IInfoTypeManager
-    {
-        public string DisplayName { get { return "Bird Species"; } }
-
-        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
-        {
-            var returnVal = model.Set<AmphibianSpecies>();
-            var a = (Expression<Func<AmphibianSpecies, bool>>)GetParentWhere(Query, QueryType);
-
-            return returnVal.Where(a);
-        }
-        public Expression GetParentWhere(object[] Query, Type QueryType)
-        {
-            Expression<Func<AmphibianSpecies, bool>> a = _ => Query.Contains(_);
-            return a;
-        }
-
-        public IInformationType[] AvailibleChildren
-        {
-            get
-            { return new IInformationType[0]; }
-        }
-
-        public List<KeyValuePair<string, string>> DisplayFields
-        {
-            get
-            {
-                return new List<KeyValuePair<string, string>>()
-                { new KeyValuePair<string, string>("Species", "BirdSpecies")};
-            }
-        }
     }
 }

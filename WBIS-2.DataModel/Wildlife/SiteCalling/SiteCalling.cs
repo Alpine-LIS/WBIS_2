@@ -1,11 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using NetTopologySuite.Geometries;
+﻿using NetTopologySuite.Geometries;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Linq.Expressions;
 using System.Text;
 
 namespace WBIS_2.DataModel
@@ -184,59 +181,5 @@ namespace WBIS_2.DataModel
 
         [NotMapped, Display(Order = -1)]
         public IInfoTypeManager Manager { get { return new SiteCallingManager(); } }
-    }
-
-    public class SiteCallingManager : IInfoTypeManager
-    {
-        public string DisplayName { get { return "Site Calling"; } }
-
-        [NotMapped]
-        public IInformationType[] AvailibleChildren
-        {
-            get
-            { return new IInformationType[] { new SiteCallingDetection() }; }
-        }
-
-        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
-        {
-            var returnVal = model.Set<SiteCalling>()
-                .Include(_ => _.User)
-                .Include(_ => _.UserModified)
-                .Include(_ => _.SurveySpecies)
-                .Include(_ => _.ProtectionZone)
-                .Include(_ => _.District)
-                .Include(_ => _.Hex160);
-            var a = (Expression<Func<SiteCalling, bool>>)GetParentWhere(Query, QueryType);
-
-            if (QueryType == typeof(Watershed))
-                return returnVal.Include(_ => _.Watershed).Where(a);
-            else if (QueryType == typeof(Quad75))
-                return returnVal.Include(_ => _.Quad75).Where(a);
-
-            return returnVal.Where(a);
-        }
-        public Expression GetParentWhere(object[] Query, Type QueryType)
-        {
-            Expression<Func<SiteCalling, bool>> a;
-            if (QueryType == typeof(District))
-                a = _ => _.Hex160.Districts.Any(d => Query.Cast<District>().Contains(d));
-            else if (QueryType == typeof(Watershed))
-                a = _ => _.Hex160.Watersheds.Any(d => Query.Cast<Watershed>().Contains(d));
-            else if (QueryType == typeof(Quad75))
-                a = _ => _.Hex160.Quad75s.Any(d => Query.Cast<Quad75>().Contains(d));
-            else if (QueryType == typeof(Hex160))
-                a = _ => Query.Cast<Hex160>().Contains(_.Hex160);
-            else
-                a = _ => Query.Contains(_);
-            return a;
-        }
-
-        public List<KeyValuePair<string, string>> DisplayFields
-        {
-            get
-            {
-                return new List<KeyValuePair<string, string>>();
-            }
-        }
     }
 }

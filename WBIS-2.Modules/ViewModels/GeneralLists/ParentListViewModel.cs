@@ -17,13 +17,25 @@ using System.Linq.Expressions;
 
 namespace WBIS_2.Modules.ViewModels
 {
-    public class ParentListViewModel : WBISViewModelBase, IDocumentContent, IMapNavigation
+    public class ParentListViewModel : ListViewModelBase, IDocumentContent, IMapNavigation
     {
         public object Title
         {
             get { return $"{ParentType.Manager.DisplayName}"; }
         }
-        public IInformationType ParentType { get; set; }
+        public IInformationType ParentType
+        {
+            get
+            {
+                return GetProperty(() => ParentType);
+            }
+            set
+            {
+                SetProperty(() => ParentType, value);
+                ListManager = ParentType.Manager;
+                RaisePropertyChanged(nameof(ListManager));
+            }
+        }
 
         public static ParentListViewModel Create(IInformationType parentType)
         {
@@ -132,7 +144,11 @@ namespace WBIS_2.Modules.ViewModels
         }
         public override void DeleteRecord()
         {
-           
+
+        }
+        public override void RestoreRecord()
+        {
+
         }
 
 

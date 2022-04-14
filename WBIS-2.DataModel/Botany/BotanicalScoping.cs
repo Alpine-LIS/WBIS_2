@@ -1,11 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using NetTopologySuite.Geometries;
+﻿using NetTopologySuite.Geometries;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Linq.Expressions;
 using System.Text;
 
 namespace WBIS_2.DataModel
@@ -81,60 +78,5 @@ namespace WBIS_2.DataModel
 
         [NotMapped, Display(Order = -1)]
         public IInfoTypeManager Manager { get { return new BotanicvalScopingManager(); } }
-    }
-
-    public class BotanicvalScopingManager : IInfoTypeManager
-    {
-        public string DisplayName { get { return "Botanical Scoping"; } }
-
-        [NotMapped]
-        public IInformationType[] AvailibleChildren
-        {
-            get
-            { return new IInformationType[] { new BotanicalSurveyArea(), new BotanicalSurvey(), new BotanicalElement() }; }
-        }
-
-
-
-        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
-        {
-            var returnVal = model.Set<BotanicalScoping>()
-                .Include(_ => _.Region)
-                .Include(_ => _.THP_Area)
-                .Include(_ => _.User)
-                .Include(_ => _.UserModified);
-            var a = (Expression<Func<BotanicalScoping, bool>>)GetParentWhere(Query, QueryType);
-
-            if (QueryType == typeof(District))
-                return returnVal.Include(_ => _.Districts).Where(a);
-            else if (QueryType == typeof(Watershed))
-                return returnVal.Include(_ => _.Watersheds).Where(a);
-            else if (QueryType == typeof(Quad75))
-                return returnVal.Include(_ => _.Quad75s).Where(a);
-
-            return returnVal.Where(a);
-        }
-
-        public Expression GetParentWhere(object[] Query, Type QueryType)
-        {
-            Expression<Func<BotanicalScoping, bool>> a;
-            if (QueryType == typeof(District))
-                a = _ => _.Districts.Any(d => Query.Cast<District>().Contains(d));
-            else if (QueryType == typeof(Watershed))
-                a = _ => _.Watersheds.Any(d => Query.Cast<Watershed>().Contains(d));
-            else if (QueryType == typeof(Quad75))
-                a = _ => _.Quad75s.Any(d => Query.Cast<Quad75>().Contains(d));
-            else
-                a = _ => Query.Contains(_);
-            return a;
-        }
-
-        public List<KeyValuePair<string, string>> DisplayFields
-        {
-            get
-            {
-                return new List<KeyValuePair<string, string>>();
-            }
-        }
     }
 }

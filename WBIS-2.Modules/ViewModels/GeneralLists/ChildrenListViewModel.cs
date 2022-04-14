@@ -17,7 +17,7 @@ using System.Linq.Expressions;
 
 namespace WBIS_2.Modules.ViewModels
 {
-    public class ChildrenListViewModel : WBISViewModelBase, IDocumentContent, IMapNavigation
+    public class ChildrenListViewModel : ListViewModelBase, IDocumentContent, IMapNavigation
     {
         public object Title
         {
@@ -28,7 +28,6 @@ namespace WBIS_2.Modules.ViewModels
             get
             {
                 return GetProperty(() => ParentType);
-                //this.Caption = $"Regens {SelectedItems.Count}";
             }
             set
             {
@@ -43,11 +42,12 @@ namespace WBIS_2.Modules.ViewModels
             get
             {
                 return GetProperty(() => CurrentChild);
-                //this.Caption = $"Regens {SelectedItems.Count}";
             }
             set
             {
                 SetProperty(() => CurrentChild, value);
+                ListManager = CurrentChild.Manager;
+                RaisePropertyChanged(nameof(ListManager));
                 RefreshDataSource();
             }
         }
@@ -182,6 +182,10 @@ namespace WBIS_2.Modules.ViewModels
         public override void DeleteRecord()
         {
            
+        }
+        public override void RestoreRecord()
+        {
+
         }
 
 
