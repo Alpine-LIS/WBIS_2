@@ -43,8 +43,8 @@ namespace WBIS_2.DataModel
         public DateTime StartTime { get; set; }
         [Required, Column("end_time")]
         public DateTime EndTime { get; set; }
-        [Required, Column("sunset_time")]
-        public DateTime SunsetTime { get; set; }
+        [Column("sunset_time")]
+        public DateTime? SunsetTime { get; set; }
 
        
         [Required, Column("survey_type1")]

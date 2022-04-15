@@ -38,8 +38,8 @@ namespace WBIS_2.DataModel
 
         public static EventHandler CurrentUserChanged;
 
-        public static List<Guid> ActiveBotanicalSurveyAreaGuids { get; set; }
-        public static List<Guid> ActiveHex160Guids { get; set; }
+        public static List<Guid> ActiveBotanicalSurveyAreaGuids { get; set; } = new List<Guid>();
+        public static List<Guid> ActiveHex160Guids { get; set; } = new List<Guid>();
 
     }
 }

@@ -113,7 +113,7 @@ namespace WBIS_2.Modules.ViewModels
        
         public override void Records_GetQueryable(object sender, GetQueryableEventArgs e)
         {
-            e.QueryableSource = ParentType.Manager.GetQueryable(Database.Districts.ToArray(), ParentType.GetType(), Database);
+            e.QueryableSource = ParentType.Manager.GetQueryable(Database.Districts.ToArray(), typeof(District), Database);
 
             //if (ParentType is District)
             //    e.QueryableSource = Database.Set<District>()

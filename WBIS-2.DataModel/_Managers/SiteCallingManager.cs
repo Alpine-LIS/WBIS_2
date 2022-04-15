@@ -61,7 +61,7 @@ namespace WBIS_2.DataModel
             }
         }
 
-        public bool ImportRecords => true;
+        public bool ImportRecords => false;
 
         public bool AddRecord => true;
 

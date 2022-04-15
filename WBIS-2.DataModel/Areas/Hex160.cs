@@ -24,7 +24,7 @@ namespace WBIS_2.DataModel
         [Column("recent_activity")]
         public string RecentActivity { get; set; }
         [Column("latest_activity")]
-        public DateTime LatestActivity { get; set; }
+        public DateTime? LatestActivity { get; set; }
 
 
         [NotMapped]
