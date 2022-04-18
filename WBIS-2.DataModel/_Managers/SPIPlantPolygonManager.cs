@@ -57,6 +57,6 @@ namespace WBIS_2.DataModel
                 return new List<KeyValuePair<string, string>>();
             }
         }
-        public bool CanSetActive => false;
+        public bool CanSetActive => false;// => false;
     }
 }

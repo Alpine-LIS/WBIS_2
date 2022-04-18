@@ -15,10 +15,10 @@ namespace WBIS_2.DataModel
        
 
         [Column("user_id")]
-        public Guid UserId { get; set; }
+        public Guid? UserId { get; set; }
         public ApplicationUser User { get; set; }
         [Column("user_modified_id")]
-        public Guid UserModifiedId { get; set; }
+        public Guid? UserModifiedId { get; set; }
         public ApplicationUser UserModified { get; set; }
 
         [Column("record_type")]
@@ -68,8 +68,8 @@ namespace WBIS_2.DataModel
         public int PZPassNumber { get; set; }
 
         //Initially gotten by the hex pz. Can be edited. Must be retained when pz changes. 
-        [Column("preotection_zone_id")]
-        public Guid ProtectionZoneID { get; set; }
+        [Column("protection_zone_id")]
+        public Guid? ProtectionZoneID { get; set; }
         public ProtectionZone ProtectionZone { get; set; }
 
 

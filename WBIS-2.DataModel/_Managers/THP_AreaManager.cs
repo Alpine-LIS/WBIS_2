@@ -37,6 +37,6 @@ namespace WBIS_2.DataModel
                 { new KeyValuePair<string, string>("THPName", "THP_Area")};
             }
         }
-        public bool CanSetActive => false;
+        public bool CanSetActive => false;// => false;
     }
 }

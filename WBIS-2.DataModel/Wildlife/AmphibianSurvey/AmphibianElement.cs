@@ -54,10 +54,10 @@ namespace WBIS_2.DataModel
 
 
         [Column("user_id")]
-        public Guid UserId { get; set; }
+        public Guid? UserId { get; set; }
         public ApplicationUser User { get; set; }
         [Column("user_modified_id")]
-        public Guid UserModifiedId { get; set; }
+        public Guid? UserModifiedId { get; set; }
         public ApplicationUser UserModified { get; set; }
 
 

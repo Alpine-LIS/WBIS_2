@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,10 @@ using WBIS_2.DataModel;
 namespace WBIS_2.DataModel.Migrations
 {
     [DbContext(typeof(WBIS2Model))]
-    partial class WBIS2ModelModelSnapshot : ModelSnapshot
+    [Migration("20220418215314_NullablePzSiteCalling")]
+    partial class NullablePzSiteCalling
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1909,19 +1911,19 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("guid");
 
-                    b.Property<Guid?>("AmphibianElementId")
+                    b.Property<Guid>("AmphibianElementId")
                         .HasColumnType("uuid")
                         .HasColumnName("amphibian_element_id");
 
-                    b.Property<Guid?>("AmphibianSurveyId")
+                    b.Property<Guid>("AmphibianSurveyId")
                         .HasColumnType("uuid")
                         .HasColumnName("amphibian_survey_id");
 
-                    b.Property<Guid?>("BotanicalElementId")
+                    b.Property<Guid>("BotanicalElementId")
                         .HasColumnType("uuid")
                         .HasColumnName("botanical_element_id");
 
-                    b.Property<Guid?>("BotanicalSurveyId")
+                    b.Property<Guid>("BotanicalSurveyId")
                         .HasColumnType("uuid")
                         .HasColumnName("botanical_survey_id");
 
@@ -1950,11 +1952,11 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("double precision")
                         .HasColumnName("lon");
 
-                    b.Property<Guid?>("OwlBandingId")
+                    b.Property<Guid>("OwlBandingId")
                         .HasColumnType("uuid")
                         .HasColumnName("owl_banding_id");
 
-                    b.Property<Guid?>("SiteCallingId")
+                    b.Property<Guid>("SiteCallingId")
                         .HasColumnType("uuid")
                         .HasColumnName("site_calling_id");
 
@@ -4372,27 +4374,39 @@ namespace WBIS_2.DataModel.Migrations
                 {
                     b.HasOne("WBIS_2.DataModel.AmphibianElement", "AmphibianElement")
                         .WithOne("DeviceInfo")
-                        .HasForeignKey("WBIS_2.DataModel.DeviceInfo", "AmphibianElementId");
+                        .HasForeignKey("WBIS_2.DataModel.DeviceInfo", "AmphibianElementId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WBIS_2.DataModel.AmphibianSurvey", "AmphibianSurvey")
                         .WithOne("DeviceInfo")
-                        .HasForeignKey("WBIS_2.DataModel.DeviceInfo", "AmphibianSurveyId");
+                        .HasForeignKey("WBIS_2.DataModel.DeviceInfo", "AmphibianSurveyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WBIS_2.DataModel.BotanicalElement", "BotanicalElement")
                         .WithOne("DeviceInfo")
-                        .HasForeignKey("WBIS_2.DataModel.DeviceInfo", "BotanicalElementId");
+                        .HasForeignKey("WBIS_2.DataModel.DeviceInfo", "BotanicalElementId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WBIS_2.DataModel.BotanicalSurvey", "BotanicalSurvey")
                         .WithOne("DeviceInfo")
-                        .HasForeignKey("WBIS_2.DataModel.DeviceInfo", "BotanicalSurveyId");
+                        .HasForeignKey("WBIS_2.DataModel.DeviceInfo", "BotanicalSurveyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WBIS_2.DataModel.OwlBanding", "OwlBanding")
                         .WithOne("DeviceInfo")
-                        .HasForeignKey("WBIS_2.DataModel.DeviceInfo", "OwlBandingId");
+                        .HasForeignKey("WBIS_2.DataModel.DeviceInfo", "OwlBandingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WBIS_2.DataModel.SiteCalling", "SiteCalling")
                         .WithOne("DeviceInfo")
-                        .HasForeignKey("WBIS_2.DataModel.DeviceInfo", "SiteCallingId");
+                        .HasForeignKey("WBIS_2.DataModel.DeviceInfo", "SiteCallingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("AmphibianElement");
 

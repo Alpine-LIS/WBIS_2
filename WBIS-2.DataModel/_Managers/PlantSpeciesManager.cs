@@ -51,6 +51,6 @@ namespace WBIS_2.DataModel
         public bool DetailView => true;
         public bool DeleteRecord => false;
         public bool RestoreRecord => false;
-        public bool CanSetActive => false;
+        public bool CanSetActive => false;// => false;
     }
 }

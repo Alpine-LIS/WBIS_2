@@ -23,7 +23,8 @@ namespace WBIS_2.DataModel
         {
             get
             {
-                return new List<KeyValuePair<string, string>>();
+                return new List<KeyValuePair<string, string>>()
+                { new KeyValuePair<string, string>("PZ_ID", "ProtectionZone")};
             }
         }
 
@@ -57,6 +58,6 @@ namespace WBIS_2.DataModel
         public bool DetailView => false;
         public bool DeleteRecord => true;
         public bool RestoreRecord => true;
-        public bool CanSetActive => false;
+        public bool CanSetActive => false;// => false;
     }
 }

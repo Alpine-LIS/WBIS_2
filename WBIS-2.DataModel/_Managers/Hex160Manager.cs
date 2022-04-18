@@ -58,6 +58,6 @@ namespace WBIS_2.DataModel
             }
         }
 
-        public bool CanSetActive => true;
+        public bool CanSetActive => false;// => true;
     }
 }

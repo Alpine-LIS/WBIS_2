@@ -41,6 +41,6 @@ namespace WBIS_2.DataModel
                 new KeyValuePair<string, string>("ManagementArea", "District")};
             }
         }
-        public bool CanSetActive => false;
+        public bool CanSetActive => false;// => false;
     }
 }

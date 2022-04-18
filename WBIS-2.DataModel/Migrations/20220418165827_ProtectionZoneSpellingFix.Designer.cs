@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,10 @@ using WBIS_2.DataModel;
 namespace WBIS_2.DataModel.Migrations
 {
     [DbContext(typeof(WBIS2Model))]
-    partial class WBIS2ModelModelSnapshot : ModelSnapshot
+    [Migration("20220418165827_ProtectionZoneSpellingFix")]
+    partial class ProtectionZoneSpellingFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -475,15 +477,15 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnName("comments");
 
                     b.Property<DateTime>("DateAdded")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_added");
 
                     b.Property<DateTime>("DateModified")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_modified");
 
                     b.Property<DateTime>("DateTime")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_time");
 
                     b.Property<string>("Datum")
@@ -679,15 +681,15 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnName("county");
 
                     b.Property<DateTime>("DateAdded")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_added");
 
                     b.Property<DateTime>("DateModified")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_modified");
 
                     b.Property<DateTime>("DateTime")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_time");
 
                     b.Property<Guid?>("DistrictId")
@@ -848,11 +850,11 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnName("application_group_id");
 
                     b.Property<DateTime>("DateAdded")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_added");
 
                     b.Property<DateTime>("DateModified")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_modified");
 
                     b.Property<string>("EmailDefault")
@@ -868,7 +870,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnName("password_sha");
 
                     b.Property<DateTime?>("PasswordTimestamp")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("password_time_stamp");
 
                     b.Property<string>("UserID")
@@ -942,15 +944,15 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnName("comments");
 
                     b.Property<DateTime>("DateAdded")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_added");
 
                     b.Property<DateTime>("DateModified")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_modified");
 
                     b.Property<DateTime>("DateTime")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_time");
 
                     b.Property<string>("Datum")
@@ -1196,11 +1198,11 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnName("guid");
 
                     b.Property<DateTime>("DateAdded")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_added");
 
                     b.Property<DateTime>("DateModified")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_modified");
 
                     b.Property<string>("EcologicalUnit")
@@ -1330,11 +1332,11 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnName("botanical_survey_area_id");
 
                     b.Property<DateTime>("DateAdded")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_added");
 
                     b.Property<DateTime>("DateModified")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_modified");
 
                     b.Property<Guid?>("DistrictId")
@@ -1342,7 +1344,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnName("district_id");
 
                     b.Property<DateTime>("EndTime")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("end_time");
 
                     b.Property<LineString>("Geometry")
@@ -1363,7 +1365,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnName("repository");
 
                     b.Property<DateTime>("StartTime")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("start_time");
 
                     b.Property<string>("SurveyName")
@@ -1438,11 +1440,11 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnName("comments");
 
                     b.Property<DateTime>("DateAdded")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_added");
 
                     b.Property<DateTime>("DateModified")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_modified");
 
                     b.Property<Guid?>("DistrictId")
@@ -1909,19 +1911,19 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("guid");
 
-                    b.Property<Guid?>("AmphibianElementId")
+                    b.Property<Guid>("AmphibianElementId")
                         .HasColumnType("uuid")
                         .HasColumnName("amphibian_element_id");
 
-                    b.Property<Guid?>("AmphibianSurveyId")
+                    b.Property<Guid>("AmphibianSurveyId")
                         .HasColumnType("uuid")
                         .HasColumnName("amphibian_survey_id");
 
-                    b.Property<Guid?>("BotanicalElementId")
+                    b.Property<Guid>("BotanicalElementId")
                         .HasColumnType("uuid")
                         .HasColumnName("botanical_element_id");
 
-                    b.Property<Guid?>("BotanicalSurveyId")
+                    b.Property<Guid>("BotanicalSurveyId")
                         .HasColumnType("uuid")
                         .HasColumnName("botanical_survey_id");
 
@@ -1930,7 +1932,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnName("datum");
 
                     b.Property<DateTime>("DeviceTime")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("device_time");
 
                     b.Property<Point>("Geometry")
@@ -1950,11 +1952,11 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("double precision")
                         .HasColumnName("lon");
 
-                    b.Property<Guid?>("OwlBandingId")
+                    b.Property<Guid>("OwlBandingId")
                         .HasColumnType("uuid")
                         .HasColumnName("owl_banding_id");
 
-                    b.Property<Guid?>("SiteCallingId")
+                    b.Property<Guid>("SiteCallingId")
                         .HasColumnType("uuid")
                         .HasColumnName("site_calling_id");
 
@@ -2078,7 +2080,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnName("hex160_id");
 
                     b.Property<DateTime?>("LatestActivity")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("latest_activity");
 
                     b.Property<string>("RecentActivity")
@@ -2112,11 +2114,11 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnName("current_passes");
 
                     b.Property<DateTime>("DateAdded")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_added");
 
                     b.Property<DateTime>("DateModified")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_modified");
 
                     b.Property<bool>("Dropped")
@@ -2248,11 +2250,11 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnName("comments");
 
                     b.Property<DateTime>("DateAdded")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_added");
 
                     b.Property<DateTime>("DateModified")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_modified");
 
                     b.Property<string>("Datum")
@@ -2268,7 +2270,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnName("ectoparasites");
 
                     b.Property<DateTime>("EndTime")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("end_time");
 
                     b.Property<bool>("Feathers")
@@ -2325,7 +2327,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnName("sex");
 
                     b.Property<DateTime>("StartTime")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("start_time");
 
                     b.Property<double>("TailLength")
@@ -2400,11 +2402,11 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnName("guid");
 
                     b.Property<DateTime>("DateAdded")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_added");
 
                     b.Property<DateTime>("DateModified")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_modified");
 
                     b.Property<Point>("Geometry")
@@ -2461,7 +2463,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnName("botanical_element_id");
 
                     b.Property<DateTime>("DateTime")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_time");
 
                     b.Property<byte[]>("ImageData")
@@ -2605,11 +2607,11 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnName("guid");
 
                     b.Property<DateTime>("DateAdded")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_added");
 
                     b.Property<DateTime>("DateModified")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_modified");
 
                     b.Property<MultiPolygon>("Geometry")
@@ -2783,11 +2785,11 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnName("dbh");
 
                     b.Property<DateTime>("DateAdded")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_added");
 
                     b.Property<DateTime>("DateModified")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_modified");
 
                     b.Property<string>("Datum")
@@ -2799,7 +2801,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnName("district_id");
 
                     b.Property<DateTime>("EndTime")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("end_time");
 
                     b.Property<Point>("Geometry")
@@ -2855,7 +2857,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("text")
                         .HasColumnName("precipitation");
 
-                    b.Property<Guid?>("ProtectionZoneID")
+                    b.Property<Guid>("ProtectionZoneID")
                         .HasColumnType("uuid")
                         .HasColumnName("protection_zone_id");
 
@@ -2889,11 +2891,11 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnName("species_present");
 
                     b.Property<DateTime>("StartTime")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("start_time");
 
                     b.Property<DateTime?>("SunsetTime")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("sunset_time");
 
                     b.Property<Guid>("SurveySpeciesId")
@@ -2992,7 +2994,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnName("detection_method");
 
                     b.Property<DateTime>("DetectionTime")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("detection_time");
 
                     b.Property<double>("Distance")
@@ -3167,7 +3169,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnName("coord_source");
 
                     b.Property<DateTime>("DateTime")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_time");
 
                     b.Property<string>("Datum")
@@ -4372,27 +4374,39 @@ namespace WBIS_2.DataModel.Migrations
                 {
                     b.HasOne("WBIS_2.DataModel.AmphibianElement", "AmphibianElement")
                         .WithOne("DeviceInfo")
-                        .HasForeignKey("WBIS_2.DataModel.DeviceInfo", "AmphibianElementId");
+                        .HasForeignKey("WBIS_2.DataModel.DeviceInfo", "AmphibianElementId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WBIS_2.DataModel.AmphibianSurvey", "AmphibianSurvey")
                         .WithOne("DeviceInfo")
-                        .HasForeignKey("WBIS_2.DataModel.DeviceInfo", "AmphibianSurveyId");
+                        .HasForeignKey("WBIS_2.DataModel.DeviceInfo", "AmphibianSurveyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WBIS_2.DataModel.BotanicalElement", "BotanicalElement")
                         .WithOne("DeviceInfo")
-                        .HasForeignKey("WBIS_2.DataModel.DeviceInfo", "BotanicalElementId");
+                        .HasForeignKey("WBIS_2.DataModel.DeviceInfo", "BotanicalElementId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WBIS_2.DataModel.BotanicalSurvey", "BotanicalSurvey")
                         .WithOne("DeviceInfo")
-                        .HasForeignKey("WBIS_2.DataModel.DeviceInfo", "BotanicalSurveyId");
+                        .HasForeignKey("WBIS_2.DataModel.DeviceInfo", "BotanicalSurveyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WBIS_2.DataModel.OwlBanding", "OwlBanding")
                         .WithOne("DeviceInfo")
-                        .HasForeignKey("WBIS_2.DataModel.DeviceInfo", "OwlBandingId");
+                        .HasForeignKey("WBIS_2.DataModel.DeviceInfo", "OwlBandingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WBIS_2.DataModel.SiteCalling", "SiteCalling")
                         .WithOne("DeviceInfo")
-                        .HasForeignKey("WBIS_2.DataModel.DeviceInfo", "SiteCallingId");
+                        .HasForeignKey("WBIS_2.DataModel.DeviceInfo", "SiteCallingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("AmphibianElement");
 
@@ -4666,7 +4680,9 @@ namespace WBIS_2.DataModel.Migrations
 
                     b.HasOne("WBIS_2.DataModel.ProtectionZone", "ProtectionZone")
                         .WithMany("SiteCallings")
-                        .HasForeignKey("ProtectionZoneID");
+                        .HasForeignKey("ProtectionZoneID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WBIS_2.DataModel.Quad75", "Quad75")
                         .WithMany("SiteCallings")

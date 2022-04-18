@@ -78,7 +78,7 @@ namespace WBIS_2.DataModel
             var dbname = "WBIS2";
             var username = "postgres";
             var password = "i$mppWMB$I7Y4XoD";
-            return $"Server={hostname};Database={dbname};Username={username};Password={password};Command Timeout=0";
+            return $"Server={hostname};Database={dbname};Username={username};Password={password};Command Timeout=0;Include Error Detail=true";
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -88,6 +88,7 @@ namespace WBIS_2.DataModel
                 .UseNpgsql(GetRDSConnectionString(),
                 o => { o.UseNetTopologySuite(); o.MaxBatchSize(25); })
                 .EnableDetailedErrors();
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -326,8 +327,8 @@ namespace WBIS_2.DataModel
                 .HasMany(_=>_.ProtectionZones)
                 .WithMany(p=>p.Hex160s)
                 .UsingEntity<Dictionary<string, object>>("hex160s_protection_zones",
-                        x => x.HasOne<ProtectionZone>().WithMany().HasForeignKey("hex160_id"),
-                        x => x.HasOne<Hex160>().WithMany().HasForeignKey("protection_zone_id"),
+                        x => x.HasOne<ProtectionZone>().WithMany().HasForeignKey("protection_zone_id"),
+                        x => x.HasOne<Hex160>().WithMany().HasForeignKey("hex160_id"),
                         x => x.ToTable("hex160s_protection_zones", "public"));
             modelBuilder.Entity<Hex160>()
                 .HasMany(_ => _.CNDDBOccurrences)
@@ -417,6 +418,100 @@ namespace WBIS_2.DataModel
         public DbSet<SPOW_OccupancyStatus> SPOW_OccupancyStatuses { get; set; }
         public DbSet<NestingStatus> NestingStatuses { get; set; }
         public DbSet<ReproductiveStatus> ReproductiveStatuses { get; set; }
+
+
+
+
+
+
+
+        public override int SaveChanges()
+        {
+            if (CurrentUser.User == null)
+            {
+                int returnVal = base.SaveChanges();
+                return returnVal;
+            }
+            else
+            {
+                Tracker.ChangesSaving = true;
+                ApplicationUser user = ApplicationUsers.FirstOrDefault(_ => _.Guid == CurrentUser.User.Guid);
+
+                var entries = ChangeTracker.Entries();
+                var GeoModified = SaveToChangesTable(entries, user);
+
+                GeoModified = GeoModified.Distinct().ToList();
+
+                int returnVal = base.SaveChanges();
+
+                Tracker.ChangesSaving = false;
+                Tracker.SendEvent(entries);
+                return returnVal;
+            }
+        }
+        //Only record new/deleted regens and activities
+        private List<string> SaveToChangesTable(IEnumerable<Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry> entries, ApplicationUser user)
+        {
+            List<string> GeoModified = new List<string>();
+
+            //List<RecordChange> changes = new List<RecordChange>();
+            foreach (Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry e in entries.Where(_ => _.State != EntityState.Unchanged))
+            {
+                var guidProp = e.CurrentValues.Properties.FirstOrDefault(_ => _.Name == "Guid");
+                //var userProp = e.CurrentValues.Properties.FirstOrDefault(_ => _.Name == "User");
+                //var modifiedProp = e.CurrentValues.Properties.FirstOrDefault(_ => _.Name == "UserModified");
+
+                if (guidProp == null) continue;
+
+                Guid entityId = (Guid)e.CurrentValues["Guid"];//.GetValue<Guid>("Guid");
+
+                if (e.State == EntityState.Added)
+                {
+                    if (e.Entity.GetType().GetInterfaces().Contains(typeof(IUserRecords)))
+                    {
+                        if (user != null)
+                            ((IUserRecords)e.Entity).User = user;
+                    }
+                    if (e.CurrentValues.Properties.Any(_ => _.Name == "Geometry"))
+                    {
+                        MultiPolygon mp = (MultiPolygon)e.CurrentValues["Geometry"];
+                        if (mp != null) GeoModified.Add(e.Entity.GetType().Name);// recordChange.Table);
+                    }
+                }
+                else if (e.State == EntityState.Modified)
+                {
+                    if (e.Entity.GetType().GetInterfaces().Contains(typeof(IUserRecords)))
+                    {
+                        if (user != null)
+                            ((IUserRecords)e.Entity).UserModified = user;
+                    }
+
+                    foreach (Microsoft.EntityFrameworkCore.Metadata.IProperty p in e.CurrentValues.Properties)
+                    {
+                        if (p.Name != "_delete" && p.Name != "Geometry") continue;
+
+                        var oldVal = e.OriginalValues[p];//.GetValue<object>(p.Name);
+                        var newVal = e.CurrentValues[p];//.GetValue<object>(p.Name);
+                        if (oldVal == null || newVal == null)
+                        {
+                            if (!object.Equals(newVal, oldVal))
+                            {
+                                if (p.Name == "Geometry") GeoModified.Add(e.Entity.GetType().Name);
+                            }
+                        }
+                        else
+                        {
+                            if (!object.Equals(newVal, oldVal))
+                            {
+                                if (p.Name == "Geometry") GeoModified.Add(e.Entity.GetType().Name);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return GeoModified.Distinct().ToList();
+        }
 
     }
 }

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class Hex160 : IInformationType, IActiveUnit
+    public class Hex160 : IInformationType//, IActiveUnit
     {
         [Key,DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
@@ -27,14 +27,14 @@ namespace WBIS_2.DataModel
         public DateTime? LatestActivity { get; set; }
 
 
-        [NotMapped]
-        public bool IsAvtive => CurrentUser.ActiveHex160Guids.Contains(Guid);
+       // [NotMapped]
+       // public bool IsAvtive => CurrentUser.ActiveHex160Guids.Contains(Guid);
         public ICollection<ApplicationUser> ActiveUsers { get; set; }
 
         [Column("geometry", TypeName = "geometry(Polygon,26710)")]
         public Polygon Geometry { get; set; }
 
-        [Column("current_preotection_zone_id"), ForeignKey("ProtectionZone")]
+        [Column("current_protection_zone_id"), ForeignKey("ProtectionZone")]
         public Guid? CurrentProtectionZoneID { get; set; }
         public ProtectionZone CurrentProtectionZone { get; set; }
         public ICollection<ProtectionZone> ProtectionZones { get; set; }

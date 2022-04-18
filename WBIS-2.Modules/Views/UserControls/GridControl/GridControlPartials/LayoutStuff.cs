@@ -154,7 +154,8 @@ namespace WBIS_2.Modules.Views
                         for (int i = 0; i < colValues.Count; i++)
                         {
                             var colVal = colValues[i];
-                            GridColumn c = new GridColumn() { FieldName = $"{colVal.Value}.{colVal.Key}", Header = colVal.Key };
+                            //GridColumn c = new GridColumn() { FieldName = $"{colVal.Value}.{colVal.Key}", Header = colVal.Key };
+                            GridColumn c = new GridColumn() { FieldName = $"{col.FieldName}.{colVal.Key}", Header = colVal.Key };
                             if (c.FieldName == "UpdateUser.UserName") c.Header = "UpdateUser";
                             c.VisibleIndex = col.VisibleIndex;
                             addColumns.Add(c, col.VisibleIndex);

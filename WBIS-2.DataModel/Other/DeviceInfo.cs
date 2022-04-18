@@ -15,26 +15,26 @@ namespace WBIS_2.DataModel
         public Guid Guid { get; set; }
 
         [Column("site_calling_id"),ForeignKey("SiteCalling")]
-        public Guid SiteCallingId { get; set; }
+        public Guid? SiteCallingId { get; set; }
         public SiteCalling SiteCalling { get; set; }
 
      
 
         [Column("owl_banding_id"), ForeignKey("OwlBanding")]
-        public Guid OwlBandingId { get; set; }
+        public Guid? OwlBandingId { get; set; }
         public OwlBanding OwlBanding { get; set; }
 
         [Column("amphibian_survey_id"), ForeignKey("AmphibianSurvey")]
-        public Guid AmphibianSurveyId { get; set; }
+        public Guid? AmphibianSurveyId { get; set; }
         public AmphibianSurvey AmphibianSurvey { get; set; }
         [Column("amphibian_element_id"), ForeignKey("AmphibianElement")]
-        public Guid AmphibianElementId { get; set; }
+        public Guid? AmphibianElementId { get; set; }
         public AmphibianElement AmphibianElement { get; set; }
         [Column("botanical_element_id"), ForeignKey("BotanicalElement")]
-        public Guid BotanicalElementId { get; set; }
+        public Guid? BotanicalElementId { get; set; }
         public BotanicalElement BotanicalElement { get; set; }
         [Column("botanical_survey_id"), ForeignKey("BotanicalSurvey")]
-        public Guid BotanicalSurveyId { get; set; }
+        public Guid? BotanicalSurveyId { get; set; }
         public BotanicalSurvey BotanicalSurvey { get; set; }
 
 

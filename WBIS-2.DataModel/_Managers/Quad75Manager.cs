@@ -56,6 +56,6 @@ namespace WBIS_2.DataModel
                 { new KeyValuePair<string, string>("QuadCode", "Quad75")};
             }
         }
-        public bool CanSetActive => false;
+        public bool CanSetActive => false;// => false;
     }
 }
