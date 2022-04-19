@@ -6,13 +6,13 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class SiteCallingDetection: IPointLayer, IInformationType
+    public class SiteCallingDetection: IPointParents, IPointLayer, IInformationType
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid"), ForeignKey("SiteCalling")]
         public Guid Guid { get; set; }
 
-        [Required, Column("site_calling_id")]
-        public Guid SiteCallingId { get; set; }
+        [Column("site_calling_id")]
+        public Guid? SiteCallingId { get; set; }
         public SiteCalling SiteCalling { get; set; }
 
 
@@ -47,7 +47,7 @@ namespace WBIS_2.DataModel
 
 
         [Column("user_location_id")]
-        public Guid UserLocationId { get; set; }
+        public Guid? UserLocationId { get; set; }
         public UserLocation UserLocation { get; set; }
 
 
@@ -75,6 +75,18 @@ namespace WBIS_2.DataModel
         public string FemaleBindingPattern { get; set; }
 
 
+        [Column("district_id")]
+        public Guid? DistrictId { get; set; }
+        public District District { get; set; }
+        [Column("watershed_id")]
+        public Guid? WatershedId { get; set; }
+        public Watershed Watershed { get; set; }
+        [Column("quad75_id")]
+        public Guid? Quad75Id { get; set; }
+        public Quad75 Quad75 { get; set; }
+        [Column("hex160_id")]
+        public Guid? Hex160Id { get; set; }
+        public Hex160 Hex160 { get; set; }
 
 
         [NotMapped, Display(Order = -1)]

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,10 @@ using WBIS_2.DataModel;
 namespace WBIS_2.DataModel.Migrations
 {
     [DbContext(typeof(WBIS2Model))]
-    partial class WBIS2ModelModelSnapshot : ModelSnapshot
+    [Migration("20220419144217_SiteCallingDetectionConnections")]
+    partial class SiteCallingDetectionConnections
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3053,7 +3055,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("text")
                         .HasColumnName("sex");
 
-                    b.Property<Guid?>("SiteCallingId")
+                    b.Property<Guid>("SiteCallingId")
                         .HasColumnType("uuid")
                         .HasColumnName("site_calling_id");
 
@@ -3065,7 +3067,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("text")
                         .HasColumnName("species_site");
 
-                    b.Property<Guid?>("UserLocationId")
+                    b.Property<Guid>("UserLocationId")
                         .HasColumnType("uuid")
                         .HasColumnName("user_location_id");
 

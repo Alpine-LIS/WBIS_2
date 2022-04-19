@@ -21,7 +21,7 @@ namespace WBIS_2.DataModel
         public Guid? UserModifiedId { get; set; }
         public ApplicationUser UserModified { get; set; }
 
-        [Column("record_type")]
+        [Required, Column("record_type")]
         public string RecordType { get; set; }
 
 

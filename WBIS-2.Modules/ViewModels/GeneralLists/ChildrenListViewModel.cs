@@ -14,6 +14,7 @@ using System.Windows.Input;
 using DevExpress.Mvvm.ModuleInjection;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
+using WBIS_2.Modules.Tools;
 
 namespace WBIS_2.Modules.ViewModels
 {
@@ -177,7 +178,12 @@ namespace WBIS_2.Modules.ViewModels
       
         public override void AddRecord()
         {
-            
+            Views.RecordImporters.RecordImportHolderView recordImportHolderView = new Views.RecordImporters.RecordImportHolderView(new Views.RecordImporters.SiteCallingRecordImportView());
+            CustomControlWindow window = new CustomControlWindow(recordImportHolderView);
+            if (window.DialogResult)
+            {
+
+            }
         }
         public override void DeleteRecord()
         {

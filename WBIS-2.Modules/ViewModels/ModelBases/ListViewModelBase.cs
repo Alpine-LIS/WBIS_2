@@ -99,11 +99,11 @@ namespace WBIS_2.Modules.ViewModels
                 AddRecordsEnabled = ro.ImportRecords || ro.AddRecord;
                 AddRecordsEnabled = ro.DeleteRecord;
                 AddRecordsEnabled = ro.RestoreRecord;
-                if (ro.AddRecord && ro.ImportRecords)
-                    AddRecordToolTip = "Add/Import Record(s)";
-                else if (ro.AddRecord)
-                    AddRecordToolTip = "Add Record";
-                else
+                //if (ro.AddRecord && ro.ImportRecords)
+                //    AddRecordToolTip = "Add/Import Record(s)";
+                //else if (ro.AddRecord)
+                //    AddRecordToolTip = "Add Record";
+                //else
                     AddRecordToolTip = "Import Record(s)";
             }
             else

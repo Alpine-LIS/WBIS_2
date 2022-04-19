@@ -1,0 +1,35 @@
+﻿<UserControl x:Class="WBIS_2.Modules.Views.RecordImporters.RecordImportMenu"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WBIS_2.Modules.Views.RecordImporters" 
+             xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" 
+             xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors" 
+             xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" 
+             xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core" xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
+             mc:Ignorable="d" 
+             d:DesignHeight="30" d:DesignWidth="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="AUTO"/>
+            <ColumnDefinition Width="AUTO"/>
+            <ColumnDefinition Width="AUTO"/>
+            <ColumnDefinition Width="AUTO"/>
+            <ColumnDefinition Width="AUTO"/>
+            <ColumnDefinition Width="AUTO"/>
+            <ColumnDefinition Width="AUTO"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="AUTO"/>
+        </Grid.ColumnDefinitions>
+        <Button Content="Select Shapefile" Grid.Column="0" Margin="5" Command="{Binding FileSelectCommand}"/>
+        <Label Grid.Column="1" Content="ID attribute for connections"/>
+        <dxe:ComboBoxEdit Grid.Column="2" SelectedItem="{Binding IdAttribute, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding IdOptions}" SelectedIndex="0"/>
+        <Label Grid.Column="3" Content="Connect spacially:" Visibility="{Binding IsSubElementVis}"/>
+        <dxe:CheckEdit Name="ChbxSpacially" Grid.Column="4" IsChecked="{Binding ConnectSpacially, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding IsSubElementVis}" MouseUp="ChbxSpacially_MouseUp"/>
+        <Label Grid.Column="5" Content="Connect by ID:" Visibility="{Binding IsSubElementVis}"/>
+        <dxe:CheckEdit Name="ChbxId" Grid.Column="6" IsChecked="{Binding ConnectId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding IsSubElementVis}" MouseUp="ChbxId_MouseUp"/>
+
+        <Button Content="Close" Grid.Column="8" Margin="5" Command="{Binding CloseCommand}" Visibility="{Binding IsSubElementVis}"/>
+    </Grid>
+</UserControl>

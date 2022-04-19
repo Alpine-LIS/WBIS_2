@@ -34,6 +34,19 @@ namespace WBIS_2.Modules.Tools
                 else return returnVal;
             }
         }
+
+        public static bool TryBoolParseString(string val)
+        {
+            bool returnVal = false;
+            if (bool.TryParse(val, out returnVal))
+                return returnVal;
+            else
+                return val.ToUpper().Trim() == "TRUE"
+                    || val.ToUpper().Trim() == "T"
+                    || val.ToUpper().Trim() == "Y"
+                    || val.ToUpper().Trim() == "YES";     
+        }
+
         public static bool? TryBoolParse(object val, Type destination)
         {
             string testVal = GetTestValue(val);

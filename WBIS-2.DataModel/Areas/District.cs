@@ -36,6 +36,7 @@ namespace WBIS_2.DataModel
         public ICollection<ApplicationUser> ApplicationUsers { get; set; }
         public ICollection<OwlBanding> OwlBandings { get; set; }
         public ICollection<SiteCalling> SiteCallings { get; set; }
+        public ICollection<SiteCallingDetection> SiteCallingDetections { get; set; }
         public ICollection<SPIPlantPoint> SPIPlantPoints { get; set; }
         public ICollection<SPIPlantPolygon> SPIPlantPolygons { get; set; }
         public ICollection<AmphibianSurvey> AmphibianSurveys { get; set; }

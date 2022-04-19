@@ -65,6 +65,15 @@
     <Compile Update="Views\GeneralLists\ChildrenListView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\RecordImporters\RecordImportHolderView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\RecordImporters\SiteCallingRecordImportView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\RecordImporters\RecordImportMenu.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\UserControls\Menus\DetailMenuView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -79,6 +88,18 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\GeneralLists\ChildrenListView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\RecordImporters\RecordImportHolderView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\RecordImporters\SiteCallingRecordImportView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\RecordImporters\RecordImportMenu.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
