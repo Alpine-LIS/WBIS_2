@@ -79,5 +79,20 @@ namespace WBIS_2.Modules.Tools
             if (val == null) return "";
             return val.ToString();
         }
+              
+        public object GetUnknownValue(object val, Type destination)
+        {
+            if (destination == typeof(string))
+                return GetTestValue(val);
+            else if (destination == typeof(DateTime))
+                return TryDateTimeParse(val, destination);
+            else if (destination == typeof(bool))
+                return TryBoolParseString(GetTestValue(val));
+            else if (destination == typeof(int))
+                return TryIntParse(val, destination);
+            else if (destination == typeof(double))
+                return TryDoubleParse(val, destination);
+            else return null;
+        }
     }
 }

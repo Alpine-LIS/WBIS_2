@@ -30,6 +30,7 @@
         <Label Grid.Column="5" Content="Connect by ID:" Visibility="{Binding IsSubElementVis}"/>
         <dxe:CheckEdit Name="ChbxId" Grid.Column="6" IsChecked="{Binding ConnectId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding IsSubElementVis}" MouseUp="ChbxId_MouseUp"/>
 
-        <Button Content="Close" Grid.Column="8" Margin="5" Command="{Binding CloseCommand}" Visibility="{Binding IsSubElementVis}"/>
+        <Label Content="Required Fields*" ToolTip="{Binding RequiredFieldsList}" Grid.Column="7"/>
+
     </Grid>
 </UserControl>

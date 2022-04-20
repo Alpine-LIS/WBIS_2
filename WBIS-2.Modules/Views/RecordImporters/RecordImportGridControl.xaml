@@ -16,13 +16,13 @@
             AutoGenerateColumns="AddNew"
             AllowInitiallyFocusedRow="True"
             SelectionMode="Row"
-            ItemsSource="{Binding AttributeTable}">
+            ItemsSource="{Binding PropertyCrosswalk}">
             <dxg:GridControl.Columns>
 
                 <dxg:GridColumn FieldName="Property">
                     <dxg:GridColumn.CellTemplate>
                         <DataTemplate>
-                            <dxe:ComboBoxEdit ItemsSource="{Binding AvailibleFields, UpdateSourceTrigger=PropertyChanged}" Margin="0"/>
+                            <dxe:ComboBoxEdit ItemsSource="{Binding RowData.Row.AvailibleFields, UpdateSourceTrigger=PropertyChanged}" Margin="0"/>
                         </DataTemplate>
                     </dxg:GridColumn.CellTemplate>
                 </dxg:GridColumn>

@@ -16,12 +16,13 @@ namespace WBIS_2.DataModel
 
         [Column("user_id")]
         public Guid? UserId { get; set; }
+        [ImportAttribute(Required = true)]
         public ApplicationUser User { get; set; }
         [Column("user_modified_id")]
         public Guid? UserModifiedId { get; set; }
         public ApplicationUser UserModified { get; set; }
 
-        [Required, Column("record_type")]
+        [Required, Column("record_type"), ImportAttribute(AcceptableChoices = new object[] { "Calling","Follow-Up","Skip","Drop","Partial-Drop"}, Required = true)]
         public string RecordType { get; set; }
 
 
@@ -39,46 +40,48 @@ namespace WBIS_2.DataModel
         public double Lon { get; set; }
         [Column("datum")]
         public string Datum { get; set; }
-        [Required, Column("start_time")]
+        [Required, Column("start_time"), ImportAttribute(Required = true)]
         public DateTime StartTime { get; set; }
-        [Required, Column("end_time")]
+        [Required, Column("end_time"), ImportAttribute]
         public DateTime EndTime { get; set; }
         [Column("sunset_time")]
         public DateTime? SunsetTime { get; set; }
 
        
-        [Required, Column("survey_type1")]
+        [Required, Column("survey_type1"), ImportAttribute(Required = true)]
         public string SurveyType1 { get; set; }
-        [Required, Column("survey_type2")]
+        [Required, Column("survey_type2"), ImportAttribute(Required = true)]
         public string SurveyType2 { get; set; }
         [Required, Column("bird_species_survey_id")]
         public Guid SurveySpeciesId { get; set; }
+        [ImportAttribute(Required = true)]
         public BirdSpecies SurveySpecies { get; set; }
        
        //site type is survey type1
-        [Column("site_id")]
+        [Column("site_id"), ImportAttribute]
         public string SiteID { get; set; }
         
-        [Column("pass_number")]
+        [Column("pass_number"), ImportAttribute]
         public int PassNumber { get; set; }
         [Column("manual_pass_changed"), Display(Order = -1)]
         public bool ManualPassChanged { get; set; } = false;
 
-        [Column("pz_pass_number")]
+        [Column("pz_pass_number"), ImportAttribute]
         public int PZPassNumber { get; set; }
 
         //Initially gotten by the hex pz. Can be edited. Must be retained when pz changes. 
         [Column("protection_zone_id")]
         public Guid? ProtectionZoneID { get; set; }
+        [ImportAttribute]
         public ProtectionZone ProtectionZone { get; set; }
 
 
 
-        [Column("yearly_activity_center")]
+        [Column("yearly_activity_center"), ImportAttribute]
         public bool YearlyActivityCenter { get; set; }
-        [Column("wind")]
+        [Column("wind"), ImportAttribute]
         public string Wind { get; set; }
-        [Column("precipitation")]
+        [Column("precipitation"), ImportAttribute]
         public string Precipitation { get; set; }
 
 
@@ -89,9 +92,9 @@ namespace WBIS_2.DataModel
 
 
 
-        [Column("species_present")]
+        [Column("species_present"), ImportAttribute]
         public bool SpeciesPresent { get; set; }
-        [Column("target_species_present")]
+        [Column("target_species_present"), ImportAttribute]
         public bool TargetSpeciesPresent { get; set; }
 
         public ICollection<SiteCallingDetection> SiteCallingDetections { get; set;}
@@ -101,35 +104,35 @@ namespace WBIS_2.DataModel
 
 
         //Following three come from tables but no link is established. Kevin Roberts changes these more regularly so old options are not maintained but string value remaines. 
-        [Required, Column("spow_occupancy_status")]
+        [Required, Column("spow_occupancy_status"), ImportAttribute]
         public string SPOW_OccupancyStatus { get; set; }
-        [Column("nesting_status")]
+        [Column("nesting_status"), ImportAttribute]
         public string NestingStatus { get; set; }
-        [Column("reproductive_status")]
+        [Column("reproductive_status"), ImportAttribute]
         public string ReproductiveStatus { get; set; }
 
 
 
-        [Column("nest_tree")]
+        [Column("nest_tree"), ImportAttribute]
         public bool NestTree { get; set; }
-        [Column("nest_type")]
+        [Column("nest_type"), ImportAttribute]
         public string NestType { get; set; }
-        [Column("tree_species")]
+        [Column("tree_species"), ImportAttribute]
         public string TreeSpecies { get; set; }
-        [Column("dbh")]
+        [Column("dbh"), ImportAttribute]
         public double DBH { get; set; }
-        [Column("nest_height")]
+        [Column("nest_height"), ImportAttribute]
         public double NestHeight { get; set; }
-        [Column("tree_tagged")]
+        [Column("tree_tagged"), ImportAttribute]
         public bool TreeTagged { get; set; }
-        [Column("moused")]
+        [Column("moused"), ImportAttribute]
         public bool Moused { get; set; }
 
 
 
-        [Column("area_description")]
+        [Column("area_description"), ImportAttribute]
         public string AreaDescription { get; set; }
-        [Column("comments")]
+        [Column("comments"), ImportAttribute]
         public string Comments { get; set; }
 
 

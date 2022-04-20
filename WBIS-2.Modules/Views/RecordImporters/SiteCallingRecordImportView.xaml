@@ -18,7 +18,16 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="AUTO"/>
         </Grid.RowDefinitions>
-        <Label Content="Site Calling:" FontWeight="Bold" FontSize="14" HorizontalAlignment="Left"/>
+        
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="AUTO"/>
+            </Grid.ColumnDefinitions>
+            <Label Content="Site Calling:" FontWeight="Bold" FontSize="14" HorizontalAlignment="Left"/>
+            <Button Content="Close" Grid.Column="8" Margin="5" Command="{Binding CloseCommand}" Visibility="{Binding IsSubElementVis}"/>
+        </Grid>
+        
         <local:RecordImportMenu Grid.Row="1"/>
         <local:RecordImportGridControl Grid.Row="2"/>
         <Grid Grid.Row="3">
@@ -34,6 +43,9 @@
             <Button Grid.Column="0" Content="Add Detections" Margin="2"/>
             <Button Grid.Column="1" Content="Add Device Info" Margin="2"/>
             <Button Grid.Column="2" Content="Add Tracks" Margin="2"/>
+
+            <Label Content="Repository Data:" Grid.Column="3"/>
+            <dxe:CheckEdit Grid.Column="4" IsChecked="{Binding RepositoryData, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
     </Grid>
 </UserControl>

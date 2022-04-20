@@ -15,8 +15,30 @@ using Atlas.Data;
 
 namespace WBIS_2.Modules.ViewModels.RecordImporters
 {
-    public abstract class RecordImporterBase: BindableBase
+    public abstract class RecordImporterBase : BindableBase
     {
+        public List<string> GetProperties(Type InfoType, bool requiredFields)
+        {
+            List<string> properties = new List<string>();
+            var props = InfoType.GetProperties();
+            //.Where(_ => _.GetCustomAttributesData().Any(_ => _.GetType() == typeof(ImportAttribute)));
+            foreach (var prop in props)
+            {
+                var attributes = prop.GetCustomAttributes(true);
+                foreach (var attribute in attributes)
+                {
+                    if (attribute.GetType() == typeof(ImportAttribute))
+                    {
+                        if (((ImportAttribute)attribute).Required == requiredFields)
+                            properties.Add(prop.Name);
+                        break;
+                    }
+                }
+            }
+            return properties;
+        }
+
+
         public RecordImporterBase()
         {
             FileSelectCommand = new DelegateCommand(FileSelectClick);
@@ -31,13 +53,19 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
 
         public ICommand SaveCommand { get; set; }
         public abstract void SaveClick();
-        public abstract bool CheckSave();
+        public bool CheckSave()
+        {
+            if (ImportShapefile == null) return false;
+            return PropertyCrosswalk.Select(x => x.Property).Intersect(RequiredFields).Count() == RequiredFields.Count();
+        }
 
 
 
         public abstract List<string> RequiredFields { get; }
+        public string RequiredFieldsList => string.Join('\n', RequiredFields);
         public abstract List<string> OptionalFields { get; }
         public List<string> AvailibleFields => GetSortedList();
+        public List<PropertyCrosswalk> PropertyCrosswalk { get;set;}
         private List<string> GetSortedList()
         {
             var returnVal = RequiredFields.Concat(OptionalFields).ToList();
@@ -78,39 +106,36 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
                 BuildAttributeTable();
             }
         }
-        public DataTable AttributeTable { get; set; }
         private void BuildAttributeTable()
-        { 
-            AttributeTable = new DataTable();
+        {
+            PropertyCrosswalk = new List<PropertyCrosswalk>();
             List<string> attributes = new List<string>();
             if (ImportShapefile != null)
             {
-                AttributeTable.Columns.Add("Attribute", typeof(string));
-                AttributeTable.Columns.Add("Type", typeof(string));
-                AttributeTable.Columns.Add("Property", typeof(string));
                 foreach (DataColumn col in ImportShapefile.DataTable.Columns)
                 {
-                    DataRow r = AttributeTable.NewRow();
-                    r[0] = col.ColumnName;
-                    attributes.Add(col.ColumnName);
-                    r[1] = col.DataType.Name;
-                    AttributeTable.Rows.Add(r);
+                    PropertyCrosswalk.Add(new RecordImporters.PropertyCrosswalk()
+                    {
+                        Attribute = col.ColumnName,
+                        DataType = col.DataType.Name,
+                        AvailibleFields = AvailibleFields
+                    });
                 }
             }
             IdOptions = attributes;
             RaisePropertiesChanged(nameof(IdOptions));
-            RaisePropertiesChanged(nameof(AttributeTable));
+            RaisePropertiesChanged(nameof(PropertyCrosswalk));
         }
 
 
 
 
 
-    public List<string> IdOptions{ get; set; }
-    public string IdAttribute { get; set; }
+        public List<string> IdOptions { get; set; }
+        public string IdAttribute { get; set; }
         public bool ConnectSpacially { get; set; }
         public bool ConnectId { get; set; }
-public ICommand CloseCommand { get; set; }
+        public ICommand CloseCommand { get; set; }
         public void CloseClick()
         {
             Holder.RemoveImportControl(this);
@@ -120,32 +145,16 @@ public ICommand CloseCommand { get; set; }
 
 
 
-
-
-
-        /*
-        Site Calling Shape
-            Correct shape type
-            Required fields
-            Optional Fields
-            Link To Track
-            Link tp device info
-            Link to detections
-
-        Track
-            Correct shape type
-
-        DeviceInfo
-            Correct shape type
-
-        Detections
-            Correct shape type
-            Required fields
-            Optional Fields
-            Link to UserLocation
-
-        UserLocation
-            Correct shape type
-        */
+        public bool IsWbisProperty(Type property)
+        {
+            return property.Namespace == "WBIS_2.DataModel";
+        }
+    }
+    public class PropertyCrosswalk
+    {
+        public string Attribute { get; set; }
+        public string DataType { get; set; }
+        public string Property { get; set; }
+        public List<string> AvailibleFields { get; set; }
     }
 }

@@ -10,29 +10,26 @@ using System.IO;
 using System.Windows;
 using System.Diagnostics;
 using Atlas.Data;
+using System.IO;
+using System.Linq;
+
 
 namespace WBIS_2.Modules.ViewModels.RecordImporters
 {
     public class SiteCallingRecordImportViewModel : RecordImporterBase
     {
-        public override List<string> RequiredFields => new List<string>()
-        {
+        public override List<string> RequiredFields => GetProperties(typeof(SiteCalling), true);
 
-        };
+        public override List<string> OptionalFields => GetProperties(typeof(SiteCalling), false);
 
-        public override List<string> OptionalFields => new List<string>()
-        {
-
-        };
-
-
+        public bool RepositoryData { get; set; } = false;
 
         public override void FileSelectClick()
         {
-            Hex160 hex160 = new Hex160();
-            hex160.Hex160ID.re
-            WBIS2Model wBIS2Model = new WBIS2Model();
-            wBIS2Model.Entry<Hex160>().Properties.Where(_=>_.Metadata.).Property(_=>_.)
+            //Hex160 hex160 = new Hex160();
+            //hex160.Hex160ID.re
+            //WBIS2Model wBIS2Model = new WBIS2Model();
+            //wBIS2Model.Entry<Hex160>().Properties.Where(_=>_.Metadata.).Property(_=>_.)
 
 
            OpenFileDialog ofd = new OpenFileDialog();
@@ -60,11 +57,8 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
 
         public override void SaveClick()
         {
-            throw new NotImplementedException();
-        }
-        public override bool CheckSave()
-        {
-            throw new NotImplementedException();
+            if (!CheckSave())
+                MessageBox.Show("HEY");
         }
     }
 }
