@@ -6,7 +6,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class ApplicationUser: IInformationType
+    public class ApplicationUser: IInformationType, IPlaceHolder
     {
         [Key,Column("guid")]
         public Guid Guid { get; set; }
@@ -39,9 +39,11 @@ namespace WBIS_2.DataModel
         //public Guid AdminId { get; set; }
         //public ApplicationUser Admin { get; set; }
 
-       
-        
-        
+
+        [Column("place_holder")]
+        public bool PlaceHolder { get; set; }
+
+
         //public ICollection<ApplicationUser> Contractors { get; set; }
         public ICollection<District> Districts { get; set; }
 
@@ -50,6 +52,8 @@ namespace WBIS_2.DataModel
         public ICollection<Hex160RequiredPass> Hex160RequiredPasses { get; set; }
         [InverseProperty("User")]
         public ICollection<SiteCalling> SiteCallings { get; set; }
+        [InverseProperty("User")]
+        public ICollection<SiteCallingDetection> SiteCallingDetections { get; set; }
         [InverseProperty("User")]
         public ICollection<OwlBanding> OwlBandings { get; set; }
         [InverseProperty("User")]
@@ -76,6 +80,8 @@ namespace WBIS_2.DataModel
         public ICollection<Hex160RequiredPass> Hex160RequiredPassesModified { get; set; }
         [InverseProperty("UserModified")]
         public ICollection<SiteCalling> SiteCallingsModified { get; set; }
+        [InverseProperty("UserModified")]
+        public ICollection<SiteCallingDetection> SiteCallingDetectionsModified { get; set; }
         [InverseProperty("UserModified")]
         public ICollection<OwlBanding> OwlBandingsModified { get; set; }
         [InverseProperty("UserModified")]

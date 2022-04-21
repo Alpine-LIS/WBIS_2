@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,10 @@ using WBIS_2.DataModel;
 namespace WBIS_2.DataModel.Migrations
 {
     [DbContext(typeof(WBIS2Model))]
-    partial class WBIS2ModelModelSnapshot : ModelSnapshot
+    [Migration("20220421145858_SiteCallingDetectionIUserInfo")]
+    partial class SiteCallingDetectionIUserInfo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -634,10 +636,6 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("guid");
 
-                    b.Property<bool>("PlaceHolder")
-                        .HasColumnType("boolean")
-                        .HasColumnName("place_holder");
-
                     b.Property<string>("SpeciesCode")
                         .HasColumnType("text")
                         .HasColumnName("species_code");
@@ -875,10 +873,6 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("password_time_stamp");
 
-                    b.Property<bool>("PlaceHolder")
-                        .HasColumnType("boolean")
-                        .HasColumnName("place_holder");
-
                     b.Property<string>("UserID")
                         .HasColumnType("text")
                         .HasColumnName("user_id");
@@ -916,10 +910,6 @@ namespace WBIS_2.DataModel.Migrations
                     b.Property<bool>("IsSurveyable")
                         .HasColumnType("boolean")
                         .HasColumnName("is_surveyable");
-
-                    b.Property<bool>("PlaceHolder")
-                        .HasColumnType("boolean")
-                        .HasColumnName("place_holder");
 
                     b.Property<string>("Species")
                         .HasColumnType("text")
@@ -2580,10 +2570,6 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("text")
                         .HasColumnName("other_status");
 
-                    b.Property<bool>("PlaceHolder")
-                        .HasColumnType("boolean")
-                        .HasColumnName("place_holder");
-
                     b.Property<string>("RPlantRank")
                         .HasColumnType("text")
                         .HasColumnName("r_plant_rank");
@@ -3578,10 +3564,6 @@ namespace WBIS_2.DataModel.Migrations
                     b.Property<string>("Order")
                         .HasColumnType("text")
                         .HasColumnName("order");
-
-                    b.Property<bool>("PlaceHolder")
-                        .HasColumnType("boolean")
-                        .HasColumnName("place_holder");
 
                     b.Property<string>("Species")
                         .HasColumnType("text")

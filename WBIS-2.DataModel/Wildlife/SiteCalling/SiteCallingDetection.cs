@@ -6,7 +6,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class SiteCallingDetection: IPointParents, IPointLayer, IInformationType
+    public class SiteCallingDetection: IPointParents, IPointLayer, IUserRecords
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid"), ForeignKey("SiteCalling")]
         public Guid Guid { get; set; }
@@ -73,6 +73,25 @@ namespace WBIS_2.DataModel
         public string FemaleBindingLeg { get; set; }
         [Column("female_banding_pattern")]
         public string FemaleBindingPattern { get; set; }
+
+
+
+
+        [Column("user_id")]
+        public Guid? UserId { get; set; }
+        [ImportAttribute(Required = true)]
+        public ApplicationUser User { get; set; }
+        [Column("user_modified_id")]
+        public Guid? UserModifiedId { get; set; }
+        public ApplicationUser UserModified { get; set; }
+        [Column("date_added")]
+        public DateTime DateAdded { get; set; }
+        [Column("date_modified")]
+        public DateTime DateModified { get; set; }
+        public bool _delete { get; set; }
+        [Column("repository")]
+        public bool Repository { get; set; }
+
 
 
         [Column("district_id")]

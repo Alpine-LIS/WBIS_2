@@ -6,7 +6,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class BirdSpecies : IInformationType
+    public class BirdSpecies : IInformationType, IPlaceHolder
     {
         [Key,Column("guid")]
         public Guid Guid { get; set; }
@@ -19,6 +19,8 @@ namespace WBIS_2.DataModel
         public bool IsFindable { get; set; }
         [Column("banding_species")]
         public bool BandingSpecies { get; set; }
+        [Column("place_holder")]
+        public bool PlaceHolder { get; set; }
 
 
         [InverseProperty("SurveySpecies")]

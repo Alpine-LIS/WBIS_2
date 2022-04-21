@@ -22,7 +22,7 @@ namespace WBIS_2.DataModel
         public Guid? UserModifiedId { get; set; }
         public ApplicationUser UserModified { get; set; }
 
-        [Required, Column("record_type"), ImportAttribute(AcceptableChoices = new object[] { "Calling","Follow-Up","Skip","Drop","Partial-Drop"}, Required = true)]
+        [Required, Column("record_type"), ImportAttribute(Required = true)]
         public string RecordType { get; set; }
 
 

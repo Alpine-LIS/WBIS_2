@@ -16,7 +16,9 @@
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
         <ScrollViewer VerticalScrollBarVisibility="Auto">
-            <Grid Grid.Row="0" Name="GridContent"/>
+            <Grid Grid.Row="0" Name="GridContent">
+                <Border BorderBrush="Black" Width="1"/>
+            </Grid>
         </ScrollViewer>            
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>

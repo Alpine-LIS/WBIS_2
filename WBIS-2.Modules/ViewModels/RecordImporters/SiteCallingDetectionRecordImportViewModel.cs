@@ -12,32 +12,31 @@ using System.Diagnostics;
 using Atlas.Data;
 using System.IO;
 using System.Linq;
-using System.Windows.Input;
-using DevExpress.Mvvm;
-using WBIS_2.Modules.Views.RecordImporters;
+
 
 namespace WBIS_2.Modules.ViewModels.RecordImporters
 {
-    public class SiteCallingRecordImportViewModel : RecordImporterBase
+    public class SiteCallingDetectionRecordImportViewModel : RecordImporterBase
     {
-        public SiteCallingRecordImportViewModel()
-        {
-                   AddRepositoryCommand = new DelegateCommand(AddRepository);
-        }
-
-
         public override List<PropertyType> AvailibleFields => GetProperties(typeof(SiteCalling));
+
 
         public bool RepositoryData { get; set; } = false;
 
         public override void FileSelectClick()
         {
+            //Hex160 hex160 = new Hex160();
+            //hex160.Hex160ID.re
+            //WBIS2Model wBIS2Model = new WBIS2Model();
+            //wBIS2Model.Entry<Hex160>().Properties.Where(_=>_.Metadata.).Property(_=>_.)
+
+
            OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "SHP|*.shp";
             ofd.Multiselect = false;
             if (!ofd.ShowDialog().Value) return;
             var tempShape = Shapefile.OpenFile(ofd.FileName);
-            if (tempShape.FeatureType != FeatureType.Point && tempShape.FeatureType != FeatureType.MultiPoint)
+            if (tempShape.FeatureType != FeatureType.Point)
             {
                 MessageBox.Show("The selected shapefile does not conain points.");
                 return;
@@ -65,18 +64,6 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
             issues.AddRange(CheckTpes(typeof(SiteCalling)));
 
             return issues;
-        }
-
-        SiteCallingDetectionRecordImportViewModel DetectionImport;
-        public ICommand AddRepositoryCommand { get; set; }
-        public void AddRepository()
-        {
-            if (DetectionImport == null)
-            {
-                var a = new SiteCallingDetectionRecordImportView();
-                DetectionImport = (SiteCallingDetectionRecordImportViewModel)a.DataContext;
-                Holder.AddImportControl(a);
-            }
         }
     }
 }

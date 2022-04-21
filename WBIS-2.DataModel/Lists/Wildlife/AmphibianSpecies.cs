@@ -6,7 +6,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class AmphibianSpecies : IInformationType
+    public class AmphibianSpecies : IInformationType, IPlaceHolder
     {
         [Key,Column("guid")]
         public Guid Guid { get; set; }
@@ -14,6 +14,8 @@ namespace WBIS_2.DataModel
         public string SpeciesName{ get; set; }
         [Column("species_code")]
         public string SpeciesCode { get; set; }
+        [Column("place_holder")]
+        public bool PlaceHolder { get; set; }
 
         [InverseProperty("AmphibianSpecies")]
         public ICollection<AmphibianLocationFound> AmphibianLocationsFound { get; set; }

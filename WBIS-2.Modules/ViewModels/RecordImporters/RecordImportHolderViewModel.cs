@@ -28,8 +28,11 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
         }
         private RecordImportHolderView View { get; set; }
         public RecordImporterBase StartingRecordImport { get; set; }
+     
+        
         public bool SaveClick()
         {
+            //Check that requirements are met for import.
             if (!StartingRecordImport.CheckSave())
                 return false;
             StartingRecordImport.SaveClick();
@@ -38,6 +41,10 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
         public void RemoveImportControl(object RemoveViewModel)
         {
             View.RemoveRecordImporterControl(RemoveViewModel);
+        }
+        public void AddImportControl(UserControl AddViewModel)
+        {
+            View.AddRecordImporterControl(AddViewModel);
         }
     }
 }

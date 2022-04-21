@@ -19,10 +19,20 @@
             ItemsSource="{Binding PropertyCrosswalk}">
             <dxg:GridControl.Columns>
 
-                <dxg:GridColumn FieldName="Property">
+                <dxg:GridColumn FieldName="PropertyType">
                     <dxg:GridColumn.CellTemplate>
                         <DataTemplate>
-                            <dxe:ComboBoxEdit ItemsSource="{Binding RowData.Row.AvailibleFields, UpdateSourceTrigger=PropertyChanged}" Margin="0"/>
+                            <dxe:ComboBoxEdit ItemsSource="{Binding RowData.Row.AvailibleFields, UpdateSourceTrigger=PropertyChanged}" Margin="0"
+                                              SelectedItem="{Binding RowData.Row.PropertyType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ApplyItemTemplateToSelectedItem="True">
+                                <dxe:ComboBoxEdit.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding Path=PropertyName, StringFormat={}{0} (}" FontWeight="{Binding Path=ShowRequired}"/>
+                                            <TextBlock Text="{Binding Path=TypeName, StringFormat={}{0})}" FontWeight="{Binding Path=ShowRequired}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </dxe:ComboBoxEdit.ItemTemplate>
+                                </dxe:ComboBoxEdit>
                         </DataTemplate>
                     </dxg:GridColumn.CellTemplate>
                 </dxg:GridColumn>

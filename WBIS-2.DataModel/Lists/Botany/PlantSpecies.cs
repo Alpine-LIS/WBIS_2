@@ -6,7 +6,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class PlantSpecies : IInformationType
+    public class PlantSpecies : IInformationType, IPlaceHolder
     {
         [Key,Column("guid")]
         public Guid Guid { get; set; }
@@ -43,6 +43,8 @@ namespace WBIS_2.DataModel
         public string Family { get; set; }
         [Column("species_code")]
         public string SpeciesCode { get; set; }
+        [Column("place_holder")]
+        public bool PlaceHolder { get; set; }
 
         //public ICollection<BotanicalScopingSpecies> BotanicalScopingSpecies { get; set; }
         public ICollection<BotanicalPlantOfInterest> BotanicalPlantsOfInterest { get; set; }

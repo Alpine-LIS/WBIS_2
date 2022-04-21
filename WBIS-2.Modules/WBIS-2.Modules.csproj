@@ -68,6 +68,9 @@
     <Compile Update="Views\RecordImporters\RecordImportHolderView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\RecordImporters\SiteCallingDetectionRecordImportView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\RecordImporters\SiteCallingRecordImportView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -92,6 +95,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\RecordImporters\RecordImportHolderView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\RecordImporters\SiteCallingDetectionRecordImportView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

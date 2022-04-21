@@ -11,14 +11,18 @@ namespace WBIS_2.DataModel
     /// An attribute for properties for if they can be used for imports and if they're required.
     /// </summary>
     public class ImportAttribute : Attribute
-    {        
+    {
+        //public ImportAttribute(params object[] t)
+        //{
+        //    AcceptableChoices = t;
+        //}
         public bool Required { get; set; } = false;
-        public object[] AcceptableChoices { get; set; }
-        public bool AcceptableValue(object val)
-        {
-            if (AcceptableChoices == null) return true;
-            if (AcceptableChoices.Length == 0) return true;
-            return AcceptableChoices.Contains(val);
-        }
+        //public object[] AcceptableChoices { get; set; }
+        //public bool AcceptableValue(object val)
+        //{
+        //    if (AcceptableChoices == null) return true;
+        //    if (AcceptableChoices.Length == 0) return true;
+        //    return AcceptableChoices.Contains(val);
+        //}
     }
 }
