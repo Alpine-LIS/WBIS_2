@@ -39,7 +39,7 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
             var tempShape = Shapefile.OpenFile(ofd.FileName);
             if (tempShape.FeatureType != FeatureType.Point && tempShape.FeatureType != FeatureType.MultiPoint)
             {
-                MessageBox.Show("The selected shapefile does not conain points.");
+                MessageBox.Show("The selected shapefile does not contain points.");
                 return;
             }
             ImportShapefile = Shapefile.OpenFile(ofd.FileName);

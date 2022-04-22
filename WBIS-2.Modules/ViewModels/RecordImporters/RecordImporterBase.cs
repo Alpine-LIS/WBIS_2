@@ -18,6 +18,7 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
 {
     public abstract class RecordImporterBase : BindableBase
     {
+        public WBIS2Model Database = new WBIS2Model();
         public List<PropertyType> GetProperties(Type InfoType)
         {
             List<PropertyType> properties = new List<PropertyType>();
@@ -30,17 +31,21 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
                 {
                     if (attribute.GetType() == typeof(ImportAttribute))
                     {
-                        string typeName = $"'{prop.PropertyType.Name}'";
-                        if (IsWbisProperty(prop.PropertyType)) typeName = $"'{typeof(string).Name}'";
-                        if (typeName != $"'{typeof(string).Name}'") typeName += $" or '{typeof(string).Name}'";
+                        string typeName = prop.PropertyType.Name;
+                        if (prop.PropertyType == typeof(int) || prop.PropertyType == typeof(double))
+                            typeName = "Numeric";
 
-                        properties.Add(new PropertyType() {PropertyName = prop.Name, TypeName = typeName, Required = ((ImportAttribute)attribute).Required });
+                        //If the property is a WBIS class then it will not be primative. Use a string as a value will need to be found or generated.
+                        if (!prop.PropertyType.IsPrimitive)
+                            typeName = "String";
+
+                        properties.Add(new PropertyType() { PropertyName = prop.Name, TypeName = typeName, Required = ((ImportAttribute)attribute).Required });
 
                         break;
                     }
                 }
             }
-            return properties.OrderByDescending(_=>_.Required).ThenBy(_=>_.PropertyName).ToList();
+            return properties.OrderByDescending(_ => _.Required).ThenBy(_ => _.PropertyName).ToList();
         }
 
 
@@ -49,6 +54,8 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
             FileSelectCommand = new DelegateCommand(FileSelectClick);
             SaveCommand = new DelegateCommand(SaveClick);
             CloseCommand = new DelegateCommand(CloseClick);
+            SaveSetupCommand = new DelegateCommand(SaveSetupClick);
+            LoadSetupCommand = new DelegateCommand(LoadSetupClick);
         }
         public RecordImportHolderViewModel Holder { get; set; }
 
@@ -58,7 +65,8 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
 
         public ICommand SaveCommand { get; set; }
         public abstract void SaveClick();
-        
+        public abstract object BuildAttributes(object unit, DataRow dataRow, string id);
+
         /// <summary>
         /// Perfom chacks to see if records can be imported.
         /// </summary>
@@ -69,8 +77,12 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
                 MessageBox.Show("There must be a shapefile selected.");
                 return false;
             }
-            if (PropertyCrosswalk.Where(_=>_.PropertyType != null)
-                .Select(x => x.PropertyType).Count(_=>_.Required) != AvailibleFields.Count(_ => _.Required))
+
+            int a = PropertyCrosswalk.Where(_ => _.PropertyType != null).Count(_ => _.PropertyType.Required);
+            int b = AvailibleFields.Count(_ => _.Required);
+
+            if (PropertyCrosswalk.Where(_ => _.PropertyType != null)
+                .Count(_ => _.PropertyType.Required) != AvailibleFields.Count(_ => _.Required))
             {
                 MessageBox.Show("All required fields must be used.");
                 return false;
@@ -79,7 +91,7 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
             var issues = RecordTypeSaveCheck();
             if (issues.Count > 0)
             {
-                if (MessageBox.Show("There are issues with the import. Would you like to export a list of issues?","",MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                if (MessageBox.Show("There are issues with the import. Would you like to export a list of issues?", "", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
                     TextWriters.WriteTextList("TXT|*.txt", "-", issues);
                 }
@@ -96,11 +108,9 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
 
 
         public abstract List<PropertyType> AvailibleFields { get; }
-        public string RequiredFieldsList => string.Join('\n', AvailibleFields.Where(_=>_.Required).Select(_=>_.PropertyName));
-        public List<PropertyCrosswalk> PropertyCrosswalk { get;set;}
-       
-
-        public bool RepositoryData { get; set; } = false;
+        public string RequiredFieldsList => string.Join('\n', AvailibleFields.Where(_ => _.Required).Select(_ => _.PropertyName));
+        public List<PropertyCrosswalk> PropertyCrosswalk { get; set; }
+        public bool OverwriteValues { get; set; } = false;
 
 
         public bool IsSubElement
@@ -118,8 +128,6 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
             }
         }
         public Visibility IsSubElementVis { get; set; } = Visibility.Hidden;
-        public abstract IInformationType ReturnRecordId(string link);
-        public abstract IInformationType ReturnRecordSpacial(Atlas.Data.Feature link);
 
         public Shapefile ImportShapefile
         {
@@ -141,12 +149,15 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
             {
                 foreach (DataColumn col in ImportShapefile.DataTable.Columns)
                 {
-                    PropertyCrosswalk.Add(new RecordImporters.PropertyCrosswalk()
+                    var xWalk = new RecordImporters.PropertyCrosswalk()
                     {
                         Attribute = col.ColumnName,
                         DataType = col.DataType.Name,
                         AvailibleFields = AvailibleFields
-                    });
+                    };
+                    if (col.DataType == typeof(int) || col.DataType == typeof(double))
+                        xWalk.DataType = "Numeric";
+                    PropertyCrosswalk.Add(xWalk);
                 }
             }
             IdOptions = attributes;
@@ -174,8 +185,8 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
         public List<string> CheckAvailibleOptions(Type type)
         {
             List<string> issues = new List<string>();
-            var choosenAttributes = PropertyCrosswalk.Where(_=>_.PropertyType != null).ToList();
-            foreach(var xWalk in choosenAttributes)
+            var choosenAttributes = PropertyCrosswalk.Where(_ => _.PropertyType != null).ToList();
+            foreach (var xWalk in choosenAttributes)
             {
                 var p = type.GetProperty(xWalk.PropertyType.PropertyName);
                 if (p != null)
@@ -185,7 +196,7 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
                     {
                         if (!CheckAvailibleOptions((string[])options, xWalk.PropertyType.PropertyName, xWalk.Attribute))
                         {
-                            issues.Add($"'{xWalk.Attribute}' contains invalid values for '{xWalk.PropertyType.PropertyName}'. Valid values are \n\t" + 
+                            issues.Add($"'{xWalk.Attribute}' contains invalid values for '{xWalk.PropertyType.PropertyName}'. Valid values are \n\t" +
                                 string.Join("\n\t", (string[])options));
                         }
                     }
@@ -195,17 +206,16 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
         }
         public bool CheckAvailibleOptions(string[] options, string propertyName, string attributeName)
         {
-            foreach(DataRow r in ImportShapefile.DataTable.Rows)
+            foreach (DataRow r in ImportShapefile.DataTable.Rows)
             {
                 if (r[attributeName] is DBNull) return false;
-                if (!options.Contains(r[attributeName].ToString())) return false;
+                if (!options.Select(_ => _.ToUpperInvariant()).Contains(r[attributeName].ToString().ToUpper())) return false;
             }
             return true;
         }
 
         /// <summary>
         /// Check that the data types between the selected atributes and properties are the same.
-        /// WBIS objects should be type string.
         /// The type should be the information type
         /// </summary>
         public List<string> CheckTpes(Type type)
@@ -216,35 +226,99 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
             {
                 var p = type.GetProperty(xWalk.PropertyType.PropertyName);
 
-                if (xWalk.PropertyType.TypeName != "'String'")
+                if (xWalk.PropertyType.TypeName != "String")
                 {
                     if (!xWalk.PropertyType.TypeName.Contains(xWalk.DataType))
                         issues.Add($"'{xWalk.Attribute}' has a data type of '{xWalk.DataType}' and '{xWalk.PropertyType.PropertyName}' must be {xWalk.PropertyType.TypeName}.");
                 }
-                //if (IsWbisProperty(p.PropertyType))
-                //{
-                //    if (xWalk.DataType != typeof(string).Name)
-                //        issues.Add($"'{xWalk.Attribute}' has a data type of '{xWalk.DataType}' and '{xWalk.PropertyType.PropertyName}' is '{typeof(string).Name}'. These types must match");
-                //}
-                //else
-                //{
-                //    if (p.PropertyType.Name != xWalk.DataType) 
-                //        issues.Add($"'{xWalk.Attribute}' has a data type of '{xWalk.DataType}' and '{xWalk.PropertyType.PropertyName}' is '{p.PropertyType.Name}'. These types must match");
-                //}
             }
             return issues;
         }
+        
 
-        public bool IsWbisProperty(Type property)
+        public ICommand SaveSetupCommand { get; set; }
+        public void SaveSetupClick()
         {
-            return property.Namespace == "WBIS_2.DataModel";
+            if (ImportShapefile == null)
+            {
+                MessageBox.Show("No shapefile has been selected.");
+                return;
+            }
+
+            string path = @$"{AppDomain.CurrentDomain.BaseDirectory}ImportSetup";
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.InitialDirectory = path;
+            sfd.Filter = "CSV|*.csv";
+            if (!sfd.ShowDialog().Value) return;
+            using (StreamWriter sw = new StreamWriter(sfd.FileName))
+            {
+                sw.WriteLine(("Property,Attribute"));
+                foreach (var xWalk in PropertyCrosswalk.Where(_ => _.PropertyType != null))
+                {
+                    sw.WriteLine($"{xWalk.PropertyType.PropertyName},{xWalk.Attribute}");
+                }
+            }
+            MessageBox.Show("Setup has been saved.");
         }
+        public ICommand LoadSetupCommand { get; set; }
+        public void LoadSetupClick()
+        {
+            if (ImportShapefile == null)
+            {
+                MessageBox.Show("No shapefile has been selected.");
+                return;
+            }
+
+            string path = @$"{AppDomain.CurrentDomain.BaseDirectory}ImportSetup";
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.InitialDirectory = path;
+            ofd.Filter = "CSV|*.csv";
+            if (!ofd.ShowDialog().Value) return;
+            using (StreamReader sr = new StreamReader(ofd.FileName))
+            {
+                string txt = sr.ReadToEnd();
+                var lines = txt.Split('\n');
+                for (int i = 1; i < lines.Length; i++)
+                {
+                    if (lines[i] == "") continue;
+                    var vals = lines[i].Split(',');
+                    var prop = vals[0].Replace("\r", "").Replace("\n", "");
+                    var att = vals[1].Replace("\r", "").Replace("\n", "");
+
+                    if (AvailibleFields.Any(_ => _.PropertyName == prop))
+                    {
+                        var xWalk = PropertyCrosswalk.FirstOrDefault(_ => _.Attribute == att);
+                        if (xWalk != null)
+                        {
+                            xWalk.PropertyType = xWalk.AvailibleFields.First(_ => _.PropertyName == prop);
+                            RaisePropertyChanged(nameof(xWalk.PropertyType));
+                        }
+                    }
+                }
+            }
+        }
+
+
+        public abstract IInformationType ReturnRecordId(string link);
+
+        public abstract IInformationType ReturnRecordSpacial(Feature link);
     }
-    public class PropertyCrosswalk
+    public class PropertyCrosswalk : BindableBase
     {
         public string Attribute { get; set; }
         public string DataType { get; set; }
-        public PropertyType PropertyType { get; set; }
+        public PropertyType PropertyType
+        {
+            get
+            {
+                return GetProperty(() => PropertyType);
+            }
+            set
+            {
+                if (value != null)
+                    SetProperty(() => PropertyType, value);
+            }
+        }
         public List<PropertyType> AvailibleFields { get; set; }
     }
     public class PropertyType : BindableBase
