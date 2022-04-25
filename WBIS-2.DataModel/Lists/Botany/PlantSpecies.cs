@@ -11,9 +11,9 @@ namespace WBIS_2.DataModel
         [Key,Column("guid")]
         public Guid Guid { get; set; }
        
-        [Column("sci_name")]
+        [Column("sci_name"), ImportAttribute(Required = true)]
         public string SciName { get; set; }
-        [Column("com_name")]
+        [Column("com_name"), ImportAttribute(Required = false)]
         public string ComName { get; set; }
         [Column("taxon_group")]
         public string TaxonGroup { get; set; }

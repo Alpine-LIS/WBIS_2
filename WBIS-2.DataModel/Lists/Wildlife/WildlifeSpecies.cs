@@ -10,7 +10,7 @@ namespace WBIS_2.DataModel
     {
         [Key,Column("guid")]
         public Guid Guid { get; set; }
-        [Column("alpha_code")]
+        [Column("alpha_code"), ImportAttribute(Required = true)]
         public string AlphaCode { get; set; }
         [Column("wildlife_species_description")]
         public string WildlifeSpeciesDescription { get; set; }

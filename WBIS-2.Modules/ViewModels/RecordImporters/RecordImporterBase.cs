@@ -18,7 +18,6 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
 {
     public abstract class RecordImporterBase : BindableBase
     {
-        public WBIS2Model Database = new WBIS2Model();
         public List<PropertyType> GetProperties(Type InfoType)
         {
             List<PropertyType> properties = new List<PropertyType>();
@@ -26,24 +25,32 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
             //.Where(_ => _.GetCustomAttributesData().Any(_ => _.GetType() == typeof(ImportAttribute)));
             foreach (var prop in props)
             {
-                var attributes = prop.GetCustomAttributes(true);
-                foreach (var attribute in attributes)
+                var att = prop.GetCustomAttributes(true).FirstOrDefault(_ => _.GetType() == typeof(ImportAttribute));
+                if (att == null) continue;
+
+                if (prop.PropertyType.GetInterfaces().Contains(typeof(IInformationType)))
                 {
-                    if (attribute.GetType() == typeof(ImportAttribute))
+                    var subProps = prop.PropertyType.GetProperties();
+                    foreach(var subProp in subProps)
                     {
-                        string typeName = prop.PropertyType.Name;
+                        var subAtt = subProp.GetCustomAttributes(true).FirstOrDefault(_ => _.GetType() == typeof(ImportAttribute));
+                        if (subAtt == null) continue;
+
+                        string typeName = subProp.PropertyType.Name;
                         if (prop.PropertyType == typeof(int) || prop.PropertyType == typeof(double))
                             typeName = "Numeric";
-
-                        //If the property is a WBIS class then it will not be primative. Use a string as a value will need to be found or generated.
-                        if (!prop.PropertyType.IsPrimitive)
-                            typeName = "String";
-
-                        properties.Add(new PropertyType() { PropertyName = prop.Name, TypeName = typeName, Required = ((ImportAttribute)attribute).Required });
-
-                        break;
+                        properties.Add(new PropertyType() { PropertyName = $"{prop.PropertyType.Name}.{subProp.Name}", TypeName = typeName, Required = ((ImportAttribute)subAtt).Required });
                     }
                 }
+                else
+                {                   
+                    string typeName = prop.PropertyType.Name;
+                    if (prop.PropertyType == typeof(int) || prop.PropertyType == typeof(double))
+                        typeName = "Numeric";
+                    properties.Add(new PropertyType() { PropertyName = prop.Name, TypeName = typeName, Required = ((ImportAttribute)att).Required });
+                }
+
+
             }
             return properties.OrderByDescending(_ => _.Required).ThenBy(_ => _.PropertyName).ToList();
         }
@@ -65,16 +72,24 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
 
         public ICommand SaveCommand { get; set; }
         public abstract void SaveClick();
-        public abstract object BuildAttributes(object unit, DataRow dataRow, string id);
+        public abstract void SaveClick(List<object> ExcludeIds);
+        public abstract List<object> GenerateChild();
+        public abstract object BuildAttributes(object unit, DataRow dataRow);
 
         /// <summary>
-        /// Perfom chacks to see if records can be imported.
+        /// Perfom checks to see if records can be imported.
+        /// If record is a sub item don't produce a list of erros. This will be aquired through it's parent 'ListSaveCheck'
         /// </summary>
         public bool CheckSave()
         {
             if (ImportShapefile == null)
             {
                 MessageBox.Show("There must be a shapefile selected.");
+                return false;
+            }
+            if (IdAttribute == null)
+            {
+                MessageBox.Show("Please select an attribute to use as a linking field.");
                 return false;
             }
 
@@ -88,22 +103,31 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
                 return false;
             }
 
-            var issues = RecordTypeSaveCheck();
-            if (issues.Count > 0)
+            BoolSaveCheck();
+            if (!IsSubElement)
             {
-                if (MessageBox.Show("There are issues with the import. Would you like to export a list of issues?", "", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                var issues = ListSaveCheck();
+                if (issues.Count > 0)
                 {
-                    TextWriters.WriteTextList("TXT|*.txt", "-", issues);
+                    if (MessageBox.Show("There are issues with the import. Would you like to export a list of issues?", "", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                    {
+                        TextWriters.WriteTextList("TXT|*.txt", "-", issues);
+                    }
+                    return false;
                 }
-                return false;
             }
 
             return true;
         }
         /// <summary>
-        /// Perfom checks specific to record types and return a list of issues
+        /// Perfom checks specific to record types and return a list of issues.
+        /// Also gets a list of issues for it's children
         /// </summary>
-        public abstract List<string> RecordTypeSaveCheck();
+        public abstract List<string> ListSaveCheck();
+        /// <summary>
+        /// Used for the simple boolean element of the 'CheckSave' routine
+        /// </summary>
+        public abstract bool BoolSaveCheck();
 
 
 
@@ -160,7 +184,7 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
                     PropertyCrosswalk.Add(xWalk);
                 }
             }
-            IdOptions = attributes;
+            IdOptions = PropertyCrosswalk.Select(_=>_.Attribute).ToList();
             RaisePropertiesChanged(nameof(IdOptions));
             RaisePropertiesChanged(nameof(PropertyCrosswalk));
         }
@@ -171,8 +195,9 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
 
         public List<string> IdOptions { get; set; }
         public string IdAttribute { get; set; }
-        public bool ConnectSpacially { get; set; }
-        public bool ConnectId { get; set; }
+        public bool ImportUnconnected { get; set; } = false;
+        public bool ConnectSpacially { get; set; } = false;
+        public bool ConnectId { get; set; } = true;
         public ICommand CloseCommand { get; set; }
         public void CloseClick()
         {
@@ -302,6 +327,129 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
         public abstract IInformationType ReturnRecordId(string link);
 
         public abstract IInformationType ReturnRecordSpacial(Feature link);
+
+        //public object GetRecordEntity(string neededValue, Type propertyType)
+        //{
+        //    object returnVal = null;
+
+        //    if (propertyType == typeof(ApplicationUser))
+        //        returnVal= GetRecordEntityApplicationUser<ApplicationUser>(neededValue);
+
+        //    return returnVal;
+        //}
+        //public ApplicationUser GetRecordEntityApplicationUser<t>(string userName) where t : ApplicationUser
+        //{
+        //    var user = Database.ApplicationUsers.FirstOrDefault(x => x.UserName == userName);
+        //    if (user == null)
+        //    {
+        //        if (NewListElements.ContainsKey(typeof(t))) 
+        //            user = (t)NewListElements[typeof(t)].FirstOrDefault(x => ((t)x).UserName == userName);
+        //    }                
+
+        //    if (user == null)
+        //    {
+        //        user = new ApplicationUser()
+        //        {
+        //            UserName = userName,
+        //            ApplicationGroup = Database.ApplicationGroups.FirstOrDefault(_ => _.GroupName == "Unknown"),
+        //            PlaceHolder = true
+        //        };
+        //        Database.ApplicationUsers.Add(user);
+        //        AddNewElement<t>(user);
+        //    }
+        //    return user;
+        //}
+        //public BirdSpecies GetRecordEntityBirdSpecies<t>(string neededValue) where t : BirdSpecies
+        //{
+        //    var element = Database.BirdSpecies.FirstOrDefault(x => x.Species == neededValue);
+        //    if (element == null)
+        //    {
+        //        if (NewListElements.ContainsKey(typeof(t)))
+        //            element = (t)NewListElements[typeof(t)].FirstOrDefault(x => ((t)x).Species == neededValue);
+        //    }
+
+        //    if (element == null)
+        //    {
+        //        element = new BirdSpecies()
+        //        {
+        //            Species = neededValue,
+        //            PlaceHolder = true
+        //        };
+        //        Database.BirdSpecies.Add(element);
+        //        AddNewElement<t>(element);
+        //    }
+        //    return element;
+        //}
+        //public WildlifeSpecies GetRecordEntityWildlifeSpecies<t>(string neededValue) where t : WildlifeSpecies
+        //{
+        //    var element = Database.WildlifeSpecies.FirstOrDefault(x => x.Species == neededValue);
+        //    if (element == null)
+        //    {
+        //        if (NewListElements.ContainsKey(typeof(t)))
+        //            element = (t)NewListElements[typeof(t)].FirstOrDefault(x => ((t)x).Species == neededValue);
+        //    }
+
+        //    if (element == null)
+        //    {
+        //        element = new WildlifeSpecies()
+        //        {
+        //            Species = neededValue,
+        //            PlaceHolder = true
+        //        };
+        //        Database.WildlifeSpecies.Add(element);
+        //        AddNewElement<t>(element);
+        //    }
+        //    return element;
+        //}
+        //public AmphibianSpecies GetRecordEntityAmphibianSpecies<t>(string neededValue) where t : AmphibianSpecies
+        //{
+        //    var element = Database.AmphibianSpecies.FirstOrDefault(x => x.SpeciesCode == neededValue);
+        //    if (element == null)
+        //    {
+        //        if (NewListElements.ContainsKey(typeof(t)))
+        //            element = (t)NewListElements[typeof(t)].FirstOrDefault(x => ((t)x).Species == neededValue);
+        //    }
+
+        //    if (element == null)
+        //    {
+        //        element = new AmphibianSpecies()
+        //        {
+        //            Species = neededValue,
+        //            PlaceHolder = true
+        //        };
+        //        Database.AmphibianSpecies.Add(element);
+        //        AddNewElement<t>(element);
+        //    }
+        //    return element;
+        //}
+        //public PlantSpecies GetRecordEntityPlantSpecies<t>(string neededValue) where t : PlantSpecies
+        //{
+        //    var element = Database.PlantSpecies.FirstOrDefault(x => x.Species == neededValue);
+        //    if (element == null)
+        //    {
+        //        if (NewListElements.ContainsKey(typeof(t)))
+        //            element = (t)NewListElements[typeof(t)].FirstOrDefault(x => ((t)x).Species == neededValue);
+        //    }
+
+        //    if (element == null)
+        //    {
+        //        element = new PlantSpecies()
+        //        {
+        //            Species = neededValue,
+        //            PlaceHolder = true
+        //        };
+        //        Database.PlantSpecies.Add(element);
+        //        AddNewElement<t>(element);
+        //    }
+        //    return element;
+        //}
+
+        private void AddNewElement<t>(object newElement)
+        {
+            if (Holder.NewListElements.ContainsKey(typeof(t)))
+                Holder.NewListElements.Add(typeof(t), new List<object>());
+            Holder.NewListElements[typeof(t)].Add(newElement);
+        }
     }
     public class PropertyCrosswalk : BindableBase
     {

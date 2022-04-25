@@ -32,15 +32,12 @@
                                         </StackPanel>
                                     </DataTemplate>
                                 </dxe:ComboBoxEdit.ItemTemplate>
-                                </dxe:ComboBoxEdit>
+                            </dxe:ComboBoxEdit>
                         </DataTemplate>
                     </dxg:GridColumn.CellTemplate>
                 </dxg:GridColumn>
 
             </dxg:GridControl.Columns>
-            <dxg:GridControl.GroupSummary>
-                <dxg:GridSummaryItem SummaryType="Count" DisplayFormat="({0})" Alignment="Left"/>
-            </dxg:GridControl.GroupSummary>
             <dxg:GridControl.View>
                 <dxg:TableView 
                     ShowTotalSummary="False" 

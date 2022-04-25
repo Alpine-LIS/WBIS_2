@@ -19,6 +19,9 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
 {
     public class RecordImportHolderViewModel:BindableBase
     {
+        public WBIS2Model Database = new WBIS2Model();
+        public Dictionary<Type, List<object>> NewListElements = new Dictionary<Type, List<object>>();
+        public bool RepositoryData { get; set; } = true;
         public RecordImportHolderViewModel(UserControl _startingRecordImport, RecordImportHolderView view)
         {
             StartingRecordImport = (RecordImporterBase)_startingRecordImport.DataContext;

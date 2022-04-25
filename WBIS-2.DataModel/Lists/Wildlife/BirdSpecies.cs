@@ -10,7 +10,7 @@ namespace WBIS_2.DataModel
     {
         [Key,Column("guid")]
         public Guid Guid { get; set; }
-        [Column("species")]
+        [Column("species"), ImportAttribute(Required = true)]
         public string Species { get; set; }
 
         [Column("is_surveyable")]

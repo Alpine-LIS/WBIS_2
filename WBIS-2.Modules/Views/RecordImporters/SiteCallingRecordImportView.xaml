@@ -40,12 +40,9 @@
                 <ColumnDefinition Width="AUTO"/>
                 <ColumnDefinition Width="AUTO"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Content="Add Detections" Margin="2" Command="{Binding AddRepositoryCommand}"/>
+            <Button Grid.Column="0" Content="Add Detections" Margin="2" Command="{Binding AddDetectionCommand}"/>
             <Button Grid.Column="1" Content="Add Device Info" Margin="2"/>
             <Button Grid.Column="2" Content="Add Tracks" Margin="2"/>
-
-            <Label Content="Repository Data:" Grid.Column="3"/>
-            <dxe:CheckEdit Grid.Column="4" IsChecked="{Binding RepositoryData, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
     </Grid>
 </UserControl>

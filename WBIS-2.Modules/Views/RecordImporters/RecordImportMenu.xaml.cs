@@ -25,15 +25,15 @@ namespace WBIS_2.Modules.Views.RecordImporters
             InitializeComponent();
         }
 
-        private void ChbxId_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            ChbxId.IsChecked = true;
-            ChbxSpacially.IsChecked = false;
-        }
-        private void ChbxSpacially_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            ChbxId.IsChecked = false;
-            ChbxSpacially.IsChecked = true;
-        }
+        //private void ChbxId_MouseUp(object sender, MouseButtonEventArgs e)
+        //{
+        //    ChbxId.IsChecked = true;
+        //    ChbxSpacially.IsChecked = false;
+        //}
+        //private void ChbxSpacially_MouseUp(object sender, MouseButtonEventArgs e)
+        //{
+        //    ChbxId.IsChecked = false;
+        //    ChbxSpacially.IsChecked = true;
+        //}
     }
 }

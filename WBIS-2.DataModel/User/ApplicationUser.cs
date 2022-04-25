@@ -10,7 +10,7 @@ namespace WBIS_2.DataModel
     {
         [Key,Column("guid")]
         public Guid Guid { get; set; }
-        [Required,Column("user_name")]
+        [Required,Column("user_name"), ImportAttribute(Required = true)]
         public string UserName { get; set; }
        
         [Column("email")]
