@@ -42,7 +42,7 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
                 MessageBox.Show("The selected shapefile does not contain points.");
                 return;
             }
-            ImportShapefile = Shapefile.OpenFile(ofd.FileName);
+            ImportShapefile = Shapefile.OpenFile(ofd.FileName); 
         }
 
         public override IInformationType ReturnRecordId(string link)

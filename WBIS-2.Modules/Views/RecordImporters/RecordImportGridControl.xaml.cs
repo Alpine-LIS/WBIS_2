@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevExpress.XtraEditors;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,12 @@ namespace WBIS_2.Modules.Views.RecordImporters
         public RecordImportGridControl()
         {
             InitializeComponent();
+        }
+
+        private void ComboBoxEdit_KeyDown(object sender, KeyEventArgs e)
+        {
+            ((ComboBoxEdit)sender).SelectedIndex = -1;
+            ((ComboBoxEdit)sender).SelectedItem = null;
         }
     }
 }

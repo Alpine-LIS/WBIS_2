@@ -13,6 +13,10 @@ using DevExpress.Mvvm;
 using System.Windows.Input;
 using Atlas.Data;
 using WBIS_2.Modules.Tools;
+using System.Reflection;
+using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
+using DevExpress.Data.ODataLinq.Helpers;
 
 namespace WBIS_2.Modules.ViewModels.RecordImporters
 {
@@ -36,17 +40,13 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
                         var subAtt = subProp.GetCustomAttributes(true).FirstOrDefault(_ => _.GetType() == typeof(ImportAttribute));
                         if (subAtt == null) continue;
 
-                        string typeName = subProp.PropertyType.Name;
-                        if (prop.PropertyType == typeof(int) || prop.PropertyType == typeof(double))
-                            typeName = "Numeric";
-                        properties.Add(new PropertyType() { PropertyName = $"{prop.PropertyType.Name}.{subProp.Name}", TypeName = typeName, Required = ((ImportAttribute)subAtt).Required });
+                        string typeName = GetDataTypeString(subProp.PropertyType);                        
+                        properties.Add(new PropertyType() { PropertyName = $"{prop.PropertyType.Name}.{subProp.Name}", TypeName = typeName, Required = ((ImportAttribute)subAtt).Required, FullClassName = prop.PropertyType.FullName });
                     }
                 }
                 else
                 {                   
-                    string typeName = prop.PropertyType.Name;
-                    if (prop.PropertyType == typeof(int) || prop.PropertyType == typeof(double))
-                        typeName = "Numeric";
+                    string typeName = GetDataTypeString(prop.PropertyType);
                     properties.Add(new PropertyType() { PropertyName = prop.Name, TypeName = typeName, Required = ((ImportAttribute)att).Required });
                 }
 
@@ -93,13 +93,11 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
                 return false;
             }
 
-            int a = PropertyCrosswalk.Where(_ => _.PropertyType != null).Count(_ => _.PropertyType.Required);
-            int b = AvailibleFields.Count(_ => _.Required);
-
-            if (PropertyCrosswalk.Where(_ => _.PropertyType != null)
-                .Count(_ => _.PropertyType.Required) != AvailibleFields.Count(_ => _.Required))
+            var missingFields = GetUnusedFields().Where(_ => _.Required).ToArray();
+            if (missingFields.Length > 0)
             {
-                MessageBox.Show("All required fields must be used.");
+                string missingText = string.Join("\n", missingFields.Select(_ => _.PropertyName));
+                MessageBox.Show($"All required fields must be used.\n{missingText}");
                 return false;
             }
 
@@ -133,6 +131,10 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
 
         public abstract List<PropertyType> AvailibleFields { get; }
         public string RequiredFieldsList => string.Join('\n', AvailibleFields.Where(_ => _.Required).Select(_ => _.PropertyName));
+        public List<PropertyType> GetUnusedFields() => AvailibleFields.Where(_ => !PropertyCrosswalk
+            .Where(z => z.PropertyType != null)
+            .Select(z => z.PropertyType).Any(z => z.PropertyName == _.PropertyName))
+            .ToList();
         public List<PropertyCrosswalk> PropertyCrosswalk { get; set; }
         public bool OverwriteValues { get; set; } = false;
 
@@ -176,11 +178,11 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
                     var xWalk = new RecordImporters.PropertyCrosswalk()
                     {
                         Attribute = col.ColumnName,
-                        DataType = col.DataType.Name,
+                        DataType = GetDataTypeString(col.DataType),
                         AvailibleFields = AvailibleFields
                     };
-                    if (col.DataType == typeof(int) || col.DataType == typeof(double))
-                        xWalk.DataType = "Numeric";
+                    xWalk.RefreshAvailible += XWalk_RefreshAvailible;
+                    
                     PropertyCrosswalk.Add(xWalk);
                 }
             }
@@ -188,7 +190,20 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
             RaisePropertiesChanged(nameof(IdOptions));
             RaisePropertiesChanged(nameof(PropertyCrosswalk));
         }
-
+        private void XWalk_RefreshAvailible(object sender, EventArgs e)
+        {
+            foreach (var xWalk in PropertyCrosswalk)
+            {
+                xWalk.AvailibleFields = GetUnusedFields();
+                RaisePropertyChanged(nameof(xWalk.AvailibleFields));
+            }
+        }
+        private string GetDataTypeString(Type type)
+        {
+            if (type == typeof(int) || type == typeof(long) || type == typeof(double))
+                return "Numeric";
+            else return type.Name;
+        }
 
 
 
@@ -328,121 +343,7 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
 
         public abstract IInformationType ReturnRecordSpacial(Feature link);
 
-        //public object GetRecordEntity(string neededValue, Type propertyType)
-        //{
-        //    object returnVal = null;
-
-        //    if (propertyType == typeof(ApplicationUser))
-        //        returnVal= GetRecordEntityApplicationUser<ApplicationUser>(neededValue);
-
-        //    return returnVal;
-        //}
-        //public ApplicationUser GetRecordEntityApplicationUser<t>(string userName) where t : ApplicationUser
-        //{
-        //    var user = Database.ApplicationUsers.FirstOrDefault(x => x.UserName == userName);
-        //    if (user == null)
-        //    {
-        //        if (NewListElements.ContainsKey(typeof(t))) 
-        //            user = (t)NewListElements[typeof(t)].FirstOrDefault(x => ((t)x).UserName == userName);
-        //    }                
-
-        //    if (user == null)
-        //    {
-        //        user = new ApplicationUser()
-        //        {
-        //            UserName = userName,
-        //            ApplicationGroup = Database.ApplicationGroups.FirstOrDefault(_ => _.GroupName == "Unknown"),
-        //            PlaceHolder = true
-        //        };
-        //        Database.ApplicationUsers.Add(user);
-        //        AddNewElement<t>(user);
-        //    }
-        //    return user;
-        //}
-        //public BirdSpecies GetRecordEntityBirdSpecies<t>(string neededValue) where t : BirdSpecies
-        //{
-        //    var element = Database.BirdSpecies.FirstOrDefault(x => x.Species == neededValue);
-        //    if (element == null)
-        //    {
-        //        if (NewListElements.ContainsKey(typeof(t)))
-        //            element = (t)NewListElements[typeof(t)].FirstOrDefault(x => ((t)x).Species == neededValue);
-        //    }
-
-        //    if (element == null)
-        //    {
-        //        element = new BirdSpecies()
-        //        {
-        //            Species = neededValue,
-        //            PlaceHolder = true
-        //        };
-        //        Database.BirdSpecies.Add(element);
-        //        AddNewElement<t>(element);
-        //    }
-        //    return element;
-        //}
-        //public WildlifeSpecies GetRecordEntityWildlifeSpecies<t>(string neededValue) where t : WildlifeSpecies
-        //{
-        //    var element = Database.WildlifeSpecies.FirstOrDefault(x => x.Species == neededValue);
-        //    if (element == null)
-        //    {
-        //        if (NewListElements.ContainsKey(typeof(t)))
-        //            element = (t)NewListElements[typeof(t)].FirstOrDefault(x => ((t)x).Species == neededValue);
-        //    }
-
-        //    if (element == null)
-        //    {
-        //        element = new WildlifeSpecies()
-        //        {
-        //            Species = neededValue,
-        //            PlaceHolder = true
-        //        };
-        //        Database.WildlifeSpecies.Add(element);
-        //        AddNewElement<t>(element);
-        //    }
-        //    return element;
-        //}
-        //public AmphibianSpecies GetRecordEntityAmphibianSpecies<t>(string neededValue) where t : AmphibianSpecies
-        //{
-        //    var element = Database.AmphibianSpecies.FirstOrDefault(x => x.SpeciesCode == neededValue);
-        //    if (element == null)
-        //    {
-        //        if (NewListElements.ContainsKey(typeof(t)))
-        //            element = (t)NewListElements[typeof(t)].FirstOrDefault(x => ((t)x).Species == neededValue);
-        //    }
-
-        //    if (element == null)
-        //    {
-        //        element = new AmphibianSpecies()
-        //        {
-        //            Species = neededValue,
-        //            PlaceHolder = true
-        //        };
-        //        Database.AmphibianSpecies.Add(element);
-        //        AddNewElement<t>(element);
-        //    }
-        //    return element;
-        //}
-        //public PlantSpecies GetRecordEntityPlantSpecies<t>(string neededValue) where t : PlantSpecies
-        //{
-        //    var element = Database.PlantSpecies.FirstOrDefault(x => x.Species == neededValue);
-        //    if (element == null)
-        //    {
-        //        if (NewListElements.ContainsKey(typeof(t)))
-        //            element = (t)NewListElements[typeof(t)].FirstOrDefault(x => ((t)x).Species == neededValue);
-        //    }
-
-        //    if (element == null)
-        //    {
-        //        element = new PlantSpecies()
-        //        {
-        //            Species = neededValue,
-        //            PlaceHolder = true
-        //        };
-        //        Database.PlantSpecies.Add(element);
-        //        AddNewElement<t>(element);
-        //    }
-        //    return element;
-        //}
+      
 
         private void AddNewElement<t>(object newElement)
         {
@@ -450,9 +351,236 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
                 Holder.NewListElements.Add(typeof(t), new List<object>());
             Holder.NewListElements[typeof(t)].Add(newElement);
         }
+
+
+
+
+
+
+        //public object GetRecordEntity(Type propertyType, DataRow dataRow)
+        //{
+        //    object returnVal = null;
+
+        //    //if (propertyType == typeof(ApplicationUser))
+        //    //    returnVal = GetRecordEntityApplicationUser<ApplicationUser>(dataRow);
+        //    //else if (propertyType == typeof(BirdSpecies))
+        //    //        returnVal = GetRecordEntityBirdSpecies<BirdSpecies>(dataRow);
+        //    //else if (propertyType == typeof(WildlifeSpecies))
+        //    //    returnVal = GetRecordEntityWildlifeSpecies<WildlifeSpecies>(dataRow);
+        //    //else if (propertyType == typeof(AmphibianSpecies))
+        //    //    returnVal = GetRecordEntityAmphibianSpecies<AmphibianSpecies>(dataRow);
+        //    //else if (propertyType == typeof(PlantSpecies))
+        //    //    returnVal = GetRecordEntityPlantSpecies<PlantSpecies>(dataRow);
+
+        //    return returnVal;
+        //}
+        private Dictionary<PropertyInfo, object> GetPropertyValues<t>(DataRow dataRow)
+        {
+            Dictionary<PropertyInfo, object> propertyInfos = new Dictionary<PropertyInfo, object>();
+            string className = typeof(t).Name;
+            var propNames = PropertyCrosswalk.Where(_ => _.PropertyType != null).Where(_ => _.PropertyType.PropertyName.StartsWith(className));
+
+            foreach(var prop in propNames)
+            {
+                PropertyInfo pi = typeof(t).GetProperty(prop.PropertyType.PropertyName.Replace($"{className}.", ""));
+                string colName = PropertyCrosswalk.Where(_=>_.PropertyType != null).First(_=>_.PropertyType.PropertyName == prop.PropertyType.PropertyName).Attribute;
+                propertyInfos.Add(pi, dataRow[colName]);
+            }
+            return propertyInfos;
+        }
+        public Expression<Func<t, bool>> GetEntityExpression<t>(Dictionary<PropertyInfo, object> propertyInfos)
+        {
+            Expression<Func<t, bool>> a;
+            System.Linq.Expressions.Expression returnVal = null;
+            foreach (var valKey in propertyInfos)
+            {
+                PropertyInfo pi = valKey.Key;
+                object val = valKey.Value;
+                a = _ => pi.GetValue(_) == val;
+
+                if (returnVal == null)
+                    returnVal = a;
+                else
+                    returnVal = System.Linq.Expressions.Expression.AndAlso(returnVal, a);
+            }
+
+            return returnVal as Expression<Func<t, bool>>;
+        }
+        public t? GetHolderEntity<t>(Expression<Func<t, bool>> expression)
+        {
+            if (Holder.NewListElements.ContainsKey(typeof(t)))
+            {
+                var EnityList = Holder.NewListElements[typeof(t)].Cast<t>();
+                return EnityList.AsQueryable().FirstOrDefault(expression);
+            }
+            return default(t);
+        }
+
+        public t GetRecordEntityApplicationUser<t>(DataRow dataRow) where t : class
+        {
+            Dictionary<PropertyInfo, object> propertyInfos = GetPropertyValues<t>(dataRow);
+            var expression = GetEntityExpression<t>(propertyInfos);
+            
+            var returnVal = Holder.Database.Set<t>().FirstOrDefault(expression);
+
+            if (returnVal == null)
+                returnVal = GetHolderEntity<t>(expression);
+
+            if (returnVal == null)
+            {
+                returnVal = Activator.CreateInstance<t>();
+
+                if (returnVal is ApplicationUser returnVal2)
+                    returnVal2.ApplicationGroup = Holder.Database.ApplicationGroups.FirstOrDefault(_ => _.GroupName == "Unknown");
+
+                foreach (var valKey in propertyInfos)
+                {
+                    PropertyInfo pi = valKey.Key;
+                    object val = valKey.Value;
+
+                    pi.SetValue(returnVal, val);
+                }
+                ((IPlaceHolder)returnVal).PlaceHolder = true;
+
+                Holder.Database.Set<t>().Add(returnVal);
+                AddNewElement<t>(returnVal);
+            }
+            return returnVal;
+        }
+        //public BirdSpecies GetRecordEntityBirdSpecies<t>(DataRow dataRow) where t : BirdSpecies
+        //{
+        //    Dictionary<PropertyInfo, object> propertyInfos = GetPropertyValues<t>(dataRow);
+        //    var expression = (Expression<Func<BirdSpecies, bool>>)GetEntityExpression<t>(propertyInfos);
+        //    var returnVal = Holder.Database.BirdSpecies.FirstOrDefault(expression);
+
+        //    if (returnVal == null)
+        //    {
+        //        if (Holder.NewListElements.ContainsKey(typeof(t)))
+        //        {
+        //            var EnityList = Holder.NewListElements[typeof(t)].Cast<t>();
+        //            returnVal = EnityList.AsQueryable().FirstOrDefault(expression);
+        //        }
+        //    }
+
+        //    if (returnVal == null)
+        //    {
+        //        returnVal = new BirdSpecies();
+        //        foreach (var valKey in propertyInfos)
+        //        {
+        //            PropertyInfo pi = valKey.Key;
+        //            object val = valKey.Value;
+
+        //            pi.SetValue(returnVal, val);
+        //        }
+        //        returnVal.PlaceHolder = true;
+
+        //        Holder.Database.BirdSpecies.Add(returnVal);
+        //        AddNewElement<t>(returnVal);
+        //    }
+        //    return returnVal;
+        //}
+        //public WildlifeSpecies GetRecordEntityWildlifeSpecies<t>(DataRow dataRow) where t : WildlifeSpecies
+        //{
+        //    Dictionary<PropertyInfo, object> propertyInfos = GetPropertyValues<t>(dataRow);
+        //    var expression = (Expression<Func<WildlifeSpecies, bool>>)GetEntityExpression<t>(propertyInfos);
+        //    var returnVal = Holder.Database.WildlifeSpecies.FirstOrDefault(expression);
+
+        //    if (returnVal == null)
+        //    {
+        //        if (Holder.NewListElements.ContainsKey(typeof(t)))
+        //        {
+        //            var EnityList = Holder.NewListElements[typeof(t)].Cast<t>();
+        //            returnVal = EnityList.AsQueryable().FirstOrDefault(expression);
+        //        }
+        //    }
+
+        //    if (returnVal == null)
+        //    {
+        //        returnVal = new WildlifeSpecies();
+        //        foreach (var valKey in propertyInfos)
+        //        {
+        //            PropertyInfo pi = valKey.Key;
+        //            object val = valKey.Value;
+
+        //            pi.SetValue(returnVal, val);
+        //        }
+        //        returnVal.PlaceHolder = true;
+
+        //        Holder.Database.WildlifeSpecies.Add(returnVal);
+        //        AddNewElement<t>(returnVal);
+        //    }
+        //    return returnVal;
+        //}
+        //public AmphibianSpecies GetRecordEntityAmphibianSpecies<t>(DataRow dataRow) where t : AmphibianSpecies
+        //{
+        //    Dictionary<PropertyInfo, object> propertyInfos = GetPropertyValues<t>(dataRow);
+        //    var expression = (Expression<Func<AmphibianSpecies, bool>>)GetEntityExpression<t>(propertyInfos);
+        //    var returnVal = Holder.Database.AmphibianSpecies.FirstOrDefault(expression);
+
+        //    if (returnVal == null)
+        //    {
+        //        if (Holder.NewListElements.ContainsKey(typeof(t)))
+        //        {
+        //            var EnityList = Holder.NewListElements[typeof(t)].Cast<t>();
+        //            returnVal = EnityList.AsQueryable().FirstOrDefault(expression);
+        //        }
+        //    }
+
+        //    if (returnVal == null)
+        //    {
+        //        returnVal = new AmphibianSpecies();
+        //        foreach (var valKey in propertyInfos)
+        //        {
+        //            PropertyInfo pi = valKey.Key;
+        //            object val = valKey.Value;
+
+        //            pi.SetValue(returnVal, val);
+        //        }
+        //        returnVal.PlaceHolder = true;
+
+        //        Holder.Database.AmphibianSpecies.Add(returnVal);
+        //        AddNewElement<t>(returnVal);
+        //    }
+        //    return returnVal;
+        //}
+        //public PlantSpecies GetRecordEntityPlantSpecies<t>(DataRow dataRow) where t : PlantSpecies
+        //{
+        //    Dictionary<PropertyInfo, object> propertyInfos = GetPropertyValues<t>(dataRow);
+        //    var expression = (Expression<Func<PlantSpecies, bool>>)GetEntityExpression<t>(propertyInfos);
+        //    var returnVal = Holder.Database.PlantSpecies.FirstOrDefault(expression);
+
+        //    if (returnVal == null)
+        //    {
+        //        if (Holder.NewListElements.ContainsKey(typeof(t)))
+        //        {
+        //            var EnityList = Holder.NewListElements[typeof(t)].Cast<t>();
+        //            returnVal = EnityList.AsQueryable().FirstOrDefault(expression);
+        //        }
+        //    }
+
+        //    if (returnVal == null)
+        //    {
+        //        returnVal = new PlantSpecies();
+        //        foreach (var valKey in propertyInfos)
+        //        {
+        //            PropertyInfo pi = valKey.Key;
+        //            object val = valKey.Value;
+
+        //            pi.SetValue(returnVal, val);
+        //        }
+        //        returnVal.PlaceHolder = true;
+
+        //        Holder.Database.PlantSpecies.Add(returnVal);
+        //        AddNewElement<t>(returnVal);
+        //    }
+        //    return returnVal;
+        //}
+
     }
     public class PropertyCrosswalk : BindableBase
     {
+        public event EventHandler RefreshAvailible;
+
         public string Attribute { get; set; }
         public string DataType { get; set; }
         public PropertyType PropertyType
@@ -463,14 +591,26 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
             }
             set
             {
-                if (value != null)
-                    SetProperty(() => PropertyType, value);
+                // if (value != null)
+                SetProperty(() => PropertyType, value);
+                RefreshAvailible?.Invoke(new object(), new EventArgs());
             }
         }
-        public List<PropertyType> AvailibleFields { get; set; }
+        public List<PropertyType> AvailibleFields
+        {
+            get
+            {
+                return GetProperty(() => AvailibleFields);
+            }
+            set
+            {
+                SetProperty(() => AvailibleFields, value);
+            }
+        }
     }
     public class PropertyType : BindableBase
     {
+        public string FullClassName { get; set; }
         public string PropertyName { get; set; }
         public string TypeName { get; set; }
         public bool Required

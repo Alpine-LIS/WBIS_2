@@ -22,8 +22,9 @@
                 <dxg:GridColumn FieldName="PropertyType">
                     <dxg:GridColumn.CellTemplate>
                         <DataTemplate>
-                            <dxe:ComboBoxEdit ItemsSource="{Binding RowData.Row.AvailibleFields, UpdateSourceTrigger=PropertyChanged}" Margin="0"
-                                              SelectedItem="{Binding RowData.Row.PropertyType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ApplyItemTemplateToSelectedItem="True">
+                            <dxe:ComboBoxEdit SelectedItem="{Binding RowData.Row.PropertyType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                              ItemsSource="{Binding RowData.Row.AvailibleFields, UpdateSourceTrigger=PropertyChanged}" Margin="0"
+                                               ApplyItemTemplateToSelectedItem="True" KeyUp="ComboBoxEdit_KeyDown" AllowUpdateTwoWayBoundPropertiesOnSynchronization="False">
                                 <dxe:ComboBoxEdit.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">

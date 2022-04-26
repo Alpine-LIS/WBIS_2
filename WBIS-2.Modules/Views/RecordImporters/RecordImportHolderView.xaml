@@ -7,33 +7,50 @@
              xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" 
              xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors" 
              xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" 
-             xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+             xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core" xmlns:converters="clr-namespace:Atlas3.Controls.Converters;assembly=Atlas3.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" MaxHeight="500">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="30"/>
-        </Grid.RowDefinitions>
-        <ScrollViewer VerticalScrollBarVisibility="Auto">
-            <Grid Grid.Row="0" Name="GridContent">
-                <Border BorderBrush="Black" Width="1"/>
+        <Grid.Resources>
+            <converters:StringToInlinesConverter x:Key="stringToInlinesConverter" />
+        </Grid.Resources>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="30"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" Name="MainGrid">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <Grid Grid.Row="0" Name="GridContent">
+                        <Border BorderBrush="Black" Width="1"/>
+                    </Grid>
+                </ScrollViewer>
             </Grid>
-        </ScrollViewer>            
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width ="AUTO"/>
-                <ColumnDefinition Width ="AUTO"/>
-                <ColumnDefinition Width ="*"/>
-                <ColumnDefinition Width ="AUTO"/>
-                <ColumnDefinition Width ="AUTO"/>
-            </Grid.ColumnDefinitions>
-            
-            <Label Content="Repository Data:" Grid.Column="0"/>
-            <dxe:CheckEdit Grid.Column="1" IsChecked="{Binding RepositoryData, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-
-            <Button Grid.Column="3" Content="Save" Margin="2" Width="75" Click="Save_Click"/>
-            <Button Grid.Column="4" Content="Close" Margin="2" Width="75" Click="Close_Click"/>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width ="*"/>
+                    <ColumnDefinition Width ="AUTO"/>
+                    <ColumnDefinition Width ="AUTO"/>
+                    <ColumnDefinition Width ="AUTO"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" Content="{Binding ShapeCount, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <Button Grid.Column="1" Content="Save" Margin="2" Width="75" Click="Save_Click"/>
+                <Button Grid.Column="2" Content="Close" Margin="2" Width="75" Click="Close_Click"/>
+                <Button Grid.Column="3" Content="{Binding HelpButtonText, UpdateSourceTrigger=PropertyChanged}" Margin="2" Width="90" Command="{Binding HelpCommand}"/>
+            </Grid>
         </Grid>
+        <dx:DXExpander Grid.Row="0" Grid.Column="1" IsExpanded="{Binding IsExpanded}" x:Name="Expander"
+                       FlowDirection="LeftToRight" VerticalExpand="None" HorizontalExpand="FromLeftToRight">
+            <Border Background="Lavender" BorderBrush="Silver" BorderThickness="1" CornerRadius="8,8,3,3">
+                <StackPanel Margin="10">
+                    <TextBlock Margin="10" TextWrapping="Wrap" MinWidth="100" MaxWidth="200" x:Name="ExpanderTextBlock"
+                               Text="{Binding HelpText}" Foreground="Black" />
+                </StackPanel>
+            </Border>
+        </dx:DXExpander>
     </Grid>
 </UserControl>
