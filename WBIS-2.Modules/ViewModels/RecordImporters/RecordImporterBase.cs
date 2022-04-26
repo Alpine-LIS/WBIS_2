@@ -41,7 +41,7 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
                         if (subAtt == null) continue;
 
                         string typeName = GetDataTypeString(subProp.PropertyType);                        
-                        properties.Add(new PropertyType() { PropertyName = $"{prop.PropertyType.Name}.{subProp.Name}", TypeName = typeName, Required = ((ImportAttribute)subAtt).Required, FullClassName = prop.PropertyType.FullName });
+                        properties.Add(new PropertyType() { PropertyName = $"{prop.PropertyType.Name}.{subProp.Name}", TypeName = typeName, Required = ((ImportAttribute)subAtt).Required});
                     }
                 }
                 else
@@ -72,9 +72,40 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
 
         public ICommand SaveCommand { get; set; }
         public abstract void SaveClick();
-        public abstract void SaveClick(List<object> ExcludeIds);
-        public abstract List<object> GenerateChild();
-        public abstract object BuildAttributes(object unit, DataRow dataRow);
+        public abstract List<object> GenerateChild(string parentId);
+        /// <summary>
+        /// Maintain a list of FIDs of features that are used to generate child records. If parentless records are to be created skip these features.
+        /// </summary>
+        public abstract List<int> SkipFids { get; }
+
+        /// <summary>
+        /// Convert the feature attribute data into a new record
+        /// </summary>
+        public t BuildAttributes<t>(DataRow dataRow) where t : class
+        {
+            var record = Activator.CreateInstance<t>();
+            var attributes = PropertyCrosswalk.Where(_ => _.PropertyType != null);
+
+            foreach (var attribute in attributes)
+            {
+                PropertyInfo prop;
+                if (!attribute.PropertyType.PropertyName.Contains("."))
+                    prop = typeof(t).GetProperty(attribute.PropertyType.PropertyName);
+                else
+                {
+                    prop = typeof(t).GetProperty(attribute.PropertyType.PropertyName);
+                }
+
+                object val;
+                if (!prop.PropertyType.GetInterfaces().Contains(typeof(IInformationType)))
+                    val = ValueProcessors.GetParseValue(dataRow[attribute.Attribute], prop.PropertyType);
+                else
+                    val = GetRecordEntity(prop.PropertyType, dataRow);
+
+                prop.SetValue(record, val);
+            }
+            return record;
+        }
 
         /// <summary>
         /// Perfom checks to see if records can be imported.
@@ -354,26 +385,24 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
 
 
 
+        public object GetRecordEntity(Type propertyType, DataRow dataRow)
+        {
+            object returnVal = null;
 
+            if (propertyType == typeof(ApplicationUser))
+                returnVal = GetRecordEntity<ApplicationUser>(dataRow);
+            else if (propertyType == typeof(BirdSpecies))
+                returnVal = GetRecordEntity<BirdSpecies>(dataRow);
+            else if (propertyType == typeof(WildlifeSpecies))
+                returnVal = GetRecordEntity<WildlifeSpecies>(dataRow);
+            else if (propertyType == typeof(AmphibianSpecies))
+                returnVal = GetRecordEntity<AmphibianSpecies>(dataRow);
+            else if (propertyType == typeof(PlantSpecies))
+                returnVal = GetRecordEntity<PlantSpecies>(dataRow);
 
+            return returnVal;
+        }
 
-        //public object GetRecordEntity(Type propertyType, DataRow dataRow)
-        //{
-        //    object returnVal = null;
-
-        //    //if (propertyType == typeof(ApplicationUser))
-        //    //    returnVal = GetRecordEntityApplicationUser<ApplicationUser>(dataRow);
-        //    //else if (propertyType == typeof(BirdSpecies))
-        //    //        returnVal = GetRecordEntityBirdSpecies<BirdSpecies>(dataRow);
-        //    //else if (propertyType == typeof(WildlifeSpecies))
-        //    //    returnVal = GetRecordEntityWildlifeSpecies<WildlifeSpecies>(dataRow);
-        //    //else if (propertyType == typeof(AmphibianSpecies))
-        //    //    returnVal = GetRecordEntityAmphibianSpecies<AmphibianSpecies>(dataRow);
-        //    //else if (propertyType == typeof(PlantSpecies))
-        //    //    returnVal = GetRecordEntityPlantSpecies<PlantSpecies>(dataRow);
-
-        //    return returnVal;
-        //}
         private Dictionary<PropertyInfo, object> GetPropertyValues<t>(DataRow dataRow)
         {
             Dictionary<PropertyInfo, object> propertyInfos = new Dictionary<PropertyInfo, object>();
@@ -416,7 +445,7 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
             return default(t);
         }
 
-        public t GetRecordEntityApplicationUser<t>(DataRow dataRow) where t : class
+        public t GetRecordEntity<t>(DataRow dataRow) where t : class
         {
             Dictionary<PropertyInfo, object> propertyInfos = GetPropertyValues<t>(dataRow);
             var expression = GetEntityExpression<t>(propertyInfos);
@@ -610,7 +639,6 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
     }
     public class PropertyType : BindableBase
     {
-        public string FullClassName { get; set; }
         public string PropertyName { get; set; }
         public string TypeName { get; set; }
         public bool Required

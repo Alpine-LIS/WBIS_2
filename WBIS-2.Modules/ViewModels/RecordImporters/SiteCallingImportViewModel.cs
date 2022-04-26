@@ -12,38 +12,37 @@ using System.Diagnostics;
 using Atlas.Data;
 using System.IO;
 using System.Linq;
-using WBIS_2.Modules.Tools;
-using WBIS_2.Modules.Views.RecordImporters;
 using System.Windows.Input;
 using DevExpress.Mvvm;
+using WBIS_2.Modules.Views.RecordImporters;
+using WBIS_2.Modules.Tools;
 
 namespace WBIS_2.Modules.ViewModels.RecordImporters
 {
-    public class SiteCallingDetectionRecordImportViewModel : RecordImporterBase
+    public class SiteCallingImportViewModel : RecordImporterBase
     {
-        public SiteCallingDetectionRecordImportViewModel()
+        public SiteCallingImportViewModel()
         {
-            AddDetectionCommand = new DelegateCommand(AddDetection);
+                   AddDetectionCommand = new DelegateCommand(AddDetection);
         }
 
 
         public override List<PropertyType> AvailibleFields => GetProperties(typeof(SiteCalling));
 
-        public bool RepositoryData { get; set; } = false;
 
         public override void FileSelectClick()
         {
-            OpenFileDialog ofd = new OpenFileDialog();
+           OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "SHP|*.shp";
             ofd.Multiselect = false;
             if (!ofd.ShowDialog().Value) return;
             var tempShape = Shapefile.OpenFile(ofd.FileName);
-            if (tempShape.FeatureType != FeatureType.Point)
+            if (tempShape.FeatureType != FeatureType.Point )
             {
                 MessageBox.Show("The selected shapefile does not contain points.");
                 return;
             }
-            ImportShapefile = Shapefile.OpenFile(ofd.FileName);
+            ImportShapefile = Shapefile.OpenFile(ofd.FileName); 
         }
 
         public override IInformationType ReturnRecordId(string link)
@@ -56,18 +55,43 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
             throw new NotImplementedException();
         }
 
+        public override List<int> SkipFids => new List<int>();
         public override void SaveClick()
         {
-        }
-        public override void SaveClick(List<object> ExcludeIds)
-        {
+            if (IsSubElement) return;
+            foreach (var feat in ImportShapefile.Features)
+            {
+                if (SkipFids.Contains(feat.Fid)) continue;
+                var siteCalling = BuildAttributes<SiteCalling>(feat.DataRow);
 
+                string id = feat.DataRow[IdAttribute].ToString();
+                AddDetections(siteCalling, id);
+
+                siteCalling.Repository = repository
+
+                Holder.Database.SiteCallings.Add(siteCalling);
+            }
         }
-        public override List<object> GenerateChild()
+        public override List<object> GenerateChild(string parentId)
         {
-            return null;
+            var children = new List<object>();
+            foreach(var feat in ImportShapefile.Features)
+            {
+                if (feat.DataRow[IdAttribute].ToString() == parentId)
+                {
+                    SkipFids.Add(feat.Fid);
+                }
+            }
+            return children;
         }
 
+        private void AddDetections(SiteCalling siteCalling, string id)
+        {
+            if (DetectionImport == null) return;
+            siteCalling.SiteCallingDetections = DetectionImport.GenerateChild(id).Cast<SiteCallingDetection>().ToList();
+            foreach (var detection in siteCalling.SiteCallingDetections)
+                detection.SiteCalling = siteCalling;
+        }
 
 
         public override bool BoolSaveCheck()
@@ -88,33 +112,16 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
             return issues;
         }
 
-        SiteCallingDetectionRecordImportViewModel DetectionImport;
+        SiteCallingDetectionImportViewModel DetectionImport;
         public ICommand AddDetectionCommand { get; set; }
         public void AddDetection()
         {
             if (DetectionImport == null)
             {
-                var a = new SiteCallingDetectionRecordImportView();
-                DetectionImport = (SiteCallingDetectionRecordImportViewModel)a.DataContext;
+                var a = new SiteCallingDetectionImportView();
+                DetectionImport = (SiteCallingDetectionImportViewModel)a.DataContext;
                 Holder.AddImportControl(a);
             }
-        }
-
-        public override SiteCalling BuildAttributes(object unit, DataRow dataRow)
-        {
-            SiteCalling siteCalling = (SiteCalling)unit;
-            Type type = typeof(SiteCalling);
-
-            var attributes = PropertyCrosswalk.Where(_ => _.PropertyType != null);
-
-            foreach (var attribute in attributes)
-            {
-                var prop = type.GetProperty(attribute.PropertyType.PropertyName);
-                var val = ValueProcessors.GetParseValue(dataRow[attribute.Attribute], prop.PropertyType);
-                prop.SetValue(siteCalling, val);
-            }
-
-            return siteCalling;
         }
     }
 }

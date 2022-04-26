@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="WBIS_2.Modules.Views.RecordImporters.SiteCallingRecordImportView"
+﻿<UserControl x:Class="WBIS_2.Modules.Views.RecordImporters.SiteCallingDetectionImportView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -24,7 +24,7 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="AUTO"/>
             </Grid.ColumnDefinitions>
-            <Label Content="Site Calling:" FontWeight="Bold" FontSize="14" HorizontalAlignment="Left"/>
+            <Label Content="Site Calling Detection:" FontWeight="Bold" FontSize="14" HorizontalAlignment="Left"/>
             <Button Content="Close" Grid.Column="8" Margin="5" Command="{Binding CloseCommand}" Visibility="{Binding IsSubElementVis}"/>
         </Grid>
         
@@ -40,9 +40,7 @@
                 <ColumnDefinition Width="AUTO"/>
                 <ColumnDefinition Width="AUTO"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Content="Add Detections" Margin="2" Command="{Binding AddDetectionCommand}"/>
-            <Button Grid.Column="1" Content="Add Device Info" Margin="2"/>
-            <Button Grid.Column="2" Content="Add Tracks" Margin="2"/>
+            <Button Grid.Column="0" Content="Add User Locations" Margin="2"/>
         </Grid>
     </Grid>
 </UserControl>

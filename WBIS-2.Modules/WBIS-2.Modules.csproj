@@ -68,10 +68,10 @@
     <Compile Update="Views\RecordImporters\RecordImportHolderView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\RecordImporters\SiteCallingDetectionRecordImportView.xaml.cs">
+    <Compile Update="Views\RecordImporters\SiteCallingDetectionImportView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\RecordImporters\SiteCallingRecordImportView.xaml.cs">
+    <Compile Update="Views\RecordImporters\SiteCallingImportView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\RecordImporters\RecordImportMenu.xaml.cs">
@@ -98,11 +98,11 @@
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\RecordImporters\SiteCallingDetectionRecordImportView.xaml">
+    <Page Update="Views\RecordImporters\SiteCallingDetectionImportView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\RecordImporters\SiteCallingRecordImportView.xaml">
+    <Page Update="Views\RecordImporters\SiteCallingImportView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

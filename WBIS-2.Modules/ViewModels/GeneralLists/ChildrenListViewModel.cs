@@ -178,7 +178,7 @@ namespace WBIS_2.Modules.ViewModels
       
         public override void AddRecord()
         {
-            Views.RecordImporters.RecordImportHolderView recordImportHolderView = new Views.RecordImporters.RecordImportHolderView(new Views.RecordImporters.SiteCallingRecordImportView());
+            Views.RecordImporters.RecordImportHolderView recordImportHolderView = new Views.RecordImporters.RecordImportHolderView(new Views.RecordImporters.SiteCallingImportView());
             CustomControlWindow window = new CustomControlWindow(recordImportHolderView);
             if (window.DialogResult)
             {

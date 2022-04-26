@@ -17,14 +17,14 @@ using WBIS_2.Modules.ViewModels.RecordImporters;
 namespace WBIS_2.Modules.Views.RecordImporters
 {
     /// <summary>
-    /// Interaction logic for SiteCallingRecordImportView.xaml
+    /// Interaction logic for SiteCallingDetectionImportView.xaml
     /// </summary>
-    public partial class SiteCallingRecordImportView : UserControl
+    public partial class SiteCallingDetectionImportView : UserControl
     {
-        public SiteCallingRecordImportView()
+        public SiteCallingDetectionImportView()
         {
             InitializeComponent();
-            DataContext = new SiteCallingRecordImportViewModel();
+            DataContext = new SiteCallingDetectionImportViewModel();
         }
     }
 }
