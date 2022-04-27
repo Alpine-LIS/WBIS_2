@@ -15,7 +15,7 @@ namespace WBIS_2.DataModel
         [Required, Column("plant_species_id")]
         public Guid PlantSpeciesId { get; set; }
         public PlantSpecies PlantSpecies { get; set; }
-        [Required, Column("geometry", TypeName = "geometry(Polygon,26710)")]
+        [Column("geometry", TypeName = "geometry(Polygon,26710)")]
         public MultiPolygon Geometry { get; set; }
 
 

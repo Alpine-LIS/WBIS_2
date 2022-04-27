@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,10 @@ using WBIS_2.DataModel;
 namespace WBIS_2.DataModel.Migrations
 {
     [DbContext(typeof(WBIS2Model))]
-    partial class WBIS2ModelModelSnapshot : ModelSnapshot
+    [Migration("20220427202628_NullableBotanyConnections")]
+    partial class NullableBotanyConnections
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -495,6 +497,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnName("district_id");
 
                     b.Property<Point>("Geometry")
+                        .IsRequired()
                         .HasColumnType("geometry(Point,26710)")
                         .HasColumnName("geometry");
 
@@ -710,6 +713,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnName("flow");
 
                     b.Property<LineString>("Geometry")
+                        .IsRequired()
                         .HasColumnType("geometry(LineString,26710)")
                         .HasColumnName("geometry");
 
@@ -973,6 +977,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnName("district_id");
 
                     b.Property<Point>("Geometry")
+                        .IsRequired()
                         .HasColumnType("geometry(Point,26710)")
                         .HasColumnName("geometry");
 
@@ -1335,13 +1340,9 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("botanical_scoping_id");
 
-                    b.Property<Guid?>("BotanicalSurveyAreaId")
+                    b.Property<Guid>("BotanicalSurveyAreaId")
                         .HasColumnType("uuid")
                         .HasColumnName("botanical_survey_area_id");
-
-                    b.Property<string>("Comments")
-                        .HasColumnType("text")
-                        .HasColumnName("comments");
 
                     b.Property<DateTime>("DateAdded")
                         .HasColumnType("timestamp without time zone")
@@ -1360,6 +1361,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnName("end_time");
 
                     b.Property<LineString>("Geometry")
+                        .IsRequired()
                         .HasColumnType("geometry(LineString,26710)")
                         .HasColumnName("geometry");
 
@@ -1467,6 +1469,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnName("general_habitat");
 
                     b.Property<MultiPolygon>("Geometry")
+                        .IsRequired()
                         .HasColumnType("geometry(MultiPolygon,26710)")
                         .HasColumnName("geometry");
 
@@ -1946,6 +1949,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnName("device_time");
 
                     b.Property<Point>("Geometry")
+                        .IsRequired()
                         .HasColumnType("geometry(Point,26710)")
                         .HasColumnName("geometry");
 
@@ -2295,6 +2299,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnName("gps_tag_id");
 
                     b.Property<Point>("Geometry")
+                        .IsRequired()
                         .HasColumnType("geometry(Point,26710)")
                         .HasColumnName("geometry");
 
@@ -2817,6 +2822,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnName("end_time");
 
                     b.Property<Point>("Geometry")
+                        .IsRequired()
                         .HasColumnType("geometry(Point,26710)")
                         .HasColumnName("geometry");
 
@@ -3038,6 +3044,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnName("female_banding_pattern");
 
                     b.Property<Point>("Geometry")
+                        .IsRequired()
                         .HasColumnType("geometry(Point,26710)")
                         .HasColumnName("geometry");
 
@@ -3156,6 +3163,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnName("district_id");
 
                     b.Property<Point>("Geometry")
+                        .IsRequired()
                         .HasColumnType("geometry(Point,26710)")
                         .HasColumnName("geometry");
 
@@ -3254,6 +3262,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnName("fruiting");
 
                     b.Property<MultiPolygon>("Geometry")
+                        .IsRequired()
                         .HasColumnType("geometry(Polygon,26710)")
                         .HasColumnName("geometry");
 
@@ -3368,6 +3377,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnName("datum");
 
                     b.Property<Point>("Geometry")
+                        .IsRequired()
                         .HasColumnType("geometry(Point,26710)")
                         .HasColumnName("geometry");
 
@@ -4323,7 +4333,9 @@ namespace WBIS_2.DataModel.Migrations
 
                     b.HasOne("WBIS_2.DataModel.BotanicalSurveyArea", "BotanicalSurveyArea")
                         .WithMany("BotanicalSurvey")
-                        .HasForeignKey("BotanicalSurveyAreaId");
+                        .HasForeignKey("BotanicalSurveyAreaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WBIS_2.DataModel.District", "District")
                         .WithMany("BotanicalSurveys")

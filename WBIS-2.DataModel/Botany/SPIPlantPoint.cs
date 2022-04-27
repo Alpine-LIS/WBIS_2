@@ -14,7 +14,7 @@ namespace WBIS_2.DataModel
         [Required, Column("plant_species_id")]
         public Guid PlantSpeciesId { get; set; }    
         public PlantSpecies PlantSpecies { get; set; }
-        [Required, Column("geometry", TypeName = "geometry(Point,26710)")]
+        [Column("geometry", TypeName = "geometry(Point,26710)")]
         public Point Geometry { get; set; }
         [Column("lat")]
         public double Lat { get; set; }

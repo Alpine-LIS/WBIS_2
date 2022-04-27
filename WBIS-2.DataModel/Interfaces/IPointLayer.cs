@@ -9,7 +9,7 @@ namespace WBIS_2.DataModel
 {
     public interface IPointLayer
     {
-        [Required, Column("geometry", TypeName = "geometry(Point,26710)")]
+        [Column("geometry", TypeName = "geometry(Point,26710)")]
         public Point Geometry { get; set; }
         [Column("starting_lat")]
         public double Lat { get; set; }

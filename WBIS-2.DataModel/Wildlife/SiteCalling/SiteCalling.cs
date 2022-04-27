@@ -26,7 +26,7 @@ namespace WBIS_2.DataModel
         public string RecordType { get; set; }
 
 
-        [Required, Column("geometry", TypeName = "geometry(Point,26710)")]
+        [Column("geometry", TypeName = "geometry(Point,26710)")]
         public Point Geometry { get; set; }
         /// <summary>
         /// Starting Lat

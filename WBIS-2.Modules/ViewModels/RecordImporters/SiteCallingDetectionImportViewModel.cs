@@ -59,14 +59,6 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
         public override void SaveClick()
         {
         }
-        public override void SaveClick(List<object> ExcludeIds)
-        {
-
-        }
-        public override List<object> GenerateChild()
-        {
-            return null;
-        }
 
 
 
@@ -90,6 +82,9 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
 
         SiteCallingDetectionImportViewModel DetectionImport;
         public ICommand AddDetectionCommand { get; set; }
+
+        public override List<int> SkipFids => throw new NotImplementedException();
+
         public void AddDetection()
         {
             if (DetectionImport == null)
@@ -100,21 +95,10 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
             }
         }
 
-        public override SiteCalling BuildAttributes(object unit, DataRow dataRow)
+
+        public override List<object> GenerateChild(string parentId)
         {
-            SiteCalling siteCalling = (SiteCalling)unit;
-            Type type = typeof(SiteCalling);
-
-            var attributes = PropertyCrosswalk.Where(_ => _.PropertyType != null);
-
-            foreach (var attribute in attributes)
-            {
-                var prop = type.GetProperty(attribute.PropertyType.PropertyName);
-                var val = ValueProcessors.GetParseValue(dataRow[attribute.Attribute], prop.PropertyType);
-                prop.SetValue(siteCalling, val);
-            }
-
-            return siteCalling;
+            throw new NotImplementedException();
         }
     }
 }

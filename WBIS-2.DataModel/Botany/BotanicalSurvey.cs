@@ -13,12 +13,12 @@ namespace WBIS_2.DataModel
         public Guid Guid { get; set; }
 
 
-        [Required, Column("botanical_survey_area_id")]
-        public Guid BotanicalSurveyAreaId { get; set; }
+        [Column("botanical_survey_area_id")]
+        public Guid? BotanicalSurveyAreaId { get; set; }
         public BotanicalSurveyArea BotanicalSurveyArea { get; set; }
 
         [Column("botanical_scoping_id")]
-        public Guid BotanicalScopingId { get; set; }
+        public Guid? BotanicalScopingId { get; set; }
         public BotanicalScoping BotanicalScoping { get; set; }
 
         public ICollection<BotanicalElement> BotanicalElement { get; set; }
@@ -52,7 +52,8 @@ namespace WBIS_2.DataModel
         [Column("repository")]
         public bool Repository { get; set; }
 
-
+        [Column("comments")]
+        public string Comments { get; set; }
 
 
 
@@ -67,7 +68,7 @@ namespace WBIS_2.DataModel
 
 
 
-        [Required, Column("geometry", TypeName = "geometry(LineString,26710)")]
+        [Column("geometry", TypeName = "geometry(LineString,26710)")]
         public LineString Geometry { get; set; }
 
 
@@ -90,7 +91,7 @@ namespace WBIS_2.DataModel
 
 
         [Column("thp_area_id")]
-        public Guid THP_AreaId { get; set; }
+        public Guid? THP_AreaId { get; set; }
         public THP_Area THP_Area { get; set; }
 
 

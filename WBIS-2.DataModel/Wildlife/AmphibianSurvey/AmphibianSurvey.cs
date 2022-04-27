@@ -101,7 +101,7 @@ namespace WBIS_2.DataModel
 
 
 
-        [Required, Column("geometry", TypeName = "geometry(LineString,26710)")]
+        [Column("geometry", TypeName = "geometry(LineString,26710)")]
         public LineString Geometry { get; set; }
 
 

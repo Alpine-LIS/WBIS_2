@@ -67,7 +67,7 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
                 string id = feat.DataRow[IdAttribute].ToString();
                 AddDetections(siteCalling, id);
 
-                siteCalling.Repository = repository
+                //siteCalling.Repository = repository
 
                 Holder.Database.SiteCallings.Add(siteCalling);
             }

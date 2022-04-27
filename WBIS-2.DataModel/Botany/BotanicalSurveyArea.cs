@@ -20,11 +20,11 @@ namespace WBIS_2.DataModel
 
 
         [Column("thp_area_id")]
-        public Guid THP_AreaId { get; set; }
+        public Guid? THP_AreaId { get; set; }
         public THP_Area THP_Area { get; set; }
 
         [Column("botanical_scoping_id")]
-        public Guid BotanicalScopingId { get; set; }
+        public Guid? BotanicalScopingId { get; set; }
         public BotanicalScoping BotanicalScoping { get; set; }
 
 
@@ -90,7 +90,7 @@ namespace WBIS_2.DataModel
         public ICollection<ApplicationUser> ActiveUsers { get; set; }
 
 
-        [Required, Column("geometry", TypeName = "geometry(MultiPolygon,26710)")]
+        [Column("geometry", TypeName = "geometry(MultiPolygon,26710)")]
         public MultiPolygon Geometry { get; set; }
 
 

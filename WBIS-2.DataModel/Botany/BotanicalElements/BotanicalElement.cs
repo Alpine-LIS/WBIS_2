@@ -20,7 +20,7 @@ namespace WBIS_2.DataModel
 
 
         [Required, Column("botanical_scoping_id")]
-        public Guid BotanicalScopingId { get; set; }
+        public Guid? BotanicalScopingId { get; set; }
         public BotanicalScoping BotanicalScoping { get; set; }
 
         [Required, Column("botanical_survey_area_id")]
@@ -100,7 +100,7 @@ namespace WBIS_2.DataModel
         public Hex160 Hex160 { get; set; }
 
 
-        [Required, Column("geometry", TypeName = "geometry(Point,26710)")]
+        [Column("geometry", TypeName = "geometry(Point,26710)")]
         public Point Geometry { get; set; }
         [Column("lat")]
         public double Lat { get; set; }
