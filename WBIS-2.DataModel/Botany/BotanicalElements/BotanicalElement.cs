@@ -19,16 +19,16 @@ namespace WBIS_2.DataModel
 
 
 
-        [Required, Column("botanical_scoping_id")]
+        [ Column("botanical_scoping_id")]
         public Guid? BotanicalScopingId { get; set; }
         public BotanicalScoping BotanicalScoping { get; set; }
 
-        [Required, Column("botanical_survey_area_id")]
-        public Guid BotanicalSurveyAreaId { get; set; }
+        [Column("botanical_survey_area_id")]
+        public Guid? BotanicalSurveyAreaId { get; set; }
         public BotanicalSurveyArea BotanicalSurveyArea { get; set; }
 
-        [Required, Column("botanical_survey_id")]
-        public Guid BotanicalSurveyId { get; set; }
+        [Column("botanical_survey_id")]
+        public Guid? BotanicalSurveyId { get; set; }
         public BotanicalSurvey BotanicalSurvey { get; set; }
 
         //[Column("botanical_point_of_interest_id")]
@@ -76,10 +76,7 @@ namespace WBIS_2.DataModel
 
 
 
-        [Required, Column("date_time")]
-        public DateTime DateTime { get; set; }       
-        [Column("comments")]
-        public string Comments { get; set; }
+       
 
 
 

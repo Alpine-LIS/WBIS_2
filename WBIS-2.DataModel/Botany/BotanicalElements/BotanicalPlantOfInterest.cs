@@ -23,6 +23,10 @@ namespace WBIS_2.DataModel
         public PlantSpecies PlantSpecies { get; set; }
 
 
+
+        [Column("tentative_identification")]
+        public bool TentativeIdentification { get; set; } = true;
+
         [Column("species_found")]
         public bool SpeciesFound { get; set; } = false;
         [Column("species_found_text")]
@@ -61,6 +65,11 @@ namespace WBIS_2.DataModel
         public string Disturbances { get; set; }
         [Column("threats")]
         public string Threats { get; set; }
-       
+
+        [Required, Column("date_time")]
+        public DateTime DateTime { get; set; }
+        [Column("comments")]
+        public string Comments { get; set; }
+
     }
 }

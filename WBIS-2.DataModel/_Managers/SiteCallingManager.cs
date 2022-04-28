@@ -18,6 +18,8 @@ namespace WBIS_2.DataModel
             { return new IInformationType[] { new SiteCallingDetection() }; }
         }
 
+        public List<Type> Inclusions = new List<Type>() { typeof(District)};
+
         public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
         {
             IQueryable<SiteCalling> returnVal = model.Set<SiteCalling>()
@@ -28,6 +30,12 @@ namespace WBIS_2.DataModel
                 .Include(_ => _.ProtectionZone)
                 .Include(_ => _.District)
                 .Include(_ => _.Hex160);
+
+            foreach(var item in Inclusions)
+            {
+                returnVal.Include(_ => _.GetType().GetProperty(item.Name));
+            }
+
             var a = (Expression<Func<SiteCalling, bool>>)GetParentWhere(Query, QueryType);
 
             if (QueryType == typeof(Watershed))

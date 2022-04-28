@@ -60,6 +60,13 @@ namespace WBIS_2
             Manager.Register(Regions.NavigationAreas, new Module(AppModules.ModuleQuad75s, () => new NavigationItem("Quad75s")));
             Manager.Register(Regions.NavigationAreas, new Module(AppModules.ModuleHex160s, () => new NavigationItem("Hex160s")));
 
+
+            Manager.Register(Regions.NavigationBotany, new Module(AppModules.ModuleBotanicalScoping, () => new NavigationItem("Botanical Scopings")));
+            Manager.Register(Regions.NavigationBotany, new Module(AppModules.ModuleBotanicalSurveyArea, () => new NavigationItem("Botanical Survey Areas")));
+            Manager.Register(Regions.NavigationBotany, new Module(AppModules.ModuleBotanicalSurvey, () => new NavigationItem("Botanical Surveys")));
+            Manager.Register(Regions.NavigationBotany, new Module(AppModules.ModuleBotanicalSurveyElement, () => new NavigationItem("Botanical Survey Elements")));
+
+
             //Manager.Register(Regions.NavigationCalifornia, new Module(AppModules.ModuleCnddbOccurrence, () => new NavigationItem("CnddbOccurrence")));
             //Manager.Register(Regions.NavigationCalifornia, new Module(AppModules.ModuleCdfwSpottedOwl, () => new NavigationItem("CdfwSpottedOwl")));
             //Manager.Register(Regions.Documents, new Module(AppModules.ModuleUser,
@@ -75,6 +82,15 @@ namespace WBIS_2
                 () => ParentListViewModel.Create(new Hex160()), typeof(ParentListView)));
             Manager.Register(Regions.Documents, new Module(AppModules.ModuleQuad75s,
                 () => ParentListViewModel.Create(new Quad75()), typeof(ParentListView)));
+
+            Manager.Register(Regions.Documents, new Module(AppModules.ModuleBotanicalScoping,
+                () => ParentListViewModel.Create(new BotanicalScoping()), typeof(ParentListView)));
+            Manager.Register(Regions.Documents, new Module(AppModules.ModuleBotanicalSurveyArea,
+                () => ParentListViewModel.Create(new BotanicalSurveyArea()), typeof(ParentListView)));
+            Manager.Register(Regions.Documents, new Module(AppModules.ModuleBotanicalSurvey,
+                () => ParentListViewModel.Create(new BotanicalSurvey()), typeof(ParentListView)));
+            Manager.Register(Regions.Documents, new Module(AppModules.ModuleBotanicalSurveyElement,
+                () => ParentListViewModel.Create(new BotanicalElement()), typeof(ParentListView)));
 
             //Manager.Register(Regions.Documents, new Module(AppModules.ModuleCnddbOccurrence,
             //   () => CnddbsListViewModel.Create("CnddbOccurrence", "CnddbOccurrence"), typeof(CnddbsListView)));
@@ -122,6 +138,11 @@ namespace WBIS_2
             Manager.Inject(Regions.NavigationAreas, AppModules.ModuleWatersheds);
             Manager.Inject(Regions.NavigationAreas, AppModules.ModuleQuad75s);
             Manager.Inject(Regions.NavigationAreas, AppModules.ModuleHex160s);
+
+            Manager.Inject(Regions.NavigationBotany, AppModules.ModuleBotanicalScoping);
+            Manager.Inject(Regions.NavigationBotany, AppModules.ModuleBotanicalSurveyArea);
+            Manager.Inject(Regions.NavigationBotany, AppModules.ModuleBotanicalSurvey);
+            Manager.Inject(Regions.NavigationBotany, AppModules.ModuleBotanicalSurveyElement);
 
             //Manager.Inject(Regions.NavigationCalifornia, AppModules.ModuleCnddbOccurrence);
             //Manager.Inject(Regions.NavigationCalifornia, AppModules.ModuleCdfwSpottedOwl);

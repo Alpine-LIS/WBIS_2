@@ -23,5 +23,10 @@ namespace WBIS_2.DataModel
         [Column("plant_species_id")]
         public Guid PlantSpeciesId { get; set; }
         public PlantSpecies PlantSpecies { get; set; }
+
+        [Required, Column("date_time")]
+        public DateTime DateTime { get; set; }
+        [Column("comments")]
+        public string Comments { get; set; }
     }
 }

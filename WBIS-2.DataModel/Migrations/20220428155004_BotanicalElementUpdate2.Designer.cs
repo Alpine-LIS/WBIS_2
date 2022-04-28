@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,10 @@ using WBIS_2.DataModel;
 namespace WBIS_2.DataModel.Migrations
 {
     [DbContext(typeof(WBIS2Model))]
-    partial class WBIS2ModelModelSnapshot : ModelSnapshot
+    [Migration("20220428155004_BotanicalElementUpdate2")]
+    partial class BotanicalElementUpdate2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -936,6 +938,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnName("guid");
 
                     b.Property<Guid?>("BotanicalScopingId")
+                        .IsRequired()
                         .HasColumnType("uuid")
                         .HasColumnName("botanical_scoping_id");
 
@@ -4176,7 +4179,9 @@ namespace WBIS_2.DataModel.Migrations
                 {
                     b.HasOne("WBIS_2.DataModel.BotanicalScoping", "BotanicalScoping")
                         .WithMany("BotanicalElements")
-                        .HasForeignKey("BotanicalScopingId");
+                        .HasForeignKey("BotanicalScopingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WBIS_2.DataModel.BotanicalSurveyArea", "BotanicalSurveyArea")
                         .WithMany("BotanicalElement")

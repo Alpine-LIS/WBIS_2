@@ -45,5 +45,10 @@ namespace WBIS_2.DataModel
         public string Gradient { get; set; }
         [Column("radius")]
         public double Radius { get; set; }
+
+        [Required, Column("date_time")]
+        public DateTime DateTime { get; set; }
+        [Column("comments")]
+        public string Comments { get; set; }
     }
 }

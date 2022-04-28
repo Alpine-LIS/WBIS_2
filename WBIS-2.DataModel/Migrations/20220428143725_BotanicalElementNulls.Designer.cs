@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,10 @@ using WBIS_2.DataModel;
 namespace WBIS_2.DataModel.Migrations
 {
     [DbContext(typeof(WBIS2Model))]
-    partial class WBIS2ModelModelSnapshot : ModelSnapshot
+    [Migration("20220428143725_BotanicalElementNulls")]
+    partial class BotanicalElementNulls
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -936,6 +938,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnName("guid");
 
                     b.Property<Guid?>("BotanicalScopingId")
+                        .IsRequired()
                         .HasColumnType("uuid")
                         .HasColumnName("botanical_scoping_id");
 
@@ -947,6 +950,10 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("botanical_survey_id");
 
+                    b.Property<string>("Comments")
+                        .HasColumnType("text")
+                        .HasColumnName("comments");
+
                     b.Property<DateTime>("DateAdded")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("date_added");
@@ -954,6 +961,10 @@ namespace WBIS_2.DataModel.Migrations
                     b.Property<DateTime>("DateModified")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("date_modified");
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("date_time");
 
                     b.Property<string>("Datum")
                         .HasColumnType("text")
@@ -1036,14 +1047,6 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("guid");
 
-                    b.Property<string>("Comments")
-                        .HasColumnType("text")
-                        .HasColumnName("comments");
-
-                    b.Property<DateTime>("DateTime")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("date_time");
-
                     b.Property<Guid>("PlantSpeciesId")
                         .HasColumnType("uuid")
                         .HasColumnName("plant_species_id");
@@ -1061,14 +1064,6 @@ namespace WBIS_2.DataModel.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("guid");
-
-                    b.Property<string>("Comments")
-                        .HasColumnType("text")
-                        .HasColumnName("comments");
-
-                    b.Property<DateTime>("DateTime")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("date_time");
 
                     b.Property<string>("Disturbances")
                         .HasColumnType("text")
@@ -1130,10 +1125,6 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("subsequent_visit");
 
-                    b.Property<bool>("TentativeIdentification")
-                        .HasColumnType("boolean")
-                        .HasColumnName("tentative_identification");
-
                     b.Property<string>("Threats")
                         .HasColumnType("text")
                         .HasColumnName("threats");
@@ -1155,14 +1146,6 @@ namespace WBIS_2.DataModel.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("guid");
-
-                    b.Property<string>("Comments")
-                        .HasColumnType("text")
-                        .HasColumnName("comments");
-
-                    b.Property<DateTime>("DateTime")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("date_time");
 
                     b.Property<string>("Gradient")
                         .HasColumnType("text")
@@ -4176,7 +4159,9 @@ namespace WBIS_2.DataModel.Migrations
                 {
                     b.HasOne("WBIS_2.DataModel.BotanicalScoping", "BotanicalScoping")
                         .WithMany("BotanicalElements")
-                        .HasForeignKey("BotanicalScopingId");
+                        .HasForeignKey("BotanicalScopingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WBIS_2.DataModel.BotanicalSurveyArea", "BotanicalSurveyArea")
                         .WithMany("BotanicalElement")
