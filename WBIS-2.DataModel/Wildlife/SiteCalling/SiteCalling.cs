@@ -17,9 +17,11 @@ namespace WBIS_2.DataModel
         [Column("user_id")]
         public Guid? UserId { get; set; }
         [ImportAttribute(Required = true)]
+        [ListInfo(AutoInclude = true)]
         public ApplicationUser User { get; set; }
         [Column("user_modified_id")]
         public Guid? UserModifiedId { get; set; }
+        [ListInfo(AutoInclude = true)]
         public ApplicationUser UserModified { get; set; }
 
         [Required, Column("record_type"), ImportAttribute(Required = true)]
@@ -54,7 +56,7 @@ namespace WBIS_2.DataModel
         public string SurveyType2 { get; set; }
         [Required, Column("bird_species_survey_id")]
         public Guid SurveySpeciesId { get; set; }
-        [ImportAttribute(Required = true)]
+        [ImportAttribute(Required = true), ListInfo(AutoInclude = true)]
         public BirdSpecies SurveySpecies { get; set; }
        
        //site type is survey type1
@@ -72,7 +74,7 @@ namespace WBIS_2.DataModel
         //Initially gotten by the hex pz. Can be edited. Must be retained when pz changes. 
         [Column("protection_zone_id")]
         public Guid? ProtectionZoneID { get; set; }
-        [ImportAttribute]
+        [ImportAttribute, ListInfo(AutoInclude = true)]
         public ProtectionZone ProtectionZone { get; set; }
 
 
@@ -162,6 +164,7 @@ namespace WBIS_2.DataModel
 
         [Column("district_id")]
         public Guid? DistrictId { get; set; }
+        [ListInfo(AutoInclude = true)]
         public District District { get; set; }
         [Column("watershed_id")]
         public Guid? WatershedId { get; set; }
@@ -171,6 +174,7 @@ namespace WBIS_2.DataModel
         public Quad75 Quad75 { get; set; }
         [Column("hex160_id")]
         public Guid? Hex160Id { get; set; }
+        [ListInfo(AutoInclude = true)]
         public Hex160 Hex160 { get; set; }
 
 
@@ -183,6 +187,6 @@ namespace WBIS_2.DataModel
 
 
         [NotMapped, Display(Order = -1)]
-        public IInfoTypeManager Manager { get { return new SiteCallingManager(); } }
+        public IInfoTypeManager Manager { get { return new InformationTypeManager<SiteCalling>(); } }
     }
 }

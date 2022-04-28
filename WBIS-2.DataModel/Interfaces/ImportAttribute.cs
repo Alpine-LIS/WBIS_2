@@ -25,4 +25,9 @@ namespace WBIS_2.DataModel
         //    return AcceptableChoices.Contains(val);
         //}
     }
+    public class ListInfo : Attribute
+    {
+        public bool AutoInclude { get; set; } = false;
+        public bool DisplayField { get; set; } = false;
+    }
 }
