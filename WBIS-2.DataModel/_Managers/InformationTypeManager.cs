@@ -50,57 +50,89 @@ namespace WBIS_2.DataModel
             if (!AutoIncludes.Contains(queryProperty))
                 returnVal = returnVal.Include($"{queryProperty.Name}");
 
-
-            //foreach (var item in Inclusions)
-            //{
-            //    returnVal.Include(_ => _.GetType().GetProperty(item.Name));
-            //}
-
-            var a = (Expression<Func<t, bool>>)GetParentWhere(Query, QueryType);
-
-            //if (QueryType == typeof(Watershed) qType)
-            //    returnVal = returnVal.Include(_ => _.qType.).Where(a);
-            //else if (QueryType == typeof(Quad75))
-            //    returnVal = returnVal.Include(_ => _.Quad75).Where(a);
+            var info = this.GetType().GetMethod(nameof(GetParentWhere2));
+            var genInfo = info.MakeGenericMethod(QueryType);
+            var a = (Expression<Func<t, bool>>)genInfo.Invoke(this, new object[] { Query.ToList() });
 
             return  returnVal.Where(a);
         }
-        public Expression GetParentWhere(object[] Query, Type QueryType)
+        public Expression GetParentWhere2<z>(List<object> Query) where z : class
         {
-            //https://stackoverflow.com/questions/8625/generic-type-conversion-from-string
-
             Expression<Func<t, bool>> a;
+            PropertyInfo queryProperty = ParentChildPropertyProperty(typeof(z));
 
-            ICollection<t> yes;
+            var p = Query.GetType().GetMethods();
 
-            PropertyInfo queryProperty = ParentChildPropertyProperty(QueryType);
-            if (!queryProperty.Name.Contains("ICollection"))
-                a = _ => Query.Contains(queryProperty.GetValue(_));
-            else if (queryProperty.Name.Contains("ICollection"))
+            if (!queryProperty.PropertyType.Name.Contains("ICollection"))
             {
-                a = _ => ((dynamic)queryProperty.GetValue(_)).Any(a => Query.Contains(queryProperty.GetValue(a)));
+                var parameterExp = Expression.Parameter(typeof(t), "type");
+                var propertyExp = Expression.Property(parameterExp, queryProperty);
+                MethodInfo method = Query.GetType().GetMethod("Contains", new[] { typeof(z) });
+                var someValue = Expression.Constant(Query);
+                var containsMethodExp = Expression.Call(someValue, method, propertyExp);
+
+                a = Expression.Lambda<Func<t, bool>>(containsMethodExp, parameterExp);
             }
-                
+            else if (queryProperty.PropertyType.Name.Contains("ICollection"))
+            {
+                var parameterExp = Expression.Parameter(typeof(t), "type");
+                var propertyExp = Expression.Property(parameterExp, queryProperty);
+                var someValue = Expression.Constant(Query.Cast<District>().ToList());
+
+                MethodInfo method = typeof(Enumerable).GetMethods()
+                    .First(m => m.Name == "Intersect")
+                    .MakeGenericMethod(typeof(District));
+
+                var containsMethodExp = Expression.Call(method, propertyExp, someValue);
+
+                MethodInfo method2 = typeof(Enumerable).GetMethods()
+                    .First(m => m.Name == "Count")
+                    .MakeGenericMethod(typeof(District));
+                var counter = Expression.Call(method2, containsMethodExp);
+
+                //MethodInfo method3 = typeof(int).GetMethod("Equals", new[] { typeof(int) });
+                //var zero = Expression.Constant(0);
+                //var bb = Expression.Call(counter, method3, zero);
+                var bb = Expression.GreaterThan(counter, Expression.Constant(0));
+                a = Expression.Lambda<Func<t, bool>>(bb, parameterExp);
+
+                //var parameterExp = Expression.Parameter(typeof(t), "type");
+                //var propertyExp = Expression.Property(parameterExp, queryProperty);
+
+                //MethodInfo method = typeof(Enumerable).GetMethods(BindingFlags.Static | BindingFlags.Public)
+                //        .First(m => m.Name == "Intersect");
+
+                //var someValue = Expression.Constant(Query.Cast<z>());
+
+                //var containsMethodExp = Expression.Call(method.MakeGenericMethod(typeof(z)),someValue , propertyExp);
+                //MethodInfo method2 = typeof(Enumerable).GetMethods(BindingFlags.Static | BindingFlags.Public)
+                //        .First(m => m.Name == "Count");
+                //var counter = Expression.Call(method2.MakeGenericMethod(typeof(z)), containsMethodExp);
+
+                //var zero = Expression.Constant(0);
+                //MethodInfo method3 = typeof(int).GetMethod("Equals", new[] { typeof(int) });
+                //var bb = Expression.Call(counter, method3, zero);
+                //a = Expression.Lambda<Func<t, bool>>(bb, parameterExp);
+            }
             else
-                //if (QueryType == typeof(District))
-                //    a = _ => _.Hex160.Districts.Any(d => Query.Cast<District>().Contains(d));
-                //else if (QueryType == typeof(Watershed))
-                //    a = _ => _.Hex160.Watersheds.Any(d => Query.Cast<Watershed>().Contains(d));
-                //else if (QueryType == typeof(Quad75))
-                //    a = _ => _.Hex160.Quad75s.Any(d => Query.Cast<Quad75>().Contains(d));
-                //else if (QueryType == typeof(Hex160))
-                //    a = _ => Query.Cast<Hex160>().Contains(_.Hex160);
-                //else
                 a = _ => Query.Contains(_);
             return a;
         }
 
         public PropertyInfo ParentChildPropertyProperty(Type type)
         {
+            var q = typeof(t).GetProperties();
             PropertyInfo propertyInfo = typeof(t).GetProperties().FirstOrDefault(_ => _.PropertyType == type);
             if (propertyInfo == null)
-                propertyInfo = typeof(t).GetProperties().First(_ => _.PropertyType.FullName.Contains(type.Name) && _.PropertyType.Name.Contains("ICollection"));
+                propertyInfo = typeof(t).GetProperties().First(_ => _.PropertyType.FullName.Contains(type.Name) && _.PropertyType.FullName.Contains("ICollection"));
             return propertyInfo;
+        }
+
+        public Expression GetParentWhere(object[] Query, Type QueryType)
+        {
+            throw new NotImplementedException();
+            List<object> result = new List<object>();
+            result.Intersect(result).Any();
         }
 
         public List<KeyValuePair<string, string>> DisplayFields

@@ -68,6 +68,7 @@ namespace WBIS_2.DataModel
 
 
 
+        [ListInfo(AutoInclude = true)]
         public ICollection<District> Districts { get; set; }
         public ICollection<Watershed> Watersheds { get; set; }
         public ICollection<Quad75> Quad75s { get; set; }
@@ -77,6 +78,6 @@ namespace WBIS_2.DataModel
 
 
         [NotMapped, Display(Order = -1)]
-        public IInfoTypeManager Manager { get { return new BotanicvalScopingManager(); } }
+        public IInfoTypeManager Manager { get { return new InformationTypeManager<BotanicalScoping>(); } }
     }
 }

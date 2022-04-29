@@ -19,6 +19,10 @@ namespace WBIS_2.DataModel
         public BotanicalElement BotanicalElement { get; set; }
 
 
+        [Column("botanical_plant_of_interest_id")]
+        public Guid? BotanicalPlantOfInterestId { get; set; }
+        public BotanicalPlantOfInterest BotanicalPlantOfInterest { get;set;}
+
 
         [Column("plant_species_id")]
         public Guid PlantSpeciesId { get; set; }

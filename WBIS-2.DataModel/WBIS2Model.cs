@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -87,6 +88,7 @@ namespace WBIS_2.DataModel
             optionsBuilder.EnableSensitiveDataLogging(true)
                 .UseNpgsql(GetRDSConnectionString(),
                 o => { o.UseNetTopologySuite(); o.MaxBatchSize(25); })
+                .LogTo(message => Debug.WriteLine(message))
                 .EnableDetailedErrors();
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         }

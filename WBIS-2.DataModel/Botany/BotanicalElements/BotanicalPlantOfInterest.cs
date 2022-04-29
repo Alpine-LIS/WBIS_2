@@ -71,5 +71,8 @@ namespace WBIS_2.DataModel
         [Column("comments")]
         public string Comments { get; set; }
 
+
+        public ICollection<BotanicalPlantList> AssociatedPlants { get; set; }
+
     }
 }
