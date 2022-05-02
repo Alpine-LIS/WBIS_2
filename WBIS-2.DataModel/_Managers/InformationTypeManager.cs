@@ -36,6 +36,7 @@ namespace WBIS_2.DataModel
 
         public IEnumerable<PropertyInfo> ListInfoProperties => typeof(InfoType).GetProperties().Where(_ => _.GetCustomAttribute(typeof(ListInfo)) != null);
         public IEnumerable<PropertyInfo> AutoIncludes => ListInfoProperties.Where(_ => ((ListInfo)_.GetCustomAttribute(typeof(ListInfo))).AutoInclude);
+        public IEnumerable<PropertyInfo> DisplayFields => ListInfoProperties.Where(_ => ((ListInfo)_.GetCustomAttribute(typeof(ListInfo))).DisplayField);
         //public IEnumerable<PropertyInfo> DisplayFields => null;
 
 
@@ -62,7 +63,7 @@ namespace WBIS_2.DataModel
 
 
 
-        public Expression GetParentWhere2<z>(List<object> Query, PropertyInfo queryProperty) where z : class
+        public Expression GetParentWhere<z>(List<object> Query, PropertyInfo queryProperty) where z : class
         {
             Expression<Func<InfoType, bool>> a;
             var parameterExp = Expression.Parameter(typeof(InfoType), "type");
@@ -98,14 +99,6 @@ namespace WBIS_2.DataModel
             if (propertyInfo == null)
                 propertyInfo = typeof(InfoType).GetProperties().First(_ => _.PropertyType.FullName.Contains(type.Name) && _.PropertyType.FullName.Contains("ICollection"));
             return propertyInfo;
-        }
-
-        public List<KeyValuePair<string, string>> DisplayFields
-        {
-            get
-            {
-                return new List<KeyValuePair<string, string>>();
-            }
         }
 
         public bool ImportRecords => false;
