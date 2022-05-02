@@ -9,12 +9,12 @@ using System.Reflection;
 
 namespace WBIS_2.DataModel
 {
-    public class InformationTypeManager<t> : IInfoTypeManager, IRecordOptions where t : class
+    public class InformationTypeManager<InfoType> : IInfoTypeManager, IRecordOptions where InfoType : class
     {
         public string DisplayName => GetDisplayName();
         private string GetDisplayName()
         {
-            string initial = typeof(t).Name;
+            string initial = typeof(InfoType).Name;
             string returnVal = initial.First().ToString();
 
             for (int i = 1; i < initial.Length - 1; i++)
@@ -34,37 +34,38 @@ namespace WBIS_2.DataModel
             { return new IInformationType[0]; }
         }
 
-        public IEnumerable<PropertyInfo> ListInfoProperties => typeof(t).GetProperties().Where(_ => _.GetCustomAttribute(typeof(ListInfo)) != null);
+        public IEnumerable<PropertyInfo> ListInfoProperties => typeof(InfoType).GetProperties().Where(_ => _.GetCustomAttribute(typeof(ListInfo)) != null);
         public IEnumerable<PropertyInfo> AutoIncludes => ListInfoProperties.Where(_ => ((ListInfo)_.GetCustomAttribute(typeof(ListInfo))).AutoInclude);
         //public IEnumerable<PropertyInfo> DisplayFields => null;
 
 
         public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
         {
-            IQueryable<t> returnVal = model.Set<t>()
+            IQueryable<InfoType> returnVal = model.Set<InfoType>()
                 .AsNoTracking();
+            
+            PropertyInfo queryProperty = ParentChildPropertyProperty(QueryType);
 
             foreach (var include in AutoIncludes)
                 returnVal = returnVal.Include($"{include.Name}");
 
-            PropertyInfo queryProperty = ParentChildPropertyProperty(QueryType);
             if (!AutoIncludes.Contains(queryProperty))
                 returnVal = returnVal.Include($"{queryProperty.Name}");
 
             var info = this.GetType().GetMethod(nameof(GetParentWhere2));
             var genInfo = info.MakeGenericMethod(QueryType);
-            var a = (Expression<Func<t, bool>>)genInfo.Invoke(this, new object[] { Query.ToList() });
+            var a = (Expression<Func<InfoType, bool>>)genInfo
+                .Invoke(this, new object[] { Query.ToList(), queryProperty });
 
             return  returnVal.Where(a).ToList().AsQueryable();
         }
 
 
 
-        public Expression GetParentWhere2<z>(List<object> Query) where z : class
+        public Expression GetParentWhere2<z>(List<object> Query, PropertyInfo queryProperty) where z : class
         {
-            Expression<Func<t, bool>> a;
-            PropertyInfo queryProperty = ParentChildPropertyProperty(typeof(z));
-            var parameterExp = Expression.Parameter(typeof(t), "type");
+            Expression<Func<InfoType, bool>> a;
+            var parameterExp = Expression.Parameter(typeof(InfoType), "type");
             var propertyExp = Expression.Property(parameterExp, queryProperty);
 
             if (!queryProperty.PropertyType.Name.Contains("ICollection"))
@@ -73,7 +74,7 @@ namespace WBIS_2.DataModel
                 var someValue = Expression.Constant(Query);
                 var containsMethodExp = Expression.Call(someValue, method, propertyExp);
 
-                a = Expression.Lambda<Func<t, bool>>(containsMethodExp, parameterExp);
+                a = Expression.Lambda<Func<InfoType, bool>>(containsMethodExp, parameterExp);
             }
             else if (queryProperty.PropertyType.Name.Contains("ICollection"))
             {                                 
@@ -83,7 +84,7 @@ namespace WBIS_2.DataModel
                 var body = Expression.Call(typeof(Enumerable), "Any", new[] { typeof(z) },
                     propertyExp, predicate);
 
-                a = Expression.Lambda<Func<t, bool>>(body, parameterExp);
+                a = Expression.Lambda<Func<InfoType, bool>>(body, parameterExp);
             }
             else
                 a = _ => Query.Contains(_);
@@ -92,18 +93,11 @@ namespace WBIS_2.DataModel
 
         public PropertyInfo ParentChildPropertyProperty(Type type)
         {
-            var q = typeof(t).GetProperties();
-            PropertyInfo propertyInfo = typeof(t).GetProperties().FirstOrDefault(_ => _.PropertyType == type);
+            var q = typeof(InfoType).GetProperties();
+            PropertyInfo propertyInfo = typeof(InfoType).GetProperties().FirstOrDefault(_ => _.PropertyType == type);
             if (propertyInfo == null)
-                propertyInfo = typeof(t).GetProperties().First(_ => _.PropertyType.FullName.Contains(type.Name) && _.PropertyType.FullName.Contains("ICollection"));
+                propertyInfo = typeof(InfoType).GetProperties().First(_ => _.PropertyType.FullName.Contains(type.Name) && _.PropertyType.FullName.Contains("ICollection"));
             return propertyInfo;
-        }
-
-        public Expression GetParentWhere(object[] Query, Type QueryType)
-        {
-            throw new NotImplementedException();
-            List<object> result = new List<object>();
-            result.Intersect(result).Any();
         }
 
         public List<KeyValuePair<string, string>> DisplayFields
