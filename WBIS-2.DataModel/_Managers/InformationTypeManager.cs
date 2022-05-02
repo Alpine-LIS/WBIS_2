@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -54,19 +55,20 @@ namespace WBIS_2.DataModel
             var genInfo = info.MakeGenericMethod(QueryType);
             var a = (Expression<Func<t, bool>>)genInfo.Invoke(this, new object[] { Query.ToList() });
 
-            return  returnVal.Where(a);
+            return  returnVal.Where(a).ToList().AsQueryable();
         }
+
+
+
         public Expression GetParentWhere2<z>(List<object> Query) where z : class
         {
             Expression<Func<t, bool>> a;
             PropertyInfo queryProperty = ParentChildPropertyProperty(typeof(z));
-
-            var p = Query.GetType().GetMethods();
+            var parameterExp = Expression.Parameter(typeof(t), "type");
+            var propertyExp = Expression.Property(parameterExp, queryProperty);
 
             if (!queryProperty.PropertyType.Name.Contains("ICollection"))
             {
-                var parameterExp = Expression.Parameter(typeof(t), "type");
-                var propertyExp = Expression.Property(parameterExp, queryProperty);
                 MethodInfo method = Query.GetType().GetMethod("Contains", new[] { typeof(z) });
                 var someValue = Expression.Constant(Query);
                 var containsMethodExp = Expression.Call(someValue, method, propertyExp);
@@ -74,45 +76,14 @@ namespace WBIS_2.DataModel
                 a = Expression.Lambda<Func<t, bool>>(containsMethodExp, parameterExp);
             }
             else if (queryProperty.PropertyType.Name.Contains("ICollection"))
-            {
-                var parameterExp = Expression.Parameter(typeof(t), "type");
-                var propertyExp = Expression.Property(parameterExp, queryProperty);
-                var someValue = Expression.Constant(Query.Cast<District>().ToList());
+            {                                 
+                var queryCast = Query.Cast<z>();
+                Expression<Func<z, bool>> predicate = b => queryCast.Contains(b);
 
-                MethodInfo method = typeof(Enumerable).GetMethods()
-                    .First(m => m.Name == "Intersect")
-                    .MakeGenericMethod(typeof(District));
+                var body = Expression.Call(typeof(Enumerable), "Any", new[] { typeof(z) },
+                    propertyExp, predicate);
 
-                var containsMethodExp = Expression.Call(method, propertyExp, someValue);
-
-                MethodInfo method2 = typeof(Enumerable).GetMethods()
-                    .First(m => m.Name == "Count")
-                    .MakeGenericMethod(typeof(District));
-                var counter = Expression.Call(method2, containsMethodExp);
-
-                //MethodInfo method3 = typeof(int).GetMethod("Equals", new[] { typeof(int) });
-                //var zero = Expression.Constant(0);
-                //var bb = Expression.Call(counter, method3, zero);
-                var bb = Expression.GreaterThan(counter, Expression.Constant(0));
-                a = Expression.Lambda<Func<t, bool>>(bb, parameterExp);
-
-                //var parameterExp = Expression.Parameter(typeof(t), "type");
-                //var propertyExp = Expression.Property(parameterExp, queryProperty);
-
-                //MethodInfo method = typeof(Enumerable).GetMethods(BindingFlags.Static | BindingFlags.Public)
-                //        .First(m => m.Name == "Intersect");
-
-                //var someValue = Expression.Constant(Query.Cast<z>());
-
-                //var containsMethodExp = Expression.Call(method.MakeGenericMethod(typeof(z)),someValue , propertyExp);
-                //MethodInfo method2 = typeof(Enumerable).GetMethods(BindingFlags.Static | BindingFlags.Public)
-                //        .First(m => m.Name == "Count");
-                //var counter = Expression.Call(method2.MakeGenericMethod(typeof(z)), containsMethodExp);
-
-                //var zero = Expression.Constant(0);
-                //MethodInfo method3 = typeof(int).GetMethod("Equals", new[] { typeof(int) });
-                //var bb = Expression.Call(counter, method3, zero);
-                //a = Expression.Lambda<Func<t, bool>>(bb, parameterExp);
+                a = Expression.Lambda<Func<t, bool>>(body, parameterExp);
             }
             else
                 a = _ => Query.Contains(_);
