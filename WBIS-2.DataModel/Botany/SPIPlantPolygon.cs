@@ -14,6 +14,7 @@ namespace WBIS_2.DataModel
 
         [Required, Column("plant_species_id")]
         public Guid PlantSpeciesId { get; set; }
+        [ListInfo(AutoInclude = true)]
         public PlantSpecies PlantSpecies { get; set; }
         [Column("geometry", TypeName = "geometry(Polygon,26710)")]
         public MultiPolygon Geometry { get; set; }
@@ -83,6 +84,6 @@ namespace WBIS_2.DataModel
 
 
         [NotMapped, Display(Order = -1)]
-        public IInfoTypeManager Manager { get { return new SPIPlantPolygonManager(); } }
+        public IInfoTypeManager Manager => new InformationTypeManager<SPIPlantPolygon>();
     }
 }

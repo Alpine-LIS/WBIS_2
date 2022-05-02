@@ -30,9 +30,11 @@ namespace WBIS_2.DataModel
 
         [Column("user_id")]
         public Guid? UserId { get; set; }
+      [ListInfo(AutoInclude = true)]
         public ApplicationUser User { get; set; }
         [Column("user_modified_id")]
         public Guid? UserModifiedId { get; set; }
+      [ListInfo(AutoInclude = true)]
         public ApplicationUser UserModified { get; set; }
 
 
@@ -40,9 +42,11 @@ namespace WBIS_2.DataModel
 
         [Required, Column("hex160_id")]
         public Guid Hex160Id { get; set; }
+        [ListInfo(AutoInclude = true)]
         public Hex160 Hex160 { get; set; }
         [Required, Column("bird_species_id")]
         public Guid BirdSpeciesId { get; set; }
+        [ListInfo(AutoInclude = true)]
         public BirdSpecies BirdSpecies { get; set; }
 
 
@@ -52,6 +56,6 @@ namespace WBIS_2.DataModel
 
 
         [NotMapped, Display(Order = -1)]
-        public IInfoTypeManager Manager { get { return new Hex160RequiredPassManager(); } }
+        public IInfoTypeManager Manager => new InformationTypeManager<Hex160RequiredPass>();
     }
 }

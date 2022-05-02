@@ -11,15 +11,17 @@ namespace WBIS_2.DataModel
     {
         [Key,DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
-        [Required, Column("thp_name")]
+        [Required, Column("thp_name"), ListInfo(DisplayField = true)]
         public string THPName { get; set; }
 
 
-        public ICollection<BotanicalScoping> BotanicalScopins { get; set; }
+        [ListInfo(ChildField = true)]
+        public ICollection<BotanicalScoping> BotanicalScopings { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<BotanicalSurveyArea> BotanicalSurveyAreas { get; set; }
 
 
         [NotMapped, Display(Order = -1)]
-        public IInfoTypeManager Manager { get { return new THP_AreaManager(); } }
+        public IInfoTypeManager Manager => new InformationTypeManager<THP_Area>();
     }
 }

@@ -22,9 +22,11 @@ namespace WBIS_2.DataModel
 
         [Column("user_id")]
         public Guid? UserId { get; set; }
+        [ListInfo(AutoInclude = true)]
         public ApplicationUser User { get; set; }
         [Column("user_modified_id")]
         public Guid? UserModifiedId { get; set; }
+        [ListInfo(AutoInclude = true)]
         public ApplicationUser UserModified { get; set; }
 
 
@@ -33,14 +35,15 @@ namespace WBIS_2.DataModel
         [Column("geometry", TypeName = "geometry(Point,26710)")]
         public Point Geometry { get; set; }
 
-        [Column("pcs_id")]
+        [Column("pcs_id"), ListInfo(DisplayField = true)]
         public string PCS_ID { get; set; }
 
         [Required, Column("hex160_id")]
         public Guid Hex160Id { get; set; }
+        [ListInfo(AutoInclude = true)]
         public Hex160 Hex160 { get; set; }
 
         [NotMapped, Display(Order = -1)]
-        public IInfoTypeManager Manager { get { return new PermanentCallStationManager(); } }
+        public IInfoTypeManager Manager => new InformationTypeManager<PermanentCallStation>();
     }
 }

@@ -16,8 +16,7 @@ namespace WBIS_2.DataModel
 
         [Column("user_id")]
         public Guid? UserId { get; set; }
-        [ImportAttribute(Required = true)]
-        [ListInfo(AutoInclude = true)]
+        [ImportAttribute(Required = true), ListInfo(AutoInclude = true)]
         public ApplicationUser User { get; set; }
         [Column("user_modified_id")]
         public Guid? UserModifiedId { get; set; }
@@ -99,6 +98,7 @@ namespace WBIS_2.DataModel
         [Column("target_species_present"), ImportAttribute]
         public bool TargetSpeciesPresent { get; set; }
 
+        [ListInfo(ChildField = true)]
         public ICollection<SiteCallingDetection> SiteCallingDetections { get; set;}
         //[Column("site_calling_detection_id")]
         //public Guid SiteCallingDetectionID { get; set; }
@@ -181,6 +181,7 @@ namespace WBIS_2.DataModel
 
 
 
+        [ListInfo(ChildField = true)]
         public ICollection<OtherWildlife> OtherWildlifeRecords { get; set; }
         public ICollection<Picture> Pictures { get; set; }
 

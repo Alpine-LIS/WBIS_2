@@ -13,6 +13,7 @@ namespace WBIS_2.DataModel
 
         [Column("site_calling_id")]
         public Guid? SiteCallingId { get; set; }
+        [ListInfo(AutoInclude = true)]
         public SiteCalling SiteCalling { get; set; }
 
 
@@ -48,6 +49,7 @@ namespace WBIS_2.DataModel
 
         [Column("user_location_id")]
         public Guid? UserLocationId { get; set; }
+        [ListInfo(AutoInclude =true)]
         public UserLocation UserLocation { get; set; }
 
 
@@ -83,6 +85,7 @@ namespace WBIS_2.DataModel
         public ApplicationUser User { get; set; }
         [Column("user_modified_id")]
         public Guid? UserModifiedId { get; set; }
+        [ImportAttribute(Required = true)]
         public ApplicationUser UserModified { get; set; }
         [Column("date_added")]
         public DateTime DateAdded { get; set; }
@@ -105,10 +108,11 @@ namespace WBIS_2.DataModel
         public Quad75 Quad75 { get; set; }
         [Column("hex160_id")]
         public Guid? Hex160Id { get; set; }
+        [ListInfo(AutoInclude = true)]
         public Hex160 Hex160 { get; set; }
 
 
         [NotMapped, Display(Order = -1)]
-        public IInfoTypeManager Manager { get { return new SiteCallingDetectionManager(); } }
+        public IInfoTypeManager Manager { get { return new InformationTypeManager<SiteCallingDetection>(); } }
     }
 }

@@ -38,7 +38,7 @@ namespace WBIS_2.DataModel
         /// <summary>
         /// Returns a 'Where' statment depending on a provided parent information type.
         /// </summary>
-        public abstract Expression GetParentWhere(object[] Query, Type QueryType);
+       // public abstract Expression GetParentWhere(object[] Query, Type QueryType);
         /// <summary>
         /// Can the infromation type be set as active.
         /// </summary>

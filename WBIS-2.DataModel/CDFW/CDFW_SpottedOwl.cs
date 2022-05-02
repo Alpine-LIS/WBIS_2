@@ -78,6 +78,6 @@ namespace WBIS_2.DataModel
 
 
         [NotMapped, Display(Order = -1)]
-        public IInfoTypeManager Manager { get { return new CDFW_SpottedOwlManager(); } }
+        public IInfoTypeManager Manager => new InformationTypeManager<CDFW_SpottedOwl>();
     }
 }

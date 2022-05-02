@@ -23,9 +23,11 @@ namespace WBIS_2.DataModel
 
         [Column("user_id")]
         public Guid? UserId { get; set; }
+        [ListInfo(AutoInclude = true)]
         public ApplicationUser User { get; set; }
         [Column("user_modified_id")]
         public Guid? UserModifiedId { get; set; }
+        [ListInfo(AutoInclude = true)]
         public ApplicationUser UserModified { get; set; }
 
 
@@ -34,16 +36,17 @@ namespace WBIS_2.DataModel
         [Column("geometry", TypeName = "geometry(MultiPolygon,26710)")]
         public MultiPolygon Geometry { get; set; }
 
-        [Column("pz_id")]
+        [Column("pz_id"), ListInfo(DisplayField = true)]
         public string PZ_ID { get; set; }
 
         public ICollection<SiteCalling> SiteCallings { get; set; }
         public ICollection<OwlBanding> OwlBandings { get; set; }
+        [ListInfo(AutoInclude = true)]
         public ICollection<Hex160> Hex160s { get; set; }
-        [InverseProperty("CurrentProtectionZone")]
+        [InverseProperty("CurrentProtectionZone"), ListInfo(AutoInclude = true)]
         public ICollection<Hex160> CurrentHex160s { get; set; }
 
         [NotMapped, Display(Order = -1)]
-        public IInfoTypeManager Manager { get { return new ProtectionZoneManager(); } }
+        public IInfoTypeManager Manager => new InformationTypeManager<ProtectionZone>();
     }
 }

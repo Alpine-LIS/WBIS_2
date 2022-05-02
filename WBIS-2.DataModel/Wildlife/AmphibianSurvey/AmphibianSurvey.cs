@@ -12,8 +12,9 @@ namespace WBIS_2.DataModel
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
 
-    
 
+
+        [ListInfo(ChildField = true)]
         public ICollection<AmphibianElement> AmphibianElements { get; set; }
 
 
@@ -91,9 +92,11 @@ namespace WBIS_2.DataModel
 
         [Column("user_id")]
         public Guid? UserId { get; set; }
+        [ListInfo(AutoInclude = true)]
         public ApplicationUser User { get; set; }
         [Column("user_modified_id")]
         public Guid? UserModifiedId { get; set; }
+        [ListInfo(AutoInclude = true)]
         public ApplicationUser UserModified { get; set; }
 
 
@@ -117,6 +120,7 @@ namespace WBIS_2.DataModel
 
         [Column("district_id")]
         public Guid? DistrictId { get; set; }
+        [ListInfo(AutoInclude = true)]
         public District District { get; set; }
         public ICollection<Watershed> Watersheds { get; set; }
         public ICollection<Quad75> Quad75s { get; set; }
@@ -127,6 +131,6 @@ namespace WBIS_2.DataModel
 
 
         [NotMapped, Display(Order = -1)]
-        public IInfoTypeManager Manager { get { return new AmphibianSurveyManager(); } }
+        public IInfoTypeManager Manager => new InformationTypeManager<AmphibianSurvey>();
     }
 }

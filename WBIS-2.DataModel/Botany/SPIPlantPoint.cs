@@ -12,7 +12,8 @@ namespace WBIS_2.DataModel
         public Guid Guid { get; set; }
        
         [Required, Column("plant_species_id")]
-        public Guid PlantSpeciesId { get; set; }    
+        public Guid PlantSpeciesId { get; set; }   
+        [ListInfo(AutoInclude = true)]
         public PlantSpecies PlantSpecies { get; set; }
         [Column("geometry", TypeName = "geometry(Point,26710)")]
         public Point Geometry { get; set; }
@@ -41,6 +42,6 @@ namespace WBIS_2.DataModel
 
 
         [NotMapped, Display(Order = -1)]
-        public IInfoTypeManager Manager { get { return new SPIPlantPointManager(); } }
+        public IInfoTypeManager Manager => new InformationTypeManager<SPIPlantPoint>();
     }
 }

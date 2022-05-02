@@ -10,7 +10,7 @@ namespace WBIS_2.DataModel
     {
         [Key,Column("guid")]
         public Guid Guid { get; set; }
-        [Column("alpha_code"), ImportAttribute(Required = true)]
+        [Column("alpha_code"), ImportAttribute(Required = true), ListInfo(DisplayField = true)]
         public string AlphaCode { get; set; }
         [Column("wildlife_species_description")]
         public string WildlifeSpeciesDescription { get; set; }
@@ -22,7 +22,7 @@ namespace WBIS_2.DataModel
         public string Family { get; set; }
         [Column("genus")]
         public string Genus { get; set; }
-        [Column("species")]
+        [Column("species"), ListInfo(DisplayField = true)]
         public string Species { get; set; }
         [Column("wl_sorting")]
         public int WLSorting { get; set; }
@@ -36,6 +36,6 @@ namespace WBIS_2.DataModel
         public ICollection<OtherWildlife> OtherWildlifeRecords { get; set; }
 
         [NotMapped, Display(Order = -1)]
-        public IInfoTypeManager Manager => new WildlifeSpeciesManager();
+        public IInfoTypeManager Manager => new InformationTypeManager<WildlifeSpecies>();
     }
 }

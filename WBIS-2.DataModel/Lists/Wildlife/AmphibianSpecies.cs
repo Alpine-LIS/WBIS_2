@@ -10,9 +10,9 @@ namespace WBIS_2.DataModel
     {
         [Key,Column("guid")]
         public Guid Guid { get; set; }
-        [Column("species_name")]
+        [Column("species_name"), ListInfo(DisplayField = true)]
         public string SpeciesName{ get; set; }
-        [Column("species_code")]
+        [Column("species_code"), ListInfo(DisplayField = true)]
         public string SpeciesCode { get; set; }
         [Column("place_holder")]
         public bool PlaceHolder { get; set; }
@@ -23,6 +23,6 @@ namespace WBIS_2.DataModel
         public ICollection<AmphibianPointOfInterest> AmphibianPointsOfInterest { get; set; }
 
         [NotMapped, Display(Order = -1)]
-        public IInfoTypeManager Manager => new AmphibianSpeciesManager();
+        public IInfoTypeManager Manager => new InformationTypeManager<AmphibianSpecies>();
     }
 }

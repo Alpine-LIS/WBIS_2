@@ -11,9 +11,9 @@ namespace WBIS_2.DataModel
         [Key,Column("guid")]
         public Guid Guid { get; set; }
        
-        [Column("sci_name"), ImportAttribute(Required = true)]
+        [Column("sci_name"), ImportAttribute(Required = true), ListInfo(DisplayField = true)]
         public string SciName { get; set; }
-        [Column("com_name"), ImportAttribute(Required = false)]
+        [Column("com_name"), ImportAttribute(Required = false), ListInfo(DisplayField = true)]
         public string ComName { get; set; }
         [Column("taxon_group")]
         public string TaxonGroup { get; set; }
@@ -58,6 +58,6 @@ namespace WBIS_2.DataModel
 
 
         [NotMapped, Display(Order = -1)]
-        public IInfoTypeManager Manager => new PlantSpeciesManager();
+        public IInfoTypeManager Manager => new InformationTypeManager<PlantSpecies>();
     }
 }

@@ -21,6 +21,7 @@ namespace WBIS_2.DataModel
         public Guid? BotanicalScopingId { get; set; }
         public BotanicalScoping BotanicalScoping { get; set; }
 
+        [ListInfo(ChildField = true)]
         public ICollection<BotanicalElement> BotanicalElement { get; set; }
 
 
@@ -92,10 +93,11 @@ namespace WBIS_2.DataModel
 
         [Column("thp_area_id")]
         public Guid? THP_AreaId { get; set; }
+        [ListInfo(AutoInclude = true, DisplayField = true)]
         public THP_Area THP_Area { get; set; }
 
 
         [NotMapped, Display(Order = -1)]
-        public IInfoTypeManager Manager { get { return new BotanicalSurveyManager(); } }
+        public IInfoTypeManager Manager => new InformationTypeManager<BotanicalSurvey>();
     }
 }

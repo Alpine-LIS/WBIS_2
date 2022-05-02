@@ -11,9 +11,9 @@ namespace WBIS_2.DataModel
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
-        [Required, Column("district_name")]
+        [Required, Column("district_name"), ListInfo(DisplayField = true)]
         public string DistrictName { get; set; }
-        [Required, Column("management_area")]
+        [Required, Column("management_area"), ListInfo(DisplayField = true)]
         public string ManagementArea { get; set; }
 
 
@@ -27,28 +27,45 @@ namespace WBIS_2.DataModel
         public DistrictExtendedGeometry DistrictExtendedGeometry { get; set; }
 
 
+        [ListInfo(ChildField = true)]
         public ICollection<Hex160> Hex160s { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<Quad75> Quad75s { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<Watershed> Watersheds { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<CNDDBOccurrence> CNDDBOccurrences { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<CDFW_SpottedOwl> CDFW_SpottedOwls { get; set; }
         public ICollection<CDFW_SpottedOwlDiagram> CDFW_SpottedOwlDiagrams { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<ApplicationUser> ApplicationUsers { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<OwlBanding> OwlBandings { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<SiteCalling> SiteCallings { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<SiteCallingDetection> SiteCallingDetections { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<SPIPlantPoint> SPIPlantPoints { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<SPIPlantPolygon> SPIPlantPolygons { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<AmphibianSurvey> AmphibianSurveys { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<AmphibianElement> AmphibianElements { get; set; }
 
+        [ListInfo(ChildField = true)]
         public ICollection<BotanicalScoping> BotanicalScopings { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<BotanicalSurveyArea> BotanicalSurveyAreas { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<BotanicalSurvey> BotanicalSurveys { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<BotanicalElement> BotanicalElements { get; set; }
 
 
         [NotMapped, Display(Order = -1)]
-        public IInfoTypeManager Manager => new DistrictManager();
+        public IInfoTypeManager Manager => new InformationTypeManager<District>();
     }
 }

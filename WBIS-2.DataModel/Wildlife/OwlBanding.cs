@@ -22,6 +22,7 @@ namespace WBIS_2.DataModel
         
         [Required, Column("bird_species_id")]
         public Guid BirdSpeciesId { get; set; }
+        [ListInfo(AutoInclude = true)]
         public BirdSpecies BirdSpecies { get; set; }
        
         
@@ -46,9 +47,11 @@ namespace WBIS_2.DataModel
 
         [Column("user_id")]
         public Guid? UserId { get; set; }
+        [ListInfo(AutoInclude = true)]
         public ApplicationUser User { get; set; }
         [Column("user_modified_id")]
         public Guid? UserModifiedId { get; set; }
+        [ListInfo(AutoInclude = true)]
         public ApplicationUser UserModified { get; set; }
 
 
@@ -66,6 +69,7 @@ namespace WBIS_2.DataModel
 
         [Column("protection_zone_id")]
         public Guid ProtectionZoneID { get; set; }
+        [ListInfo(AutoInclude = true)]
         public ProtectionZone ProtectionZone { get; set; }
         [Column("geometry", TypeName = "geometry(Point,26710)")]
         public Point Geometry { get; set; }
@@ -123,6 +127,7 @@ namespace WBIS_2.DataModel
 
         [Column("district_id")]
         public Guid? DistrictId { get; set; }
+        [ListInfo(AutoInclude = true)]
         public District District { get; set; }
         [Column("watershed_id")]
         public Guid? WatershedId { get; set; }
@@ -132,6 +137,7 @@ namespace WBIS_2.DataModel
         public Quad75 Quad75 { get; set; }
         [Column("hex160_id")]
         public Guid? Hex160Id { get; set; }
+        [ListInfo(AutoInclude = true)]
         public Hex160 Hex160 { get; set; }
 
 
@@ -141,6 +147,6 @@ namespace WBIS_2.DataModel
 
 
         [NotMapped, Display(Order = -1)]
-        public IInfoTypeManager Manager { get { return new OwlBandingManager(); } }
+        public IInfoTypeManager Manager => new InformationTypeManager<OwlBanding>();
     }
 }

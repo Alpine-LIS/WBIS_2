@@ -10,7 +10,7 @@ namespace WBIS_2.DataModel
     {
         [Key,Column("guid")]
         public Guid Guid { get; set; }
-        [Column("species"), ImportAttribute(Required = true)]
+        [Column("species"), ImportAttribute(Required = true), ListInfo (DisplayField = true)]
         public string Species { get; set; }
 
         [Column("is_surveyable")]
@@ -33,6 +33,6 @@ namespace WBIS_2.DataModel
         public ICollection<Hex160RequiredPass> PassSpecies { get; set; }
 
         [NotMapped, Display(Order = -1)]
-        public IInfoTypeManager Manager => new BirdSpeciesManager();
+        public IInfoTypeManager Manager => new InformationTypeManager<BirdSpecies>();
     }
 }

@@ -10,7 +10,7 @@ namespace WBIS_2.DataModel
     {
         [Key,Column("guid")]
         public Guid Guid { get; set; }
-        [Required,Column("user_name"), ImportAttribute(Required = true)]
+        [Required,Column("user_name"), ImportAttribute(Required = true), ListInfo(DisplayField = true)]
         public string UserName { get; set; }
        
         [Column("email")]
@@ -110,6 +110,6 @@ namespace WBIS_2.DataModel
 
 
         [NotMapped, Display(Order = -1)]
-        public IInfoTypeManager Manager { get { return new ApplicationUserManager(); } }
+        public IInfoTypeManager Manager => new InformationTypeManager<ApplicationUser>();
     }
 }

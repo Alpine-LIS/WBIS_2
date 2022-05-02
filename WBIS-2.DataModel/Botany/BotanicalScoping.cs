@@ -13,16 +13,21 @@ namespace WBIS_2.DataModel
         public Guid Guid { get; set; }
 
 
-      
 
+
+        [ListInfo(ChildField = true)]
         public ICollection<BotanicalElement> BotanicalElements { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<BotanicalSurvey> BotanicalSurveys { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<BotanicalSurveyArea> BotanicalSurveyAreas { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<BotanicalScopingSpecies> BotanicalScopingSpecies { get; set; }
 
 
         [Column("thp_area_id")]
         public Guid THP_AreaId { get; set; }
+        [ListInfo(AutoInclude = true)]
         public THP_Area THP_Area { get; set; }
 
         
@@ -59,9 +64,11 @@ namespace WBIS_2.DataModel
 
         [Column("user_id")]
         public Guid? UserId { get; set; }
+        [ListInfo(AutoInclude = true)]
         public ApplicationUser User { get; set; }
         [Column("user_modified_id")]
         public Guid? UserModifiedId { get; set; }
+        [ListInfo(AutoInclude = true)]
         public ApplicationUser UserModified { get; set; }
 
 
@@ -78,6 +85,6 @@ namespace WBIS_2.DataModel
 
 
         [NotMapped, Display(Order = -1)]
-        public IInfoTypeManager Manager { get { return new InformationTypeManager<BotanicalScoping>(); } }
+        public IInfoTypeManager Manager => new InformationTypeManager<BotanicalScoping>();
     }
 }

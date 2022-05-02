@@ -29,6 +29,7 @@ namespace WBIS_2.DataModel
 
         [Column("botanical_survey_id")]
         public Guid? BotanicalSurveyId { get; set; }
+        [ListInfo(AutoInclude = true)]
         public BotanicalSurvey BotanicalSurvey { get; set; }
 
         //[Column("botanical_point_of_interest_id")]
@@ -67,9 +68,11 @@ namespace WBIS_2.DataModel
 
         [Column("user_id")]
         public Guid? UserId { get; set; }
+        [ListInfo(AutoInclude = true)]
         public ApplicationUser User { get; set; }
         [Column("user_modified_id")]
         public Guid? UserModifiedId { get; set; }
+        [ListInfo(AutoInclude = true)]
         public ApplicationUser UserModified { get; set; }
 
 
@@ -112,6 +115,6 @@ namespace WBIS_2.DataModel
 
 
         [NotMapped, Display(Order = -1)]
-        public IInfoTypeManager Manager { get { return new BotanicalElementManager(); } }
+        public IInfoTypeManager Manager => new InformationTypeManager<BotanicalElement>();
     }
 }

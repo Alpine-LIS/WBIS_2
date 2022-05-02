@@ -29,5 +29,6 @@ namespace WBIS_2.DataModel
     {
         public bool AutoInclude { get; set; } = false;
         public bool DisplayField { get; set; } = false;
+        public bool ChildField { get; set; } = false;
     }
 }

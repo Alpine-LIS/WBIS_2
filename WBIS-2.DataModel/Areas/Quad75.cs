@@ -11,13 +11,13 @@ namespace WBIS_2.DataModel
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
-        [Required, Column("quad_code")]
+        [Required, Column("quad_code"), ListInfo(DisplayField = true)]
         public string QuadCode { get; set; }
         [Required, Column("isgs_code")]
         public string UsgsCode { get; set; }
         [Column("cnps_code")]
         public string CNPSCode { get; set; }
-        [Column("quad_name")]
+        [Column("quad_name"), ListInfo(DisplayField = true)]
         public string QuadName { get; set; }
         [Column("quad_size")]
         public string QuadSize { get; set; }
@@ -45,25 +45,40 @@ namespace WBIS_2.DataModel
 
 
         public ICollection<District> Districts { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<Hex160> Hex160s { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<Watershed> Watersheds { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<CNDDBOccurrence> CNDDBOccurrences { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<CDFW_SpottedOwl> CDFW_SpottedOwls { get; set; }
 
+        [ListInfo(ChildField = true)]
         public ICollection<SiteCalling> SiteCallings { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<SiteCallingDetection> SiteCallingDetections { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<OwlBanding> OwlBandings { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<SPIPlantPolygon> SPIPlantPolygons { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<SPIPlantPoint> SPIPlantPoints { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<AmphibianSurvey> AmphibianSurveys { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<AmphibianElement> AmphibianElements { get; set; }
 
+        [ListInfo(ChildField = true)]
         public ICollection<BotanicalScoping> BotanicalScopings { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<BotanicalSurveyArea> BotanicalSurveyAreas { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<BotanicalSurvey> BotanicalSurveys { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<BotanicalElement> BotanicalElements { get; set; }  
         
         [NotMapped, Display(Order = -1)]
-        public IInfoTypeManager Manager { get { return new Quad75Manager(); } }
+        public IInfoTypeManager Manager => new InformationTypeManager<Quad75>();
     }
 }

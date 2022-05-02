@@ -109,6 +109,6 @@ namespace WBIS_2.DataModel
 
 
         [NotMapped, Display(Order = -1)]
-        public IInfoTypeManager Manager { get { return new CNDDBOccurrenceManager(); } }
+        public IInfoTypeManager Manager => new InformationTypeManager<CNDDBOccurrence>();
     }
 }

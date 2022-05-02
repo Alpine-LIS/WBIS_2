@@ -11,7 +11,7 @@ namespace WBIS_2.DataModel
     {
         [Key,DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
-        [Required, Column("hex160_id")]
+        [Required, Column("hex160_id"), ListInfo(DisplayField = true)]
         public string Hex160ID { get; set; }
         [Column("calling_responses")]
         public int CallingResponses { get; set; }
@@ -36,17 +36,28 @@ namespace WBIS_2.DataModel
 
         [Column("current_protection_zone_id"), ForeignKey("ProtectionZone")]
         public Guid? CurrentProtectionZoneID { get; set; }
+        [ListInfo(AutoInclude = true)]
         public ProtectionZone CurrentProtectionZone { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<ProtectionZone> ProtectionZones { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<PermanentCallStation> PermanentCallStations { get; set; }
 
+        [ListInfo(ChildField = true)]
         public ICollection<Hex160RequiredPass> Hex160RequiredPasses { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<SiteCalling> SiteCallings { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<SiteCallingDetection> SiteCallingDetections { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<OwlBanding> OwlBandings { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<AmphibianSurvey> AmphibianSurveys { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<AmphibianElement> AmphibianElements { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<SPIPlantPolygon> SPIPlantPolygons { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<SPIPlantPoint> SPIPlantPoints { get; set; }
 
 
@@ -54,14 +65,19 @@ namespace WBIS_2.DataModel
         public ICollection<Watershed> Watersheds { get; set; }
         public ICollection<Quad75> Quad75s { get; set; }
 
+        [ListInfo(ChildField = true)]
         public ICollection<CNDDBOccurrence> CNDDBOccurrences { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<CDFW_SpottedOwl> CDFW_SpottedOwls { get; set; }
 
+        [ListInfo(ChildField = true)]
         public ICollection<BotanicalSurveyArea> BotanicalSurveyAreas { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<BotanicalSurvey> BotanicalSurveys { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<BotanicalElement> BotanicalElements { get; set; }
        
         [NotMapped, Display(Order = -1)]
-        public IInfoTypeManager Manager { get { return new Hex160Manager(); } }
+        public IInfoTypeManager Manager => new InformationTypeManager<Hex160>();
     }
 }
