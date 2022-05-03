@@ -93,25 +93,16 @@ namespace WBIS_2.Modules.ViewModels
 
 
         private void SetRecordOptions()
-        {
-            if (ListManager is IRecordOptions ro)
-            {
-                AddRecordsEnabled = ro.ImportRecords || ro.AddRecord;
-                AddRecordsEnabled = ro.DeleteRecord;
-                AddRecordsEnabled = ro.RestoreRecord;
+        {            
+                AddRecordsEnabled = ListManager.ImportRecords || ListManager.AddRecord;
+                AddRecordsEnabled = ListManager.DeleteRecord;
+                AddRecordsEnabled = ListManager.RestoreRecord;
                 //if (ro.AddRecord && ro.ImportRecords)
                 //    AddRecordToolTip = "Add/Import Record(s)";
                 //else if (ro.AddRecord)
                 //    AddRecordToolTip = "Add Record";
                 //else
                     AddRecordToolTip = "Import Record(s)";
-            }
-            else
-            {
-                AddRecordsEnabled = false;
-                DeleteRecordsEnabled = false;
-                RestoreRecordsEnabled = false;
-            }
 
             RaisePropertyChanged(nameof(AddRecordsEnabled));
             RaisePropertyChanged(nameof(DeleteRecordsEnabled));

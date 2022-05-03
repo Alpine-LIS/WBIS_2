@@ -143,24 +143,31 @@ namespace WBIS_2.Modules.Views
         {
             addColumns = new Dictionary<GridColumn, int>();
 
+            foreach(var displayField in ((ListViewModelBase)DataContext).ListManager.DisplayFields)
+            {
+                GridColumn c = new GridColumn() { FieldName = $"{displayField.Value}", Header = displayField.Key };
+                if (c.FieldName == "UserModified.UserName") c.Header = "UpdateUser";
+                addColumns.Add(c,0);
+            }
+
             foreach (var col in gc.Columns)
             {
-                if (col.FieldType.GetInterfaces().Contains(typeof(IInformationType)))
+                if (col.FieldType.GetInterfaces().Contains(typeof(IInformationType)) || col.FieldType.Namespace.Contains("WBIS_2.DataModel"))
                 {
-                    IInformationType instance = (IInformationType)Activator.CreateInstance(col.FieldType);
-                    var colValues = instance.Manager.DisplayFields;
-                    if (colValues != null)
-                    {
-                        for (int i = 0; i < colValues.Count; i++)
-                        {
-                            var colVal = colValues[i];
-                            //GridColumn c = new GridColumn() { FieldName = $"{colVal.Value}.{colVal.Key}", Header = colVal.Key };
-                            GridColumn c = new GridColumn() { FieldName = $"{col.FieldName}.{colVal.Key}", Header = colVal.Key };
-                            if (c.FieldName == "UpdateUser.UserName") c.Header = "UpdateUser";
-                            c.VisibleIndex = col.VisibleIndex;
-                            addColumns.Add(c, col.VisibleIndex);
-                        }
-                    }
+                    //IInformationType instance = (IInformationType)Activator.CreateInstance(col.FieldType);
+                    //var colValues = instance.Manager.DisplayFields;
+                    //if (colValues != null)
+                    //{
+                    //    for (int i = 0; i < colValues.Count; i++)
+                    //    {
+                    //        var colVal = colValues[i];
+                    //        //GridColumn c = new GridColumn() { FieldName = $"{colVal.Value}.{colVal.Key}", Header = colVal.Key };
+                    //        GridColumn c = new GridColumn() { FieldName = $"{col.FieldName}.{colVal.Key}", Header = colVal.Key };
+                    //        if (c.FieldName == "UpdateUser.UserName") c.Header = "UpdateUser";
+                    //        c.VisibleIndex = col.VisibleIndex;
+                    //        addColumns.Add(c, col.VisibleIndex);
+                    //    }
+                    //}
                     col.Visible = false;
                 }
                 else if (col.FieldType == typeof(Guid) || col.FieldType == typeof(Guid?) || col.FieldType.BaseType == typeof(NetTopologySuite.Geometries.Geometry))

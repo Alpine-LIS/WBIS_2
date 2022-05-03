@@ -37,8 +37,8 @@ namespace WBIS_2.DataModel
         public ICollection<CNDDBOccurrence> CNDDBOccurrences { get; set; }
         [ListInfo(ChildField = true)]
         public ICollection<CDFW_SpottedOwl> CDFW_SpottedOwls { get; set; }
-        public ICollection<CDFW_SpottedOwlDiagram> CDFW_SpottedOwlDiagrams { get; set; }
         [ListInfo(ChildField = true)]
+        public ICollection<CDFW_SpottedOwlDiagram> CDFW_SpottedOwlDiagrams { get; set; }
         public ICollection<ApplicationUser> ApplicationUsers { get; set; }
         [ListInfo(ChildField = true)]
         public ICollection<OwlBanding> OwlBandings { get; set; }

@@ -10,7 +10,7 @@ using System.Reflection;
 namespace WBIS_2.DataModel
 {
     public class InformationTypeManager { }
-    public class InformationTypeManager<InfoType> : IInfoTypeManager, IRecordOptions where InfoType : class
+    public class InformationTypeManager<InfoType> : IInfoTypeManager where InfoType : class
     {
         public string DisplayName => GetDisplayName();
         private string GetDisplayName()
@@ -30,8 +30,9 @@ namespace WBIS_2.DataModel
         }
 
 
-        public IEnumerable<PropertyInfo> ListInfoProperties => typeof(InfoType).GetProperties().Where(_ => _.GetCustomAttribute(typeof(ListInfo)) != null);
-        public IEnumerable<PropertyInfo> AutoIncludes => ListInfoProperties.Where(_ => ((ListInfo)_.GetCustomAttribute(typeof(ListInfo))).AutoInclude);
+        private IEnumerable<PropertyInfo> ListInfoProperties => typeof(InfoType).GetProperties().Where(_ => _.GetCustomAttribute(typeof(ListInfo)) != null);
+        private IEnumerable<PropertyInfo> AutoIncludes => ListInfoProperties.Where(_ => ((ListInfo)_.GetCustomAttribute(typeof(ListInfo))).AutoInclude);
+        public IEnumerable<PropertyInfo> DisplayFieldProperties => ListInfoProperties.Where(_ => ((ListInfo)_.GetCustomAttribute(typeof(ListInfo))).DisplayField);
         public IInformationType[] AvailibleChildren => GetAvailibleChildren();
 
         private IInformationType[] GetAvailibleChildren()
@@ -47,95 +48,43 @@ namespace WBIS_2.DataModel
             }
             return children.ToArray();
         }
-        List<KeyValuePair<string, string>> IListManager.DisplayFields => throw new NotImplementedException();
 
-        private List<KeyValuePair<string, string>> GetDisplayFields()
+        /// <summary>
+        /// For each of the auto included properties get the fields that should be displayed for them.
+        /// </summary>
+        public List<KeyValuePair<string, string>> DisplayFields
         {
-            List<KeyValuePair<string, string>> valuePairs = new List<KeyValuePair<string, string>>();
-
-            var properites = ListInfoProperties.Where(_ => ((ListInfo)_.GetCustomAttribute(typeof(ListInfo))).DisplayField);
-            foreach (var item in properites)
+            get
             {
-                var runTimeType = item.PropertyType.GenericTypeArguments.Single();
-                var trueType = Type.GetType(runTimeType.FullName);
+                List<KeyValuePair<string, string>> valuePairs = new List<KeyValuePair<string, string>>();
 
-                if (trueType.GetInterfaces().Contains(typeof(IInformationType)))
+                foreach (var prop in AutoIncludes)
                 {
-                    valuePairs.AddRange(GetDisplayFields(trueType));
-                }
-                else
-                {
-                    valuePairs.Add(new KeyValuePair<string, string>(item.Name, trueType.Name));
+                    valuePairs.AddRange(GetDisplayFields(prop.PropertyType, $"{prop.Name}."));
                 }
 
-                var properites2 = typeof(InfoType).GetProperties().Where(_ => _.GetCustomAttribute(typeof(ListInfo)) != null)
-                    .Where(_ => ((ListInfo)_.GetCustomAttribute(typeof(ListInfo))).DisplayField);
-                foreach(var item2 in properites2)
-                {
-
-                    valuePairs.Add(GetDisplayValuePair(item2.PropertyType, "")); 
-
-                    if (item2.PropertyType.GetInterfaces().Contains(typeof(IInformationType)))
-                    {
-
-                    }
-                    else
-                        valuePairs.Add(new KeyValuePair<string, string>(item.Name, trueType.Name));
-                }
-
-
-                if (prop.PropertyType.GetInterfaces().Contains(typeof(IInformationType)))
-                {
-                    var subProps = prop.PropertyType.GetProperties();
-                    foreach (var subProp in subProps)
-                    {
-                        var subAtt = subProp.GetCustomAttributes(true).FirstOrDefault(_ => _.GetType() == typeof(ImportAttribute));
-                        if (subAtt == null) continue;
-
-                        string typeName = GetDataTypeString(subProp.PropertyType);
-                        properties.Add(new PropertyType() { PropertyName = $"{prop.PropertyType.Name}.{subProp.Name}", TypeName = typeName, Required = ((ImportAttribute)subAtt).Required });
-                    }
-                }
-                else
-                {
-                    string typeName = GetDataTypeString(prop.PropertyType);
-                    properties.Add(new PropertyType() { PropertyName = prop.Name, TypeName = typeName, Required = ((ImportAttribute)att).Required });
-                }
-
-                { new KeyValuePair<string, string>("Species", "BirdSpecies")};
-
-                valuePairs.Add(new KeyValuePair<string, string>(item.Name, trueType.Name));
+                return valuePairs;
             }
-            return valuePairs;
         }
 
         private List<KeyValuePair<string, string>> GetDisplayFields(Type type, string classStack)
         {
             List<KeyValuePair<string, string>> valuePairs = new List<KeyValuePair<string, string>>();
-            var properties = type.GetProperties().Where(_ => _.GetCustomAttribute(typeof(ListInfo)) != null)
-                    .Where(_ => ((ListInfo)_.GetCustomAttribute(typeof(ListInfo))).DisplayField);
+            var properties = ((IInformationType)Activator.CreateInstance(type)).Manager.DisplayFieldProperties;
 
             foreach (var item in properties)
-            {
-                var runTimeType = item.PropertyType.GenericTypeArguments.Single();
-                var trueType = Type.GetType(runTimeType.FullName);
-
-                if (trueType.GetInterfaces().Contains(typeof(IInformationType)))
+            {                
+                if (IsIInformationType(item.PropertyType))
                 {
-                    valuePairs.AddRange(GetDisplayFields(trueType, $"{classStack}{trueType.Name}."));
+                    valuePairs.AddRange(GetDisplayFields(item.PropertyType, $"{classStack}{item.Name}."));
                 }
                 else
                 {
-                    valuePairs.Add(new KeyValuePair<string, string>(item.Name, $"{classStack}{trueType.Name}"));
+                    valuePairs.Add(new KeyValuePair<string, string>(item.Name, $"{classStack}{item.Name}"));
                 }
             }
 
             return valuePairs;
-        }
-
-        private KeyValuePair<string, string> GetDisplayValuePair(Type propType, string classStack)
-        {
-
         }
 
         public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
@@ -146,7 +95,7 @@ namespace WBIS_2.DataModel
             PropertyInfo queryProperty = ParentChildPropertyProperty(QueryType);
 
             foreach (var include in AutoIncludes)
-                returnVal = returnVal.Include($"{include.Name}");
+                ThenIncludes(ref returnVal, include);
 
             if (queryProperty != null)
                 if (!AutoIncludes.Contains(queryProperty))
@@ -158,6 +107,26 @@ namespace WBIS_2.DataModel
                 .Invoke(this, new object[] { Query.ToList(), queryProperty });
 
             return  returnVal.Where(a).ToList().AsQueryable();
+        }
+
+        /// <summary>
+        /// Auto includes may have further neccissary inclussion for display purposes
+        /// </summary>
+        private void ThenIncludes(ref IQueryable<InfoType> query, PropertyInfo includeProp)
+        {
+            bool furtherInclusions = false;
+            var IncludedInstance = Activator.CreateInstance(includeProp.PropertyType);
+            foreach(var potentialInclusion in ((IInformationType)IncludedInstance).Manager.DisplayFieldProperties)
+            {
+                if (IsIInformationType(potentialInclusion.PropertyType))
+                {
+                    furtherInclusions = true;
+                    query = query.Include($"{includeProp.Name}.{potentialInclusion.Name}");
+                }
+            }
+
+            if (!furtherInclusions) 
+                query = query.Include($"{includeProp.Name}");
         }
 
 
@@ -219,5 +188,8 @@ namespace WBIS_2.DataModel
         public bool RestoreRecord => true;
         public bool CanSetActive => false;// => false;
 
+
+        public bool IsIInformationType(Type type)
+        { return type.GetInterfaces().Contains(typeof(IInformationType)); }
     }
 }
