@@ -1,24 +1,17 @@
-﻿using DevExpress.Xpf.Core;
-using DevExpress.Xpf.Docking;
-using Microsoft.EntityFrameworkCore;
+﻿using WBIS_2.DataModel;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Xml;
-using WBIS_2.DataModel;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using DevExpress.Mvvm.ModuleInjection;
+using WBIS_2.Common;
 using WBIS_2.Modules.Views;
+using DevExpress.Xpf.SpellChecker;
+using WBIS_2.ViewModels;
+using System.Globalization;
+using WBIS_2.Modules.Tools;
+using WBIS_2.Modules;
 
 namespace WBIS_2.Views
 {
@@ -31,13 +24,39 @@ namespace WBIS_2.Views
         {
             InitializeComponent();
 
-            WBIS2Model wBIS2Model = new WBIS2Model();
-            //wBIS2Model.ApplicationUsers.Add(new ApplicationUser() { ApplicationGroup = wBIS2Model.ApplicationGroups.First(), UserName = "Tyler D. Suran" });
-            //wBIS2Model.SaveChanges();
-            CurrentUser.User = wBIS2Model.ApplicationUsers.Include(_=>_.ApplicationGroup).First();
-            //RMS_3.DataModel.CurrentUser.CurrentUserChanged += CurrentUserChanged;
-            //Application.Current.MainWindow.Closing += MainWindow_Closing;
+            WBIS_2.DataModel.CurrentUser.CurrentUserChanged += CurrentUserChanged;
+            Application.Current.MainWindow.Closing += MainWindow_Closing;
             //Application.Current.MainWindow.Loaded += MainWindow_Loaded;            
+            checker = new SpellChecker();
+            checker.Culture = new CultureInfo("pl-PL");
+            checker.SpellCheckMode = DevExpress.XtraSpellChecker.SpellCheckMode.AsYouType;
+            SpellChecker = checker;
+
+            Application.Current.MainWindow.Activated += MainWindow_Activated;
+        }
+        SpellChecker checker;
+        public SpellChecker SpellChecker
+        {
+            get { return checker; }
+            private set { checker = value; }
+        }
+        private void MainWindow_Activated(object sender, EventArgs e)
+        {
+            Application.Current.MainWindow.Activated -= MainWindow_Activated;
+            //((MainViewModel)DataContext).ShowAnnouncmentsStartup();
+        }
+
+        void TestUserControl_ContentRendered(object sender, EventArgs e)
+        {
+            // Don't forget to unsubscribe from the event
+            ((PresentationSource)sender).ContentRendered -= TestUserControl_ContentRendered;
+            //((MainViewModel)DataContext).ShowAnnouncmentsStartup();
+            // ..
+        }
+        private void MainView_GotFocus(object sender, RoutedEventArgs e)
+        {
+            this.GotFocus -= MainView_GotFocus;
+            //((MainViewModel)DataContext).ShowAnnouncmentsStartup();
         }
 
 
@@ -62,117 +81,64 @@ namespace WBIS_2.Views
 
         private void LogOutClick(object sender, DevExpress.Xpf.Bars.ItemClickEventArgs e)
         {
-        //    UserLoginControl userLoginControl = new UserLoginControl(CurrentUser.User);
-        //    CustomControlWindow window = new CustomControlWindow(userLoginControl);
-        //    if (window.DialogResult) UserLoggedIn(userLoginControl.ReturnApplicationUser);// UserMenuControl.Content = "User: " + CurrentUser.UserName;
+            UserLoginControl userLoginControl = new UserLoginControl(CurrentUser.User);
+            CustomControlWindow window = new CustomControlWindow(userLoginControl);
+            if (window.DialogResult) UserLoggedIn(userLoginControl.ReturnApplicationUser);// UserMenuControl.Content = "User: " + CurrentUser.UserName;
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            ////DbChooser dbChooser = new DbChooser();
-            ////CustomControlWindow dbWindow = new CustomControlWindow(dbChooser);
+            if (CurrentUser.ApplicationStarted) return;
+            //CheckForUpdates(false);
 
-            //Alpine.UpdateSupport.Models.AvailableVersions availableVersions;
-            //availableVersions = new Alpine.UpdateSupport.Models.AvailableVersions();
-            ////var VersionDownloadTracker = new PostGISVersionTrackerHelper();
+            WaitWindowHandler w = new WaitWindowHandler();
+            w.Start();
+            UserLoginControl userLoginControl = new UserLoginControl();
+            w.Stop();
+            CustomControlWindow userWindow = new CustomControlWindow(userLoginControl, true);
 
-            ////If the version on the remote file doesn't match the application version, then the user can update
-            //if (availableVersions.UpdateAvailable)
-            //{
-            //    availableVersions.Dispose();
-            //    var dataContext = new Alpine.UpdateSupport.ViewModels.AutoUpdaterControlViewModel(null);// Atlas3.Controls.ViewModels.AutoUpdaterViewModel(null,null,null,null);
-            //    var commands = new List<DevExpress.Mvvm.UICommand>();
-            //    commands.AddRange(dataContext.GetCommands());
-            //    var control = new Alpine.UpdateSupport.Views.AutoUpdaterControl { DataContext = dataContext };
-            //    //var ctrlWithHelpView = new Alpine.UpdateSupport.Views.cont Atlas3.Controls.Views.ControlWithHelpView(control);
-            //    //ctrlWithHelpView.Height = control.Height + 5;
-            //    //commands.Add(ctrlWithHelpView.GetToggleHelpCommand());
-            //    //control = ctrlWithHelpView;
+            if (!userWindow.DialogResult)
+            {
+                Application.Current.MainWindow.Close();
+                return;
+            }
 
-            //    var updateWindow = new DXDialogWindow("Check for Updates", commands);
-            //    updateWindow.SizeToContent = SizeToContent.WidthAndHeight;
-            //    updateWindow.Content = control;
-            //    updateWindow.Owner = System.Windows.Application.Current.MainWindow;
-            //    updateWindow.ResizeMode = ResizeMode.NoResize;
-            //    updateWindow.WindowStyle = WindowStyle.ToolWindow;
-            //    updateWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            //    updateWindow.ShowDialog();
-            //}
-            //availableVersions.Dispose();
-
-
-            //var serverControl = new WhichDbControl();
-            //var serverWindow = new DXDialogWindow("Pick a server");
-            //serverWindow.SizeToContent = SizeToContent.WidthAndHeight;
-            //serverWindow.Content = serverControl;
-            //serverWindow.Owner = System.Windows.Application.Current.MainWindow;
-            //serverWindow.ResizeMode = ResizeMode.NoResize;
-            //serverWindow.WindowStyle = WindowStyle.ToolWindow;
-            //serverWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            //serverWindow.ShowDialog();
-
-
-            //UserLoginControl userLoginControl = new UserLoginControl();
-            //CustomControlWindow userWindow = new CustomControlWindow(userLoginControl);
-
-            //if (!userWindow.DialogResult)
-            //{
-            //    Application.Current.MainWindow.Close();
-            //    return;
-            //}
-
-            //WaitWindowHandler w = new WaitWindowHandler();
-            //w.Start();
-            ////new StartTimeout();
-            //UserLoggedIn(userLoginControl.ReturnApplicationUser);
-            //Map.Content = new MapView();
-            //w.Stop();
+            w.Start();
+            //new StartTimeout();
+            UserLoggedIn(userLoginControl.ReturnApplicationUser);
+            if (!userLoginControl.SkipMapLoad) Map.Content = new MapView();
+            w.Stop();
+            CurrentUser.ApplicationStarted = true;
+            //AddWatersheds();
         }
-
 
         private void UserLoggedIn(ApplicationUser selectedUser)
         {
-            //CurrentUser.User = new RMS3Model().ApplicationUsers
-            //           .Include(_ => _.Districts)
-            //           //.Include(_ => _.ActiveRegens)
-            //           //.Include(_ => _.ActiveFuelbreaks)
-            //           .Include(_ => _.ApplicationGroup)
-            //           .First(_ => _.Guid == selectedUser.Guid);
+            if (CurrentUser.CurrentDatabase)
+            {
+                CurrentUser.User = new WBIS2Model().ApplicationUsers
+                           .Include(_ => _.Districts)
+                           //.Include(_ => _.ActiveRegens)
+                           //.Include(_ => _.ActiveFuelbreaks)
+                           .Include(_ => _.ApplicationGroup)
+                           .First(_ => _.Guid == selectedUser.Guid);
+            }
+            else
+            {
+                CurrentUser.User = new WBIS2Model().ApplicationUsers
+                                           .Include(_ => _.Districts)
+                                           //.Include(_ => _.ActiveRegens)
+                                           //.Include(_ => _.ActiveFuelbreaks)
+                                           .Include(_ => _.ApplicationGroup)
+                                           .First(_ => _.UserName == selectedUser.UserName);
+                var w = Application.Current.MainWindow;
+                w.Title = w.Title + " OldDb";
+            }
 
-
-            //UserMenuControl.Content = "User: " + CurrentUser.UserName;
-            //if (CurrentUser.RegenUser)
-            //{
-            //    DefaultViewMenuControl.Content = "Default View: Regen";
-            //    RegenDefaultMenuControl.IsChecked = true;
-            //    FuelbreakDefaultMenuControl.IsChecked = false;
-            //}
-            //else
-            //{
-            //    DefaultViewMenuControl.Content = "Default View: Fuelbreak";
-            //    RegenDefaultMenuControl.IsChecked = false;
-            //    FuelbreakDefaultMenuControl.IsChecked = true;
-            //}
+            UserMenuControl.Content = "User: " + CurrentUser.UserName;
+            UserMenuControl.Background = null;//Brushes.LightGreen;
         }
-        private void RegenDefultClick(object sender, DevExpress.Xpf.Bars.ItemClickEventArgs e)
-        {
-            //DefaultViewMenuControl.Content = "Default View: Regen";
-            //RegenDefaultMenuControl.IsChecked = true;
-            //FuelbreakDefaultMenuControl.IsChecked = false;
-            //CurrentUser.RegenUser = true;
-            //CurrentUser.RegenOrFuelbreakChanged?.Invoke(new object(), new EventArgs());
-        }
-
-        private void FuelbreakDefaultClick(object sender, DevExpress.Xpf.Bars.ItemClickEventArgs e)
-        {
-            //DefaultViewMenuControl.Content = "Default View: Fuelbreak";
-            //RegenDefaultMenuControl.IsChecked = false;
-            //FuelbreakDefaultMenuControl.IsChecked = true;
-            //CurrentUser.RegenUser = false;
-            //CurrentUser.RegenOrFuelbreakChanged?.Invoke(new object(), new EventArgs());
-        }
-
-
+      
 
         public Visibility UserVisibility { get; set; } = Visibility.Visible;
         public Visibility AdminUserVisibility { get; set; } = Visibility.Visible;
@@ -239,58 +205,10 @@ namespace WBIS_2.Views
             //// }
             //availableVersions.Dispose();
         }
-    }
-
-     
-
-
-    class WaitWindowHandler
-    {
-        //private Thread StatusThread = null;
-
-        //WaitWindow Popup = null;
-
-        public void Start()
+        private void DockLayoutManager_DockItemClosed(object sender, DevExpress.Xpf.Docking.Base.DockItemClosedEventArgs e)
         {
-        //    //create the thread with its ThreadStart method
-        //    this.StatusThread = new Thread(() =>
-        //    {
-        //        try
-        //        {
-        //            Popup = new WaitWindow();
-        //            this.Popup.Show();
-        //            this.Popup.Closed += (lsender, le) =>
-        //            {
-        //                //when the window closes, close the thread invoking the shutdown of the dispatcher
-        //                this.Popup.Dispatcher.InvokeShutdown();
-        //                this.Popup = null;
-        //                this.StatusThread = null;
-        //            };
-
-        //            //this call is needed so the thread remains open until the dispatcher is closed
-        //            System.Windows.Threading.Dispatcher.Run();
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace);
-        //        }
-        //    });
-
-        //    //run the thread in STA mode to make it work correctly
-        //    this.StatusThread.SetApartmentState(ApartmentState.STA);
-        //    this.StatusThread.Priority = ThreadPriority.Normal;
-        //    this.StatusThread.Start();
-        }
-
-        public void Stop()
-        {
-            //while (this.Popup == null)
-            //{ }
-            ////need to use the dispatcher to call the Close method, because the window is created in another thread, and this method is called by the main thread
-            //this.Popup.Dispatcher.BeginInvoke(new Action(() =>
-            //{
-            //    this.Popup.Close();
-            //}));
+            ModuleManager.DefaultManager.InjectOrNavigate(Regions.MainWindow, Common.Modules.Main);
+            AccordionControl.SelectedItem = null;
         }
     }
 }

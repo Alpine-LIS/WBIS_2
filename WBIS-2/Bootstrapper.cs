@@ -14,6 +14,7 @@ using System.IO;
 using System;
 using WBIS_2.Modules.Views;
 using WBIS_2.Modules.ViewModels;
+using WBIS_2.Modules;
 
 namespace WBIS_2
 {
@@ -23,7 +24,8 @@ namespace WBIS_2
         protected static IModuleManager Manager { get { return ModuleManager.DefaultManager; } }
         public virtual void Run()
         {
-            WBIS_2.Modules.GdalConfiguration.ConfigureGdal();
+            GdalConfigurationRMS.ConfigureFull();
+            Atlas3.Data.Exchange.GdalConfigurationAtlas3.ConfigureFull();
             ConfigureTypeLocators();
             RegisterModules();
             //if (!RestoreState())
@@ -52,7 +54,7 @@ namespace WBIS_2
         }
         private static void RegisterData()
         {
-            //Manager.Register(Regions.NavigationUser, new Module(AppModules.ModuleUser, () => new NavigationItem("User")));
+            Manager.Register(Regions.NavigationUser, new Module(AppModules.ModuleUser, () => new NavigationItem("User")));
             //Manager.Register(Regions.NavigationAdminUser, new Module(AppModules.ModuleAdminUser, () => new NavigationItem("Users")));
 
             Manager.Register(Regions.NavigationAreas, new Module(AppModules.ModuleDistricts, () => new NavigationItem("Districts")));
@@ -69,8 +71,8 @@ namespace WBIS_2
 
             //Manager.Register(Regions.NavigationCalifornia, new Module(AppModules.ModuleCnddbOccurrence, () => new NavigationItem("CnddbOccurrence")));
             //Manager.Register(Regions.NavigationCalifornia, new Module(AppModules.ModuleCdfwSpottedOwl, () => new NavigationItem("CdfwSpottedOwl")));
-            //Manager.Register(Regions.Documents, new Module(AppModules.ModuleUser,
-            //   () => ApplicationUserViewModel.Create(CurrentUser.User), typeof(ApplicationUserView)));
+            Manager.Register(Regions.Documents, new Module(AppModules.ModuleUser,
+               () => ApplicationUserViewModel.Create(CurrentUser.User), typeof(ApplicationUserView)));
             //Manager.Register(Regions.Documents, new Module(AppModules.ModuleAdminUser,
             //  () => ApplicationUserAdminViewModel.Create(), typeof(ApplicationUserAdminView)));
 
@@ -128,7 +130,7 @@ namespace WBIS_2
         {
             Manager.Inject(Regions.MainWindow, AppModules.Main);
 
-            //Manager.Inject(Regions.NavigationUser, AppModules.ModuleUser);
+            Manager.Inject(Regions.NavigationUser, AppModules.ModuleUser);
             //Manager.Inject(Regions.NavigationUser, AppModules.ModuleMap);
 
             //Manager.Inject(Regions.NavigationAdminUser, AppModules.ModuleAdminUser);
@@ -150,7 +152,7 @@ namespace WBIS_2
 
         protected virtual void ConfigureNavigation()
         {
-            //Manager.GetEvents(Regions.NavigationUser).Navigation += OnNavigation;
+            Manager.GetEvents(Regions.NavigationUser).Navigation += OnNavigation;
             //Manager.GetEvents(Regions.NavigationAdminUser).Navigation += OnNavigation;
             Manager.GetEvents(Regions.NavigationAreas).Navigation += OnNavigation;
             Manager.GetEvents(Regions.NavigationCalifornia).Navigation += OnNavigation;

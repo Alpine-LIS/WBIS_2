@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Npgsql;
-//using Atlas3.Controls.Compatibility.MapFunctions;
 using WBIS_2.Modules.Views;
 using Atlas.Controls.Atlas3.MapFunctions;
 using NetTopologySuite.Geometries;
@@ -43,14 +42,21 @@ namespace WBIS_2.Modules.ViewModels
             {
                 _mapControl = value;
                 _mapControl.UxMap.SelectionChanged += UxMap_SelectionChanged;
+                _mapControl.UxMap.Layers.LayerAdded+= UxMap_LayerAdded;
+                _mapControl.UxMap.Layers.LayerRemoved += UxMap_LayerAdded;
                 _mapControl.EditorEnabled = _editorEnabled;
+                CurrentUser.AllLayers = _mapControl.UxMap.Layers.Select(_=>_.LegendText).OrderBy(_=>_).ToList();
             }
         }
 
 
+        private void UxMap_LayerAdded(object? sender, LayerEventArgs e)
+        {
+            CurrentUser.AllLayers = _mapControl.UxMap.Layers.Select(_ => _.LegendText).OrderBy(_ => _).ToList();
+        }
+
         private void UxMap_SelectionChanged(object sender, EventArgs e)
         {
-            //throw new NotImplementedException();
             ResetAFS();
             MapDataPasser.MapSelectionChanged(MapControl.Selection.ToFeatureList());
         }
@@ -66,19 +72,17 @@ namespace WBIS_2.Modules.ViewModels
 
         protected MapViewModel()
         {
-            //Messenger.Default.Register<FeatureEditedMessage>(this, OnFeatureEdited);
-
         }
 
         public MapViewModel(bool temp)
         {
-            //Messenger.Default.Register<FeatureEditedMessage>(this, OnFeatureEdited);
             MapDataPasser.ZoomToLayerEvent += ZoomToLayer;
             MapDataPasser.ZoomToFeatureEvent += ZoomToSingle;
             MapDataPasser.RefreshLayersEvent += RefreshLayers;
             MapDataPasser.MapDrawFeatureEvent += DrawActivity;
             MapDataPasser.MapShowAFSEvent += MapDataPasser_MapShowAFSEvent;
             MapDataPasser.UserDistrictsChangedEvent += MapDataPasser_UserDistrictsChanged;
+            MapDataPasser.InformationTypesChangedEvent += InformationTypesChanged;
         }
 
         public void ZoomToLayer(string layerName)
@@ -87,36 +91,6 @@ namespace WBIS_2.Modules.ViewModels
             layer.SelectionEnabled = true;
             ((IMapFeatureLayer)layer).SelectAll();
         }
-
-
-        //private void OnFeatureEdited(FeatureEditedMessage obj)
-        //{
-        //    if (obj.Feature.DataRow.Table.Columns.Contains("Guid"))
-        //    {
-        //        string tbl = obj.Feature.ParentFeatureSet.Name;
-        //        //if (tbl)
-        //        //tbl = tbl.Substring(0, tbl.Length - 1);
-
-        //        NetTopologySuite.Geometries.MultiPolygon geo = null;
-        //        var database = new RMS_3.DataModel.RMS3Model();
-        //        if (tbl == "Regens")
-        //        {
-        //            tbl = "Regen";
-        //            geo = database.Regens.First(_ => _.Guid == (Guid)obj.Feature.DataRow["Guid"]).Geometry;
-        //        }
-        //        else if (tbl == "Fuelbreaks")
-        //        {
-        //            tbl = "Fuelbreak";
-        //            geo = database.Fuelbreaks.First(_ => _.Guid == (Guid)obj.Feature.DataRow["Guid"]).Geometry;
-        //        }
-        //        else if (tbl == "Activities")
-        //        {
-        //            tbl = "Activity";
-        //            geo = database.Activities.First(_ => _.Guid == (Guid)obj.Feature.DataRow["Guid"]).Geometry;
-        //        }
-        //        database.InsertRecordChange((Guid)obj.Feature.DataRow["Guid"], tbl, "Geometry", geo, obj.Feature.Geometry);
-        //    }
-        //}
 
         public void ZoomToLayer(object sender, EventArgs e)
         {
@@ -134,7 +108,6 @@ namespace WBIS_2.Modules.ViewModels
             }
             MapDataPasser.SelectionFromGrid = true;
             var q = $"{MapDataPasser.ZoomKeyField} = {MapDataPasser.ZoomKeyValues[0]}";
-            //layer.SelectByAttribute(q);
             var allKeys = String.Join(",", MapDataPasser.ZoomKeyValues);
             var q2 = $"[{MapDataPasser.ZoomKeyField}] IN ({allKeys})";
             MapControl.ActiveLayer = layer;
@@ -333,6 +306,13 @@ namespace WBIS_2.Modules.ViewModels
             //    }
             //}
             //MapControl.UxMap.MapFrame.Invalidate();
+        }
+
+        public void InformationTypesChanged(object sender, EventArgs e)
+        {
+            foreach (var layer in MapControl.UxMap.Layers)
+                layer.IsVisible = CurrentUser.VisibleLayers.Contains(MapDataPasser.CleanLayerStr(layer.LegendText));
+            MapControl.UxMap.MapFrame.Invalidate();
         }
     }
 }

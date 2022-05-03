@@ -7,6 +7,7 @@ using Atlas3.Manager;
 using WBIS_2.Modules.ViewModels;
 using WBIS_2.DataModel;
 using Atlas3.Controls.ViewModels;
+using System.Threading.Tasks;
 
 namespace WBIS_2.Modules.Views
 {
@@ -47,24 +48,7 @@ namespace WBIS_2.Modules.Views
             MapControl.EditorEnabled = true;
 
             DataContextChanged += MapView_DataContextChanged;
-
-
-            foreach (var l in MapControl.UxMap.Layers)
-            {
-                if (l.LegendText.ToUpper().Contains("ACT"))
-                {
-                    var layer = MapControl.GetLayer(l.LegendText);
-                    layer.UseNotCommon = true;
-
-                }
-            }
-
-
-            //ResourceDictionary dic = App.Current.Resources;
-            //dic[typeof(TextBlock)] = null;
-
-            //ResourceDictionary dic = App.Current.Resources;
-            //dic[typeof(TextBlock)] = null;
+            (DataContext as MapViewModel).InformationTypesChanged(new object(), new EventArgs());
         }
 
 
@@ -91,6 +75,10 @@ namespace WBIS_2.Modules.Views
         }
 
         private void MapView_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
 
         }

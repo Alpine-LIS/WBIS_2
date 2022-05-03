@@ -101,6 +101,9 @@ namespace WBIS_2.DataModel
         [InverseProperty("UserModified")]
         public ICollection<BotanicalSurveyArea> BotanicalSurveyAreasModified { get; set; }
 
+        [InverseProperty("ApplicationUser")]
+        public ICollection<UserMapLayer> UserMapLayers { get; set; }
+
 
 
         public ICollection<Hex160> ActiveHex160s { get; set; }

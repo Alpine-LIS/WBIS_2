@@ -142,6 +142,7 @@ namespace WBIS_2.Modules.Views
         private void DisplayFileds(GridControl gc)
         {
             addColumns = new Dictionary<GridColumn, int>();
+            if (((ListViewModelBase)DataContext).ListManager == null) return;
 
             foreach(var displayField in ((ListViewModelBase)DataContext).ListManager.DisplayFields)
             {

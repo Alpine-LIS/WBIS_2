@@ -80,5 +80,19 @@ namespace WBIS_2.DataModel
             UserDistrictsChangedEvent?.Invoke(new object(), new EventArgs());
         }
         public static bool ViewFuelTreatments = false;
+
+
+        /// <summary>
+        /// When the opened information types are changed, or their default visable layers are updated.
+        /// </summary>
+        public static EventHandler InformationTypesChangedEvent;
+        public static void InformationTypesChanged()
+        {
+            InformationTypesChangedEvent?.Invoke(new object(), new EventArgs());
+        }
+        public static string CleanLayerStr(string value)
+        {
+            return value.Replace(" ", "").Replace("_", "").ToUpper();
+        }
     }
 }

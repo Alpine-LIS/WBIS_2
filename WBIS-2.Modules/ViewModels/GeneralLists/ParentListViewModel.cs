@@ -34,6 +34,7 @@ namespace WBIS_2.Modules.ViewModels
                 SetProperty(() => ParentType, value);
                 ListManager = ParentType.Manager;
                 RaisePropertyChanged(nameof(ListManager));
+                CurrentUser.AddRemoveInfoType(ListManager.DisplayName, true);
             }
         }
 
@@ -50,6 +51,7 @@ namespace WBIS_2.Modules.ViewModels
         public override void CloseForm()
         {
             DocumentOwner.Close(this);
+            CurrentUser.AddRemoveInfoType(ListManager.DisplayName, false);
         }
 
         public void OnClose(CancelEventArgs e)

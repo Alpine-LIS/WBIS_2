@@ -7,9 +7,21 @@
              xmlns:dxa="http://schemas.devexpress.com/winfx/2008/xaml/accordion"
              xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
              xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
-             xmlns:common="clr-namespace:WBIS_2.Common;assembly=WBIS_2.Common"
+             xmlns:common="clr-namespace:WBIS_2.Common;assembly=WBIS_2.Common" xmlns:dxspch="http://schemas.devexpress.com/winfx/2008/xaml/spellchecker"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" Loaded="UserControl_Loaded">
+
+
+
+    <dxspch:SpellingSettings.SpellChecker>
+        <Binding Path="SpellChecker"/>
+    </dxspch:SpellingSettings.SpellChecker>
+    <dxspch:SpellingSettings.CheckAsYouType>True</dxspch:SpellingSettings.CheckAsYouType>
+    <dxspch:SpellingSettings.ShowSpellCheckMenu>True</dxspch:SpellingSettings.ShowSpellCheckMenu>
+    <dxspch:SpellingSettings.UnderlineColor>Red</dxspch:SpellingSettings.UnderlineColor>
+    <dxspch:SpellingSettings.UnderlineStyle>WavyLine</dxspch:SpellingSettings.UnderlineStyle>
+    <dxspch:SpellingSettings.IgnoreWordsWithNumbers>true</dxspch:SpellingSettings.IgnoreWordsWithNumbers>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height ="Auto"/>
@@ -19,10 +31,6 @@
             <dxb:MainMenuControl Caption="Main Menu">
                 <dxb:BarSubItem Name="UserMenuControl" Content="Log Out">
                     <dxb:BarButtonItem Content="Change User" ItemClick="LogOutClick"/>
-                    <dxb:BarSubItem Name="DefaultViewMenuControl" Content="Default View: Regen">
-                        <dxb:BarCheckItem Name="RegenDefaultMenuControl"  Content="Regen" ItemClick="RegenDefultClick" IsChecked="True"/>
-                        <dxb:BarCheckItem Name="FuelbreakDefaultMenuControl" Content="Fuelbreak" ItemClick="FuelbreakDefaultClick" IsChecked="False"/>
-                    </dxb:BarSubItem>
                 </dxb:BarSubItem>
                 <dxb:BarSubItem Content="Help">
                     <dxb:BarButtonItem Content="About"/>
@@ -32,28 +40,21 @@
             </dxb:MainMenuControl>
         </dxb:BarContainerControl>
         <dxdo:DockLayoutManager 
+            DockItemClosed="DockLayoutManager_DockItemClosed"
             Grid.Row="1"
             Name="DockLayoutManager"
             FloatingMode="Desktop" ClosedPanelsBarVisibility="Auto" ClosedPanelsBarPosition="Bottom" EnableWin32Compatibility="True" Loaded="DockLayoutManager_Loaded">
             <dxdo:LayoutGroup Orientation="Horizontal">
                 <dxdo:LayoutPanel Name="Navigation" Caption="Navigation" AllowClose="False" ItemWidth="200">
-                    <dxa:AccordionControl AutoExpandAllItems="True" SelectionUnit="SubItem">
+                    <dxa:AccordionControl AutoExpandAllItems="True" SelectionUnit="SubItem" Name="AccordionControl">
 
-                        <!--<dxa:AccordionItem Header="User" dxmvvm:UIRegion.Region="{x:Static common:Regions.NavigationAdminUser}" IsExpanded="False" x:Name="UserRegion">
+                        <dxa:AccordionItem Header="User" dxmvvm:UIRegion.Region="{x:Static common:Regions.NavigationUser}" IsExpanded="False" x:Name="UserRegion">
                             <dxa:AccordionItem.ItemContainerStyle>
                                 <Style TargetType="dxa:AccordionItem">
                                     <Setter Property="Header" Value="{Binding Caption}"/>
                                 </Style>
                             </dxa:AccordionItem.ItemContainerStyle>
                         </dxa:AccordionItem>
-                        <dxa:AccordionItem Header="User" dxmvvm:UIRegion.Region="{x:Static common:Regions.NavigationAdminUser}" IsExpanded="False" x:Name="AdminUserRegion">
-                            <dxa:AccordionItem.ItemContainerStyle>
-                                <Style TargetType="dxa:AccordionItem">
-                                    <Setter Property="Header" Value="{Binding Caption}"/>
-                                </Style>
-                            </dxa:AccordionItem.ItemContainerStyle>
-                        </dxa:AccordionItem>-->
-
                         <dxa:AccordionItem Header="Areas" dxmvvm:UIRegion.Region="{x:Static common:Regions.NavigationAreas}" IsExpanded="False">
                             <dxa:AccordionItem.ItemContainerStyle>
                                 <Style TargetType="dxa:AccordionItem">

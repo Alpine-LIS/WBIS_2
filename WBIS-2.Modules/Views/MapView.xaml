@@ -1,5 +1,5 @@
 ﻿<UserControl 
-    x:Class="WBIS_2.Modules.Views.MapView"
+     x:Class="WBIS_2.Modules.Views.MapView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -9,10 +9,12 @@
     xmlns:atlasMap="clr-namespace:Atlas3.Controls;assembly=Atlas3.Controls"
     xmlns:dxmvvm="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:ControlsView="clr-namespace:Atlas3.Controls.Views;assembly=Atlas3.Controls" 
+    xmlns:MapViews="clr-namespace:Atlas.Map.Views;assembly=Atlas.Map"
     xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
     mc:Ignorable="d" 
                            xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors" 
-  d:DesignHeight="450" d:DesignWidth="800">
+  d:DesignHeight="450" d:DesignWidth="800"
+    Loaded="UserControl_Loaded">
 
 
 
@@ -23,7 +25,15 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <ControlsView:MapToolBarViewTools Map="{Binding ElementName=MapControl}" Name="MapToolBarViewTools" />
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="AUTO"/>
+                <ColumnDefinition Width="AUTO"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <ControlsView:MapToolBarViewTools Map="{Binding ElementName=MapControl}" Name="MapToolBarViewTools" Grid.Column="0"/>
+            <!--<ControlsView:MapToolBar Map="{Binding ElementName=MapControl}" Name="MapToolBar" Grid.Column="1"/>-->
+        </Grid>
         <dxdo:DockLayoutManager
             Grid.Row="1" FloatingMode="Desktop" ClosedPanelsBarVisibility="Auto" ClosedPanelsBarPosition="Bottom">
             <dxdo:LayoutGroup Caption="LayoutRoot" Orientation="Horizontal">
@@ -37,6 +47,9 @@
 
                     </atlasMap:MapControl>
                 </dxdo:DocumentPanel>
+                <dxdo:LayoutPanel Caption="Feature Info" x:Name="featureInfo" Closed="True">
+                    <MapViews:AttributesInfoEditView MapControl="{Binding ElementName=MapControl}" />
+                </dxdo:LayoutPanel>
             </dxdo:LayoutGroup>
         </dxdo:DockLayoutManager>
         <dxb:StatusBarControl Grid.Row="2" Grid.ColumnSpan="4" Caption="Map Bar Bottom" Background="Green">

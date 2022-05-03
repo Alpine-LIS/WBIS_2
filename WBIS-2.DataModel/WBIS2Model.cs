@@ -149,8 +149,11 @@ namespace WBIS_2.DataModel
             modelBuilder.Entity<NestingStatus>().ToTable("nesting_status");
             modelBuilder.Entity<ReproductiveStatus>().ToTable("reproductive_status");
 
+            modelBuilder.Entity<UserMapLayer>().ToTable("user_map_layers");
 
-            modelBuilder.Entity<ApplicationUser>()
+
+
+        modelBuilder.Entity<ApplicationUser>()
                 .HasMany(_ => _.Districts)
                 .WithMany(p => p.ApplicationUsers)
                 .UsingEntity<Dictionary<string, object>>("users_districts",
@@ -422,6 +425,7 @@ namespace WBIS_2.DataModel
         public DbSet<ReproductiveStatus> ReproductiveStatuses { get; set; }
 
 
+        public DbSet<UserMapLayer> UserMapLayers { get; set; }
 
 
 

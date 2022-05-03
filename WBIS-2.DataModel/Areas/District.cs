@@ -26,6 +26,10 @@ namespace WBIS_2.DataModel
         [Display(AutoGenerateField = false)]
         public DistrictExtendedGeometry DistrictExtendedGeometry { get; set; }
 
+        public ICollection<CDFW_SpottedOwlDiagram> CDFW_SpottedOwlDiagrams { get; set; }
+        public ICollection<ApplicationUser> ApplicationUsers { get; set; }
+
+
 
         [ListInfo(ChildField = true)]
         public ICollection<Hex160> Hex160s { get; set; }
@@ -36,10 +40,7 @@ namespace WBIS_2.DataModel
         [ListInfo(ChildField = true)]
         public ICollection<CNDDBOccurrence> CNDDBOccurrences { get; set; }
         [ListInfo(ChildField = true)]
-        public ICollection<CDFW_SpottedOwl> CDFW_SpottedOwls { get; set; }
-        [ListInfo(ChildField = true)]
-        public ICollection<CDFW_SpottedOwlDiagram> CDFW_SpottedOwlDiagrams { get; set; }
-        public ICollection<ApplicationUser> ApplicationUsers { get; set; }
+        public ICollection<CDFW_SpottedOwl> CDFW_SpottedOwls { get; set; }        
         [ListInfo(ChildField = true)]
         public ICollection<OwlBanding> OwlBandings { get; set; }
         [ListInfo(ChildField = true)]

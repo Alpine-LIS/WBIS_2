@@ -46,10 +46,15 @@ namespace WBIS_2.Modules.ViewModels
             }
             set
             {
+                if (CurrentChild != null) 
+                    CurrentUser.AddRemoveInfoType(CurrentChild.Manager.DisplayName, false);
+                if (value != null) 
+                    CurrentUser.AddRemoveInfoType(value.Manager.DisplayName, true);
+
                 SetProperty(() => CurrentChild, value);
                 ListManager = CurrentChild.Manager;
                 RaisePropertyChanged(nameof(ListManager));
-                RefreshDataSource();
+                RefreshDataSource();               
             }
         }
         public object[] ParentQuery
@@ -82,6 +87,8 @@ namespace WBIS_2.Modules.ViewModels
         public override void CloseForm()
         {
             DocumentOwner.Close(this);
+            if (CurrentChild != null)
+                CurrentUser.AddRemoveInfoType(CurrentChild.Manager.DisplayName, false);
         }
 
         public void OnClose(CancelEventArgs e)
