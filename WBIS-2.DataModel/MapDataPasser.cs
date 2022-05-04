@@ -92,7 +92,8 @@ namespace WBIS_2.DataModel
         }
         public static string CleanLayerStr(string value)
         {
-            return value.Replace(" ", "").Replace("_", "").ToUpper();
+            return value.Replace(" ", "_").ToUpper();
+            //return value.Replace(" ", "").Replace("_", "").ToUpper();
         }
     }
 }

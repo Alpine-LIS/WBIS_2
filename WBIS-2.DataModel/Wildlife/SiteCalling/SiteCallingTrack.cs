@@ -9,6 +9,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
+    [SubElement(typeof(SiteCalling))]
     public class SiteCallingTrack
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid"), ForeignKey("SiteCalling")]

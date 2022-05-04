@@ -9,7 +9,6 @@ using System.Reflection;
 
 namespace WBIS_2.DataModel
 {
-    public class InformationTypeManager { }
     public class InformationTypeManager<InfoType> : IInfoTypeManager where InfoType : class
     {
         public string DisplayName => GetDisplayName();
@@ -70,6 +69,8 @@ namespace WBIS_2.DataModel
         private List<KeyValuePair<string, string>> GetDisplayFields(Type type, string classStack)
         {
             List<KeyValuePair<string, string>> valuePairs = new List<KeyValuePair<string, string>>();
+            if (!IsIInformationType(type)) return valuePairs;
+
             var properties = ((IInformationType)Activator.CreateInstance(type)).Manager.DisplayFieldProperties;
 
             foreach (var item in properties)
@@ -83,7 +84,6 @@ namespace WBIS_2.DataModel
                     valuePairs.Add(new KeyValuePair<string, string>(item.Name, $"{classStack}{item.Name}"));
                 }
             }
-
             return valuePairs;
         }
 
@@ -115,13 +115,16 @@ namespace WBIS_2.DataModel
         private void ThenIncludes(ref IQueryable<InfoType> query, PropertyInfo includeProp)
         {
             bool furtherInclusions = false;
-            var IncludedInstance = Activator.CreateInstance(includeProp.PropertyType);
-            foreach(var potentialInclusion in ((IInformationType)IncludedInstance).Manager.DisplayFieldProperties)
+            if (IsIInformationType(includeProp.PropertyType))
             {
-                if (IsIInformationType(potentialInclusion.PropertyType))
+                var IncludedInstance = Activator.CreateInstance(includeProp.PropertyType);
+                foreach (var potentialInclusion in ((IInformationType)IncludedInstance).Manager.DisplayFieldProperties)
                 {
-                    furtherInclusions = true;
-                    query = query.Include($"{includeProp.Name}.{potentialInclusion.Name}");
+                    if (IsIInformationType(potentialInclusion.PropertyType))
+                    {
+                        furtherInclusions = true;
+                        query = query.Include($"{includeProp.Name}.{potentialInclusion.Name}");
+                    }
                 }
             }
 

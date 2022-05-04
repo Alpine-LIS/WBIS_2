@@ -25,7 +25,7 @@ namespace WBIS_2.DataModel
                         UserName = _User.UserName;
                         ReadOnly = _User.ApplicationGroup.ReadOnly;
                         AdminPrivileges = _User.ApplicationGroup.AdminPrivileges;
-                        //Districts = _User.UserDistricts;
+                        Districts = _User.Districts;
 
                         CurrentUserChanged?.Invoke(new object(), new EventArgs());
                         GetVisableLayers();
@@ -55,9 +55,9 @@ namespace WBIS_2.DataModel
             else CurrentInfoTypes.Remove(infoType);
             GetVisableLayers();
         }
-        public static List<string> AllLayers { get; set; } = new List<string>();
+        public static List<string> AllLayers = new List<string>();
         public static List<string> VisibleLayers { get; set; } = new List<string>();
-        private static void GetVisableLayers()
+        public static void GetVisableLayers()
         {
             WBIS2Model database = new WBIS2Model();
 
@@ -67,6 +67,12 @@ namespace WBIS_2.DataModel
                 .Select(_ => MapDataPasser.CleanLayerStr(_.VisibleLayer))
                 .Distinct().ToList();
 
+            if (VisibleLayers.Count() == 0)
+                VisibleLayers = database.UserMapLayers
+                    .Include(_ => _.ApplicationUser)
+                    .Where(_ => _.ApplicationUser == null && CurrentUser.CurrentInfoTypes.Contains(_.InformationType))
+                    .Select(_ => MapDataPasser.CleanLayerStr(_.VisibleLayer))
+                    .Distinct().ToList();
             if (VisibleLayers.Count() == 0)
                 VisibleLayers = database.UserMapLayers
                     .Include(_ => _.ApplicationUser)
@@ -82,5 +88,8 @@ namespace WBIS_2.DataModel
             
             MapDataPasser.InformationTypesChanged();
         }
+
+        public static bool ViewDeleted { get; set; } = false;
+        public static bool ViewRepository { get; set; } = false;
     }
 }

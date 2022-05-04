@@ -19,6 +19,7 @@ using WBIS_2.Modules.Tools;
 using WBIS_2.Modules.Views.Wildlife;
 using WBIS_2.Modules.ViewModels.Wildlife;
 using System.IO;
+using DevExpress.Mvvm.ModuleInjection;
 
 namespace WBIS_2.Modules.ViewModels
 {
@@ -30,7 +31,7 @@ namespace WBIS_2.Modules.ViewModels
         {
             RefreshDataSource();
 
-            CurrentUser.CurrentUserChanged += CurrentUserChanged;
+            //CurrentUser.CurrentUserChanged += CurrentUserChanged;
 
             SelectedItems = new ObservableCollection<object>();
             SelectedItems.CollectionChanged += SelectedItems_CollectionChanged;
@@ -39,6 +40,16 @@ namespace WBIS_2.Modules.ViewModels
             AddRecordCommand = new DelegateCommand(AddRecord);
             DeleteRecordCommand = new DelegateCommand(DeleteRecord);
             RecordsRefreshCommand = new DelegateCommand(RecordsRefresh);
+            ModuleManager.DefaultManager.GetEvents(viewModel: this).ViewModelRemoving += WBISViewModelBase_ViewModelRemoving;
+        }
+
+        private void WBISViewModelBase_ViewModelRemoving(object? sender, ViewModelRemovingEventArgs e)
+        {
+            //Tracker.ChangesSaved -= Tracker_ChangesSaved;
+            //CurrentUser.CurrentUserChanged -= CurrentUserChanged;
+
+            CurrentUser.AddRemoveInfoType(ListManager.DisplayName, false);
+            //this.Dispose();
         }
 
         public EntityInstantFeedbackSource Records { get; set; }
@@ -85,7 +96,8 @@ namespace WBIS_2.Modules.ViewModels
             set
             {
                 SetProperty(() => ListManager, value);
-                SetRecordOptions();
+                //if (ListManager == null) return;
+                //SetRecordOptions();
             }
         }
 

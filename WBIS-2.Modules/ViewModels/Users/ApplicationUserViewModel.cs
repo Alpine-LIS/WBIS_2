@@ -83,6 +83,11 @@ namespace WBIS_2.Modules.ViewModels
             RaisePropertyChanged(nameof(DistrictList));
             CreateLayerList();
             RaisePropertyChanged(nameof(LayerList));
+
+            FillInfoTypes();
+            FillInfoTypesLayers();
+            InfoType = InfoTypes[0];
+            RaisePropertyChanged(nameof(InfoType));
         }
         public ApplicationGroup[] ApplicationGroups { get; set; }
         public override void Tracker_ChangesSaved(object sender, IEnumerable<Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry> e)
@@ -121,13 +126,37 @@ namespace WBIS_2.Modules.ViewModels
 
             if (!Database.ApplicationUsers.Contains(User)) Database.ApplicationUsers.Add(User);
             else Database.ApplicationUsers.Update(User);
+            UpdateMapLayers();
 
             Database.SaveChanges();
             RaisePropertyChanged("Title");
             this.Changed = false;
 
             if (CurrentUser.User != null) CurrentUser.User = User;
+            if (ChangedInfoLayers.Count > 0) CurrentUser.GetVisableLayers();
+        }
+
+        private void UpdateMapLayers()
+        {
+            if (CurrentUser.AllLayers.Count == 0) return;
+            UpdateLayerList();
+            if (ChangedInfoLayers.Count == 0) return;
             
+            foreach (string info in ChangedInfoLayers.Distinct())
+            {
+                Database.UserMapLayers.RemoveRange(
+                    Database.UserMapLayers.Where(_ => _.ApplicationUser == User && _.InformationType == info));
+                foreach (string layer in InfoTypesLayers[info])
+                {
+                    Database.UserMapLayers.Add(
+                        new UserMapLayer()
+                        {
+                            ApplicationUser = User,
+                            InformationType = info,
+                            VisibleLayer = layer
+                        });
+                }
+            }
         }
 
     
@@ -161,20 +190,86 @@ namespace WBIS_2.Modules.ViewModels
 
 
 
+        public List<string> InfoTypes { get; set; }
+
+        private void FillInfoTypes()
+        {
+            InfoTypes = new List<string>();
+            InfoTypes.Add("Default View");
+            InfoTypes.Add("District");
+            InfoTypes.AddRange(new InformationTypeManager<District>().AvailibleChildren.Select(_ => _.Manager.DisplayName));
+            RaisePropertyChanged(nameof(InfoTypes));
+        }
+
+        public string InfoType
+        {
+            get { return GetProperty(() => InfoType); }
+            set
+            {
+                UpdateLayerList();
+                SetProperty(() => InfoType, value);
+                CreateLayerList();
+            }
+        }
+
+        Dictionary<string, List<string>> InfoTypesLayers = new Dictionary<string, List<string>>();
+        private void FillInfoTypesLayers()
+        {
+            foreach (var type in InfoTypes)
+            {
+                var layers = Database.UserMapLayers
+                .Include(_ => _.ApplicationUser)
+                .Where(_ => _.ApplicationUser.Guid == User.Guid && type == _.InformationType)
+                .Select(_ => MapDataPasser.CleanLayerStr(_.VisibleLayer))
+                .Distinct().ToList();
+
+                if (layers.Count() == 0)
+                    layers = Database.UserMapLayers
+                        .Include(_ => _.ApplicationUser)
+                        .Where(_ => _.ApplicationUser == null && type == _.InformationType)
+                        .Select(_ => MapDataPasser.CleanLayerStr(_.VisibleLayer))
+                        .Distinct().ToList();
+                if (layers.Count() == 0)
+                    layers = Database.UserMapLayers
+                        .Include(_ => _.ApplicationUser)
+                        .Where(_ => _.ApplicationUser.Guid == User.Guid && _.InformationType == "Default View")
+                        .Select(_ => MapDataPasser.CleanLayerStr(_.VisibleLayer))
+                        .Distinct().ToList();
+                if (layers.Count() == 0)
+                    layers = Database.UserMapLayers
+                        .Include(_ => _.ApplicationUser)
+                        .Where(_ => _.ApplicationUser == null && _.InformationType == "Default View")
+                        .Select(_ => MapDataPasser.CleanLayerStr(_.VisibleLayer))
+                        .Distinct().ToList();
+
+                InfoTypesLayers.Add(type, layers);
+            }
+        }
+
         public ObservableCollection<StringBoolStringClass> LayerList { get; set; }
         private void CreateLayerList()
         {
-            //servi
-
-
-
+            if (InfoType == null) return;
+            if (!InfoTypesLayers.ContainsKey(InfoType)) return;
 
             LayerList = new ObservableCollection<StringBoolStringClass>();
             foreach (string layer in CurrentUser.AllLayers)
             {
-                LayerList.Add(new StringBoolStringClass() { Layer = layer, IsSelected = User.Districts.Contains(district) });
+                LayerList.Add(new StringBoolStringClass() { LayerName = layer, IsSelected = InfoTypesLayers[InfoType].Contains(MapDataPasser.CleanLayerStr(layer)) });
+            }
+            RaisePropertyChanged(nameof(LayerList));
+        }
+        private void UpdateLayerList()
+        {
+            if (InfoType == null) return;
+            List<string> test = LayerList.Where(_ => _.IsSelected).Select(_ => MapDataPasser.CleanLayerStr(_.LayerName)).ToList();
+            if (!InfoTypesLayers[InfoType].SequenceEqual(test))
+            {
+                InfoTypesLayers[InfoType] = test;
+                ChangedInfoLayers.Add(InfoType);
             }
         }
+        List<string> ChangedInfoLayers = new List<string>();
 
 
         public class DistrictBoolStringClass
@@ -184,8 +279,10 @@ namespace WBIS_2.Modules.ViewModels
         }
         public class StringBoolStringClass
         {
-            public string Layer { get; set; }
+            public string LayerName { get; set; }
             public bool IsSelected { get; set; }
         }
+
+        public Visibility MapLayersAvailible => CurrentUser.AllLayers.Count == 0? Visibility.Visible : Visibility.Hidden;
     }
 }

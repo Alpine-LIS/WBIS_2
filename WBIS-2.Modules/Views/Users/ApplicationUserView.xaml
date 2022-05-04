@@ -95,14 +95,18 @@
             </Grid.RowDefinitions>
 
             <Label Grid.Column="0" Content="Information Type:"/>
-            <dxe:ComboBoxEdit Grid.Column="1" Text="{Binding InfoType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding InfoTypes}"/>
+            <dxe:ComboBoxEdit Grid.Column="1" SelectedItem="{Binding InfoType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding InfoTypes}" SelectedIndex="0"/>
+            <Label Grid.Column="1" Grid.Row="1" Content="*No Map Layers Availible" Visibility="{Binding MapLayersAvailible}" HorizontalAlignment="Left" VerticalAlignment="Top" FontWeight="Bold"/>
 
             <Label Grid.Column="2" Content="Layers:" VerticalAlignment="Top"/>
             <ListBox ItemsSource="{Binding LayerList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="2" Grid.Column="3" Grid.RowSpan="2">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal" >
-                            <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="{Binding LayerName}" Margin="0"/>
+                            <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <Label Margin="0">
+                                <TextBlock  Text="{Binding LayerName}"/>
+                            </Label>
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>

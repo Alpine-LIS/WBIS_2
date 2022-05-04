@@ -27,7 +27,7 @@ namespace WBIS_2.Modules.Views
         {
             InitializeComponent();
             //Messenger.Default.Register<string>(this, OnMessage);
-            MapDataPasser.MapSelectionChangedEvent += MapDataPasser_MapSelectionChangedEvent;
+            //MapDataPasser.MapSelectionChangedEvent += MapDataPasser_MapSelectionChangedEvent;
             DataContextChanged += GridControlView_DataContextChanged;
             MyGrid.DefaultSorting = "Guid";
 

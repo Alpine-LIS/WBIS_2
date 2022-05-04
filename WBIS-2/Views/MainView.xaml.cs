@@ -207,6 +207,7 @@ namespace WBIS_2.Views
         }
         private void DockLayoutManager_DockItemClosed(object sender, DevExpress.Xpf.Docking.Base.DockItemClosedEventArgs e)
         {
+            //((DevExpress.Xpf.Docking.DocumentPanel)e.AffectedItems[0]).
             ModuleManager.DefaultManager.InjectOrNavigate(Regions.MainWindow, Common.Modules.Main);
             AccordionControl.SelectedItem = null;
         }

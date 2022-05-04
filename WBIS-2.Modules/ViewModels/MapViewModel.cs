@@ -11,6 +11,9 @@ using Npgsql;
 using WBIS_2.Modules.Views;
 using Atlas.Controls.Atlas3.MapFunctions;
 using NetTopologySuite.Geometries;
+using System.Data;
+using System.Windows;
+using Microsoft.EntityFrameworkCore;
 
 namespace WBIS_2.Modules.ViewModels
 {
@@ -45,7 +48,6 @@ namespace WBIS_2.Modules.ViewModels
                 _mapControl.UxMap.Layers.LayerAdded+= UxMap_LayerAdded;
                 _mapControl.UxMap.Layers.LayerRemoved += UxMap_LayerAdded;
                 _mapControl.EditorEnabled = _editorEnabled;
-                CurrentUser.AllLayers = _mapControl.UxMap.Layers.Select(_=>_.LegendText).OrderBy(_=>_).ToList();
             }
         }
 
@@ -81,7 +83,7 @@ namespace WBIS_2.Modules.ViewModels
             MapDataPasser.RefreshLayersEvent += RefreshLayers;
             MapDataPasser.MapDrawFeatureEvent += DrawActivity;
             MapDataPasser.MapShowAFSEvent += MapDataPasser_MapShowAFSEvent;
-            MapDataPasser.UserDistrictsChangedEvent += MapDataPasser_UserDistrictsChanged;
+            //MapDataPasser.UserDistrictsChangedEvent += MapDataPasser_UserDistrictsChanged;
             MapDataPasser.InformationTypesChangedEvent += InformationTypesChanged;
         }
 
@@ -284,34 +286,116 @@ namespace WBIS_2.Modules.ViewModels
         }
 
 
-        private void MapDataPasser_UserDistrictsChanged(object sender, EventArgs e)
+
+
+
+        private void MapDataPasser_UserMapOptionsChanged(string layerStr)
         {
-            //if (MapControl == null) return;
+            var p = typeof(WBIS2Model).GetProperties().FirstOrDefault(_ => MapDataPasser.CleanLayerStr(_.Name) == MapDataPasser.CleanLayerStr(layerStr));
+            if (p == null) return;
+            var trueType = p.PropertyType.GenericTypeArguments.Single();
+           // var runTimeType = p.PropertyType.GenericTypeArguments.Single();
+            //var trueType = Type.GetType(runTimeType.FullName);
 
-            //Guid[] districtGuids = CurrentUser.Districts.Select(_ => _.Guid).ToArray();
+            //Is the layer a sub element
+            var sub = trueType.GetCustomAttributes(typeof(SubElement), true).FirstOrDefault();//.FirstOrDefault(_ => _.AttributeType == typeof(SubElement));
+            Type parentType = null; 
+            string parent = "";
+            string joinParent = "";
+            if (sub != null)
+            {
+                WBIS2Model model = new WBIS2Model();
 
-            ////string[] layers = new string[] { "REGENS" };
-            //string[] layers = new string[] { "REGENS", "FUELBREAKS" };
-            //foreach (string layer in layers)
-            //{
-            //    var featureLayer = MapControl.GetLayer(layer);
-            //    foreach (var f in featureLayer.DataSet.Features)
-            //    {
-            //        //featureLayer.SetVisible(f, (string)f.DataRow["DISTRICT"] == "Redding");
-            //        if (layer == "FUELBREAKS")
-            //            featureLayer.SetVisible(f, districtGuids.Contains((Guid)f.DataRow["DistrictGuid"]) &&
-            //                (!(bool)f.DataRow["FuelTreatment"] || (bool)f.DataRow["FuelTreatment"] == MapDataPasser.ViewFuelTreatments));
-            //        else
-            //            featureLayer.SetVisible(f, districtGuids.Contains((Guid)f.DataRow["DistrictGuid"]));
-            //    }
-            //}
-            //MapControl.UxMap.MapFrame.Invalidate();
+                parentType = ((SubElement)sub).ParentType;
+                var entityType = model.Model.FindEntityType(parentType);
+                var schema = entityType.GetSchema();
+                parent = entityType.GetTableName().ToLower();
+
+                joinParent = $" INNER JOIN {parent} ON {layerStr.ToLower()}.guid = {parent}.guid";
+            }
+
+            //Does the layer contain repository data
+            string repository = "";
+            if (CurrentUser.ViewRepository = false)
+            {
+                if (parent == "")
+                {
+                    if (trueType.GetProperties().Any(_ => _.Name == "Repository"))
+                        repository = $"{layerStr.ToLower()}.repository = FALSE AND ";
+                }
+                else
+                {
+                    if (Type.GetType(parent).GetProperties().Any(_ => _.Name == "Repository"))
+                        repository = $"{parent}.repository = FALSE AND ";
+                }
+            }
+
+            string districts = "";
+            //Is the district connection one to one or many to many
+            if (parentType == null)
+            {
+                if (trueType.GetProperty("District") != null)
+                    districts = $" {layerStr.ToLower()}.district_id IN ({DistrictGuids})";
+                else
+                    districts = $" {layerStr.ToLower()}.guid IN (SELECT {GetDatabaseString(trueType)}_id FROM {layerStr.ToLower()}_districts WHERE district_id IN ({DistrictGuids}))";
+            }
+            else
+            {
+                if (parentType.GetProperty("District") != null)
+                    districts = $" {parent}.district_id IN ({DistrictGuids})";
+                else
+                    districts = $" {layerStr.ToLower()}.guid IN (SELECT {GetDatabaseString(parentType)}_id FROM {parent}_districts WHERE district_id IN ({DistrictGuids}))";
+            }
+                
+
+            string query = $"SELECT {layerStr.ToLower()}.guid, {repository}{districts} from {layerStr.ToLower()} {joinParent} ORDER BY {layerStr.ToLower()}.guid";
+
+            DataTable dt = new DataTable();
+            using (NpgsqlDataAdapter filler = new NpgsqlDataAdapter(query, WBIS2Model.GetRDSConnectionString()))
+                filler.Fill(dt);
+
+            var layer = MapControl.GetLayer(layerStr);
+            bool misteap = false;
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                layer.SetVisible(i, (bool)dt.Rows[i][1]);
+                if ((Guid)dt.Rows[i][0] != (Guid)layer.DataSet.DataTable.Rows[i]["guid"])
+                    misteap = true;
+            }
+            if (misteap)
+                MessageBox.Show($"There was a misalignment displaying layer {layerStr}");
+        }
+        string DistrictGuids = $"'{string.Join("','", CurrentUser.Districts.Select(_ => _.Guid))}'";
+        private string GetDatabaseString(Type type)
+        {
+            string initial = type.Name;
+            string returnVal = initial.First().ToString();
+
+            for (int i = 1; i < initial.Length - 1; i++)
+            {
+                if (!Char.IsLetterOrDigit(initial[i]))
+                    returnVal += "_";
+                else if (Char.IsUpper(initial[i]) && Char.IsLower(initial[i + 1]))
+                    returnVal += "_" + initial[i];
+                else returnVal += initial[i];
+            }
+            return (returnVal + initial.Last()).ToLower();
         }
 
         public void InformationTypesChanged(object sender, EventArgs e)
         {
             foreach (var layer in MapControl.UxMap.Layers)
-                layer.IsVisible = CurrentUser.VisibleLayers.Contains(MapDataPasser.CleanLayerStr(layer.LegendText));
+            {
+                if (CurrentUser.VisibleLayers.Contains(MapDataPasser.CleanLayerStr(layer.LegendText)))
+                {
+                    layer.IsVisible = true;
+                    MapDataPasser_UserMapOptionsChanged(layer.LegendText);
+                }
+                else
+                {
+                    layer.IsVisible = false;
+                }
+            }
             MapControl.UxMap.MapFrame.Invalidate();
         }
     }

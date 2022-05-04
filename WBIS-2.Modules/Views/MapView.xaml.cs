@@ -8,6 +8,7 @@ using WBIS_2.Modules.ViewModels;
 using WBIS_2.DataModel;
 using Atlas3.Controls.ViewModels;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace WBIS_2.Modules.Views
 {
@@ -40,6 +41,7 @@ namespace WBIS_2.Modules.Views
                 Atlas3.Manager.AtlasManager.Instance.Map.FunctionMode = Atlas.Controls.FunctionMode.Select;
                 Atlas3.Manager.AtlasManager.Instance.Map.FunctionMode = Atlas.Controls.FunctionMode.ZoomPan;
             }
+            CurrentUser.AllLayers = Atlas3.Manager.AtlasManager.Instance.Map.Layers.Select(_ => _.LegendText).OrderBy(_ => _).ToList();
 
 
             Unloaded += MapView_Unloaded;

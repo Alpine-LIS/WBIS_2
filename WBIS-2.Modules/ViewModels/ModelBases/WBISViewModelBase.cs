@@ -19,6 +19,7 @@ using WBIS_2.Modules.Tools;
 using WBIS_2.Modules.Views.Wildlife;
 using WBIS_2.Modules.ViewModels.Wildlife;
 using System.IO;
+using DevExpress.Mvvm.ModuleInjection;
 
 namespace WBIS_2.Modules.ViewModels
 {
@@ -82,11 +83,10 @@ namespace WBIS_2.Modules.ViewModels
             Tracker.ChangesSaved += Tracker_ChangesSaved;
             CurrentUser.CurrentUserChanged += CurrentUserChanged;
             ClosingFormCommand = new DelegateCommand(CloseForm);
+            SaveCommand = new DelegateCommand(Save);
 
             Privileges();
-
         }
-
 
         public event EventHandler RecordSaved;
         protected virtual void OnRecordSaved(object sender, EventArgs e)
@@ -187,9 +187,6 @@ namespace WBIS_2.Modules.ViewModels
 
         public bool HasPhotos { get; set; } = false;
         public ICommand ViewPhotosCommand { get; set; }
-
-
-
 
 
     //    private string _TableName = "";

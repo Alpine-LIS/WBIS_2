@@ -105,7 +105,8 @@ namespace WBIS_2.Modules.ViewModels
 
         public void OnDestroy()
         {
-
+            if (CurrentChild != null)
+                CurrentUser.AddRemoveInfoType(CurrentChild.Manager.DisplayName, false);
         }
 
         protected ChildrenListViewModel()
