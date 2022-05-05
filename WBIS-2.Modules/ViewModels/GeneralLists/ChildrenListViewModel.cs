@@ -18,7 +18,7 @@ using WBIS_2.Modules.Tools;
 
 namespace WBIS_2.Modules.ViewModels
 {
-    public class ChildrenListViewModel : ListViewModelBase, IDocumentContent, IMapNavigation
+    public class ChildrenListViewModel : ListViewModelBase, IDocumentContent
     {
         public object Title
         {
@@ -78,7 +78,6 @@ namespace WBIS_2.Modules.ViewModels
             {
                 Caption = $"{parentType.Manager.DisplayName} Children",
                 Content = $"{parentType.Manager.DisplayName} Children",
-                SelectedItems = new ObservableCollection<object>(),
                 ParentType = parentType,
                 ParentQuery = parentQuery,
             });
@@ -215,29 +214,6 @@ namespace WBIS_2.Modules.ViewModels
             }
         }
         public bool ClosingFormEnabled = true;
-
-        public string TableKeyField { get { return ""; } }
-
-        public string LayerKeyField { get { return ""; } }
-
-        public string LayerName { get { return ""; } }
-
-        public void ZoomToLayer()
-        {
-        }
-
-        public void ZoomToFeature(object ZoomObject)
-        {
-            //if (CurrentUser.RegenUser)
-            //    MapDataPasser.ZoomToFeature(LayerName, LayerKeyField, ((Regen)ZoomObject).RegenID);
-            //else
-            //    MapDataPasser.ZoomToFeature(LayerName, LayerKeyField, ((Fuelbreak)ZoomObject).FuelbreakID);
-        }
-        public void MapShowAFS(Dictionary<Guid, string> selection)
-        {
-            MapDataPasser.MapShowAFS(LayerName, LayerKeyField, selection.Values.Cast<object>().Distinct().ToList());
-            // MapDataPasser.MapShowAFS(LayerName, "Guid", selection.Cast<object>().ToList());
-        }
 
         public override void SelectionChanged()
         {

@@ -17,7 +17,7 @@ using System.Linq.Expressions;
 
 namespace WBIS_2.Modules.ViewModels
 {
-    public class ParentListViewModel : ListViewModelBase, IDocumentContent, IMapNavigation
+    public class ParentListViewModel : ListViewModelBase, IDocumentContent
     {
         public object Title
         {
@@ -165,29 +165,6 @@ namespace WBIS_2.Modules.ViewModels
             }
         }
         public bool ClosingFormEnabled = true;
-     
-        public string TableKeyField { get { return ""; } }
-
-        public string LayerKeyField { get { return ""; } }
-
-        public string LayerName { get { return ""; } }
-
-        public void ZoomToLayer()
-        {
-        }
-
-        public void ZoomToFeature(object ZoomObject)
-        {
-            //if (CurrentUser.RegenUser)
-            //    MapDataPasser.ZoomToFeature(LayerName, LayerKeyField, ((Regen)ZoomObject).RegenID);
-            //else
-            //    MapDataPasser.ZoomToFeature(LayerName, LayerKeyField, ((Fuelbreak)ZoomObject).FuelbreakID);
-        }
-        public void MapShowAFS(Dictionary<Guid, string> selection)
-        {
-            MapDataPasser.MapShowAFS(LayerName, LayerKeyField, selection.Values.Cast<object>().Distinct().ToList());
-            // MapDataPasser.MapShowAFS(LayerName, "Guid", selection.Cast<object>().ToList());
-        }
 
         public override void SelectionChanged()
         {

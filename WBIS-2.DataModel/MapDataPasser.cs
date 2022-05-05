@@ -8,10 +8,10 @@ namespace WBIS_2.DataModel
         public static string ZoomLayerName { get; set; }
         public static string ZoomKeyField { get; set; }
         public static string ZoomKeyValueSingle { get; set; }
-        public static List<object> ZoomKeyValues { get; set; }
+        public static List<Guid> ZoomKeyValues { get; set; }
         public static event EventHandler ZoomToLayerEvent;
         public static event EventHandler ZoomToFeatureEvent;
-        public static void ZoomToLayer(string layerName, string keyField, List<object> keyFields, bool PerformZoom)
+        public static void ZoomToLayer(string layerName, string keyField, List<Guid> keyFields, bool PerformZoom)
         {
             ZoomLayerName = layerName;
             ZoomKeyField = keyField;
@@ -68,10 +68,10 @@ namespace WBIS_2.DataModel
         public static event EventHandler MapShowAFSEvent;
         public static void MapShowAFS(string layerName, string keyField, List<object> keyFields)
         {
-            ZoomLayerName = layerName;
-            ZoomKeyField = keyField;
-            ZoomKeyValues = keyFields;
-            MapShowAFSEvent?.Invoke(new object(), new EventArgs());
+            //ZoomLayerName = layerName;
+            //ZoomKeyField = keyField;
+            //ZoomKeyValues = keyFields;
+            //MapShowAFSEvent?.Invoke(new object(), new EventArgs());
         }
 
         public static event EventHandler UserDistrictsChangedEvent;

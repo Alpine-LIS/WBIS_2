@@ -18,6 +18,7 @@ namespace WBIS_2.DataModel
         /// <summary>
         /// Information type options to be displayed as children of the current information type.
         /// </summary>
+        public Type InformationType { get; }
         public IInformationType[] AvailibleChildren { get; }
 
         /// Fields to be displayed when in an alternate information type.
@@ -62,5 +63,8 @@ namespace WBIS_2.DataModel
         /// Does the record have a detail view availible.
         /// </summary>
         public bool DetailView { get; }
+
+        public SubstituteLayer SubstituteLayer { get; }
+        public abstract string GetLayerName();
     }
 }

@@ -86,6 +86,13 @@ namespace WBIS_2.Modules.ViewModels
             SaveCommand = new DelegateCommand(Save);
 
             Privileges();
+            ModuleManager.DefaultManager.GetEvents(viewModel: this).ViewModelRemoving += WBISViewModelBase_ViewModelRemoving;
+        }
+
+        public virtual void WBISViewModelBase_ViewModelRemoving(object? sender, ViewModelRemovingEventArgs e)
+        {
+            Tracker.ChangesSaved -= Tracker_ChangesSaved;
+            CurrentUser.CurrentUserChanged -= CurrentUserChanged;
         }
 
         public event EventHandler RecordSaved;
@@ -144,7 +151,7 @@ namespace WBIS_2.Modules.ViewModels
        
 
         public abstract void Tracker_ChangesSaved(object sender, IEnumerable<Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry> e);      
-        private void CurrentUserChanged(object sender, EventArgs e)
+        public virtual void CurrentUserChanged(object sender, EventArgs e)
         {
             Privileges();
         }

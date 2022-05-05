@@ -7,6 +7,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
+    [SubstituteLayer(typeof(Watershed))]
     public class BotanicalScoping : UserDataValidator, IUserRecords
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
@@ -77,6 +78,7 @@ namespace WBIS_2.DataModel
 
         [ListInfo(AutoInclude = true)]
         public ICollection<District> Districts { get; set; }
+        [ListInfo(AutoInclude = true)]
         public ICollection<Watershed> Watersheds { get; set; }
         public ICollection<Quad75> Quad75s { get; set; }
 

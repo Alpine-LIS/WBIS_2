@@ -25,7 +25,7 @@ namespace WBIS_2.Modules.ViewModels
 {
 
     [POCOViewModel]
-    public abstract class ListViewModelBase : WBISViewModelBase
+    public abstract class ListViewModelBase : WBISViewModelBase, IMapNavigation
     {
         protected ListViewModelBase()
         {
@@ -33,23 +33,19 @@ namespace WBIS_2.Modules.ViewModels
 
             //CurrentUser.CurrentUserChanged += CurrentUserChanged;
 
-            SelectedItems = new ObservableCollection<object>();
+            SelectedItems = new ObservableCollection<IInformationType>();
             SelectedItems.CollectionChanged += SelectedItems_CollectionChanged;
 
             ShowDetailsCommand = new DelegateCommand(ShowDetails);
             AddRecordCommand = new DelegateCommand(AddRecord);
             DeleteRecordCommand = new DelegateCommand(DeleteRecord);
             RecordsRefreshCommand = new DelegateCommand(RecordsRefresh);
-            ModuleManager.DefaultManager.GetEvents(viewModel: this).ViewModelRemoving += WBISViewModelBase_ViewModelRemoving;
         }
 
-        private void WBISViewModelBase_ViewModelRemoving(object? sender, ViewModelRemovingEventArgs e)
+        public override void WBISViewModelBase_ViewModelRemoving(object? sender, ViewModelRemovingEventArgs e)
         {
-            //Tracker.ChangesSaved -= Tracker_ChangesSaved;
-            //CurrentUser.CurrentUserChanged -= CurrentUserChanged;
-
             CurrentUser.AddRemoveInfoType(ListManager.DisplayName, false);
-            //this.Dispose();
+            base.WBISViewModelBase_ViewModelRemoving(sender, e);
         }
 
         public EntityInstantFeedbackSource Records { get; set; }
@@ -66,9 +62,10 @@ namespace WBIS_2.Modules.ViewModels
         }
         public abstract void Records_GetQueryable(object sender, GetQueryableEventArgs e);
 
-        private void CurrentUserChanged(object sender, EventArgs e)
+        public override void CurrentUserChanged(object sender, EventArgs e)
         {
             RefreshDataSource();
+            base.CurrentUserChanged(sender, e);
         }
 
 
@@ -149,7 +146,7 @@ namespace WBIS_2.Modules.ViewModels
         public bool ToggleAutoZoom { get; set; } = true;
 
 
-        public ObservableCollection<object> SelectedItems { get; set; }
+        public ObservableCollection<IInformationType> SelectedItems { get; set; }
         private void SelectedItems_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             SelectionChanged();
@@ -165,6 +162,7 @@ namespace WBIS_2.Modules.ViewModels
         }
 
         public ICommand FilterFromGridSelectionCommand { get; set; }
+              
         public event EventHandler FilterFromGridSelection;
         private void FilterFromGridSelectionClick()
         {
@@ -178,6 +176,55 @@ namespace WBIS_2.Modules.ViewModels
         {
             //if (DontSaveLayout || Tracker.ChangesSaving) return;
             //SaveGridLayoutEvent?.Invoke(new object(), new EventArgs());
+        }
+
+
+        public string TableKeyField => "guid";
+
+        public string LayerKeyField => "guid";
+
+        public string LayerName => ListManager.GetLayerName();
+
+        public void ZoomToLayer()
+        {
+            List<Guid> guids = new List<Guid>();
+            if (ListManager.SubstituteLayer == null)
+                guids = SelectedItems.Select(_ => _.Guid).ToList();
+            else
+            {
+                var prop = ListManager.InformationType.GetProperties()
+                    .FirstOrDefault(_ => _.PropertyType == ListManager.SubstituteLayer.SubLayer);
+                if (prop == null)
+                {
+                    var props = ListManager.InformationType.GetProperties()
+                        .Where(_ => _.PropertyType.GetGenericArguments().Count() > 0);
+                    prop = props.FirstOrDefault(_ => _.PropertyType.GetGenericArguments().Single() == ListManager.SubstituteLayer.SubLayer);
+                }
+                    
+                if (prop == null) return;
+                foreach (var item in SelectedItems)
+                {
+                    var t = prop.GetValue(item);
+                    if (t.GetType().GetInterfaces().Contains(typeof(IInformationType)))
+                        guids.Add(((IInformationType)t).Guid);
+                    else
+                    {                        
+                        foreach (IInformationType i in Enumerable.ToArray<IInformationType>((IEnumerable<IInformationType>)t))
+                            guids.Add(i.Guid);
+                    }
+                }
+            }
+            MapDataPasser.ZoomToLayer(LayerName, LayerKeyField, guids, ToggleAutoZoom);
+        }
+
+        public void ZoomToFeature(object ZoomObject)
+        {
+           // throw new NotImplementedException();
+        }
+
+        public void MapShowAFS(Dictionary<Guid, string> selection)
+        {
+           // throw new NotImplementedException();
         }
     }
 }

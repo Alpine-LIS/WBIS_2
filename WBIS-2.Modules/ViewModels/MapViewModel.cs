@@ -110,8 +110,8 @@ namespace WBIS_2.Modules.ViewModels
             }
             MapDataPasser.SelectionFromGrid = true;
             var q = $"{MapDataPasser.ZoomKeyField} = {MapDataPasser.ZoomKeyValues[0]}";
-            var allKeys = String.Join(",", MapDataPasser.ZoomKeyValues);
-            var q2 = $"[{MapDataPasser.ZoomKeyField}] IN ({allKeys})";
+            var allKeys = String.Join("','", MapDataPasser.ZoomKeyValues);
+            var q2 = $"CONVERT([{MapDataPasser.ZoomKeyField}],'System.String') IN ('{allKeys}')";
             MapControl.ActiveLayer = layer;
             layer.SelectByAttribute(q2);
             if ((bool)sender) layer.ZoomToSelectedFeatures();
@@ -146,30 +146,30 @@ namespace WBIS_2.Modules.ViewModels
 
         private void MapDataPasser_MapShowAFSEvent(object sender, EventArgs e)
         {
-            if (MapControl == null)
-            {
-                return;
-            }
+            //if (MapControl == null)
+            //{
+            //    return;
+            //}
 
-            ResetAFS();
-            AfsLayer = new KeyValuePair<IMapFeatureLayer, string>(MapControl.GetLayer(MapDataPasser.ZoomLayerName), MapDataPasser.ZoomKeyField);
-            if (AfsLayer.Key == null) return;
-            AfsLayer.Key.SelectionEnabled = true;
-            PreAfsCategory.Clear();
+            //ResetAFS();
+            //AfsLayer = new KeyValuePair<IMapFeatureLayer, string>(MapControl.GetLayer(MapDataPasser.ZoomLayerName), MapDataPasser.ZoomKeyField);
+            //if (AfsLayer.Key == null) return;
+            //AfsLayer.Key.SelectionEnabled = true;
+            //PreAfsCategory.Clear();
 
-            //IFeatureCategory newCat = new PolygonCategory(System.Drawing.Color.FromArgb(150,244,233,0), System.Drawing.Color.Yellow, 2);
-            foreach (var key in MapDataPasser.ZoomKeyValues)
-            {
-                var f = AfsLayer.Key.DataSet.Features.First(_ => (string)_.DataRow[MapDataPasser.ZoomKeyField] == (string)key);
-                var a = (PolygonCategory)AfsLayer.Key.GetCategory(f.Fid).Clone();
-                a.Symbolizer.SetFillColorEx(System.Drawing.Color.FromArgb(250, 244, 233, 0));
-                a.Symbolizer.SetOutline(System.Drawing.Color.Yellow, 1);
-                a.SelectionSymbolizer.SetFillColorEx(System.Drawing.Color.FromArgb(50, 244, 233, 0));
-                a.SelectionSymbolizer.SetOutline(System.Drawing.Color.Yellow, 1);
-                PreAfsCategory.Add((string)key, AfsLayer.Key.GetCategory(f.Fid));
-                AfsLayer.Key.SetCategory(f.Fid, a);
-            }
-            MapControl.UxMap.MapFrame.Invalidate();
+            ////IFeatureCategory newCat = new PolygonCategory(System.Drawing.Color.FromArgb(150,244,233,0), System.Drawing.Color.Yellow, 2);
+            //foreach (var key in MapDataPasser.ZoomKeyValues)
+            //{
+            //    var f = AfsLayer.Key.DataSet.Features.First(_ => (string)_.DataRow[MapDataPasser.ZoomKeyField] == (string)key);
+            //    var a = (PolygonCategory)AfsLayer.Key.GetCategory(f.Fid).Clone();
+            //    a.Symbolizer.SetFillColorEx(System.Drawing.Color.FromArgb(250, 244, 233, 0));
+            //    a.Symbolizer.SetOutline(System.Drawing.Color.Yellow, 1);
+            //    a.SelectionSymbolizer.SetFillColorEx(System.Drawing.Color.FromArgb(50, 244, 233, 0));
+            //    a.SelectionSymbolizer.SetOutline(System.Drawing.Color.Yellow, 1);
+            //    PreAfsCategory.Add((string)key, AfsLayer.Key.GetCategory(f.Fid));
+            //    AfsLayer.Key.SetCategory(f.Fid, a);
+            //}
+            //MapControl.UxMap.MapFrame.Invalidate();
         }
 
         KeyValuePair<IMapFeatureLayer, string> AfsLayer = new KeyValuePair<IMapFeatureLayer, string>();

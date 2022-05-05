@@ -12,6 +12,7 @@ namespace WBIS_2.DataModel
     public class InformationTypeManager<InfoType> : IInfoTypeManager where InfoType : class
     {
         public string DisplayName => GetDisplayName();
+        public Type InformationType => typeof(InfoType);
         private string GetDisplayName()
         {
             string initial = typeof(InfoType).Name;
@@ -194,5 +195,29 @@ namespace WBIS_2.DataModel
 
         public bool IsIInformationType(Type type)
         { return type.GetInterfaces().Contains(typeof(IInformationType)); }
+       
+        
+        public SubstituteLayer SubstituteLayer => (SubstituteLayer)typeof(InfoType).GetCustomAttributes(typeof(SubstituteLayer), true).FirstOrDefault();
+        public string GetLayerName()
+        {
+            Type type;
+            if (SubstituteLayer == null)
+            {
+                type = typeof(InfoType);
+               // var p = typeof(WBIS2Model).GetProperties().First(_ => _.PropertyType.GetGenericArguments().Single() == typeof(InfoType));
+               // name = p.Name;
+            }
+            else
+            {
+                type = SubstituteLayer.SubLayer;
+                //var p = typeof(WBIS2Model).GetProperties().First(_ => _.PropertyType.GetGenericArguments().Single() == SubstituteLayer.SubLayer);
+                //name = p.Name;
+            }
+
+            WBIS2Model model = new WBIS2Model();
+            var entityType = model.Model.FindEntityType(type);
+            var schema = entityType.GetSchema();
+            return entityType.GetTableName().ToLower();
+        }
     }
 }

@@ -35,7 +35,7 @@ namespace WBIS_2.Modules.Views
             foreach (int row in RowsToRefresh) GridControlEx.RefreshRow(row);
             RowsToRefresh.Clear();
 
-            MapDataPasser.ZoomKeyValues = Selection.Cast<object>().ToList();
+            //MapDataPasser.ZoomKeyValues = Selection.Cast<IInformationType>().ToList();
             AfsMapEvent?.Invoke(new object(), new EventArgs());
 
         }
