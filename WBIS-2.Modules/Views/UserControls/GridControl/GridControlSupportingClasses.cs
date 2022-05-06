@@ -124,6 +124,16 @@ namespace WBIS_2.Modules.Views
         }
     }
 
+
+    public class TableViewEx : TableView
+    {
+
+    }
+
+
+
+
+
     public static class UnitsActivitiesPasser
     {
         public static bool RegenActivities;

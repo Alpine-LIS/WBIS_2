@@ -20,6 +20,7 @@ using WBIS_2.Modules.Views.Wildlife;
 using WBIS_2.Modules.ViewModels.Wildlife;
 using System.IO;
 using DevExpress.Mvvm.ModuleInjection;
+using Npgsql;
 
 namespace WBIS_2.Modules.ViewModels
 {
@@ -225,6 +226,80 @@ namespace WBIS_2.Modules.ViewModels
         public void MapShowAFS(Dictionary<Guid, string> selection)
         {
            // throw new NotImplementedException();
+        }
+
+
+        public void RemoveActiveUnits(bool removeAll)
+        {
+            WBIS2Model model = new WBIS2Model();
+            var entityType = model.Model.FindEntityType(ListManager.InformationType);
+            string tableName  = $"active_{entityType.GetTableName()}";
+
+            Guid queryGuid = CurrentUser.User.Guid;
+
+            var conn = new NpgsqlConnection(WBIS2Model.GetRDSConnectionString());
+            conn.Open();
+            using (var cmd = new NpgsqlCommand("", conn))
+            {
+                using (var transaction = conn.BeginTransaction())
+                {
+                    if (removeAll)
+                    {
+                        cmd.CommandText = $"DELETE FROM \"{tableName}\" WHERE \"application_user_id\" = '{queryGuid}'";
+                        cmd.ExecuteNonQuery();
+                    }
+                    else
+                    {
+                        foreach (IInformationType item in SelectedItems)
+                        {
+                            cmd.CommandText = $"DELETE FROM \"{tableName}\" WHERE \"application_user_id\" = '{queryGuid}' " +
+                                $"AND \"unit_id\" = '{item.Guid}'";
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+
+                    transaction.Commit();
+                }
+            }
+            conn.Close();
+        }
+
+        public void AddAppendActiveUnits(bool newList)
+        {
+            WBIS2Model model = new WBIS2Model();
+            var entityType = model.Model.FindEntityType(ListManager.InformationType);
+            string tableName = $"active_{entityType.GetTableName()}";
+
+            Guid queryGuid = CurrentUser.User.Guid;
+
+            var conn = new NpgsqlConnection(WBIS2Model.GetRDSConnectionString());
+            conn.Open();
+            using (var cmd = new NpgsqlCommand("", conn))
+            {
+                using (var transaction = conn.BeginTransaction())
+                {
+                    if (newList)
+                    {
+                        cmd.CommandText = $"DELETE FROM \"{tableName}\" WHERE \"application_user_id\" = '{queryGuid}'";
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    var qualifiedTable = $"\"{tableName}\"";
+                    var query_copy = $"COPY {qualifiedTable}(\"application_user_id\",\"unit_id\") FROM STDIN (FORMAT BINARY)";
+
+                    using var writer = conn.BeginBinaryImport(query_copy);
+                    foreach (IInformationType item in SelectedItems)
+                    {
+                        writer.StartRow();
+                        writer.Write(queryGuid);
+                        writer.Write(item.Guid);
+                    }
+                    writer.Complete();
+                    writer.Close();
+                    transaction.Commit();
+                }
+            }
+            conn.Close();
         }
     }
 }

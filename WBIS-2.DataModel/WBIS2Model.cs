@@ -165,14 +165,14 @@ namespace WBIS_2.DataModel
                 .HasMany(_ => _.ActiveBotanicalSurveyAreas)
                 .WithMany(p => p.ActiveUsers)
                 .UsingEntity<Dictionary<string, object>>("active_botanical_survey_areas",
-                        x => x.HasOne<BotanicalSurveyArea>().WithMany().HasForeignKey("botanical_survey_area_id"),
+                        x => x.HasOne<BotanicalSurveyArea>().WithMany().HasForeignKey("unit_id"),
                         x => x.HasOne<ApplicationUser>().WithMany().HasForeignKey("application_user_id"),
                         x => x.ToTable("active_botanical_survey_areas", "public"));
             modelBuilder.Entity<ApplicationUser>()
                 .HasMany(_ => _.ActiveHex160s)
                 .WithMany(p => p.ActiveUsers)
                 .UsingEntity<Dictionary<string, object>>("active_hex160s",
-                        x => x.HasOne<Hex160>().WithMany().HasForeignKey("hex160_id"),
+                        x => x.HasOne<Hex160>().WithMany().HasForeignKey("unit_id"),
                         x => x.HasOne<ApplicationUser>().WithMany().HasForeignKey("application_user_id"),
                         x => x.ToTable("active_hex160s", "public"));
 

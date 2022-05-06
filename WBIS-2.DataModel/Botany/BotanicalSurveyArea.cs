@@ -7,7 +7,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class BotanicalSurveyArea : UserDataValidator, IUserRecords, INonPointParents//, IActiveUnit
+    public class BotanicalSurveyArea : UserDataValidator, IUserRecords, INonPointParents, IActiveUnit
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
@@ -90,8 +90,9 @@ namespace WBIS_2.DataModel
         public ApplicationUser UserModified { get; set; }
 
 
-      //  [NotMapped]
-       // public bool IsAvtive => CurrentUser.ActiveBotanicalSurveyAreaGuids.Contains(Guid);
+        [Column("is_active")]
+        public bool IsActive { get; set; }
+        [ListInfo(AutoInclude = true)]
         public ICollection<ApplicationUser> ActiveUsers { get; set; }
 
 

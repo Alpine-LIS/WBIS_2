@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -88,9 +89,53 @@ namespace WBIS_2.DataModel
             return valuePairs;
         }
 
+
+
+
+        public string GetSqlQuery(List<string> exlude)
+        {
+            var query = "Select ";
+            var entityType = typeof(InfoType);
+            using var context = new WBIS2Model();
+
+            if (context.Model.FindEntityType(typeof(InfoType)) is IEntityType et)
+            {
+                var properties = et.GetProperties();
+                //TODO:
+                /* 
+                var navs = et.GetIndexes();
+                var other = et.GetNavigations();
+                var fc = et.GetReferencingForeignKeys();
+                */
+                foreach (var prop in properties)
+                {
+                    string dbName = prop.Name;
+                    PropertyInfo propertyInfo = typeof(InfoType).GetProperty(prop.Name);
+                    var sub = propertyInfo.GetCustomAttributes(typeof(System.ComponentModel.DataAnnotations.Schema.ColumnAttribute), true).FirstOrDefault();                   
+                   
+                    if (sub != null)
+                        dbName = ((System.ComponentModel.DataAnnotations.Schema.ColumnAttribute)sub).Name;
+
+                    if (exlude.Contains(prop.Name) || exlude.Contains(dbName))
+                    {
+                        query += $"null as \"{dbName}\" ,";
+                        continue;
+                    }
+                    query += $"\"{dbName}\" ,";
+                }
+                query = query.Remove(query.Length - 1, 1);
+
+                if (CanSetActive) query = query.Replace($"\"is_active\"", $"guid IN (SELECT unit_id FROM active_{et.GetSchemaQualifiedTableName()} WHERE application_user_id = '{CurrentUser.User.Guid}') as \"is_active\"");
+
+                query += $" from \"{et.GetSchemaQualifiedTableName()}\"";
+            }
+            return query;
+        }
+
         public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
         {
             IQueryable<InfoType> returnVal = model.Set<InfoType>()
+                .FromSqlRaw(GetSqlQuery(new List<string>() { "geometry" }))
                 .AsNoTracking();
             
             PropertyInfo queryProperty = ParentChildPropertyProperty(QueryType);
@@ -107,7 +152,8 @@ namespace WBIS_2.DataModel
             var a = (Expression<Func<InfoType, bool>>)genInfo
                 .Invoke(this, new object[] { Query.ToList(), queryProperty });
 
-            return  returnVal.Where(a).ToList().AsQueryable();
+            //return CanSetActive ? returnVal.Where(a).ToList().AsQueryable() : returnVal.Where(a);
+            return  returnVal.Where(a);
         }
 
         /// <summary>
@@ -190,7 +236,7 @@ namespace WBIS_2.DataModel
         public bool DetailView => true;
         public bool DeleteRecord => true;
         public bool RestoreRecord => true;
-        public bool CanSetActive => false;// => false;
+        public bool CanSetActive => typeof(InfoType).GetInterfaces().Contains(typeof(IActiveUnit));
 
 
         public bool IsIInformationType(Type type)

@@ -53,7 +53,9 @@ namespace WBIS_2.Modules.ViewModels
 
                 SetProperty(() => CurrentChild, value);
                 ListManager = CurrentChild.Manager;
+                SelectedItems = new ObservableCollection<IInformationType>();
                 RaisePropertyChanged(nameof(ListManager));
+                RaisePropertyChanged(nameof(SelectedItems));
                 RefreshDataSource();               
             }
         }

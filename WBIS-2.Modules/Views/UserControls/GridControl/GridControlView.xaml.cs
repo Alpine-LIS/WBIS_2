@@ -27,7 +27,7 @@ namespace WBIS_2.Modules.Views
         {
             InitializeComponent();
             //Messenger.Default.Register<string>(this, OnMessage);
-            //MapDataPasser.MapSelectionChangedEvent += MapDataPasser_MapSelectionChangedEvent;
+            MapDataPasser.MapSelectionChangedEvent += MapDataPasser_MapSelectionChangedEvent;
             DataContextChanged += GridControlView_DataContextChanged;
             MyGrid.DefaultSorting = "Guid";
 
@@ -89,46 +89,27 @@ namespace WBIS_2.Modules.Views
         private void MapDataPasser_MapSelectionChangedEvent(object sender, EventArgs e)
         {
             if (MapDataPasser.SelectionFromGrid) return;
-            //if (this.DataContext is WBIS_2.Modules.Interfaces.IMapNavigation || DataContext.GetType().BaseType == typeof(ActivitiesListViewModel))
-            //{
-            //    try
-            //    {
-            //        List<IFeature> selection = (List<IFeature>)sender;
-            //        if (selection.Count == 0) return;
+            if (((ListViewModelBase)DataContext).ListManager == null) return;
 
-            //        LayerField layerField = new RMS3Model().LayerFields.FirstOrDefault(_ => _.Layer.ToUpper() == selection[0].ParentFeatureSet.Name.ToUpper());
+                try
+                {
+                    List<IFeature> selection = (List<IFeature>)sender;
+                    if (selection.Count == 0) return;
 
-            //        if (layerField == null) return;
-            //        if (layerField.Layer == "ACTIVITIES" && !((RMSViewModelBase)DataContext).IsActivityList) return;
-
-            //        GridColumn col = MyGrid.Columns.Where(_ => _.Header != null).FirstOrDefault(_ => _.Header.ToString() == layerField.Field);
-            //        if (col == null) return;
-
-            //        var selectedIDs = "";
-            //        foreach (var feature in selection)
-            //        {
-
-            //            //if (feature.ParentFeatureSet.Name.ToLower() == mn.LayerName.ToLower())
-            //            //{
-            //            var selectedFeatureID = feature.DataRow[col.Header.ToString()];
-            //            selectedIDs = selectedIDs + $"'{selectedFeatureID}',";
-            //            //this.MyGrid.FilterString = $"[RegenID] IN '{selectedFeatureID}'";
-            //            //break;
-            //            //}
-            //        }
-            //        if (selectedIDs.Length > 0)
-            //        {
-            //            selectedIDs = selectedIDs.Remove(selectedIDs.Length - 1);
-            //            string filter = $"[{col.FieldName}] IN ({selectedIDs})";
-            //            if (filter != MyGrid.FilterString)
-            //                this.MyGrid.FilterString = filter;
-            //        }
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        return;
-            //    }
-            //}
+                    var selectedIDs = $"'{string.Join("','",selection.Select(_=>_.DataRow["guid"].ToString()))}'";
+                   
+                    if (selectedIDs.Length > 0)
+                    {
+                        //selectedIDs = selectedIDs.Remove(selectedIDs.Length - 1);
+                        string filter = $"[Guid] IN ({selectedIDs})";
+                        if (filter != MyGrid.FilterString)
+                            this.MyGrid.FilterString = filter;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return;
+                }
         }
 
       

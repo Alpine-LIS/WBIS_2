@@ -13,6 +13,9 @@ namespace WBIS_2.DataModel
         public Guid Guid { get; set; }
 
 
+        [Column("survey_type")]
+        public string SurveyType { get; set; }
+
         [Column("botanical_survey_area_id")]
         public Guid? BotanicalSurveyAreaId { get; set; }
         public BotanicalSurveyArea BotanicalSurveyArea { get; set; }

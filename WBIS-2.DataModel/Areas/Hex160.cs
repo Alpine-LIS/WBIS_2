@@ -3,11 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class Hex160 : IInformationType//, IActiveUnit
+    public class Hex160 : IInformationType, IActiveUnit
     {
         [Key,DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
@@ -27,8 +28,9 @@ namespace WBIS_2.DataModel
         public DateTime? LatestActivity { get; set; }
 
 
-       // [NotMapped]
-       // public bool IsAvtive => CurrentUser.ActiveHex160Guids.Contains(Guid);
+        [Column("is_active")]
+        public bool IsActive { get; set; }
+        [ListInfo(AutoInclude = true)]
         public ICollection<ApplicationUser> ActiveUsers { get; set; }
 
         [Column("geometry", TypeName = "geometry(Polygon,26710)")]

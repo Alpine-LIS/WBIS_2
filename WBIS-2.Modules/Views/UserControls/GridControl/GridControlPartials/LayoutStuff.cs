@@ -81,6 +81,7 @@ namespace WBIS_2.Modules.Views
         private void GridControl_ItemsSourceChanged(object sender, DevExpress.Xpf.Grid.ItemsSourceChangedEventArgs ee)
         {
             //ShowPassedREcords();
+            SetUnitsContextMenu();
             SetColumnDisplay();
         }
         //bool settingColProperties = false;
