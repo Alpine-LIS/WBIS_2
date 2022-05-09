@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <PackageReference Include="DevExpress.Wpf" Version="21.2.6-pre-22040" />
+    <PackageReference Include="DevExpress.Wpf.Themes.Office2019Black" Version="21.2.5" />
   </ItemGroup>
 
   <ItemGroup>

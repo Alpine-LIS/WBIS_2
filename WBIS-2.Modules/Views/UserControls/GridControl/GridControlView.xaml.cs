@@ -296,7 +296,7 @@ namespace WBIS_2.Modules.Views
             if (e.HitInfo.Column == null)
             {
                 if (DataContext is WBIS_2.Modules.Interfaces.IMapNavigation)
-                    ((WBIS_2.Modules.Interfaces.IMapNavigation)DataContext).ZoomToFeature(MyView.FocusedRow);
+                    ((WBIS_2.Modules.Interfaces.IMapNavigation)DataContext).ZoomToFeature((IInformationType)MyView.FocusedRow);
             }
             else
             {
@@ -307,8 +307,8 @@ namespace WBIS_2.Modules.Views
         {
             if (MyGrid.IsSubSelection && DataContext is WBIS_2.Modules.Interfaces.IMapNavigation)
             {
-                string unitCol = ((WBIS_2.Modules.Interfaces.IMapNavigation)DataContext).LayerKeyField;
-                unitCol = MyGrid.Columns.First(_ => _.FieldName.EndsWith(unitCol)).FieldName;
+                string unitCol = ((WBIS_2.Modules.Interfaces.IMapNavigation)DataContext).LayerKeyField.ToLower();
+                unitCol = MyGrid.Columns.First(_ => _.FieldName.ToLower().EndsWith(unitCol)).FieldName;
 
                 if (Keyboard.Modifiers == ModifierKeys.Control)
                 {

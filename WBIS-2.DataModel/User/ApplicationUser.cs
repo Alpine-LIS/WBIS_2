@@ -43,6 +43,11 @@ namespace WBIS_2.DataModel
         [Column("place_holder")]
         public bool PlaceHolder { get; set; }
 
+        [Column("wildlife")]
+        public bool Wildlife { get; set; } = false;
+        [Column("botany")]
+        public bool Botany { get; set; } = false;
+
 
         //public ICollection<ApplicationUser> Contractors { get; set; }
         public ICollection<District> Districts { get; set; }

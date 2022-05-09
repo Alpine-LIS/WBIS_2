@@ -70,7 +70,7 @@ namespace WBIS_2.Modules.ViewModels
         }
 
 
-        private bool _viewDeleted;
+        private bool _viewDeleted = CurrentUser.ViewDeleted;
         public bool ViewDeleted
         {
             get { return _viewDeleted; }
@@ -79,6 +79,7 @@ namespace WBIS_2.Modules.ViewModels
                 if (_viewDeleted != value)
                 {
                     _viewDeleted = value;
+                    CurrentUser.ViewDeleted = value;
                     RefreshDataSource();
                 }
             }
@@ -218,14 +219,14 @@ namespace WBIS_2.Modules.ViewModels
             MapDataPasser.ZoomToLayer(LayerName, LayerKeyField, guids, ToggleAutoZoom);
         }
 
-        public void ZoomToFeature(object ZoomObject)
+        public void ZoomToFeature(IInformationType ZoomObject)
         {
-           // throw new NotImplementedException();
+            MapDataPasser.ZoomToFeature(LayerName, LayerKeyField, ZoomObject.Guid);
         }
 
-        public void MapShowAFS(Dictionary<Guid, string> selection)
+        public void MapShowAFS(Dictionary<Guid, Guid> selection)
         {
-           // throw new NotImplementedException();
+            MapDataPasser.MapShowAFS(LayerName, LayerKeyField, selection.Values.Cast<Guid>().Distinct().ToList());
         }
 
 
@@ -236,6 +237,8 @@ namespace WBIS_2.Modules.ViewModels
             string tableName  = $"active_{entityType.GetTableName()}";
 
             Guid queryGuid = CurrentUser.User.Guid;
+            if (CurrentUser.MobileUserActiveUnits)
+                queryGuid = CurrentUser.MobileUserGuid;
 
             var conn = new NpgsqlConnection(WBIS2Model.GetRDSConnectionString());
             conn.Open();
@@ -271,6 +274,8 @@ namespace WBIS_2.Modules.ViewModels
             string tableName = $"active_{entityType.GetTableName()}";
 
             Guid queryGuid = CurrentUser.User.Guid;
+            if (CurrentUser.MobileUserActiveUnits)
+                queryGuid = CurrentUser.MobileUserGuid;
 
             var conn = new NpgsqlConnection(WBIS2Model.GetRDSConnectionString());
             conn.Open();

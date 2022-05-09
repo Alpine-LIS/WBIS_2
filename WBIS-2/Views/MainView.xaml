@@ -30,7 +30,13 @@
         <dxb:BarContainerControl ContainerType="Top" Grid.Row="0">
             <dxb:MainMenuControl Caption="Main Menu">
                 <dxb:BarSubItem Name="UserMenuControl" Content="Log Out">
-                    <dxb:BarButtonItem Content="Change User" ItemClick="LogOutClick"/>
+                    <!--<dxb:BarButtonItem Content="Change User" ItemClick="LogOutClick"/>-->
+                    
+                    <dxb:BarSubItem Name="ViewActiveUnitsAsMenuControl" Content="View Active Units As:"/>
+                    <dxb:BarSubItem Content="Preferences">
+                        <dxb:BarButtonItem Content="Light Mode" ItemClick="LightMode_ItemClick"/>
+                        <dxb:BarButtonItem Content="Dark Mode" ItemClick="DarkMode_ItemClick"/>
+                    </dxb:BarSubItem>
                 </dxb:BarSubItem>
                 <dxb:BarSubItem Content="Help">
                     <dxb:BarButtonItem Content="About"/>

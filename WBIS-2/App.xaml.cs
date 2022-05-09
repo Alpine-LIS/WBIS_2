@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -16,8 +17,9 @@ namespace WBIS_2
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-            ApplicationThemeHelper.ApplicationThemeName = "Office2019Colorful";
-            //ApplicationThemeHelper.ApplicationThemeName = "Office2019Black";
+            string appPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            if (File.Exists($@"{appPath}\WBIS_2\dm.preference")) ApplicationThemeHelper.ApplicationThemeName = "Office2019Black";
+            else ApplicationThemeHelper.ApplicationThemeName = "Office2019Colorful";
             ApplicationThemeHelper.UpdateApplicationThemeName();
 
             base.OnStartup(e);

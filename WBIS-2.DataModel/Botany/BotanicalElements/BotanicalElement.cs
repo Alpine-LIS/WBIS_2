@@ -49,8 +49,8 @@ namespace WBIS_2.DataModel
         //public Guid DeviceInfoID { get; set; }
         public DeviceInfo DeviceInfo { get; set; }
 
-
-
+        [Column("photo_tag")]
+        public string PhotoTag { get; set; }
 
 
         [Column("date_added")]

@@ -40,7 +40,7 @@ namespace WBIS_2.Modules.Views
                 //.Include(_=>_.ActiveRegens)
                 //.Include(_ => _.ActiveFuelbreaks)
                 .Include(_ => _.ApplicationGroup)
-                .Where(_ => _.ApplicationGroup.GroupName != "Contractor" && _._delete == false).OrderBy(_ => _.UserName);
+                .Where(_ => _.ApplicationGroup.DesktopAccess && !_._delete &&  !_.PlaceHolder).OrderBy(_ => _.UserName);
             }
             catch (Exception ex)
             {

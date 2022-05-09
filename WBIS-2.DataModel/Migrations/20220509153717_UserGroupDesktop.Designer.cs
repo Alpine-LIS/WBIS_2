@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,10 @@ using WBIS_2.DataModel;
 namespace WBIS_2.DataModel.Migrations
 {
     [DbContext(typeof(WBIS2Model))]
-    partial class WBIS2ModelModelSnapshot : ModelSnapshot
+    [Migration("20220509153717_UserGroupDesktop")]
+    partial class UserGroupDesktop
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -990,10 +992,6 @@ namespace WBIS_2.DataModel.Migrations
                     b.Property<double>("Lon")
                         .HasColumnType("double precision")
                         .HasColumnName("lon");
-
-                    b.Property<string>("PhotoTag")
-                        .HasColumnType("text")
-                        .HasColumnName("photo_tag");
 
                     b.Property<Guid?>("Quad75Id")
                         .HasColumnType("uuid")

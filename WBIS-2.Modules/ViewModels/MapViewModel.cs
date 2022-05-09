@@ -131,7 +131,7 @@ namespace WBIS_2.Modules.ViewModels
             MapDataPasser.SelectionFromGrid = true;
 
             MapControl.ActiveLayer = layer;
-            var f = layer.DataSet.Features.First(_ => (string)_.DataRow[MapDataPasser.ZoomKeyField] == MapDataPasser.ZoomKeyValueSingle);
+            var f = layer.DataSet.Features.First(_ => (Guid)_.DataRow[MapDataPasser.ZoomKeyField] == MapDataPasser.ZoomKeyValueSingle);
 
             Extent extent = new Extent();
             foreach (Coordinate c in f.Geometry.Envelope.Coordinates)
@@ -146,40 +146,40 @@ namespace WBIS_2.Modules.ViewModels
 
         private void MapDataPasser_MapShowAFSEvent(object sender, EventArgs e)
         {
-            //if (MapControl == null)
-            //{
-            //    return;
-            //}
+            if (MapControl == null)
+            {
+                return;
+            }
 
-            //ResetAFS();
-            //AfsLayer = new KeyValuePair<IMapFeatureLayer, string>(MapControl.GetLayer(MapDataPasser.ZoomLayerName), MapDataPasser.ZoomKeyField);
-            //if (AfsLayer.Key == null) return;
-            //AfsLayer.Key.SelectionEnabled = true;
-            //PreAfsCategory.Clear();
+            ResetAFS();
+            AfsLayer = new KeyValuePair<IMapFeatureLayer, string>(MapControl.GetLayer(MapDataPasser.ZoomLayerName), MapDataPasser.ZoomKeyField);
+            if (AfsLayer.Key == null) return;
+            AfsLayer.Key.SelectionEnabled = true;
+            PreAfsCategory.Clear();
 
-            ////IFeatureCategory newCat = new PolygonCategory(System.Drawing.Color.FromArgb(150,244,233,0), System.Drawing.Color.Yellow, 2);
-            //foreach (var key in MapDataPasser.ZoomKeyValues)
-            //{
-            //    var f = AfsLayer.Key.DataSet.Features.First(_ => (string)_.DataRow[MapDataPasser.ZoomKeyField] == (string)key);
-            //    var a = (PolygonCategory)AfsLayer.Key.GetCategory(f.Fid).Clone();
-            //    a.Symbolizer.SetFillColorEx(System.Drawing.Color.FromArgb(250, 244, 233, 0));
-            //    a.Symbolizer.SetOutline(System.Drawing.Color.Yellow, 1);
-            //    a.SelectionSymbolizer.SetFillColorEx(System.Drawing.Color.FromArgb(50, 244, 233, 0));
-            //    a.SelectionSymbolizer.SetOutline(System.Drawing.Color.Yellow, 1);
-            //    PreAfsCategory.Add((string)key, AfsLayer.Key.GetCategory(f.Fid));
-            //    AfsLayer.Key.SetCategory(f.Fid, a);
-            //}
-            //MapControl.UxMap.MapFrame.Invalidate();
+            //IFeatureCategory newCat = new PolygonCategory(System.Drawing.Color.FromArgb(150,244,233,0), System.Drawing.Color.Yellow, 2);
+            foreach (var key in MapDataPasser.ZoomKeyValues)
+            {
+                var f = AfsLayer.Key.DataSet.Features.First(_ => (Guid)_.DataRow[MapDataPasser.ZoomKeyField] == key);
+                var a = (PolygonCategory)AfsLayer.Key.GetCategory(f.Fid).Clone();
+                a.Symbolizer.SetFillColorEx(System.Drawing.Color.FromArgb(50, 255, 243,13));
+                a.Symbolizer.SetOutline(System.Drawing.Color.Yellow, 1);
+                a.SelectionSymbolizer.SetFillColorEx(System.Drawing.Color.FromArgb(50, 244, 233, 0));
+                a.SelectionSymbolizer.SetOutline(System.Drawing.Color.Yellow, 1);
+                PreAfsCategory.Add(key, AfsLayer.Key.GetCategory(f.Fid));
+                AfsLayer.Key.SetCategory(f.Fid, a);
+            }
+            MapControl.UxMap.MapFrame.Invalidate();
         }
 
         KeyValuePair<IMapFeatureLayer, string> AfsLayer = new KeyValuePair<IMapFeatureLayer, string>();
         //IMapFeatureLayer AfsLayer;
-        Dictionary<string, IFeatureCategory> PreAfsCategory = new Dictionary<string, IFeatureCategory>();
+        Dictionary<Guid, IFeatureCategory> PreAfsCategory = new Dictionary<Guid, IFeatureCategory>();
         private void ResetAFS()
         {
-            foreach (KeyValuePair<string, IFeatureCategory> keyValuePair in PreAfsCategory)
+            foreach (KeyValuePair<Guid, IFeatureCategory> keyValuePair in PreAfsCategory)
             {
-                var f = AfsLayer.Key.DataSet.Features.First(_ => (string)_.DataRow[AfsLayer.Value] == keyValuePair.Key);
+                var f = AfsLayer.Key.DataSet.Features.First(_ => (Guid)_.DataRow[AfsLayer.Value] == keyValuePair.Key);
                 AfsLayer.Key.SetCategory(f.Fid, keyValuePair.Value);
             }
             MapControl.UxMap.MapFrame.Invalidate();

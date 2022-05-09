@@ -12,6 +12,10 @@ using WBIS_2.ViewModels;
 using System.Globalization;
 using WBIS_2.Modules.Tools;
 using WBIS_2.Modules;
+using DevExpress.Xpf.Core;
+using System.IO;
+using DevExpress.Xpf.Bars;
+using System.Windows.Media;
 
 namespace WBIS_2.Views
 {
@@ -137,8 +141,10 @@ namespace WBIS_2.Views
 
             UserMenuControl.Content = "User: " + CurrentUser.UserName;
             UserMenuControl.Background = null;//Brushes.LightGreen;
+
+            SetViewActiveUnitsAs();
         }
-      
+
 
         public Visibility UserVisibility { get; set; } = Visibility.Visible;
         public Visibility AdminUserVisibility { get; set; } = Visibility.Visible;
@@ -210,6 +216,68 @@ namespace WBIS_2.Views
             //((DevExpress.Xpf.Docking.DocumentPanel)e.AffectedItems[0]).
             ModuleManager.DefaultManager.InjectOrNavigate(Regions.MainWindow, Common.Modules.Main);
             AccordionControl.SelectedItem = null;
+        }
+        private void LightMode_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            string appPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            if (File.Exists($@"{appPath}\WBIS_2\dm.preference")) File.Delete($@"{appPath}\WBIS_2\dm.preference");
+            if (!File.Exists($@"{appPath}\WBIS_2\lm.preference")) File.Create($@"{appPath}\WBIS_2\lm.preference").Close();
+            ApplicationThemeHelper.ApplicationThemeName = "Office2019Colorful";
+            ApplicationThemeHelper.UpdateApplicationThemeName();
+        }
+        private void DarkMode_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            string appPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            if (File.Exists($@"{appPath}\WBIS_2\lm.preference")) File.Delete($@"{appPath}\WBIS_2\lm.preference");
+            if (!File.Exists($@"{appPath}\WBIS_2\dm.preference")) File.Create($@"{appPath}\WBIS_2\dm.preference").Close();
+            ApplicationThemeHelper.ApplicationThemeName = "Office2019Black";
+            ApplicationThemeHelper.UpdateApplicationThemeName();
+        }
+
+
+        private void SetViewActiveUnitsAs()
+        {
+            ViewActiveUnitsAsMenuControl.Items.Clear();
+            ViewActiveUnitsAsMenuControl.Content = "View Active Units As: " + CurrentUser.UserName;
+
+            BarCheckItem CurrentUserItem = new BarCheckItem() { Content = CurrentUser.UserName, IsChecked = true };
+            CurrentUserItem.ItemClick += CurrentUserItem_ItemClick;
+            ViewActiveUnitsAsMenuControl.Items.Add(CurrentUserItem);
+
+
+            var MobileUsers = new WBIS2Model().ApplicationUsers.Include(_ => _.ApplicationGroup)
+                .Where(_ => _.ApplicationGroup.GroupName == "Mobile User" && !_._delete && !_.PlaceHolder
+                && ((_.Wildlife && CurrentUser.User.Wildlife) || (_.Botany && CurrentUser.User.Botany)))
+                .Select(_ => _.UserName).OrderBy(_ => _);
+            foreach (var MobileUser in MobileUsers)
+            {
+                BarCheckItem MobileUserItem = new BarCheckItem() { Content = MobileUser, IsChecked = false };
+                MobileUserItem.ItemClick += MobileUserItem_ItemClick;
+                ViewActiveUnitsAsMenuControl.Items.Add(MobileUserItem);
+            }
+            CurrentUser.ViewActiveUnitsAsCurrentUser();
+        }
+
+        private void MobileUserItem_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            ViewActiveUnitsAsMenuControl.Content = "View Active Units As: " + e.Item.Content.ToString();
+            UserMenuControl.Content = "User: " + CurrentUser.UserName + ": " + e.Item.Content.ToString();
+            UserMenuControl.Background = Brushes.LightGreen;
+            foreach (BarCheckItem item in ViewActiveUnitsAsMenuControl.Items)
+                item.IsChecked = false;
+            ((BarCheckItem)sender).IsChecked = true;
+            CurrentUser.ViewActiveUnitsAsMobileUser(e.Item.Content.ToString());
+        }
+
+        private void CurrentUserItem_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            ViewActiveUnitsAsMenuControl.Content = "View Active Units As: " + e.Item.Content.ToString();
+            UserMenuControl.Content = "User: " + CurrentUser.UserName;
+            UserMenuControl.Background = null;//Brushes.LightGreen;
+            foreach (BarCheckItem item in ViewActiveUnitsAsMenuControl.Items)
+                item.IsChecked = false;
+            ((BarCheckItem)sender).IsChecked = true;
+            CurrentUser.ViewActiveUnitsAsCurrentUser();
         }
     }
 }

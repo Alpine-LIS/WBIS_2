@@ -125,7 +125,11 @@ namespace WBIS_2.DataModel
                 }
                 query = query.Remove(query.Length - 1, 1);
 
-                if (CanSetActive) query = query.Replace($"\"is_active\"", $"guid IN (SELECT unit_id FROM active_{et.GetSchemaQualifiedTableName()} WHERE application_user_id = '{CurrentUser.User.Guid}') as \"is_active\"");
+                Guid guid = CurrentUser.User.Guid;
+                if (CurrentUser.MobileUserActiveUnits)
+                    guid = CurrentUser.MobileUserGuid;
+
+                if (CanSetActive) query = query.Replace($"\"is_active\"", $"guid IN (SELECT unit_id FROM active_{et.GetSchemaQualifiedTableName()} WHERE application_user_id = '{guid}') as \"is_active\"");
 
                 query += $" from \"{et.GetSchemaQualifiedTableName()}\"";
             }

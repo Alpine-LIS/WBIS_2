@@ -15,6 +15,8 @@ namespace WBIS_2.DataModel
         public bool AdminPrivileges { get; set; } = false;
         [Required,Column("read_only")]
         public bool ReadOnly { get; set; } = false;
+        [Required, Column("desktop_access")]
+        public bool DesktopAccess { get; set; } = false;
         public ICollection<ApplicationUser> ApplicationUsers { get; set; }
     }
 }

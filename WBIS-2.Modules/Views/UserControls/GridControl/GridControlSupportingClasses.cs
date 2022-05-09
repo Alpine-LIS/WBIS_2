@@ -10,7 +10,7 @@ namespace WBIS_2.Modules.Views
 {
     class AlternativeFocusingSelection
     {
-        public Dictionary<Guid,string> Selection = new Dictionary<Guid, string>();
+        public Dictionary<Guid, Guid> Selection = new Dictionary<Guid, Guid>();
         private List<int> RowsToRefresh = new List<int>();
         GridControlEx GridControlEx { get; set; }
         public AlternativeFocusingSelection(GridControlEx gridControlEx) => GridControlEx = gridControlEx;
@@ -23,7 +23,7 @@ namespace WBIS_2.Modules.Views
             if (!Selection.ContainsKey((Guid)test))
             {
                 var unit = GridControlEx.GetCellValue(rowHandle, unitCol);
-                Selection.Add((Guid)test,(string)unit);
+                Selection.Add((Guid)test,(Guid)unit);
             }
             else if (ShouldRemove)
                 Selection.Remove((Guid)test);
@@ -123,15 +123,6 @@ namespace WBIS_2.Modules.Views
             base.RaiseSelectionChanged(new GridSelectionChangedEventArgs(this.View, System.ComponentModel.CollectionChangeAction.Refresh, 0));
         }
     }
-
-
-    public class TableViewEx : TableView
-    {
-
-    }
-
-
-
 
 
     public static class UnitsActivitiesPasser

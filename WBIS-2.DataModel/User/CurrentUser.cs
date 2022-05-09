@@ -91,5 +91,23 @@ namespace WBIS_2.DataModel
 
         public static bool ViewDeleted { get; set; } = false;
         public static bool ViewRepository { get; set; } = false;
+
+
+        public static bool MobileUserActiveUnits = false;
+        public static Guid MobileUserGuid = Guid.Empty;
+        public static void ViewActiveUnitsAsCurrentUser()
+        {
+            MobileUserActiveUnits = false;
+            MobileUserGuid = Guid.Empty;
+
+            CurrentUserChanged?.Invoke(new object(), new EventArgs());
+        }
+        public static void ViewActiveUnitsAsMobileUser(string MobileUserName)
+        {
+            MobileUserActiveUnits = true;
+            MobileUserGuid = new WBIS2Model().ApplicationUsers.First(_ => _.UserName == MobileUserName && !_._delete && !_.PlaceHolder).Guid;
+
+            CurrentUserChanged?.Invoke(new object(), new EventArgs());
+        }
     }
 }

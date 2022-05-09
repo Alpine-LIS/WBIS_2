@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using WBIS_2.DataModel;
 
 namespace WBIS_2.Modules.Interfaces
 {
@@ -10,8 +11,8 @@ namespace WBIS_2.Modules.Interfaces
         string LayerKeyField { get; }
         string LayerName { get; }
         void ZoomToLayer();
-        void ZoomToFeature(object ZoomObject);
-        void MapShowAFS(Dictionary<Guid, string> selection);
+        void ZoomToFeature(IInformationType ZoomObject);
+        void MapShowAFS(Dictionary<Guid, Guid> selection);
 
     }
 }
