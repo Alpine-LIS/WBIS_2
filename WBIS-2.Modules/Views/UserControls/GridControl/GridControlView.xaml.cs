@@ -82,9 +82,18 @@ namespace WBIS_2.Modules.Views
             ((ListViewModelBase)DataContext).FilterFromGridSelection += GridControlView_FilterFromGridSelection;
 
             ((ListViewModelBase)DataContext).SaveGridLayoutEvent += GridControlView_SaveGridLayoutEvent;
+            ((ListViewModelBase)DataContext).ViewActiveEvent += GridControlView_ViewActiveEvent;
         }
 
 
+
+
+
+
+        private void GridControlView_ViewActiveEvent(object sender, EventArgs e)
+        {
+            this.MyGrid.FilterString = $"[IsActive] = TRUE";
+        }
 
         private void MapDataPasser_MapSelectionChangedEvent(object sender, EventArgs e)
         {

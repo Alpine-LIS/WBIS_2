@@ -1,0 +1,64 @@
+﻿<UserControl x:Class="WBIS_2.Modules.Views.UserControls.SelectWatershedsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WBIS_2.Modules.Views.UserControls" xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="AUTO"/>
+        </Grid.RowDefinitions>
+
+        <dxg:GridControl Grid.Row="0" MinHeight="200"
+                    MaxHeight="1920"
+                    AutoGenerateColumns="None"
+                    AllowInitiallyFocusedRow="False"
+                    SelectionMode="Row"
+                         Name="GridControl"
+                       SelectedItemChanged="GridControl_SelectedItemChanged" >
+            <dxg:GridControl.Columns>
+                <dxg:GridColumn FieldName="WatershedID" Header="WatershedID"/>
+                <dxg:GridColumn FieldName="WatershedName"/>
+                <dxg:GridColumn FieldName="Hydrologic"/>
+
+            <dxg:GridColumn FieldName="Select">
+                <dxg:GridColumn.CellTemplate>
+                    <DataTemplate>
+                            <dxe:CheckEdit IsChecked="{Binding RowData.Row.Select, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" VerticalAlignment="Center" AllowUpdateTwoWayBoundPropertiesOnSynchronization="False"/>
+                    </DataTemplate>
+                </dxg:GridColumn.CellTemplate>
+            </dxg:GridColumn>
+
+            </dxg:GridControl.Columns>
+            <dxg:GridControl.GroupSummary>
+                <dxg:GridSummaryItem SummaryType="Count" DisplayFormat="({0})" Alignment="Left"/>
+            </dxg:GridControl.GroupSummary>
+            <dxg:GridControl.View>
+                <dxg:TableView 
+                            ShowTotalSummary="False" 
+                            ShowGroupPanel="False"
+                            AllowEditing ="False" 
+                            NavigationStyle="Cell"
+                            ColumnFilterPopupMode="Excel">
+                </dxg:TableView>
+            </dxg:GridControl.View>
+        </dxg:GridControl>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="AUTO"/>
+                <ColumnDefinition Width="AUTO"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="AUTO"/>
+                <ColumnDefinition Width="AUTO"/>
+            </Grid.ColumnDefinitions>
+            <Button Content="Deselect All" Click="DeselectAllClick" Grid.Column="0"/>
+            <Button x:Name="BtnSelectTouching" Content="Deselect All" Click="SelectTouchingClick" Grid.Column="1"/>
+            <Button Content="Save" Click="SaveClick" Grid.Column="3"/>
+            <Button Content="Cancel" Click="CancelClick" Grid.Column="4"/>
+        </Grid>        
+    </Grid>
+</UserControl>

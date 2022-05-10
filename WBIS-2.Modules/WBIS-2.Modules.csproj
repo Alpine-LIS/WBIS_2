@@ -22,9 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ViewModels\Botany\" />
     <Folder Include="Views\Areas\" />
-    <Folder Include="Views\Botany\" />
     <Folder Include="Views\California\" />
   </ItemGroup>
 
@@ -58,6 +56,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Views\Botany\BotanicalScopingPlantView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\GeneralLists\ParentListView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -85,6 +86,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Update="Views\Botany\BotanicalScopingPlantView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Views\GeneralLists\ParentListView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>

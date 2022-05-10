@@ -48,6 +48,8 @@ namespace WBIS_2.DataModel
         [Column("botany")]
         public bool Botany { get; set; } = false;
 
+        [Column("auto_filter_active_units")]
+        public bool AutoFilterActiveUnits { get; set; } = false;
 
         //public ICollection<ApplicationUser> Contractors { get; set; }
         public ICollection<District> Districts { get; set; }

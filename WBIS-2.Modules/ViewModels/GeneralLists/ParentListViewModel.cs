@@ -75,13 +75,19 @@ namespace WBIS_2.Modules.ViewModels
             //Tracker.ChangesSaved += Tracker_ChangesSaved;
             Privileges();
         }
-              
-        public override void ShowDetails()
+
+        public override void ShowChildren()
         {
-            if (CurrentRecord == null)
+            if (SelectedItems.Count == 0)
             {
                 return;
             }
+
+            //if (SelectedItems.Count == 1 && HasDetailView)
+            //{
+            //    base.ShowDetails();
+            //    return;
+            //}
 
             if (ParentType.Manager.AvailibleChildren.Count() > 0)
             {
@@ -137,7 +143,7 @@ namespace WBIS_2.Modules.ViewModels
            
         }
 
-        public object CurrentRecord { get; set; }
+        //public object CurrentRecord { get; set; }
       
         public override void AddRecord()
         {

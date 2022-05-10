@@ -29,11 +29,13 @@ namespace WBIS_2.DataModel
 
                         CurrentUserChanged?.Invoke(new object(), new EventArgs());
                         GetVisableLayers();
+                        AutoFilterActiveUnits = _User.AutoFilterActiveUnits;
                     }
                 }
             }
         }
 
+        public static bool AutoFilterActiveUnits { get; set; }
         public static string UserName { get; set; } = "Unknown";
         public static bool ReadOnly { get; set; }
         public static bool AdminPrivileges { get; set; }

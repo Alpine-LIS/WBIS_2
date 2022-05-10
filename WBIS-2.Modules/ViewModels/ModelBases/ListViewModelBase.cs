@@ -21,6 +21,7 @@ using WBIS_2.Modules.ViewModels.Wildlife;
 using System.IO;
 using DevExpress.Mvvm.ModuleInjection;
 using Npgsql;
+using DevExpress.Mvvm.POCO;
 
 namespace WBIS_2.Modules.ViewModels
 {
@@ -38,9 +39,13 @@ namespace WBIS_2.Modules.ViewModels
             SelectedItems.CollectionChanged += SelectedItems_CollectionChanged;
 
             ShowDetailsCommand = new DelegateCommand(ShowDetails);
+            ShowChildrenCommand  = new DelegateCommand(ShowChildren);
             AddRecordCommand = new DelegateCommand(AddRecord);
             DeleteRecordCommand = new DelegateCommand(DeleteRecord);
             RecordsRefreshCommand = new DelegateCommand(RecordsRefresh);
+
+            ViewActiveCommand = new DelegateCommand(ViewActive);
+            ClearActiveListCommand = new DelegateCommand(ClearActiveList);
         }
 
         public override void WBISViewModelBase_ViewModelRemoving(object? sender, ViewModelRemovingEventArgs e)
@@ -49,6 +54,7 @@ namespace WBIS_2.Modules.ViewModels
             base.WBISViewModelBase_ViewModelRemoving(sender, e);
         }
 
+        public IInformationType CurrentRecord { get; set; }
         public EntityInstantFeedbackSource Records { get; set; }
         internal virtual void RefreshDataSource()
         {
@@ -96,7 +102,7 @@ namespace WBIS_2.Modules.ViewModels
             {
                 SetProperty(() => ListManager, value);
                 //if (ListManager == null) return;
-                //SetRecordOptions();
+                SetRecordOptions();
             }
         }
 
@@ -104,25 +110,53 @@ namespace WBIS_2.Modules.ViewModels
 
 
         private void SetRecordOptions()
-        {            
-                AddRecordsEnabled = ListManager.ImportRecords || ListManager.AddRecord;
-                AddRecordsEnabled = ListManager.DeleteRecord;
-                AddRecordsEnabled = ListManager.RestoreRecord;
-                //if (ro.AddRecord && ro.ImportRecords)
-                //    AddRecordToolTip = "Add/Import Record(s)";
-                //else if (ro.AddRecord)
-                //    AddRecordToolTip = "Add Record";
-                //else
-                    AddRecordToolTip = "Import Record(s)";
+        {
+            if (ListManager == null) return;
 
+            DetailsViewModel = Type.GetType("WBIS_2.Modules.ViewModels." + ListManager.DisplayName.Replace(" ", "") + "ViewModel");
+            ShowDetailsEnabled = DetailsViewModel != null;
+            ShowChildrenEnabled = ListManager.AvailibleChildren.Count() > 0;
+
+            ActiveUnitMenuVisable = ListManager.CanSetActive;
+            AddRecordsEnabled = ListManager.ImportRecords || AddSingleRecord;
+            DeleteRecordsEnabled = ListManager.DeleteRecord;
+            RestoreRecordsEnabled = ListManager.RestoreRecord;
+            if (AddSingleRecord && ListManager.ImportRecords)
+                AddRecordToolTip = "Add/Import Record(s)";
+            else if (AddSingleRecord)
+                AddRecordToolTip = "Add Record";
+            else
+                AddRecordToolTip = "Import Record(s)";
+
+            RaisePropertyChanged(nameof(ActiveUnitMenuVisable));
             RaisePropertyChanged(nameof(AddRecordsEnabled));
             RaisePropertyChanged(nameof(DeleteRecordsEnabled));
             RaisePropertyChanged(nameof(RestoreRecordsEnabled));
             RaisePropertyChanged(nameof(AddRecordToolTip));
+            RaisePropertyChanged(nameof(ShowDetailsEnabled));
+            RaisePropertyChanged(nameof(ShowChildrenEnabled));
+
+            if (ListManager.CanSetActive && CurrentUser.AutoFilterActiveUnits) ViewActive();
         }
 
 
 
+        public event EventHandler ViewActiveEvent;
+        public bool ActiveUnitMenuVisable { get; set; }
+        public ICommand ViewActiveCommand { get; set; }
+        public void ViewActive()
+        {
+            ViewActiveEvent?.Invoke(new object(), new EventArgs()); 
+        }
+        public ICommand ClearActiveListCommand { get; set; }
+        public void ClearActiveList()
+        {
+            RemoveActiveUnits(true);
+            Records.Refresh();
+        }
+
+
+        public bool AddSingleRecord { get; set; }
         public bool AddRecordsEnabled { get; set; }
         public string AddRecordToolTip { get; set; }
         public ICommand AddRecordCommand { get; set; }
@@ -137,14 +171,55 @@ namespace WBIS_2.Modules.ViewModels
         public abstract void RestoreRecord();
 
 
-        public ICommand ShowDetailsCommand { get; set; }
-        public abstract void ShowDetails();
+      
+        
+
+
         public ICommand RecordsRefreshCommand { get; set; }
         public void RecordsRefresh()
         {
             Records.Refresh();
             RaisePropertyChanged(nameof(Records));
         }
+
+
+
+
+
+
+
+
+
+        public bool ShowChildrenEnabled { get; set; }
+        public ICommand ShowChildrenCommand { get; set; }
+        public abstract void ShowChildren();
+
+
+
+
+        public Type DetailsViewModel { get; set; }
+        public ICommand ShowDetailsCommand { get; set; }
+        public bool ShowDetailsEnabled { get; set; }
+        public void ShowDetails()
+        {
+            if (DetailsViewModel == null) return;
+            if (CurrentRecord == null) return;
+
+            IDocumentManagerService service = this.GetRequiredService<IDocumentManagerService>();
+            IDocument document = service.FindDocumentById(CurrentRecord.Guid);
+            if (document == null)
+            {
+                var viewModel = DetailsViewModel.GetMethod("Create").Invoke(new object(), new object[] { CurrentRecord.Guid });
+                document = service.CreateDocument(ListManager.DisplayName.Replace(" ", "") + "View", viewModel, CurrentRecord.Guid, this);
+                document.Id = CurrentRecord.Guid;
+            }
+            document.Show();
+        }
+
+
+
+
+
         public bool ToggleAutoZoom { get; set; } = true;
 
 

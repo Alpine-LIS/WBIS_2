@@ -235,11 +235,9 @@ namespace WBIS_2.DataModel
         }
 
         public bool ImportRecords => false;
-        public bool AddRecord => true;
-        public bool AddRequiresParent => true;
-        public bool DetailView => true;
-        public bool DeleteRecord => true;
-        public bool RestoreRecord => true;
+        public bool AddRequiresParent => false;
+        public bool DeleteRecord => typeof(InfoType).GetProperties().Any(_=>_.Name == "_delete");
+        public bool RestoreRecord => typeof(InfoType).GetProperties().Any(_ => _.Name == "_delete");
         public bool CanSetActive => typeof(InfoType).GetInterfaces().Contains(typeof(IActiveUnit));
 
 

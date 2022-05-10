@@ -45,12 +45,18 @@ namespace WBIS_2.Modules.ViewModels
             {
                 _mapControl = value;
                 _mapControl.UxMap.SelectionChanged += UxMap_SelectionChanged;
+                _mapControl.UxMap.KeyDown += UxMap_SelectionMade;
                 _mapControl.UxMap.Layers.LayerAdded+= UxMap_LayerAdded;
                 _mapControl.UxMap.Layers.LayerRemoved += UxMap_LayerAdded;
                 _mapControl.EditorEnabled = _editorEnabled;
             }
         }
 
+
+        private void UxMap_KeyPress()
+        {
+            throw new NotImplementedException();
+        }
 
         private void UxMap_LayerAdded(object? sender, LayerEventArgs e)
         {
@@ -60,7 +66,15 @@ namespace WBIS_2.Modules.ViewModels
         private void UxMap_SelectionChanged(object sender, EventArgs e)
         {
             ResetAFS();
+            MapDataPasser.ZoomLayerName = MapControl.ActiveLayer.LegendText;
             MapDataPasser.MapSelectionChanged(MapControl.Selection.ToFeatureList());
+        }
+
+        private void UxMap_SelectionMade(object? sender, System.Windows.Forms.KeyEventArgs e)
+        {
+            if (e.KeyCode != System.Windows.Forms.Keys.Enter) return;
+            MapDataPasser.ZoomLayerName = MapControl.ActiveLayer.LegendText;
+            MapDataPasser.MapSelectionMade(MapControl.Selection.ToFeatureList());
         }
 
         private MapControl _mapControl;

@@ -42,7 +42,7 @@ namespace WBIS_2.DataModel
         /// <summary>
         /// Record can be added through a detail view.
         /// </summary>
-        public bool AddRecord { get; }
+        //public bool AddRecord { get; }
 
         /// <summary>
         /// Record can be deleted.
@@ -62,7 +62,7 @@ namespace WBIS_2.DataModel
         /// <summary>
         /// Does the record have a detail view availible.
         /// </summary>
-        public bool DetailView { get; }
+        //public bool DetailView { get; }
 
         public SubstituteLayer SubstituteLayer { get; }
         public abstract string GetLayerName();

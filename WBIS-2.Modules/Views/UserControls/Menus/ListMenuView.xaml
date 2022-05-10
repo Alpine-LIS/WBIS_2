@@ -44,6 +44,12 @@
                 Glyph="{dx:DXImage SvgImages/Dashboards/EnableSearch.svg}"
                 Content="Open Details"
                 IsEnabled="{Binding ShowDetailsEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <dxb:BarButtonItem 
+                ToolTip="Open Children (Alt+c)"
+                KeyGesture="Alt+c"
+                Command="{Binding ShowChildrenCommand}"
+                Glyph="{dx:DXImage SvgImages/Spreadsheet/MailMergePreview.svg}"
+                IsEnabled="{Binding ShowChildrenEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <dxb:BarCheckItem Glyph="{dx:DXImage SvgImages/RichEdit/TrackingChanges_ShowMarkup.svg}"
                 Content="View Deleted" 
                 ToolTip="View Deleted" 
@@ -70,6 +76,14 @@
 
 
             <!--<local:HexMenuTools IsVisible="{Binding IsHex160List, UpdateSourceTrigger =PropertyChanged}"/>-->
+
+
+            <dxb:BarSubItem ToolTip="Active Units" IsVisible="{Binding ActiveUnitMenuVisable}" Glyph="{dx:DXImage SvgImages/Dashboards/ImportMap.svg}">
+                <dxb:BarButtonItem Content="Show Active Units"
+                    ToolTip="Auto filter list to active units" 
+                    Command="{Binding ViewActiveCommand}"/>
+                <dxb:BarButtonItem Content="Clear Active Units" Command="{Binding ClearActiveListCommand}"/>
+            </dxb:BarSubItem>
         </dxb:ToolBarControl>
     </Grid>
 </UserControl>

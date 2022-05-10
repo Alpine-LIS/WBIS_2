@@ -42,6 +42,20 @@ namespace WBIS_2.DataModel
             MapSelectionChangedEvent?.Invoke(featureList, new EventArgs());
         }
 
+
+
+
+        public static event EventHandler MapSelectionMadeEvent;
+        public static void MapSelectionMade(object featureList)
+        {
+            MapSelectionMadeEvent?.Invoke(featureList, new EventArgs());
+        }
+
+
+
+
+
+
         public static event EventHandler MapDrawFeatureEvent;
         public static void MapDrawFeature(Guid guid)
         {
