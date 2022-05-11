@@ -107,6 +107,11 @@ namespace WBIS_2.DataModel
         public ICollection<Hex160> Hex160s { get; set; }
 
 
+        [Column("plant_species_id")]
+        public Guid? PlantSpeciesId { get; set; }
+        [ListInfo(AutoInclude = true)]
+        public PlantSpecies PlantSpecies { get; set; }
+
 
         [NotMapped, Display(Order = -1)]
         public IInfoTypeManager Manager => new InformationTypeManager<CNDDBOccurrence>();

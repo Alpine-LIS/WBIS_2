@@ -28,7 +28,7 @@ namespace WBIS_2.DataModel
         /// <summary>
         /// Return an IQueryable for the specified information type.
         /// </summary>
-        public abstract IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model);
+        public abstract IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model, List<string> ForceInclude = null);
         /// <summary>
         /// Can the infromation type be set as active.
         /// </summary>
@@ -66,5 +66,6 @@ namespace WBIS_2.DataModel
 
         public SubstituteLayer SubstituteLayer { get; }
         public abstract string GetLayerName();
+        public string GetSqlQuery(List<string> exlude);
     }
 }

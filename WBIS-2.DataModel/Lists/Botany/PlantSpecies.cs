@@ -55,6 +55,8 @@ namespace WBIS_2.DataModel
         public ICollection<SPIPlantPoint> SPIPlantPoints { get; set; }
         public ICollection<SPIPlantPolygon> SPIPlantPolys { get; set; }
         public ICollection<BotanicalScopingSpecies> BotanicalScopingSpecies { get; set; }
+        public ICollection<CNDDBOccurrence> CNDDBOccurrences { get; set; }
+        public ICollection<CNDDBQuadElement> CNDDBQuadElements { get; set; }
 
 
         [NotMapped, Display(Order = -1)]

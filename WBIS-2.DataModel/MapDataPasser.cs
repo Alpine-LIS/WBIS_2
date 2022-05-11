@@ -26,6 +26,15 @@ namespace WBIS_2.DataModel
             ZoomToFeatureEvent?.Invoke(new object(), new EventArgs());
         }
 
+
+        public static event EventHandler SetActiveLayerEvent;
+        public static void SetActiveLayer(string lyrName)
+        {
+            SetActiveLayerEvent?.Invoke(lyrName, new EventArgs());
+        }
+
+
+
         public static event EventHandler RefreshLayersEvent;
         public static void RefreshLayers(List<string> lyrNames)
         {

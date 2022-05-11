@@ -6,18 +6,24 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using WBIS_2.DataModel;
+using WBIS_2.Modules.Interfaces;
+using WBIS_2.Modules.Tools;
 
 namespace WBIS_2.Modules.ViewModels
 {
-    public class BotanicalScopingViewModel : WBISViewModelBase, IDocumentContent
+    public class BotanicalScopingViewModel : WBISViewModelBase, IDocumentContent, IDetailView
     {
+        public static bool AddSingle => true;
+
         private BotanicalScopingSpecies CheckSpecies = null;
         public BotanicalScopingSpecies CurrentSpecies
         {
@@ -29,6 +35,13 @@ namespace WBIS_2.Modules.ViewModels
             {
                 CheckChangedSpecies();
                 SetProperty(() => CurrentSpecies, value);
+                if (CurrentSpecies == null)
+                {
+                    SpeciesRank = $"Rare Plant Rank:";
+                    RaisePropertyChanged(nameof(SpeciesRank));
+                    return;
+                }
+
                 SpeciesRank = $"Rare Plant Rank: {CurrentSpecies.PlantSpecies.RPlantRank}";
                 RaisePropertyChanged(nameof(SpeciesRank));
                 CheckSpecies = new BotanicalScopingSpecies()
@@ -41,6 +54,7 @@ namespace WBIS_2.Modules.ViewModels
                     ExcludeText = CurrentSpecies.ExcludeText,
                     ExcludeReport = CurrentSpecies.ExcludeReport
                 };
+                UpdateSpeciesCount();
             }
         }
 
@@ -71,19 +85,46 @@ namespace WBIS_2.Modules.ViewModels
             set
             {
                 SetProperty(()=>SpeciesList, value);
-                SpeciesCount = $"Species: {SpeciesList.Count().ToString("N0")} " +
-                    $"| Excluded: {SpeciesList.Count(_=>_.Exclude).ToString("N0")} " +
-                    $"| Excluded from report: {SpeciesList.Count(_=>_.ExcludeReport).ToString("N0")}";
-                RaisePropertyChanged(nameof(SpeciesCount));
+                UpdateSpeciesCount();
             }
+        }
+        public ObservableCollection<BotanicalScopingSpecies> SelectedSpecies { get; set; } = new ObservableCollection<BotanicalScopingSpecies>();
+
+        private void UpdateSpeciesCount()
+        {
+            SpeciesCount = $"Species: {SpeciesList.Count().ToString("N0")} " +
+                                $"| Excluded: {SpeciesList.Count(_ => _.Exclude).ToString("N0")} " +
+                                $"| Excluded from report: {SpeciesList.Count(_ => _.ExcludeReport).ToString("N0")}";
+            RaisePropertyChanged(nameof(SpeciesCount));
         }
         public string SpeciesCount { get; set; }
         public string SpeciesRank { get; set; } = "Rare Plant Rank:";
 
         public Watershed CurrentWatershed { get; set; }
-        public Watershed[] WatershedList { get; set; }
+        public Watershed[] WatershedList
+        {
+            get { return GetProperty(() => WatershedList); }
+            set
+            {
+                SetProperty(() => WatershedList, value);
+                if (WatershedList.Count() > 0)
+                {
+                    Scoping.WshdElevationMax = Convert.ToInt32(WatershedList.Max(_ => _.ElevationMax));
+                    Scoping.WshdElevationMin = Convert.ToInt32(WatershedList.Min(_ => _.ElevationMin));
+                }
+                else
+                {
+                    Scoping.WshdElevationMax = 0;
+                    Scoping.WshdElevationMin = 0;
+                }
+                RaisePropertyChanged(nameof(Scoping));
+            }
+        }
+        public ObservableCollection<Watershed> SelectedWatersheds { get; set; } = new ObservableCollection<Watershed>();
+
         public BotanicalScoping Scoping { get; set; }
         public string[] ThpNames { get; set; }
+        [Required(AllowEmptyStrings = false), StringLength(1000, MinimumLength = 1)]
         public string ThpName { get; set; }
         public string[] Foresters { get; set; }
         public string[] EcoUnits => new string[] { "Outer North Coast Ranges",
@@ -112,6 +153,15 @@ namespace WBIS_2.Modules.ViewModels
         {
             AllowMapSelectionCommand = new DelegateCommand(AllowMapSelection);
             WatershedListSelectionCommand = new DelegateCommand(WatershedListSelection);
+            WatershedRemoveSelectedCommand = new DelegateCommand(WatershedRemoveSelected);
+
+
+            SpeciesFromWatershedMapCommand = new DelegateCommand(SpeciesFromWatershedMap);
+            SpeciesFromQuad75MapCommand = new DelegateCommand(SpeciesFromQuad75Map);
+            SpeciesFromWatershedListCommand = new DelegateCommand(SpeciesFromWatershedList);
+            RemoveSelectedSpeciesCommand = new DelegateCommand(RemoveSelectedSpecies);
+
+
 
             ThpNames = Database.THP_Areas.Select(_=>_.THPName).OrderBy(_=>_).ToArray();
                 Foresters = Database.BotanicalScopings.Select(_=>_.Forester).Distinct().OrderBy(_ => _).ToArray();
@@ -123,18 +173,27 @@ namespace WBIS_2.Modules.ViewModels
                     .Include(_ => _.THP_Area)
                     .Include(_ => _.Region)
                     .Include(_ => _.Watersheds)
+                    .Include(_ => _.Districts)
+                    .Include(_ => _.Quad75s)
                     .First(_=>_.Guid == guid);
 
-                WatershedList = Scoping.Watersheds.ToArray();
+                WatershedList = Database.Watersheds
+                    .Include(_=>_.BotanicalScopings)
+                    .Where(_=>_.BotanicalScopings.Contains(Scoping))
+                    .AsNoTracking().ToArray();
                 SpeciesList = Database.BotanicalScopingSpecies
                     .Include(_=>_.PlantSpecies)
-                    .Include(_=>_.BotanicalScoping).Where(_=>_.BotanicalScoping == Scoping).ToArray();
+                    .Include(_=>_.BotanicalScoping).Where(_=>_.BotanicalScoping == Scoping)
+                    .AsNoTracking().ToArray();
                 if (Scoping.THP_Area != null) ThpName = Scoping.THP_Area.THPName;
             }
             else
             {
                 Scoping = new BotanicalScoping();
                 Scoping.Guid = Guid.Empty;
+                Scoping.Region = Regions.First();
+                SpeciesList = new BotanicalScopingSpecies[0];
+                WatershedList = new Watershed[0];
             }
 
             RaisePropertyChanged(nameof(ThpName));
@@ -159,12 +218,77 @@ namespace WBIS_2.Modules.ViewModels
 
         public void OnDestroy()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         public override void Save()
         {
-            throw new NotImplementedException();
+            if (!this.Changed) return;
+
+            if (HasErrors() || Scoping.HasErrors())
+            {
+                MessageBox.Show("Please ensure that all field requirements are met.");
+                return;
+            }
+
+            WaitWindowHandler w = new WaitWindowHandler();
+            w.Start();
+
+            Database.BotanicalScopingSpecies.RemoveRange(
+                Database.BotanicalScopingSpecies.Include(_ => _.BotanicalScoping)
+                .Where(_ => _.BotanicalScoping.Guid == Scoping.Guid));
+
+            Scoping.BotanicalScopingSpecies = new List<BotanicalScopingSpecies>();
+            Scoping.Watersheds = new List<Watershed>();
+            Scoping.Districts = new List<District>();
+            Scoping.Quad75s = new List<Quad75>();
+                       
+            foreach(var bs in SpeciesList)
+            {
+                BotanicalScopingSpecies botanicalScopingSpecies = new BotanicalScopingSpecies()
+                {
+                    PlantSpecies = Database.PlantSpecies.First(_=>_.Guid == bs.PlantSpecies.Guid),
+                    Exclude = false,
+                    ExcludeReport = false,
+                    HabitatDescription = bs.HabitatDescription,
+                    NddbHabitatDescription = bs.NddbHabitatDescription,
+                    SpiHabitatDescription = bs.SpiHabitatDescription,
+                    ProtectionSummary = bs.ProtectionSummary,
+                    BotanicalScoping = Scoping
+                };
+                Scoping.BotanicalScopingSpecies.Add(botanicalScopingSpecies);
+                Database.BotanicalScopingSpecies.Add(botanicalScopingSpecies);
+            }
+
+            Scoping.Watersheds = Database.Watersheds
+                .Include(_ => _.Districts)
+                .Include(_ => _.Quad75s)
+                .Where(_ => WatershedList.Select(z => z.Guid).Contains(_.Guid)).ToList();
+
+            foreach(var water in Scoping.Watersheds)
+            {
+                ((List<District>)Scoping.Districts).AddRange(water.Districts);
+                ((List<Quad75>)Scoping.Quad75s).AddRange(water.Quad75s);
+            }
+
+            Scoping.Districts = Scoping.Districts.Distinct().ToList();
+            Scoping.Quad75s = Scoping.Quad75s.Distinct().ToList();
+
+            THP_Area tHP_Area = Database.THP_Areas.FirstOrDefault(_ => _.THPName == ThpName);
+            if (tHP_Area == null)
+            {
+                tHP_Area = new THP_Area() { THPName = ThpName };
+                Database.THP_Areas.Add(tHP_Area);
+            }
+            Scoping.THP_Area = tHP_Area;
+
+            if (!Database.BotanicalScopings.Contains(Scoping))
+                Database.BotanicalScopings.Add(Scoping);
+            else Database.BotanicalScopings.Update(Scoping);
+
+            Database.SaveChanges();
+            this.Changed = false;
+            w.Stop();
         }
 
         public override void Tracker_ChangesSaved(object sender, IEnumerable<EntityEntry> e)
@@ -180,6 +304,7 @@ namespace WBIS_2.Modules.ViewModels
         public ICommand AllowMapSelectionCommand { get; set; }
         private void AllowMapSelection()
         {
+            MapDataPasser.SetActiveLayer("watersheds");
             MapDataPasser.MapSelectionMadeEvent += MapDataPasser_MapSelectionChangedEvent;
         }
 
@@ -190,15 +315,147 @@ namespace WBIS_2.Modules.ViewModels
             if (MessageBox.Show("Would you like to use these watersheds for the scoping?", "", MessageBoxButton.YesNo) == MessageBoxResult.No)
                 return;
             List<IFeature> features = (List<IFeature>)sender;
-            WatershedList = Database.Watersheds.Where(_=>features.Select(x=>x.DataRow["guid"]).Cast<Guid>().Contains(_.Guid)).ToArray();
+            WatershedList = Database.Watersheds.Where(_=>features.Select(x=>x.DataRow["guid"]).Cast<Guid>().Contains(_.Guid))
+                .AsNoTracking().ToArray();
             RaisePropertyChanged(nameof(WatershedList));
+            this.Changed = true;
         }
 
 
         public ICommand WatershedListSelectionCommand { get; set; }
         private void WatershedListSelection()
         {
-            
+            var selectWatershedsControl = new Views.UserControls.SelectWatershedsControl(WatershedList.Select(_=>_.Guid).ToArray());
+            CustomControlWindow window = new CustomControlWindow(selectWatershedsControl);
+            if (window.DialogResult)
+            {
+                Guid[] newGuids = selectWatershedsControl.WatershedSelections.Where(_=>_.Select).Select(_=>_.guid).ToArray();
+                WatershedList = Database.Watersheds.Where(_ => newGuids.Contains(_.Guid))
+                    .AsNoTracking().ToArray();
+                RaisePropertyChanged(nameof(WatershedList));
+                this.Changed = true;
+            }
         }
+
+        public ICommand WatershedRemoveSelectedCommand { get; set; }
+        private void WatershedRemoveSelected()
+        {
+            if (SelectedWatersheds == null) return;
+            if (SelectedWatersheds.Count == 0) return;
+
+            WatershedList = WatershedList.Except(SelectedWatersheds).ToArray();
+            RaisePropertyChanged(nameof(WatershedList));
+            this.Changed = true;
+        }
+
+
+
+
+        public ICommand SpeciesFromWatershedMapCommand { get; set; }
+        private void SpeciesFromWatershedMap()
+        {
+            MapDataPasser.SetActiveLayer("watersheds");
+            MapDataPasser.MapSelectionMadeEvent += MapDataPasser_MapSelectionSpeciesEvent;
+        }
+        public ICommand SpeciesFromQuad75MapCommand { get; set; }
+        private void SpeciesFromQuad75Map()
+        {
+            MapDataPasser.SetActiveLayer("quad75s");
+            MapDataPasser.MapSelectionMadeEvent += MapDataPasser_MapSelectionSpeciesEvent;
+        }
+
+        private void MapDataPasser_MapSelectionSpeciesEvent(object? sender, EventArgs e)
+        {
+            MapDataPasser.MapSelectionMadeEvent -= MapDataPasser_MapSelectionSpeciesEvent;
+            if (!MapDataPasser.ZoomLayerName.ToUpper().Contains("WATERSHED")
+                && !MapDataPasser.ZoomLayerName.ToUpper().Contains("QUAD")) return;
+            if (MessageBox.Show("Would you like to use this selection to select plant species?", "", MessageBoxButton.YesNo) == MessageBoxResult.No)
+                return;
+
+
+            List<IFeature> features = (List<IFeature>)sender;
+            Views.UserControls.SelectBotanicalSpeciesControl selectBotanicalSpeciesControl;
+            if (MapDataPasser.ZoomLayerName.ToUpper().Contains("WATERSHED"))
+            {
+                var list = Database.Watersheds.Where(_ => features.Select(x => x.DataRow["guid"]).Cast<Guid>().Contains(_.Guid))
+                    .AsNoTracking().ToList<object>();
+                selectBotanicalSpeciesControl = new Views.UserControls.SelectBotanicalSpeciesControl(list, typeof(Watershed));
+            }
+            else
+            {
+                var list = Database.Quad75s.Where(_ => features.Select(x => x.DataRow["guid"]).Cast<Guid>().Contains(_.Guid))
+                    .AsNoTracking().ToList<object>();
+                selectBotanicalSpeciesControl = new Views.UserControls.SelectBotanicalSpeciesControl(list, typeof(Quad75));
+            }
+            CustomControlWindow window = new CustomControlWindow(selectBotanicalSpeciesControl);
+            if (window.DialogResult)
+            {
+                ApplySelectedSpecies(selectBotanicalSpeciesControl);
+            }
+        }
+
+
+        public ICommand SpeciesFromWatershedListCommand { get; set; }
+        private void SpeciesFromWatershedList()
+        {
+            var selectBotanicalSpeciesControl = new Views.UserControls.SelectBotanicalSpeciesControl(WatershedList.Cast<object>().ToList(), typeof(Watershed));
+            CustomControlWindow window = new CustomControlWindow(selectBotanicalSpeciesControl);
+            if (window.DialogResult)
+            {
+                ApplySelectedSpecies(selectBotanicalSpeciesControl);
+            }
+        }
+
+        private void ApplySelectedSpecies(Views.UserControls.SelectBotanicalSpeciesControl selectBotanicalSpeciesControl)
+        {
+            bool replace = MessageBox.Show("Replace the current plant list?", "", MessageBoxButton.YesNo) == MessageBoxResult.Yes;
+
+            Guid[] newGuids = selectBotanicalSpeciesControl.SpeciesSelections.Where(_ => _.Select).Select(_ => _.guid).ToArray();
+            var species = Database.PlantSpecies.Where(_ => newGuids.Contains(_.Guid)).AsNoTracking().ToArray();
+            List<BotanicalScopingSpecies> botanicalScopingSpecies = new List<BotanicalScopingSpecies>();
+            foreach (var s in species)
+            {
+                if (!SpeciesList.Any(_ => _.PlantSpecies.Guid == s.Guid) || replace)
+                {
+                    var b = new BotanicalScopingSpecies()
+                    {
+                        PlantSpecies = s,
+                        Exclude = false,
+                        ExcludeReport = false,
+                        HabitatDescription = s.GenHabitat,
+                        NddbHabitatDescription = s.GenHabitat,
+                        SpiHabitatDescription = s.SpiHabitat
+                    };
+                    var p = Database.PlantProtectionSummaries
+                    .Include(_ => _.Region)
+                    .Include(_ => _.PlantSpecies)
+                    .AsNoTracking()
+                    .FirstOrDefault(_ => _.PlantSpecies == s && _.Region == Scoping.Region);
+                    if (p != null) b.ProtectionSummary = p.Summary;
+
+                    botanicalScopingSpecies.Add(b);
+                }
+            }
+
+            if (replace) SpeciesList = botanicalScopingSpecies.ToArray();
+            else SpeciesList = SpeciesList.Concat(botanicalScopingSpecies).ToArray();
+
+            RaisePropertyChanged(nameof(SpeciesList));
+            this.Changed = true;
+        }
+
+
+
+        public ICommand RemoveSelectedSpeciesCommand { get; set; }
+        private void RemoveSelectedSpecies()
+        {
+            if (SelectedSpecies == null) return;
+            if (SelectedSpecies.Count == 0) return;
+
+            SpeciesList = SpeciesList.Except(SelectedSpecies).ToArray();
+            RaisePropertyChanged(nameof(SpeciesList));
+            this.Changed = true;
+        }
+
     }
 }

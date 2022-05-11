@@ -87,6 +87,6 @@ namespace WBIS_2.DataModel
 
 
         [NotMapped, Display(Order = -1)]
-        public IInfoTypeManager Manager => new InformationTypeManager<BotanicalScoping>();
+        public IInfoTypeManager Manager => new InformationTypeManager<BotanicalScoping>() { };
     }
 }

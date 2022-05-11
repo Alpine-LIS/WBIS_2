@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DevExpress.Mvvm;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,7 @@ namespace WBIS_2.Modules.Views.UserControls
     public partial class SelectWatershedsControl : UserControl
     {
         WBIS2Model Database = new WBIS2Model();
-        List<WatershedSelection> WatershedSelections = new List<WatershedSelection>();
+        public List<WatershedSelection> WatershedSelections = new List<WatershedSelection>();
         public SelectWatershedsControl(Guid[] currentSelection)
         {
             InitializeComponent();
@@ -42,41 +43,53 @@ namespace WBIS_2.Modules.Views.UserControls
 
         private void SaveClick(object sender, RoutedEventArgs e)
         {
-
+            Window window = Window.GetWindow(this);
+            window.DialogResult = true;
+            window.Close();
         }
         private void CancelClick(object sender, RoutedEventArgs e)
         {
-
+            Window window = Window.GetWindow(this);
+            window.DialogResult = false;
+            window.Close();
         }
         private void DeselectAllClick(object sender, RoutedEventArgs e)
         {
-
+            foreach (var w in WatershedSelections)
+                w.SetSelect(false);
         }
         private void SelectTouchingClick(object sender, RoutedEventArgs e)
         {
             if (GridControl.SelectedItem == null) return;
 
             var geo = Database.Watersheds.First(_ => _.Guid == ((WatershedSelection)GridControl.SelectedItem).guid).Geometry;
-            var watersheds = Database.Watersheds.Where(_ => _.Geometry.Touches(geo));
-            foreach(var watershed in watersheds)
+            var watersheds = Database.Watersheds.Where(_ => _.Geometry.Touches(geo)).AsNoTracking();
+            foreach (var watershed in watersheds)
             {
-                var w = WatershedSelections.FirstOrDefault(_=>_.guid == watershed.Guid);
+                var w = WatershedSelections.FirstOrDefault(_ => _.guid == watershed.Guid);
                 if (w != null)
-                    w.Select = true;
+                    w.SetSelect(true);
             }
+            ((WatershedSelection)GridControl.SelectedItem).SetSelect(true);
         }
 
 
 
 
 
-        public class WatershedSelection
+        public class WatershedSelection : BindableBase
         {
             public string WatershedID { get; set; }
             public string WatershedName { get; set; }
             public string Hydrologic { get; set; }
             public bool Select { get; set; }
             public Guid guid { get; set; }
+
+            public void SetSelect (bool select)
+            {
+                Select = select;
+                RaisePropertyChanged(nameof(Select));
+            }
         }
 
         private void GridControl_SelectedItemChanged(object sender, DevExpress.Xpf.Grid.SelectedItemChangedEventArgs e)

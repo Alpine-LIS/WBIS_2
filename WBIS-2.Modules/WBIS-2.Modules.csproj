@@ -83,6 +83,9 @@
     <Compile Update="Views\UserControls\Menus\HexMenuTools.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\UserControls\SelectBotanicalSpeciesControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -119,6 +122,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\UserControls\Menus\HexMenuTools.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\UserControls\SelectBotanicalSpeciesControl.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

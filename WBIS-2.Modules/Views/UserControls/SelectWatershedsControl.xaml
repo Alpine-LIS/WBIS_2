@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WBIS_2.Modules.Views.UserControls" xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800" MaxHeight="350">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -56,7 +56,7 @@
                 <ColumnDefinition Width="AUTO"/>
             </Grid.ColumnDefinitions>
             <Button Content="Deselect All" Click="DeselectAllClick" Grid.Column="0"/>
-            <Button x:Name="BtnSelectTouching" Content="Deselect All" Click="SelectTouchingClick" Grid.Column="1"/>
+            <Button x:Name="BtnSelectTouching" Content="" Click="SelectTouchingClick" Grid.Column="1"/>
             <Button Content="Save" Click="SaveClick" Grid.Column="3"/>
             <Button Content="Cancel" Click="CancelClick" Grid.Column="4"/>
         </Grid>        

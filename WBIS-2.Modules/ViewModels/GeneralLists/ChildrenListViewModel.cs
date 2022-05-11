@@ -191,15 +191,15 @@ namespace WBIS_2.Modules.ViewModels
 
        // public object CurrentRecord { get; set; }
       
-        public override void AddRecord()
-        {
-            Views.RecordImporters.RecordImportHolderView recordImportHolderView = new Views.RecordImporters.RecordImportHolderView(new Views.RecordImporters.SiteCallingImportView());
-            CustomControlWindow window = new CustomControlWindow(recordImportHolderView);
-            if (window.DialogResult)
-            {
+        //public override void AddRecord()
+        //{
+        //    Views.RecordImporters.RecordImportHolderView recordImportHolderView = new Views.RecordImporters.RecordImportHolderView(new Views.RecordImporters.SiteCallingImportView());
+        //    CustomControlWindow window = new CustomControlWindow(recordImportHolderView);
+        //    if (window.DialogResult)
+        //    {
 
-            }
-        }
+        //    }
+        //}
         public override void DeleteRecord()
         {
            

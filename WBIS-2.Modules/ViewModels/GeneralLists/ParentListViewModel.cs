@@ -145,10 +145,10 @@ namespace WBIS_2.Modules.ViewModels
 
         //public object CurrentRecord { get; set; }
       
-        public override void AddRecord()
-        {
+        //public override void AddRecord()
+        //{
             
-        }
+        //}
         public override void DeleteRecord()
         {
 

@@ -64,6 +64,8 @@ namespace WBIS_2.DataModel
         public ICollection<BotanicalSurvey> BotanicalSurveys { get; set; }
         [ListInfo(ChildField = true)]
         public ICollection<BotanicalElement> BotanicalElements { get; set; }
+        [ListInfo(ChildField = true)]
+        public ICollection<CNDDBQuadElement> CNDDBQuadElements { get; set; }
 
 
         [NotMapped, Display(Order = -1)]

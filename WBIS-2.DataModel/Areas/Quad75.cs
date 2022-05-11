@@ -76,8 +76,10 @@ namespace WBIS_2.DataModel
         [ListInfo(ChildField = true)]
         public ICollection<BotanicalSurvey> BotanicalSurveys { get; set; }
         [ListInfo(ChildField = true)]
-        public ICollection<BotanicalElement> BotanicalElements { get; set; }  
-        
+        public ICollection<BotanicalElement> BotanicalElements { get; set; }
+        [ListInfo(ChildField = true)]
+        public ICollection<CNDDBQuadElement> CNDDBQuadElements { get; set; }
+
         [NotMapped, Display(Order = -1)]
         public IInfoTypeManager Manager => new InformationTypeManager<Quad75>();
     }

@@ -116,6 +116,8 @@ namespace WBIS_2.Modules.ViewModels
             DetailsViewModel = Type.GetType("WBIS_2.Modules.ViewModels." + ListManager.DisplayName.Replace(" ", "") + "ViewModel");
             ShowDetailsEnabled = DetailsViewModel != null;
             ShowChildrenEnabled = ListManager.AvailibleChildren.Count() > 0;
+            if (DetailsViewModel != null)
+                AddSingleRecord = (bool)DetailsViewModel.GetProperty("AddSingle").GetValue(null);
 
             ActiveUnitMenuVisable = ListManager.CanSetActive;
             AddRecordsEnabled = ListManager.ImportRecords || AddSingleRecord;
@@ -160,7 +162,29 @@ namespace WBIS_2.Modules.ViewModels
         public bool AddRecordsEnabled { get; set; }
         public string AddRecordToolTip { get; set; }
         public ICommand AddRecordCommand { get; set; }
-        public abstract void AddRecord();
+        public void AddRecord()
+        {
+            if (AddSingleRecord && ListManager.ImportRecords)
+                AddRecordToolTip = "Add/Import Record(s)";
+            else if (AddSingleRecord)
+                AddSingle();
+            else
+                AddRecordToolTip = "Import Record(s)";
+        }
+        private void AddSingle()
+        {
+            if (DetailsViewModel == null) return;
+
+            IDocumentManagerService service = this.GetRequiredService<IDocumentManagerService>();
+            IDocument document = service.FindDocumentById(Guid.Empty);
+            if (document == null)
+            {
+                var viewModel = DetailsViewModel.GetMethod("Create").Invoke(new object(), new object[] { Guid.Empty });
+                document = service.CreateDocument(ListManager.DisplayName.Replace(" ", "") + "View", viewModel, Guid.Empty, this);
+                document.Id = Guid.Empty;
+            }
+            document.Show();
+        }
 
         public bool DeleteRecordsEnabled { get; set; }
         public ICommand DeleteRecordCommand { get; set; }

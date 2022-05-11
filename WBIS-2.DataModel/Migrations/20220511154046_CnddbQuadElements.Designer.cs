@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,10 @@ using WBIS_2.DataModel;
 namespace WBIS_2.DataModel.Migrations
 {
     [DbContext(typeof(WBIS2Model))]
-    partial class WBIS2ModelModelSnapshot : ModelSnapshot
+    [Migration("20220511154046_CnddbQuadElements")]
+    partial class CnddbQuadElements
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1932,10 +1934,6 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("text")
                         .HasColumnName("presence");
 
-                    b.Property<Guid?>("PlantSpeciesId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("plant_species_id");
-
                     b.Property<string>("RPLANTRANK")
                         .HasColumnType("text")
                         .HasColumnName("rplantrank");
@@ -1978,8 +1976,6 @@ namespace WBIS_2.DataModel.Migrations
 
                     b.HasKey("Guid");
 
-                    b.HasIndex("PlantSpeciesId");
-
                     b.ToTable("cnddb_occurrences", (string)null);
                 });
 
@@ -2018,10 +2014,6 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("text")
                         .HasColumnName("fed_status");
 
-                    b.Property<Guid?>("PlantSpeciesId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("plant_species_id");
-
                     b.Property<Guid?>("Quad75Id")
                         .HasColumnType("uuid")
                         .HasColumnName("quad75_id");
@@ -2039,8 +2031,6 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnName("taxon_sort");
 
                     b.HasKey("Guid");
-
-                    b.HasIndex("PlantSpeciesId");
 
                     b.HasIndex("Quad75Id");
 
@@ -4645,26 +4635,11 @@ namespace WBIS_2.DataModel.Migrations
                     b.Navigation("District");
                 });
 
-            modelBuilder.Entity("WBIS_2.DataModel.CNDDBOccurrence", b =>
-                {
-                    b.HasOne("WBIS_2.DataModel.PlantSpecies", "PlantSpecies")
-                        .WithMany("CNDDBOccurrences")
-                        .HasForeignKey("PlantSpeciesId");
-
-                    b.Navigation("PlantSpecies");
-                });
-
             modelBuilder.Entity("WBIS_2.DataModel.CNDDBQuadElement", b =>
                 {
-                    b.HasOne("WBIS_2.DataModel.PlantSpecies", "PlantSpecies")
-                        .WithMany("CNDDBQuadElements")
-                        .HasForeignKey("PlantSpeciesId");
-
                     b.HasOne("WBIS_2.DataModel.Quad75", "Quad75")
                         .WithMany("CNDDBQuadElements")
                         .HasForeignKey("Quad75Id");
-
-                    b.Navigation("PlantSpecies");
 
                     b.Navigation("Quad75");
                 });
@@ -5347,10 +5322,6 @@ namespace WBIS_2.DataModel.Migrations
                     b.Navigation("BotanicalPlantsOfInterest");
 
                     b.Navigation("BotanicalScopingSpecies");
-
-                    b.Navigation("CNDDBOccurrences");
-
-                    b.Navigation("CNDDBQuadElements");
 
                     b.Navigation("FloweringTimelines");
 

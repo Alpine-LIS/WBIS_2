@@ -99,6 +99,14 @@ namespace WBIS_2.Modules.ViewModels
             MapDataPasser.MapShowAFSEvent += MapDataPasser_MapShowAFSEvent;
             //MapDataPasser.UserDistrictsChangedEvent += MapDataPasser_UserDistrictsChanged;
             MapDataPasser.InformationTypesChangedEvent += InformationTypesChanged;
+            MapDataPasser.SetActiveLayerEvent += MapDataPasser_SetActiveLayerEvent;
+        }
+
+        private void MapDataPasser_SetActiveLayerEvent(object? sender, EventArgs e)
+        {
+            var layer = MapControl.GetLayer((string)sender);
+            if (layer == null) return;
+            MapControl.UxMap.SetActiveLayer(layer);
         }
 
         public void ZoomToLayer(string layerName)

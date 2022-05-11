@@ -136,7 +136,7 @@ namespace WBIS_2.DataModel
             return query;
         }
 
-        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
+        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model, List<string> ForceInclude = null)
         {
             IQueryable<InfoType> returnVal = model.Set<InfoType>()
                 .FromSqlRaw(GetSqlQuery(new List<string>() { "geometry" }))
@@ -146,6 +146,10 @@ namespace WBIS_2.DataModel
 
             foreach (var include in AutoIncludes)
                 ThenIncludes(ref returnVal, include);
+
+            if (ForceInclude != null)
+                foreach (var include in ForceInclude)
+                    returnVal = returnVal.Include(include);
 
             if (queryProperty != null)
                 if (!AutoIncludes.Contains(queryProperty))

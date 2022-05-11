@@ -54,69 +54,26 @@ namespace WBIS_2.Modules.Views.Botany
 
             if (e.Property.Name == "Background")
             {
-                if ((bool)excludeReport)
+                if (excludeReport == null || exclude == null)
                 {
-                    e.Result = Brushes.LightSalmon;
-                    e.Handled = true;
+                    e.Handled = false;
                 }
-                else if ((bool)exclude)
+                else
                 {
-                    e.Result = Brushes.LightGray;
-                    e.Handled = true;
+                    if ((bool)excludeReport)
+                    {
+                        e.Result = Brushes.LightSalmon;
+                        e.Handled = true;
+                    }
+                    else if ((bool)exclude)
+                    {
+                        e.Result = Brushes.LightGray;
+                        e.Handled = true;
+                    }
+                    else e.Handled = false;
                 }
-                else e.Handled = false;
             }
-            //else if (e.Property.Name == "Foreground")
-            //{
-            //    if (((BotanicalScopingViewModel)DataContext).ChangedSpecies.Contains((Guid)id))
-            //    {                    
-            //        e.Result = FontWeights.Bold;
-            //        e.Handled = true;
-            //    }
-            //    else e.Handled = false;
-            //}
             else e.Handled = false;
-
-            //if (excludeReport == null)
-            //    e.Handled = false;
-            //else if ((bool)excludeReport)
-            //{
-            //    if (e.Property.Name == "Background")
-            //    {
-            //        e.Result = Brushes.LightSalmon;
-            //        e.Handled = true;
-            //    }
-            //    else if (e.Property.Name == "Foreground")
-            //    {
-            //        if (((BotanicalScopingViewModel)DataContext).ChangedSpecies.Contains((Guid)id))
-            //            e.Result = Brushes.Black;
-            //        else
-            //            e.Result = Brushes.Black;
-            //        e.Handled = true;
-            //    }
-            //    else e.Handled = false;
-            //}
-            //else if (exclude == null)
-            //    e.Handled = false;
-            //else if ((bool)exclude)
-            //{
-            //    if (e.Property.Name == "Background")
-            //    {
-            //        e.Result = Brushes.LightGray;
-            //        e.Handled = true;
-            //    }
-            //    else if (e.Property.Name == "Foreground")
-            //    {
-            //        if (((BotanicalScopingViewModel)DataContext).ChangedSpecies.Contains((Guid)id))
-            //            e.Result = Brushes.Black;
-            //        else
-            //            e.Result = Brushes.Black;
-            //        e.Handled = true;
-            //    }
-            //    else e.Handled = false;
-            //}
-            //else
-            //    e.Handled = false;
         }
     }
 }

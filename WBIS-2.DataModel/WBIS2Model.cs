@@ -103,6 +103,7 @@ namespace WBIS_2.DataModel
             modelBuilder.Entity<CDFW_SpottedOwl>().ToTable("cdfw_spotted_owls");
             modelBuilder.Entity<CDFW_SpottedOwlDiagram>().ToTable("cdfw_spotted_owl_diagrams");
             modelBuilder.Entity<CNDDBOccurrence>().ToTable("cnddb_occurrences");
+            modelBuilder.Entity<CNDDBQuadElement>().ToTable("cnddb_quad_elements");
             modelBuilder.Entity<BirdSpecies>().ToTable("bird_species");
             modelBuilder.Entity<WildlifeSpecies>().ToTable("wildlife_species");
             modelBuilder.Entity<ApplicationGroup>().ToTable("application_groups");
@@ -206,6 +207,13 @@ namespace WBIS_2.DataModel
                         x => x.HasOne<CNDDBOccurrence>().WithMany().HasForeignKey("cnddb_occurrence_id"),
                         x => x.HasOne<District>().WithMany().HasForeignKey("district_id"),
                         x => x.ToTable("cnddb_occurrences_districts", "public"));
+            modelBuilder.Entity<District>()
+                .HasMany(_ => _.CNDDBQuadElements)
+                .WithMany(p => p.Districts)
+                .UsingEntity<Dictionary<string, object>>("cnddb_quad_elements_districts",
+                        x => x.HasOne<CNDDBQuadElement>().WithMany().HasForeignKey("cnddb_quad_element_id"),
+                        x => x.HasOne<District>().WithMany().HasForeignKey("district_id"),
+                        x => x.ToTable("cnddb_quad_elements_districts", "public"));
             modelBuilder.Entity<District>()
                 .HasMany(_ => _.BotanicalScopings)
                 .WithMany(p => p.Districts)
@@ -379,6 +387,7 @@ namespace WBIS_2.DataModel
         public DbSet<CDFW_SpottedOwl> CDFW_SpottedOwls { get; set; }
         public DbSet<CDFW_SpottedOwlDiagram> CDFW_SpottedOwlDiagrams { get; set; }
         public DbSet<CNDDBOccurrence> CNDDBOccurrences { get; set; }
+        public DbSet<CNDDBQuadElement> CNDDBQuadElements { get; set; }
         public DbSet<BirdSpecies> BirdSpecies { get; set; }
         public DbSet<WildlifeSpecies> WildlifeSpecies { get; set; }
         public DbSet<ApplicationGroup> ApplicationGroups { get; set; }
