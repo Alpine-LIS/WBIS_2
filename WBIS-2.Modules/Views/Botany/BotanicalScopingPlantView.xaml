@@ -13,12 +13,14 @@
         </Grid.RowDefinitions>
 
         <dxb:ToolBarControl>
+            <dxb:BarButtonItem ToolTip="Add Species" Command="{Binding AddSpeciesCommand}" Glyph="{dx:DXImage SvgImages/Icon Builder/Actions_Add.svg}"/>
             <dxb:BarSubItem ToolTip="Map Select &#x0a;Press (Enter) to confirm." Glyph="{dx:DXImage SvgImages/Dashboards/ImportMap.svg}">
                 <dxb:BarButtonItem Content="Watershed" Command="{Binding SpeciesFromWatershedMapCommand}"/>
                 <dxb:BarButtonItem Content="Quad75" Command="{Binding SpeciesFromQuad75MapCommand}"/>
             </dxb:BarSubItem>
             <dxb:BarButtonItem ToolTip="Select From Watershed List" Command="{Binding SpeciesFromWatershedListCommand}" Glyph="{dx:DXImage SvgImages/DiagramIcons/Orientation/ListOrientation.svg}"/>
             <dxb:BarButtonItem ToolTip="Remove Selected" Command="{Binding RemoveSelectedSpeciesCommand}" Glyph="{dx:DXImage SvgImages/Icon Builder/Actions_RemoveCircled.svg}"/>
+            <dxb:BarButtonItem ToolTip="Flowering Timeline" Command="{Binding FloweringTimelineCommand}" Glyph="{dx:DXImage SvgImages/Scheduling/TimelineView.svg}"/>
         </dxb:ToolBarControl>
 
         <Grid Grid.Row="1">

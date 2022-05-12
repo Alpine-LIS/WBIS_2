@@ -18,8 +18,8 @@ namespace WBIS_2.DataModel
         [Column("summary")]
         public string Summary { get; set; }
 
-        [Column("region_id")]
-        public Guid RegionId { get; set; }
-        public Region Region { get; set; }
+        [Column("district_id")]
+        public Guid? DistrictId { get; set; }
+        public District District { get; set; }
     }
 }

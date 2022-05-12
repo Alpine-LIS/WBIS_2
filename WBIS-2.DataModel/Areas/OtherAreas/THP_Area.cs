@@ -20,6 +20,8 @@ namespace WBIS_2.DataModel
         [ListInfo(ChildField = true)]
         public ICollection<BotanicalSurveyArea> BotanicalSurveyAreas { get; set; }
 
+        [ListInfo(ChildField = true)]
+        public ICollection<BotanicalSurvey> BotanicalSurveys { get; set; }
 
         [NotMapped, Display(Order = -1)]
         public IInfoTypeManager Manager => new InformationTypeManager<THP_Area>();

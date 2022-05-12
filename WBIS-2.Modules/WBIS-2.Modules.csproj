@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="ViewModels\Lists\" />
     <Folder Include="Views\Areas\" />
     <Folder Include="Views\California\" />
   </ItemGroup>

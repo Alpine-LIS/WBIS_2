@@ -160,6 +160,8 @@ namespace WBIS_2.Modules.ViewModels
             SpeciesFromQuad75MapCommand = new DelegateCommand(SpeciesFromQuad75Map);
             SpeciesFromWatershedListCommand = new DelegateCommand(SpeciesFromWatershedList);
             RemoveSelectedSpeciesCommand = new DelegateCommand(RemoveSelectedSpecies);
+            FloweringTimelineCommand = new DelegateCommand(FloweringTimeline);
+            AddSpeciesCommand = new DelegateCommand(AddSpecies);
 
 
 
@@ -178,6 +180,7 @@ namespace WBIS_2.Modules.ViewModels
                     .First(_=>_.Guid == guid);
 
                 WatershedList = Database.Watersheds
+                    .Include(_ => _.Districts)
                     .Include(_=>_.BotanicalScopings)
                     .Where(_=>_.BotanicalScopings.Contains(Scoping))
                     .AsNoTracking().ToArray();
@@ -191,7 +194,7 @@ namespace WBIS_2.Modules.ViewModels
             {
                 Scoping = new BotanicalScoping();
                 Scoping.Guid = Guid.Empty;
-                Scoping.Region = Regions.First();
+                Scoping.Region = Regions.First(_=>_.RegionName == "Master List");
                 SpeciesList = new BotanicalScopingSpecies[0];
                 WatershedList = new Watershed[0];
             }
@@ -231,7 +234,22 @@ namespace WBIS_2.Modules.ViewModels
                 return;
             }
 
-            WaitWindowHandler w = new WaitWindowHandler();
+            if (WatershedList.Length == 0)
+            {
+                MessageBox.Show("A botanical scoping must have watersheds.");
+                return;
+            }
+
+            foreach (var bs in SpeciesList)
+            {
+                if (bs.Exclude && bs.ExcludeText == "")
+                {
+                    MessageBox.Show("There are excluded species that are missing a justification.");
+                    return;
+                }
+            }
+
+                WaitWindowHandler w = new WaitWindowHandler();
             w.Start();
 
             Database.BotanicalScopingSpecies.RemoveRange(
@@ -315,7 +333,9 @@ namespace WBIS_2.Modules.ViewModels
             if (MessageBox.Show("Would you like to use these watersheds for the scoping?", "", MessageBoxButton.YesNo) == MessageBoxResult.No)
                 return;
             List<IFeature> features = (List<IFeature>)sender;
-            WatershedList = Database.Watersheds.Where(_=>features.Select(x=>x.DataRow["guid"]).Cast<Guid>().Contains(_.Guid))
+            WatershedList = Database.Watersheds
+                .Include(_ => _.Districts)
+                .Where(_=>features.Select(x=>x.DataRow["guid"]).Cast<Guid>().Contains(_.Guid))
                 .AsNoTracking().ToArray();
             RaisePropertyChanged(nameof(WatershedList));
             this.Changed = true;
@@ -330,7 +350,9 @@ namespace WBIS_2.Modules.ViewModels
             if (window.DialogResult)
             {
                 Guid[] newGuids = selectWatershedsControl.WatershedSelections.Where(_=>_.Select).Select(_=>_.guid).ToArray();
-                WatershedList = Database.Watersheds.Where(_ => newGuids.Contains(_.Guid))
+                WatershedList = Database.Watersheds
+                    .Include(_=>_.Districts)
+                    .Where(_ => newGuids.Contains(_.Guid))
                     .AsNoTracking().ToArray();
                 RaisePropertyChanged(nameof(WatershedList));
                 this.Changed = true;
@@ -349,6 +371,21 @@ namespace WBIS_2.Modules.ViewModels
         }
 
 
+
+
+
+
+
+        public ICommand AddSpeciesCommand { get; set; }
+        private void AddSpecies()
+        {
+            var selectBotanicalSpeciesControl = new Views.UserControls.SelectBotanicalSpeciesControl(null, null, Scoping.Region.RegionName);
+            CustomControlWindow window = new CustomControlWindow(selectBotanicalSpeciesControl);
+            if (window.DialogResult)
+            {
+                ApplySelectedSpecies(selectBotanicalSpeciesControl);
+            }
+        }
 
 
         public ICommand SpeciesFromWatershedMapCommand { get; set; }
@@ -379,13 +416,13 @@ namespace WBIS_2.Modules.ViewModels
             {
                 var list = Database.Watersheds.Where(_ => features.Select(x => x.DataRow["guid"]).Cast<Guid>().Contains(_.Guid))
                     .AsNoTracking().ToList<object>();
-                selectBotanicalSpeciesControl = new Views.UserControls.SelectBotanicalSpeciesControl(list, typeof(Watershed));
+                selectBotanicalSpeciesControl = new Views.UserControls.SelectBotanicalSpeciesControl(list, typeof(Watershed), "Master List");
             }
             else
             {
                 var list = Database.Quad75s.Where(_ => features.Select(x => x.DataRow["guid"]).Cast<Guid>().Contains(_.Guid))
                     .AsNoTracking().ToList<object>();
-                selectBotanicalSpeciesControl = new Views.UserControls.SelectBotanicalSpeciesControl(list, typeof(Quad75));
+                selectBotanicalSpeciesControl = new Views.UserControls.SelectBotanicalSpeciesControl(list, typeof(Quad75), "Master List");
             }
             CustomControlWindow window = new CustomControlWindow(selectBotanicalSpeciesControl);
             if (window.DialogResult)
@@ -398,7 +435,7 @@ namespace WBIS_2.Modules.ViewModels
         public ICommand SpeciesFromWatershedListCommand { get; set; }
         private void SpeciesFromWatershedList()
         {
-            var selectBotanicalSpeciesControl = new Views.UserControls.SelectBotanicalSpeciesControl(WatershedList.Cast<object>().ToList(), typeof(Watershed));
+            var selectBotanicalSpeciesControl = new Views.UserControls.SelectBotanicalSpeciesControl(WatershedList.Cast<object>().ToList(), typeof(Watershed), "Master List");
             CustomControlWindow window = new CustomControlWindow(selectBotanicalSpeciesControl);
             if (window.DialogResult)
             {
@@ -409,8 +446,9 @@ namespace WBIS_2.Modules.ViewModels
         private void ApplySelectedSpecies(Views.UserControls.SelectBotanicalSpeciesControl selectBotanicalSpeciesControl)
         {
             bool replace = MessageBox.Show("Replace the current plant list?", "", MessageBoxButton.YesNo) == MessageBoxResult.Yes;
+            bool spiDesc = MessageBox.Show("Botanical scoping plant species use the CNDDB habitat description by default. Would you like the use the SPI habitat description?", "", MessageBoxButton.YesNo) == MessageBoxResult.Yes;
 
-            Guid[] newGuids = selectBotanicalSpeciesControl.SpeciesSelections.Where(_ => _.Select).Select(_ => _.guid).ToArray();
+                Guid[] newGuids = selectBotanicalSpeciesControl.SpeciesSelections.Where(_ => _.Select).Select(_ => _.guid).ToArray();
             var species = Database.PlantSpecies.Where(_ => newGuids.Contains(_.Guid)).AsNoTracking().ToArray();
             List<BotanicalScopingSpecies> botanicalScopingSpecies = new List<BotanicalScopingSpecies>();
             foreach (var s in species)
@@ -426,12 +464,8 @@ namespace WBIS_2.Modules.ViewModels
                         NddbHabitatDescription = s.GenHabitat,
                         SpiHabitatDescription = s.SpiHabitat
                     };
-                    var p = Database.PlantProtectionSummaries
-                    .Include(_ => _.Region)
-                    .Include(_ => _.PlantSpecies)
-                    .AsNoTracking()
-                    .FirstOrDefault(_ => _.PlantSpecies == s && _.Region == Scoping.Region);
-                    if (p != null) b.ProtectionSummary = p.Summary;
+                    if (spiDesc) b.HabitatDescription = b.SpiHabitatDescription;
+                    b.ProtectionSummary = GetProtectionSummary(s);
 
                     botanicalScopingSpecies.Add(b);
                 }
@@ -444,6 +478,49 @@ namespace WBIS_2.Modules.ViewModels
             this.Changed = true;
         }
 
+        private string GetProtectionSummary(PlantSpecies plantSpecies)
+        {
+            if (WatershedList.Length > 0)
+            {
+                foreach(Watershed w in WatershedList)
+                {
+                    var ps = Database.PlantProtectionSummaries
+                                .Include(_ => _.PlantSpecies)
+                                .Include(_ => _.District)
+                                .FirstOrDefault(_ => w.Districts.Contains(_.District) && _.PlantSpecies == plantSpecies);
+                    if (ps != null) return ps.Summary;
+                }                
+            }
+
+            if (Scoping.Region.RegionName != "Master List")
+            {
+                var ps = Database.PlantProtectionSummaries
+                                .Include(_ => _.PlantSpecies)
+                                .Include(_ => _.District)
+                                .FirstOrDefault(_ => Scoping.Region.RegionName.Contains(_.District.DistrictName) && _.PlantSpecies == plantSpecies);
+                if (ps != null) return ps.Summary;
+            }
+
+            if (WatershedList.Length > 0)
+            {
+                var ps = Database.PlantProtectionSummaries
+                                .Include(_ => _.PlantSpecies)
+                                .Include(_ => _.District)
+                                .FirstOrDefault(_ => CurrentUser.Districts.Contains(_.District) && _.PlantSpecies == plantSpecies);
+                if (ps != null) return ps.Summary;
+            }
+
+            if (WatershedList.Length > 0)
+            {
+                var ps = Database.PlantProtectionSummaries
+                                .Include(_ => _.PlantSpecies)
+                                .FirstOrDefault(_ => _.PlantSpecies == plantSpecies);
+                if (ps != null) return ps.Summary;
+            }
+
+
+            return "";
+        }
 
 
         public ICommand RemoveSelectedSpeciesCommand { get; set; }
@@ -457,5 +534,15 @@ namespace WBIS_2.Modules.ViewModels
             this.Changed = true;
         }
 
+
+        public ICommand FloweringTimelineCommand { get; set; }
+        private void FloweringTimeline()
+        {
+            var floweringTimeline = new Views.UserControls.FloweringTimelineControl(SpeciesList, ThpName, Scoping.ElevationMin, Scoping.ElevationMax);
+            CustomControlWindow window = new CustomControlWindow(floweringTimeline);
+            if (window.DialogResult)
+            {
+            }
+        }
     }
 }

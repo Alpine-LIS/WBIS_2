@@ -1,0 +1,78 @@
+﻿<UserControl x:Class="WBIS_2.Modules.Views.UserControls.FloweringTimelineControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WBIS_2.Modules.Views.UserControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800" Height="450" Width="1000">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="AUTO"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="AUTO"/>
+        </Grid.RowDefinitions>
+
+        <WindowsFormsHost Name="WFH"  Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Grid.ColumnSpan="2"/>
+
+        <Grid Grid.Row="0" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Name="LblElevation" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="0"/>
+            <Grid Grid.Column="1" Background="Yellow" >
+                <TextBlock Text="Listed"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Grid>
+            <Grid Grid.Column="2" Background="CornflowerBlue" >
+                <TextBlock Text="CRPR 1, 2"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Grid>
+            <Grid Grid.Column="3" Background="Salmon" >
+                <TextBlock Text="CRPR 3, 4"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Grid>
+            <Border BorderThickness="2" BorderBrush="Black" Grid.Column="0"/>
+            <Border BorderThickness="2" BorderBrush="Black" Grid.Column="1"/>
+            <Border BorderThickness="2" BorderBrush="Black" Grid.Column="2"/>
+        </Grid>
+
+        <Grid Grid.Column="0" Grid.Row="1">
+            <TextBox Text="THP"/>
+            <Border BorderThickness="2" BorderBrush="Black"/>
+        </Grid>
+        <Grid Grid.Column="0" Grid.Row="2">
+            <Border BorderThickness="2" BorderBrush="Black"/>
+        </Grid>
+        <Grid Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" VerticalAlignment="Bottom">
+            <Grid>
+                <Grid.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform Angle="-90"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Grid.RenderTransform>
+                <TextBlock Name="LblThp" HorizontalAlignment="Left" Padding="10" FontSize="18"/>
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Row="4" Grid.Column="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="AUTO"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="AUTO"/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="BtnExport" Content="Export Timeline" Grid.Column="1" Click="BtnExport_Click"/>
+            <Button x:Name="BtnClose" Content="Close" Grid.Column="3" Click="BtnClose_Click"/>
+        </Grid>
+    </Grid>
+</UserControl>

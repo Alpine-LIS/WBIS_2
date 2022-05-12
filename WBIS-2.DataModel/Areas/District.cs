@@ -66,7 +66,7 @@ namespace WBIS_2.DataModel
         public ICollection<BotanicalElement> BotanicalElements { get; set; }
         [ListInfo(ChildField = true)]
         public ICollection<CNDDBQuadElement> CNDDBQuadElements { get; set; }
-
+        public ICollection<PlantProtectionSummary> PlantProtectionSummaries { get; set; }
 
         [NotMapped, Display(Order = -1)]
         public IInfoTypeManager Manager => new InformationTypeManager<District>();
