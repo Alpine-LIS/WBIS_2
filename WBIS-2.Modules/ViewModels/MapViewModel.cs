@@ -336,41 +336,15 @@ namespace WBIS_2.Modules.ViewModels
                 joinParent = $" INNER JOIN {parent} ON {layerStr.ToLower()}.guid = {parent}.guid";
             }
 
-            //Does the layer contain repository data
-            string repository = "";
-            if (CurrentUser.ViewRepository = false)
-            {
-                if (parent == "")
-                {
-                    if (trueType.GetProperties().Any(_ => _.Name == "Repository"))
-                        repository = $"{layerStr.ToLower()}.repository = FALSE AND ";
-                }
-                else
-                {
-                    if (Type.GetType(parent).GetProperties().Any(_ => _.Name == "Repository"))
-                        repository = $"{parent}.repository = FALSE AND ";
-                }
-            }
+            string delete = GetDeleteQuery(layerStr, parent, parentType, trueType);
+            string repository = GetRepositoryQuery(layerStr, parent, parentType, trueType);
+            string districts = GetDistrictQuery(layerStr, parent, parentType, trueType);
 
-            string districts = "";
-            //Is the district connection one to one or many to many
-            if (parentType == null)
-            {
-                if (trueType.GetProperty("District") != null)
-                    districts = $" {layerStr.ToLower()}.district_id IN ({DistrictGuids})";
-                else
-                    districts = $" {layerStr.ToLower()}.guid IN (SELECT {GetDatabaseString(trueType)}_id FROM {layerStr.ToLower()}_districts WHERE district_id IN ({DistrictGuids}))";
-            }
-            else
-            {
-                if (parentType.GetProperty("District") != null)
-                    districts = $" {parent}.district_id IN ({DistrictGuids})";
-                else
-                    districts = $" {layerStr.ToLower()}.guid IN (SELECT {GetDatabaseString(parentType)}_id FROM {parent}_districts WHERE district_id IN ({DistrictGuids}))";
-            }
-                
+            string boolQuery = string.Join(" AND ", new string[] { delete, repository, districts });
+            while (boolQuery.StartsWith(" AND "))
+                boolQuery = boolQuery.Remove(0, 5);
 
-            string query = $"SELECT {layerStr.ToLower()}.guid, {repository}{districts} from {layerStr.ToLower()} {joinParent} ORDER BY {layerStr.ToLower()}.guid";
+            string query = $"SELECT {layerStr.ToLower()}.guid, {boolQuery} from {layerStr.ToLower()} {joinParent} ORDER BY {layerStr.ToLower()}.guid";
 
             DataTable dt = new DataTable();
             using (NpgsqlDataAdapter filler = new NpgsqlDataAdapter(query, WBIS2Model.GetRDSConnectionString()))
@@ -387,6 +361,65 @@ namespace WBIS_2.Modules.ViewModels
             if (misteap)
                 MessageBox.Show($"There was a misalignment displaying layer {layerStr}");
         }
+
+        private string GetDistrictQuery(string layerStr, string parent, Type parentType, Type trueType)
+        {
+            string districts = "";
+            //Is the district connection one to one or many to many
+            if (parentType == null)
+            {
+                if (trueType.GetProperty("District") != null)
+                    districts = $" {layerStr.ToLower()}.district_id IN ({DistrictGuids})";
+                else
+                    districts = $" {layerStr.ToLower()}.guid IN (SELECT {GetDatabaseString(trueType)}_id FROM {layerStr.ToLower()}_districts WHERE district_id IN ({DistrictGuids}))";
+            }
+            else
+            {
+                if (parentType.GetProperty("District") != null)
+                    districts = $" {parent}.district_id IN ({DistrictGuids})";
+                else
+                    districts = $" {layerStr.ToLower()}.guid IN (SELECT {GetDatabaseString(parentType)}_id FROM {parent}_districts WHERE district_id IN ({DistrictGuids}))";
+            }
+            return districts;
+        }
+        private string GetRepositoryQuery(string layerStr, string parent, Type parentType, Type trueType)
+        {
+            string repository = "";
+            if (CurrentUser.ViewRepository = false)
+            {
+                if (parent == "")
+                {
+                    if (trueType.GetProperties().Any(_ => _.Name == "Repository"))
+                        repository = $"{layerStr.ToLower()}.repository = FALSE";
+                }
+                else
+                {
+                    if (Type.GetType(parent).GetProperties().Any(_ => _.Name == "Repository"))
+                        repository = $"{parent}.repository = FALSE";
+                }
+            }
+            return repository;
+        }
+        private string GetDeleteQuery(string layerStr, string parent, Type parentType, Type trueType)
+        {
+            string delete = "";
+            if (CurrentUser.ViewDeleted = false)
+            {
+                if (parent == "")
+                {
+                    if (trueType.GetProperties().Any(_ => _.Name == "_delete"))
+                        delete = $"{layerStr.ToLower()}._delete = FALSE";
+                }
+                else
+                {
+                    if (Type.GetType(parent).GetProperties().Any(_ => _.Name == "_delete"))
+                        delete = $"{parent}._delete = FALSE";
+                }
+            }
+            return delete;
+        }
+
+
         string DistrictGuids = $"'{string.Join("','", CurrentUser.Districts.Select(_ => _.Guid))}'";
         private string GetDatabaseString(Type type)
         {

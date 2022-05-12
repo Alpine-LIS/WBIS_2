@@ -51,11 +51,11 @@
                 Glyph="{dx:DXImage SvgImages/Spreadsheet/MailMergePreview.svg}"
                 IsEnabled="{Binding ShowChildrenEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <dxb:BarCheckItem Glyph="{dx:DXImage SvgImages/RichEdit/TrackingChanges_ShowMarkup.svg}"
-                Content="View Deleted" 
                 ToolTip="View Deleted" 
-                IsChecked="{Binding ViewDeleted, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                IsEnabled="{Binding ViewDeletedEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                              IsVisible="{Binding AdminUser, UpdateSourceTrigger=PropertyChanged}"/>           
+                IsChecked="{Binding ViewDeleted, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <dxb:BarCheckItem Glyph="{dx:DXImage SvgImages/Spreadsheet/ShowAllSubtotalsAtBottomPivotTable.svg}"
+                ToolTip="View Deleted" 
+                IsChecked="{Binding ViewRepository, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <dxb:BarCheckItem 
                 ToolTip="Toggle map auto zoom"
                 IsChecked="{Binding ToggleAutoZoom}"

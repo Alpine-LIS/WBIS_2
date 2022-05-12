@@ -91,6 +91,21 @@ namespace WBIS_2.Modules.ViewModels
             }
         }
 
+        private bool _ViewRepository = CurrentUser.ViewRepository;
+        public bool ViewRepository
+        {
+            get { return _ViewRepository; }
+            set
+            {
+                if (_ViewRepository != value)
+                {
+                    _ViewRepository = value;
+                    CurrentUser.ViewRepository = value;
+                    RefreshDataSource();
+                }
+            }
+        }
+
 
         public IInfoTypeManager ListManager
         {
