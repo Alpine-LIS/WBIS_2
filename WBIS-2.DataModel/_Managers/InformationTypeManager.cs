@@ -136,13 +136,13 @@ namespace WBIS_2.DataModel
             return query;
         }
 
-        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model, List<string> ForceInclude = null)
+
+        public IQueryable GetQueryable(WBIS2Model model, List<string> ForceInclude = null)
         {
             IQueryable<InfoType> returnVal = model.Set<InfoType>()
                 .FromSqlRaw(GetSqlQuery(new List<string>() { "geometry" }))
                 .AsNoTracking();
-            
-            PropertyInfo queryProperty = ParentChildPropertyProperty(QueryType);
+
 
             foreach (var include in AutoIncludes)
                 ThenIncludes(ref returnVal, include);
@@ -150,7 +150,15 @@ namespace WBIS_2.DataModel
             if (ForceInclude != null)
                 foreach (var include in ForceInclude)
                     returnVal = returnVal.Include(include);
+                     
+            return returnVal;
+        }
 
+        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model, List<string> ForceInclude = null)
+        {
+            IQueryable<InfoType> returnVal = (IQueryable<InfoType>)GetQueryable(model, ForceInclude);
+
+            PropertyInfo queryProperty = ParentChildPropertyProperty(QueryType);
             if (queryProperty != null)
                 if (!AutoIncludes.Contains(queryProperty))
                     returnVal = returnVal.Include($"{queryProperty.Name}");
@@ -160,8 +168,7 @@ namespace WBIS_2.DataModel
             var a = (Expression<Func<InfoType, bool>>)genInfo
                 .Invoke(this, new object[] { Query.ToList(), queryProperty });
 
-            //return CanSetActive ? returnVal.Where(a).ToList().AsQueryable() : returnVal.Where(a);
-            return  returnVal.Where(a);
+            return returnVal.Where(a);
         }
 
         /// <summary>

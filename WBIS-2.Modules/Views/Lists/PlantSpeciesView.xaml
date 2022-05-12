@@ -1,0 +1,197 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WBIS_2.Modules.Views.Botany" 
+             xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors" 
+             xmlns:views="clr-namespace:WBIS_2.Modules.Views" 
+             xmlns:viewModels="clr-namespace:WBIS_2.Modules.ViewModels" 
+             xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
+             xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core" x:Class="WBIS_2.Modules.Views.Botany.PlantSpeciesView"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type={x:Type viewModels:PlantSpeciesViewModel}}"
+            d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <views:DetailMenuView Grid.Row="0"/>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="AUTO"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="AUTO"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="AUTO"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="AUTO"/>
+                <RowDefinition Height="AUTO"/>
+                <RowDefinition Height="AUTO"/>
+                <RowDefinition Height="AUTO"/>
+                <RowDefinition Height="AUTO"/>
+            </Grid.RowDefinitions>
+
+            <Label Content="SciName:" Grid.Column="0" Grid.Row="0"/>
+            <dxe:TextEdit Text="{Binding SciName, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Grid.Column="1" Grid.Row="0"/>
+            <Label Content="ComName:" Grid.Column="2" Grid.Row="0"/>
+            <dxe:TextEdit Text="{Binding CurrentSpecies.ComName, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Grid.Column="3" Grid.Row="0"/>
+            <Label Content="Family:" Grid.Column="4" Grid.Row="0"/>
+            <dxe:ComboBoxEdit Text="{Binding CurrentSpecies.Family, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
+                              ItemsSource="{Binding Familys}" Grid.Column="5" Grid.Row="0" IsTextEditable="True" AutoComplete="True"/>
+
+            <Label Content="TaxonGroup:" Grid.Column="0" Grid.Row="1"/>
+            <dxe:ComboBoxEdit Text="{Binding CurrentSpecies.TaxonGroup, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
+                              ItemsSource="{Binding TaxonGroups}" Grid.Column="1" Grid.Row="1" IsTextEditable="True" AutoComplete="True"/>
+            <Label Content="ElmCode:" Grid.Column="2" Grid.Row="1"/>
+            <dxe:TextEdit Text="{Binding CurrentSpecies.ElmCode, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Grid.Column="3" Grid.Row="1"/>
+            <Label Content="SpeciesCode:" Grid.Column="4" Grid.Row="1"/>
+            <dxe:TextEdit Text="{Binding CurrentSpecies.SpeciesCode, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Grid.Column="5" Grid.Row="1"/>
+
+            <Label Content="RPlantRank:" Grid.Column="0" Grid.Row="2"/>
+            <dxe:ComboBoxEdit Text="{Binding CurrentSpecies.RPlantRank, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
+                              ItemsSource="{Binding RPlantRanks}" Grid.Column="1" Grid.Row="2" IsTextEditable="True" AutoComplete="True"/>
+            <Label Content="FedList:" Grid.Column="2" Grid.Row="2"/>
+            <dxe:ComboBoxEdit Text="{Binding CurrentSpecies.FedList, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
+                              ItemsSource="{Binding FedLists}" Grid.Column="3" Grid.Row="2" IsTextEditable="True" AutoComplete="True"/>
+            <Label Content="CalList:" Grid.Column="4" Grid.Row="2"/>
+            <dxe:ComboBoxEdit Text="{Binding CurrentSpecies.CalList, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
+                              ItemsSource="{Binding CalLists}" Grid.Column="5" Grid.Row="2" IsTextEditable="True" AutoComplete="True"/>
+
+            <Label Content="GRank:" Grid.Column="0" Grid.Row="3"/>
+            <dxe:ComboBoxEdit Text="{Binding CurrentSpecies.GRank, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
+                              ItemsSource="{Binding GRanks}" Grid.Column="1" Grid.Row="3" IsTextEditable="True" AutoComplete="True"/>
+            <Label Content="SRank:" Grid.Column="2" Grid.Row="3"/>
+            <dxe:ComboBoxEdit Text="{Binding CurrentSpecies.SRank, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
+                              ItemsSource="{Binding SRanks}" Grid.Column="3" Grid.Row="3" IsTextEditable="True" AutoComplete="True"/>
+
+            <Label Content="Active From:" Grid.Column="0" Grid.Row="43"/>
+            <dxe:ComboBoxEdit Text="{Binding ActiveFrom, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
+                              ItemsSource="{Binding AbailibleMonths}" Grid.Column="1" Grid.Row="4"/>
+            <Label Content="Active To:" Grid.Column="2" Grid.Row="4"/>
+            <dxe:ComboBoxEdit Text="{Binding ActiveTo, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
+                              ItemsSource="{Binding AbailibleMonths}" Grid.Column="3" Grid.Row="4" />
+            <Label Content="Place Holder:" Grid.Column="4" Grid.Row="4"/>
+            <dxe:CheckEdit IsChecked="{Binding CurrentSpecies.PlaceHolder, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Grid.Column="5" Grid.Row="4"/>
+        </Grid>
+
+        <dx:DXTabControl Grid.Row="3">
+            <dx:DXTabItem Header="Descriptions">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="AUTO"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Label Content="Other Status:" Grid.Column="0" Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+                    <dxe:TextEdit Grid.Row="0" Grid.Column="1" Text="{Binding CurrentSpecies.OtherStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                      VerticalContentAlignment="Top" TextWrapping="Wrap" AcceptsReturn="True"/>
+                    <Label Content="Habitats:" Grid.Column="0" Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+                    <dxe:TextEdit Grid.Row="1" Grid.Column="1" Text="{Binding CurrentSpecies.Habitats, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                      VerticalContentAlignment="Top" TextWrapping="Wrap" AcceptsReturn="True"/>
+                    <Label Content="General Habitat:" Grid.Column="0" Grid.Row="2" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+                    <dxe:TextEdit Grid.Row="2" Grid.Column="1" Text="{Binding CurrentSpecies.GenHabitat, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                      VerticalContentAlignment="Top" TextWrapping="Wrap" AcceptsReturn="True"/>
+                    <Label Content="SPI Habitat:" Grid.Column="0" Grid.Row="3" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+                    <dxe:TextEdit Grid.Row="3" Grid.Column="1" Text="{Binding CurrentSpecies.SpiHabitat, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                      VerticalContentAlignment="Top" TextWrapping="Wrap" AcceptsReturn="True"/>
+                    <Label Content="Micro Habitat:" Grid.Column="0" Grid.Row="4" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+                    <dxe:TextEdit Grid.Row="4" Grid.Column="1" Text="{Binding CurrentSpecies.MicroHabitat, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                      VerticalContentAlignment="Top" TextWrapping="Wrap" AcceptsReturn="True"/>
+                </Grid>
+            </dx:DXTabItem>
+
+            <dx:DXTabItem Header="Additional Options">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="AUTO"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                   
+                    <Label Content="Protection Summaries:" Grid.Column="0" HorizontalAlignment="Left"/>
+                    <dxg:GridControl Grid.Row="1" Grid.Column="0" MinHeight="200"
+                    MaxHeight="1920"
+                    AutoGenerateColumns="None"
+                    AllowInitiallyFocusedRow="False"
+                    SelectionMode="Row"
+                                     ItemsSource="{Binding ProtectionSummaries}">
+                        <dxg:GridControl.Columns>
+                            <dxg:GridColumn FieldName="District.DistrictName" Header="DistrictName" Width="25"/>
+                            <dxg:GridColumn FieldName="Summary">
+                                <dxg:GridColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <dxe:TextEdit Text="{Binding RowData.Row.Summary, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Top" TextWrapping="Wrap" AcceptsReturn="True"
+                                                      AllowUpdateTwoWayBoundPropertiesOnSynchronization="False"/>
+                                    </DataTemplate>
+                                </dxg:GridColumn.CellTemplate>
+                            </dxg:GridColumn>
+
+                        </dxg:GridControl.Columns>
+                        <dxg:GridControl.GroupSummary>
+                            <dxg:GridSummaryItem SummaryType="Count" DisplayFormat="({0})" Alignment="Left"/>
+                        </dxg:GridControl.GroupSummary>
+                        <dxg:GridControl.View>
+                            <dxg:TableView 
+                            ShowTotalSummary="False" 
+                            ShowGroupPanel="False"
+                            AllowEditing ="False" 
+                            NavigationStyle="Cell"
+                            ColumnFilterPopupMode="Excel" AutoWidth="True" AllowBestFit="True" BestFitMode="Smart" ShowIndicator="False">
+                            </dxg:TableView>
+                        </dxg:GridControl.View>
+                    </dxg:GridControl>
+
+                    <Label Content="Regions:" Grid.Column="1" HorizontalAlignment="Left"/>
+                    <dxg:GridControl Grid.Row="1" Grid.Column="1" MinHeight="200"
+                    MaxHeight="1920"
+                    AutoGenerateColumns="None"
+                    AllowInitiallyFocusedRow="False"
+                    SelectionMode="Row"
+                                     ItemsSource="{Binding RegionSelections}">
+                        <dxg:GridControl.Columns>
+                            <dxg:GridColumn FieldName="Region.RegionName" Header="RegionName"/>
+                            <dxg:GridColumn FieldName="Summary">
+                                <dxg:GridColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <dxe:CheckEdit IsChecked="{Binding RowData.Row.Select, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" 
+                                                       VerticalAlignment="Center" AllowUpdateTwoWayBoundPropertiesOnSynchronization="False"/>
+                                    </DataTemplate>
+                                </dxg:GridColumn.CellTemplate>
+                            </dxg:GridColumn>
+
+                        </dxg:GridControl.Columns>
+                        <dxg:GridControl.GroupSummary>
+                            <dxg:GridSummaryItem SummaryType="Count" DisplayFormat="({0})" Alignment="Left"/>
+                        </dxg:GridControl.GroupSummary>
+                        <dxg:GridControl.View>
+                            <dxg:TableView 
+                            ShowTotalSummary="False" 
+                            ShowGroupPanel="False"
+                            AllowEditing ="False" 
+                            NavigationStyle="Cell"
+                            ColumnFilterPopupMode="Excel"
+                                AllowBestFit="True" ShowIndicator="False">
+                            </dxg:TableView>
+                        </dxg:GridControl.View>
+                    </dxg:GridControl>
+                </Grid>
+            </dx:DXTabItem>
+        </dx:DXTabControl>
+    </Grid>
+</UserControl>

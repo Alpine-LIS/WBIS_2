@@ -61,8 +61,8 @@
             <dxe:TextEdit Text="{Binding Scoping.WshdElevationMax}" Grid.Column="7" Grid.Row="1" MaskType="Numeric" IsReadOnly="True"/>
         </Grid>
 
-        <TabControl Grid.Row="2">
-            <TabItem Header="Watersheds">
+        <dx:DXTabControl Grid.Row="2">
+            <dx:DXTabItem Header="Watersheds">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="AUTO"/>
@@ -100,11 +100,11 @@
                         <dxg:GridColumn FieldName="Hydrologic"/>
                     </dxg:GridControl>
                 </Grid>
-            </TabItem>
+            </dx:DXTabItem>
 
-            <TabItem Header="Plant Species">
+            <dx:DXTabItem Header="Plant Species">
                 <local:BotanicalScopingPlantView/>
-            </TabItem>
-        </TabControl>
+            </dx:DXTabItem>
+        </dx:DXTabControl>
     </Grid>
 </UserControl>

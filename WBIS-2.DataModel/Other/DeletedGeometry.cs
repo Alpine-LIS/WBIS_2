@@ -19,7 +19,7 @@ namespace WBIS_2.DataModel
         public Polygon PolyGeometry { get; set; }
         [Column("mpoly_geometry", TypeName = "geometry(MultiPolygon,26710)")]
         public MultiPolygon MPolyGeometry { get; set; }
-        [Column("point_eometry", TypeName = "geometry(Point,26710)")]
+        [Column("point_geometry", TypeName = "geometry(Point,26710)")]
         public Point PointGeometry { get; set; }
         [Column("line_geometry", TypeName = "geometry(LineString,26710)")]
         public LineString LineGeometry { get; set; }

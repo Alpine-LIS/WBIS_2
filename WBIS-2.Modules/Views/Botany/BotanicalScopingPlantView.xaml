@@ -72,8 +72,8 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Label Content="{Binding SpeciesRank}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-            <TabControl Grid.Row="1">
-                <TabItem Header="Species">
+            <dx:DXTabControl Grid.Row="1">
+                <dx:DXTabItem Header="Species">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="AUTO"/>
@@ -98,8 +98,8 @@
                         <dxe:TextEdit Grid.Row="3" Grid.ColumnSpan="4" Text="{Binding CurrentSpecies.ExcludeText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
                                       VerticalContentAlignment="Top" TextWrapping="Wrap" AcceptsReturn="True"/>
                     </Grid>
-                </TabItem>
-                <TabItem Header="Protection &amp; Description">
+                    </dx:DXTabItem>
+                <dx:DXTabItem Header="Protection &amp; Description">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="AUTO"/>
@@ -119,8 +119,8 @@
                         <dxe:TextEdit Grid.Row="5" Text="{Binding CurrentSpecies.SpiHabitatDescription, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
                                       VerticalContentAlignment="Top" TextWrapping="Wrap" AcceptsReturn="True"/>
                     </Grid>
-                </TabItem>
-            </TabControl>
+                    </dx:DXTabItem>
+                </dx:DXTabControl>
         </Grid>
         </Grid>
     </Grid>

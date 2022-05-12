@@ -22,6 +22,11 @@ namespace WBIS_2.Common
         public static string ModuleCdfwSpottedOwl { get { return "CdfwSpottedOwl"; } }
 
 
+
+        public static string ModulePlantsList { get { return "PlantsList"; } }
+
+
+
         public static string ModuleBotanicalScoping { get { return "BotnaicalScoping"; } }
         public static string ModuleBotanicalSurveyArea { get { return "BotnaicalSurveyArea"; } }
         public static string ModuleBotanicalSurvey { get { return "BotnaicalSurvey"; } }

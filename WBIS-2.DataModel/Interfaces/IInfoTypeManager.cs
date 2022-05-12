@@ -28,6 +28,7 @@ namespace WBIS_2.DataModel
         /// <summary>
         /// Return an IQueryable for the specified information type.
         /// </summary>
+        public abstract IQueryable GetQueryable(WBIS2Model model, List<string> ForceInclude = null);
         public abstract IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model, List<string> ForceInclude = null);
         /// <summary>
         /// Can the infromation type be set as active.

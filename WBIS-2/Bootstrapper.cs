@@ -62,6 +62,7 @@ namespace WBIS_2
             Manager.Register(Regions.NavigationAreas, new Module(AppModules.ModuleQuad75s, () => new NavigationItem("Quad75s")));
             Manager.Register(Regions.NavigationAreas, new Module(AppModules.ModuleHex160s, () => new NavigationItem("Hex160s")));
 
+            Manager.Register(Regions.NavigationBotany, new Module(AppModules.ModulePlantsList, () => new NavigationItem("Plants List")));
 
             Manager.Register(Regions.NavigationBotany, new Module(AppModules.ModuleBotanicalScoping, () => new NavigationItem("Botanical Scopings")));
             Manager.Register(Regions.NavigationBotany, new Module(AppModules.ModuleBotanicalSurveyArea, () => new NavigationItem("Botanical Survey Areas")));
@@ -85,6 +86,9 @@ namespace WBIS_2
             Manager.Register(Regions.Documents, new Module(AppModules.ModuleQuad75s,
                 () => ParentListViewModel.Create(new Quad75()), typeof(ParentListView)));
 
+
+            Manager.Register(Regions.Documents, new Module(AppModules.ModulePlantsList,
+                () => PlantSpeciesListViewModel.Create(new PlantSpecies()), typeof(PlantSpeciesListView)));
             Manager.Register(Regions.Documents, new Module(AppModules.ModuleBotanicalScoping,
                 () => ParentListViewModel.Create(new BotanicalScoping()), typeof(ParentListView)));
             Manager.Register(Regions.Documents, new Module(AppModules.ModuleBotanicalSurveyArea,
@@ -141,6 +145,7 @@ namespace WBIS_2
             Manager.Inject(Regions.NavigationAreas, AppModules.ModuleQuad75s);
             Manager.Inject(Regions.NavigationAreas, AppModules.ModuleHex160s);
 
+            Manager.Inject(Regions.NavigationBotany, AppModules.ModulePlantsList);
             Manager.Inject(Regions.NavigationBotany, AppModules.ModuleBotanicalScoping);
             Manager.Inject(Regions.NavigationBotany, AppModules.ModuleBotanicalSurveyArea);
             Manager.Inject(Regions.NavigationBotany, AppModules.ModuleBotanicalSurvey);
