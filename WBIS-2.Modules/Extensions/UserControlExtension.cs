@@ -36,8 +36,7 @@ namespace WBIS_2.Modules
         {
             var children = AllChildren((DependencyObject)sender);
             foreach (DependencyObject control in children)
-            {
-               
+            {              
                 //if (control is TextBox tb)
                 //{
                 //    //if (tb.IsReadOnly) return;
@@ -45,6 +44,7 @@ namespace WBIS_2.Modules
                 //}
                 if (control is TextEdit tb1)
                 {
+                    if (tb1.Name == "CbxChildren") continue;
                     //if (tb.IsReadOnly) return;
                     //if (EditGridControl && tb1.Parent == null) return;
                     if (tb1.Parent == null && EditGridControl) tb1.EditValueChanged += Tb1_EditValueChanged1; 
@@ -57,6 +57,7 @@ namespace WBIS_2.Modules
                 //}
                 if (control is ComboBoxEdit cb1)
                 {
+                    if (cb1.Name == "CbxChildren") continue;
                     //if (cb1.IsReadOnly) return;
                     // if (EditGridControl && cb1.Parent == null) return;
                     //cb1.SelectedIndexChanged += Cb1_SelectedIndexChanged;

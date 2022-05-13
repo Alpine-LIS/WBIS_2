@@ -14,6 +14,7 @@ using NetTopologySuite.Geometries;
 using System.Data;
 using System.Windows;
 using Microsoft.EntityFrameworkCore;
+using WBIS_2.Modules.Tools;
 
 namespace WBIS_2.Modules.ViewModels
 {
@@ -371,14 +372,14 @@ namespace WBIS_2.Modules.ViewModels
                 if (trueType.GetProperty("District") != null)
                     districts = $" {layerStr.ToLower()}.district_id IN ({DistrictGuids})";
                 else
-                    districts = $" {layerStr.ToLower()}.guid IN (SELECT {GetDatabaseString(trueType)}_id FROM {layerStr.ToLower()}_districts WHERE district_id IN ({DistrictGuids}))";
+                    districts = $" {layerStr.ToLower()}.guid IN (SELECT {DbHelp.GetDbString(trueType)}_id FROM {layerStr.ToLower()}_districts WHERE district_id IN ({DistrictGuids}))";
             }
             else
             {
                 if (parentType.GetProperty("District") != null)
                     districts = $" {parent}.district_id IN ({DistrictGuids})";
                 else
-                    districts = $" {layerStr.ToLower()}.guid IN (SELECT {GetDatabaseString(parentType)}_id FROM {parent}_districts WHERE district_id IN ({DistrictGuids}))";
+                    districts = $" {layerStr.ToLower()}.guid IN (SELECT {DbHelp.GetDbString(parentType)}_id FROM {parent}_districts WHERE district_id IN ({DistrictGuids}))";
             }
             return districts;
         }
@@ -421,22 +422,6 @@ namespace WBIS_2.Modules.ViewModels
 
 
         string DistrictGuids = $"'{string.Join("','", CurrentUser.Districts.Select(_ => _.Guid))}'";
-        private string GetDatabaseString(Type type)
-        {
-            string initial = type.Name;
-            string returnVal = initial.First().ToString();
-
-            for (int i = 1; i < initial.Length - 1; i++)
-            {
-                if (!Char.IsLetterOrDigit(initial[i]))
-                    returnVal += "_";
-                else if (Char.IsUpper(initial[i]) && Char.IsLower(initial[i + 1]))
-                    returnVal += "_" + initial[i];
-                else returnVal += initial[i];
-            }
-            return (returnVal + initial.Last()).ToLower();
-        }
-
         public void InformationTypesChanged(object sender, EventArgs e)
         {
             foreach (var layer in MapControl.UxMap.Layers)

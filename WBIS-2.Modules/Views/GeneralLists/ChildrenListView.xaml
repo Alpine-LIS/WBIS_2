@@ -25,6 +25,7 @@
             Margin="5"
             Content="Available Children:"/>
         <dxe:ComboBoxEdit 
+            Name="CbxChildren"
             Grid.Row="0"
             Grid.Column="1"
             IsTextEditable="False" SelectedIndex="0"

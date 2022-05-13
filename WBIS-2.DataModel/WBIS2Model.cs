@@ -151,10 +151,12 @@ namespace WBIS_2.DataModel
             modelBuilder.Entity<ReproductiveStatus>().ToTable("reproductive_status");
 
             modelBuilder.Entity<UserMapLayer>().ToTable("user_map_layers");
+            modelBuilder.Entity<DropdownOption>().ToTable("dropdown_options");
+            modelBuilder.Entity<TableModified>().ToTable("tables_modified");
 
 
 
-        modelBuilder.Entity<ApplicationUser>()
+            modelBuilder.Entity<ApplicationUser>()
                 .HasMany(_ => _.Districts)
                 .WithMany(p => p.ApplicationUsers)
                 .UsingEntity<Dictionary<string, object>>("users_districts",
@@ -435,6 +437,8 @@ namespace WBIS_2.DataModel
 
 
         public DbSet<UserMapLayer> UserMapLayers { get; set; }
+        public DbSet<DropdownOption> DropdownOptions { get; set; }
+        public DbSet<TableModified> TablesModified { get; set; }
 
 
 

@@ -249,6 +249,35 @@ namespace WBIS_2.Modules.ViewModels
                 }
             }
 
+            
+
+            if (Database.BotanicalScopings
+                    .Include(_ => _.THP_Area).Any(_ => _.THP_Area == DbHelp.ThpExistance(Database, ThpName)
+                    && _.Guid != Scoping.Guid))
+            {
+                MessageBox.Show($"There is already a scoping for the thp {ThpName}.");
+                return;
+            }
+
+            //if (Database.BotanicalScopings
+            //    .Include(_=>_.THP_Area).Any(_=> DbHelp.ThpQueryName(_.THP_Area.THPName) == DbHelp.ThpQueryName(ThpName) && !_._delete))
+            //{
+            //    if (Scoping.THP_Area.Equals != null)
+            //    {
+            //        if (DbHelp.ThpQueryName(Scoping.THP_Area.THPName) != DbHelp.ThpQueryName(ThpName))
+            //        {
+            //            MessageBox.Show($"There is already a scoping for the thp {ThpName}.");
+            //            return;
+            //        }
+            //    }
+            //    else
+            //    {
+            //        MessageBox.Show($"There is already a scoping for the thp {ThpName}.");
+            //        return;
+            //    }
+            //}
+
+
                 WaitWindowHandler w = new WaitWindowHandler();
             w.Start();
 
@@ -292,7 +321,7 @@ namespace WBIS_2.Modules.ViewModels
             Scoping.Districts = Scoping.Districts.Distinct().ToList();
             Scoping.Quad75s = Scoping.Quad75s.Distinct().ToList();
 
-            THP_Area tHP_Area = Database.THP_Areas.FirstOrDefault(_ => _.THPName == ThpName);
+            THP_Area tHP_Area = Database.THP_Areas.FirstOrDefault(_ => DbHelp.ThpQueryName(_.THPName) == DbHelp.ThpQueryName(ThpName));
             if (tHP_Area == null)
             {
                 tHP_Area = new THP_Area() { THPName = ThpName };

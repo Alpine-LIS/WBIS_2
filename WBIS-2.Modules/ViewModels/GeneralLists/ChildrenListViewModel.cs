@@ -33,7 +33,10 @@ namespace WBIS_2.Modules.ViewModels
             set
             {
                 SetProperty(() => ParentType, value);
+                if (ParentType == null) return;
                 AvailibleChildren = ParentType.Manager.AvailibleChildren;
+                if (AvailibleChildren.Length > 0)
+                    CurrentChild = AvailibleChildren[0];
             }
         }
 
@@ -92,7 +95,7 @@ namespace WBIS_2.Modules.ViewModels
                 CurrentUser.AddRemoveInfoType(CurrentChild.Manager.DisplayName, false);
         }
 
-        public void OnClose(CancelEventArgs e)
+        public virtual void OnClose(CancelEventArgs e)
         {
             if (Changed)
             {
@@ -104,7 +107,7 @@ namespace WBIS_2.Modules.ViewModels
             }
         }
 
-        public void OnDestroy()
+        public virtual void OnDestroy()
         {
             if (CurrentChild != null)
                 CurrentUser.AddRemoveInfoType(CurrentChild.Manager.DisplayName, false);
