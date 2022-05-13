@@ -64,23 +64,23 @@ namespace WBIS_2.Modules.ViewModels
         public BotanicalSurveyAreaViewModel(Guid guid)
         {           
             ThpNames = Database.THP_Areas.Select(_=>_.THPName).OrderBy(_=>_).ToArray();
-               
-            if (guid != Guid.Empty)
-            {
-                SurveyArea = Database.BotanicalSurveyAreas
-                    .Include(_ => _.BotanicalScoping)
-                    .Include(_ => _.THP_Area)
-                    .Include(_ => _.Watersheds)
-                    .Include(_ => _.District)
-                    .Include(_ => _.Quad75s)
-                    .First(_=>_.Guid == guid);
-                              
+
+            SurveyArea = Database.BotanicalSurveyAreas
+                   .Include(_ => _.BotanicalScoping)
+                   .Include(_ => _.THP_Area)
+                   .Include(_ => _.Watersheds)
+                   .Include(_ => _.District)
+                   .Include(_ => _.Quad75s)
+                   .FirstOrDefault(_ => _.Guid == guid);
+
+            if (SurveyArea != null)
+            {           
                 if (SurveyArea.THP_Area != null) ThpName = SurveyArea.THP_Area.THPName;
             }
             else
             {
                 SurveyArea = new BotanicalSurveyArea();
-                SurveyArea.Guid = Guid.Empty;
+                SurveyArea.Guid = guid;
             }
 
             RaisePropertyChanged(nameof(ThpName));
@@ -142,94 +142,39 @@ namespace WBIS_2.Modules.ViewModels
 
         public override void Save()
         {
-            //if (!this.Changed) return;
+            if (!this.Changed) return;
 
-            //if (HasErrors() || Scoping.HasErrors())
-            //{
-            //    MessageBox.Show("Please ensure that all field requirements are met.");
-            //    return;
-            //}
+            if (HasErrors() || SurveyArea.HasErrors())
+            {
+                MessageBox.Show("Please ensure that all field requirements are met.");
+                return;
+            }
 
-            //if (WatershedList.Length == 0)
-            //{
-            //    MessageBox.Show("A botanical scoping must have watersheds.");
-            //    return;
-            //}
+            WaitWindowHandler w = new WaitWindowHandler();
+            w.Start();
+                      
+            THP_Area tHP_Area = DbHelp.ThpExistance(Database, ThpName);
+            if (tHP_Area == null)
+            {
+                tHP_Area = new THP_Area() { THPName = ThpName };
+                Database.THP_Areas.Add(tHP_Area);
+            }
+            SurveyArea.THP_Area = tHP_Area;
 
-            //foreach (var bs in SpeciesList)
-            //{
-            //    if (bs.Exclude && bs.ExcludeText == "")
-            //    {
-            //        MessageBox.Show("There are excluded species that are missing a justification.");
-            //        return;
-            //    }
-            //}
+            if (ConnectScoping)
+                SurveyArea.BotanicalScoping = Database.BotanicalScopings
+                    .Include(_=>_.THP_Area)
+                    .Include(_=>_.BotanicalSurveyAreas)
+                    .FirstOrDefault(_=>_.THP_Area == SurveyArea.THP_Area);
 
-            //    WaitWindowHandler w = new WaitWindowHandler();
-            //w.Start();
+            if (!Database.BotanicalSurveyAreas.Contains(SurveyArea))
+                Database.BotanicalSurveyAreas.Add(SurveyArea);
+            else Database.BotanicalSurveyAreas.Update(SurveyArea);
 
-            //Database.BotanicalScopingSpecies.RemoveRange(
-            //    Database.BotanicalScopingSpecies.Include(_ => _.BotanicalScoping)
-            //    .Where(_ => _.BotanicalScoping.Guid == Scoping.Guid));
-
-            //Scoping.BotanicalScopingSpecies = new List<BotanicalScopingSpecies>();
-            //Scoping.Watersheds = new List<Watershed>();
-            //Scoping.Districts = new List<District>();
-            //Scoping.Quad75s = new List<Quad75>();
-                       
-            //foreach(var bs in SpeciesList)
-            //{
-            //    BotanicalScopingSpecies botanicalScopingSpecies = new BotanicalScopingSpecies()
-            //    {
-            //        PlantSpecies = Database.PlantSpecies.First(_=>_.Guid == bs.PlantSpecies.Guid),
-            //        Exclude = false,
-            //        ExcludeReport = false,
-            //        HabitatDescription = bs.HabitatDescription,
-            //        NddbHabitatDescription = bs.NddbHabitatDescription,
-            //        SpiHabitatDescription = bs.SpiHabitatDescription,
-            //        ProtectionSummary = bs.ProtectionSummary,
-            //        BotanicalScoping = Scoping
-            //    };
-            //    Scoping.BotanicalScopingSpecies.Add(botanicalScopingSpecies);
-            //    Database.BotanicalScopingSpecies.Add(botanicalScopingSpecies);
-            //}
-
-            //Scoping.Watersheds = Database.Watersheds
-            //    .Include(_ => _.Districts)
-            //    .Include(_ => _.Quad75s)
-            //    .Where(_ => WatershedList.Select(z => z.Guid).Contains(_.Guid)).ToList();
-
-            //foreach(var water in Scoping.Watersheds)
-            //{
-            //    ((List<District>)Scoping.Districts).AddRange(water.Districts);
-            //    ((List<Quad75>)Scoping.Quad75s).AddRange(water.Quad75s);
-            //}
-
-            //Scoping.Districts = Scoping.Districts.Distinct().ToList();
-            //Scoping.Quad75s = Scoping.Quad75s.Distinct().ToList();
-
-            //THP_Area tHP_Area = Database.THP_Areas.FirstOrDefault(_ => _.THPName == ThpName);
-            //if (tHP_Area == null)
-            //{
-            //    tHP_Area = new THP_Area() { THPName = ThpName };
-            //    Database.THP_Areas.Add(tHP_Area);
-            //}
-            //Scoping.THP_Area = tHP_Area;
-
-            //if (!Database.BotanicalScopings.Contains(Scoping))
-            //    Database.BotanicalScopings.Add(Scoping);
-            //else Database.BotanicalScopings.Update(Scoping);
-
-            //Database.SaveChanges();
-            //this.Changed = false;
-            //w.Stop();
+            Database.SaveChanges();
+            this.Changed = false;
+            w.Stop();
         }
-
-        public override void Tracker_ChangesSaved(object sender, IEnumerable<EntityEntry> e)
-        {
-            //throw new NotImplementedException();
-        }
-
 
 
 
@@ -249,7 +194,7 @@ namespace WBIS_2.Modules.ViewModels
         {
             PropertyInfo property = informationType.GetType().GetProperty(propertyName);
             string currentVal = "";
-            object test = property.GetValue(informationType).ToString();
+            object test = property.GetValue(informationType);
             if (test != null) currentVal = test.ToString();
             DropdownOption[] dropDownOptions = Database.DropdownOptions.Where(_=>_.Entity == DbHelp.GetDbString(informationType.GetType())
                 && _.Property == DbHelp.GetDbString(propertyName)).ToArray();

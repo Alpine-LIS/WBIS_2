@@ -175,7 +175,12 @@ namespace WBIS_2.Modules.ViewModels
 
         public override void Tracker_ChangesSaved(object sender, IEnumerable<Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry> e)
         {
-            
+            if (ListManager == null) return;
+            Type type = ListManager.InformationType;
+            if (e.Any(_ => _.Entity.GetType() == type))
+            {
+                RefreshDataSource();
+            }
         }
             
         public override void Records_GetQueryable(object sender, GetQueryableEventArgs e)

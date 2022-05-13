@@ -45,7 +45,7 @@
             <Label Content="Area Name:" Grid.Column="2" Grid.Row="0"/>
             <dxe:TextEdit Text="{Binding AreaName, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Grid.Column="3" Grid.Row="0"/>
             <Label Content="Survey Type:" Grid.Column="4" Grid.Row="0"/>
-            <dxe:ComboBoxEdit Text="{Binding SurveyTypes.ConcatText, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" ItemsSource="{Binding SurveyTypes.Options}" 
+            <dxe:ComboBoxEdit Text="{Binding SurveyTypes.ConcatText, Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" ItemsSource="{Binding SurveyTypes.Options}" 
                               Grid.Column="5" Grid.Row="0">
                 <dxe:ComboBoxEdit.ItemTemplate>
                     <DataTemplate>
@@ -55,7 +55,7 @@
             </dxe:ComboBoxEdit>
 
             <Label Content="Aspect:" Grid.Column="0" Grid.Row="1"/>
-            <dxe:ComboBoxEdit Text="{Binding Aspects.ConcatText, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" ItemsSource="{Binding Aspects.Options}" 
+            <dxe:ComboBoxEdit Text="{Binding Aspects.ConcatText, Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" ItemsSource="{Binding Aspects.Options}" 
                               Grid.Column="1" Grid.Row="1" AutoComplete="True">
                 <dxe:ComboBoxEdit.ItemTemplate>
                     <DataTemplate>
@@ -64,7 +64,7 @@
                 </dxe:ComboBoxEdit.ItemTemplate>
             </dxe:ComboBoxEdit>
             <Label Content="Slope:" Grid.Column="2" Grid.Row="1"/>
-            <dxe:ComboBoxEdit Text="{Binding Slopes.ConcatText, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" ItemsSource="{Binding Slopes.Options}" 
+            <dxe:ComboBoxEdit Text="{Binding Slopes.ConcatText, Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" ItemsSource="{Binding Slopes.Options}" 
                               Grid.Column="3" Grid.Row="1" AutoComplete="True">
                 <dxe:ComboBoxEdit.ItemTemplate>
                     <DataTemplate>
@@ -73,7 +73,7 @@
                 </dxe:ComboBoxEdit.ItemTemplate>
             </dxe:ComboBoxEdit>
             <Label Content="Canopy:" Grid.Column="4" Grid.Row="1"/>
-            <dxe:ComboBoxEdit Text="{Binding Canopies.ConcatText, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" ItemsSource="{Binding Canopies.Options}" 
+            <dxe:ComboBoxEdit Text="{Binding Canopies.ConcatText, Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" ItemsSource="{Binding Canopies.Options}" 
                               Grid.Column="5" Grid.Row="1" AutoComplete="True">
                 <dxe:ComboBoxEdit.ItemTemplate>
                     <DataTemplate>
@@ -83,7 +83,7 @@
             </dxe:ComboBoxEdit>
 
             <Label Content="Rock Outcrops:" Grid.Column="0" Grid.Row="2"/>
-            <dxe:ComboBoxEdit Text="{Binding RockOutcrops.ConcatText, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" ItemsSource="{Binding RockOutcrops.Options}" 
+            <dxe:ComboBoxEdit Text="{Binding RockOutcrops.ConcatText, Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" ItemsSource="{Binding RockOutcrops.Options}" 
                               Grid.Column="1" Grid.Row="2" AutoComplete="True">
                 <dxe:ComboBoxEdit.ItemTemplate>
                     <DataTemplate>
@@ -92,7 +92,7 @@
                 </dxe:ComboBoxEdit.ItemTemplate>
             </dxe:ComboBoxEdit>
             <Label Content="Boulders:" Grid.Column="2" Grid.Row="2"/>
-            <dxe:ComboBoxEdit Text="{Binding Boulders.ConcatText, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" ItemsSource="{Binding Boulders.Options}" 
+            <dxe:ComboBoxEdit Text="{Binding Boulders.ConcatText, Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" ItemsSource="{Binding Boulders.Options}" 
                               Grid.Column="3" Grid.Row="2" AutoComplete="True">
                 <dxe:ComboBoxEdit.ItemTemplate>
                     <DataTemplate>
@@ -105,7 +105,7 @@
                               Grid.Column="5" Grid.Row="2" AutoComplete="True"/>
 
             <Label Content="Ungerstory Vegetation:" Grid.Column="0" Grid.Row="3"/>
-            <dxe:ComboBoxEdit Text="{Binding UnderstoryVegs.ConcatText, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" ItemsSource="{Binding UnderstoryVegs.Options}" 
+            <dxe:ComboBoxEdit Text="{Binding UnderstoryVegs.ConcatText, Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" ItemsSource="{Binding UnderstoryVegs.Options}" 
                               Grid.Column="1" Grid.Row="3" AutoComplete="True">
                 <dxe:ComboBoxEdit.ItemTemplate>
                     <DataTemplate>
@@ -114,7 +114,7 @@
                 </dxe:ComboBoxEdit.ItemTemplate>
             </dxe:ComboBoxEdit>
             <Label Content="General Habitat:" Grid.Column="2" Grid.Row="3"/>
-            <dxe:ComboBoxEdit Text="{Binding GenHabs.ConcatText, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" ItemsSource="{Binding GenHabs.Options}" 
+            <dxe:ComboBoxEdit Text="{Binding GenHabs.ConcatText, Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" ItemsSource="{Binding GenHabs.Options}" 
                               Grid.Column="3" Grid.Row="3" AutoComplete="True">
                 <dxe:ComboBoxEdit.ItemTemplate>
                     <DataTemplate>

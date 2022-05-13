@@ -191,12 +191,13 @@ namespace WBIS_2.Modules.ViewModels
             if (DetailsViewModel == null) return;
 
             IDocumentManagerService service = this.GetRequiredService<IDocumentManagerService>();
-            IDocument document = service.FindDocumentById(Guid.Empty);
+            Guid newGuid = Guid.NewGuid();
+            IDocument document = service.FindDocumentById(newGuid);
             if (document == null)
             {
-                var viewModel = DetailsViewModel.GetMethod("Create").Invoke(new object(), new object[] { Guid.Empty });
-                document = service.CreateDocument(ListManager.DisplayName.Replace(" ", "") + "View", viewModel, Guid.Empty, this);
-                document.Id = Guid.Empty;
+                var viewModel = DetailsViewModel.GetMethod("Create").Invoke(new object(), new object[] { newGuid });
+                document = service.CreateDocument(ListManager.DisplayName.Replace(" ", "") + "View", viewModel, newGuid, this);
+                document.Id = newGuid;
             }
             document.Show();
         }

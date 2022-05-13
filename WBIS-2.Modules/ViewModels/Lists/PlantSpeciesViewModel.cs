@@ -57,6 +57,7 @@ namespace WBIS_2.Modules.ViewModels
                 RegionalPlantLists = new List<RegionalPlantList>(),
                 PlantProtectionSummaries = new List<PlantProtectionSummary>()
                 };
+                CurrentSpecies.Guid = guid;
                 FillProtectionSummariesEmpty();
             }
             FillRegions();
