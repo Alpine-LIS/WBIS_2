@@ -463,6 +463,7 @@ namespace WBIS_2.DataModel
 
                 int returnVal = base.SaveChanges();
 
+                if (GeoModified.Count > 0) MapDataPasser.RefreshLayers(GeoModified);
                 Tracker.ChangesSaving = false;
                 Tracker.SendEvent(entries);
                 return returnVal;
@@ -493,8 +494,7 @@ namespace WBIS_2.DataModel
                     }
                     if (e.CurrentValues.Properties.Any(_ => _.Name == "Geometry"))
                     {
-                        MultiPolygon mp = (MultiPolygon)e.CurrentValues["Geometry"];
-                        if (mp != null) GeoModified.Add(e.Entity.GetType().Name);// recordChange.Table);
+                        GeoModified.Add(e.Metadata.GetTableName());// recordChange.Table);
                     }
                 }
                 else if (e.State == EntityState.Modified)
@@ -507,7 +507,7 @@ namespace WBIS_2.DataModel
 
                     foreach (Microsoft.EntityFrameworkCore.Metadata.IProperty p in e.CurrentValues.Properties)
                     {
-                        if (p.Name != "_delete" && p.Name != "Geometry") continue;
+                        if (p.Name != "_delete" && p.Name != "Geometry" && p.Name != "Repository") continue;
 
                         var oldVal = e.OriginalValues[p];//.GetValue<object>(p.Name);
                         var newVal = e.CurrentValues[p];//.GetValue<object>(p.Name);
@@ -515,14 +515,14 @@ namespace WBIS_2.DataModel
                         {
                             if (!object.Equals(newVal, oldVal))
                             {
-                                if (p.Name == "Geometry") GeoModified.Add(e.Entity.GetType().Name);
+                                GeoModified.Add(e.Metadata.GetTableName());
                             }
                         }
                         else
                         {
                             if (!object.Equals(newVal, oldVal))
                             {
-                                if (p.Name == "Geometry") GeoModified.Add(e.Entity.GetType().Name);
+                                GeoModified.Add(e.Metadata.GetTableName());
                             }
                         }
                     }

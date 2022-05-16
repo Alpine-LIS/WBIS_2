@@ -23,7 +23,7 @@ namespace WBIS_2.DataModel
 
         [Column("thp_area_id")]
         public Guid? THP_AreaId { get; set; }
-        [ListInfo(AutoInclude = true)]
+        [ListInfo(AutoInclude = true), ImportAttribute(Required = true)]
         public THP_Area THP_Area { get; set; }
 
         [Column("botanical_scoping_id")]
@@ -31,7 +31,7 @@ namespace WBIS_2.DataModel
         public BotanicalScoping BotanicalScoping { get; set; }
 
 
-        [Column("area_name")]
+        [Column("area_name"), ImportAttribute(Required = true)]
         public string AreaName { get; set; }
         [Column("survey_type")]
         public string SurveyType { get; set; }

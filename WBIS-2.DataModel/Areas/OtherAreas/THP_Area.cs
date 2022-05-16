@@ -11,7 +11,7 @@ namespace WBIS_2.DataModel
     {
         [Key,DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
-        [Required, Column("thp_name"), ListInfo(DisplayField = true)]
+        [Required, Column("thp_name"), ListInfo(DisplayField = true), ImportAttribute(Required = true)]
         public string THPName { get; set; }
 
 

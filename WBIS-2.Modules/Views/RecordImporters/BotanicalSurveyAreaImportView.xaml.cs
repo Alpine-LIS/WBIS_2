@@ -19,12 +19,12 @@ namespace WBIS_2.Modules.Views.RecordImporters
     /// <summary>
     /// Interaction logic for SiteCallingImportView.xaml
     /// </summary>
-    public partial class SiteCallingImportView : UserControl
+    public partial class BotanicalSurveyAreaImportView : UserControl
     {
-        public SiteCallingImportView()
+        public BotanicalSurveyAreaImportView()
         {
             InitializeComponent();
-            DataContext = new SiteCallingImportViewModel();
+            DataContext = new BotanicalSurveyAreaImportViewModel();
         }
     }
 }

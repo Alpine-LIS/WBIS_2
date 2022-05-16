@@ -20,10 +20,18 @@ using WBIS_2.Modules.Tools;
 
 namespace WBIS_2.Modules.ViewModels
 {
-    public class PlantSpeciesViewModel : WBISViewModelBase, IDocumentContent, IDetailView
+    public class PlantSpeciesViewModel : DetailViewModelBase, IDocumentContent, IDetailView
     {
         public static bool AddSingle => true;
-        public PlantSpecies CurrentSpecies { get; set; }
+        public PlantSpecies CurrentSpecies
+        {
+            get { return GetProperty(() => CurrentSpecies); }
+            set
+            {
+                SetProperty(() => CurrentSpecies, value);
+                Record = CurrentSpecies;
+            }
+        }
         public object Title => $"{CurrentSpecies.SciName}";
 
        

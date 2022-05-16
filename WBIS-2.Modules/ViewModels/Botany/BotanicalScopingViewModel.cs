@@ -20,7 +20,7 @@ using WBIS_2.Modules.Tools;
 
 namespace WBIS_2.Modules.ViewModels
 {
-    public class BotanicalScopingViewModel : WBISViewModelBase, IDocumentContent, IDetailView
+    public class BotanicalScopingViewModel : DetailViewModelBase, IDocumentContent, IDetailView
     {
         public static bool AddSingle => true;
 
@@ -122,7 +122,15 @@ namespace WBIS_2.Modules.ViewModels
         }
         public ObservableCollection<Watershed> SelectedWatersheds { get; set; } = new ObservableCollection<Watershed>();
 
-        public BotanicalScoping Scoping { get; set; }
+        public BotanicalScoping Scoping
+        {
+            get { return GetProperty(() => Scoping); } 
+            set
+            {
+                SetProperty(()=>Scoping,value);
+                Record = Scoping;
+            }
+        }
         public string[] ThpNames { get; set; }
         [Required(AllowEmptyStrings = false), StringLength(1000, MinimumLength = 1)]
         public string ThpName { get; set; }
@@ -551,6 +559,7 @@ namespace WBIS_2.Modules.ViewModels
 
 
         public ICommand FloweringTimelineCommand { get; set; }
+
         private void FloweringTimeline()
         {
             var floweringTimeline = new Views.UserControls.FloweringTimelineControl(SpeciesList, ThpName, Scoping.ElevationMin, Scoping.ElevationMax);

@@ -278,34 +278,25 @@ namespace WBIS_2.Modules.ViewModels
         private void RefreshLayers(object sender, EventArgs e)
         {
 
-            //List<string> layers = (List<string>)sender;
+            List<string> layers = (List<string>)sender;
 
-            //foreach (string startingStr in layers)
-            //{
-            //    string lyrStr = startingStr;
-            //    if (startingStr.ToUpper().Contains("REGEN")) lyrStr = "REGENS";
-            //    else if (startingStr.ToUpper().Contains("FUELBREAK")) lyrStr = "FUELBREAKS";
-            //    else if (startingStr.ToUpper().Contains("DISTRICT")) lyrStr = "DISTRICTS";
-            //    else if (startingStr.ToUpper().Contains("PLANTING")) lyrStr = "ACTIVITIES";
-            //    else if (startingStr.ToUpper().Contains("SPRAYING")) lyrStr = "ACTIVITIES";
-            //    else if (startingStr.ToUpper().Contains("EVALUATION")) lyrStr = "ACTIVITIES";
-            //    else if (startingStr.ToUpper().Contains("MISCELLANEOUS")) lyrStr = "ACTIVITIES";
-            //    else if (startingStr.ToUpper().Contains("COMMERCIAL")) lyrStr = "ACTIVITIES";
-            //    else if (startingStr.ToUpper().Contains("SITE")) lyrStr = "ACTIVITIES";
+            foreach (string startingStr in layers)
+            {
+                string lyrStr = startingStr;
+                
+                var layer = MapControl.GetLayer(lyrStr);
+                if (layer == null) continue;
+                //MapControl.UxMap.ActiveLayer = layer;
+                PGFeatureSet pGFeatureSet = (PGFeatureSet)layer.DataSet;
+                //MapControl.UxMap.ActiveLayer.DataSet = new PGFeatureSet(pGFeatureSet.Server, pGFeatureSet.Table, "Geometry", "Guid");
+                //MapControl.UxMap.ActiveLayer.Selection.Configure();
+                layer.DataSet = new PGFeatureSet(pGFeatureSet.Server, pGFeatureSet.Table, "geometry", "guid");
+                layer.Selection.Configure();
+                layer.AssignFastDrawnStates();
+            }
 
-            //    var layer = MapControl.GetLayer(lyrStr);
-            //    if (layer == null) continue;
-            //    //MapControl.UxMap.ActiveLayer = layer;
-            //    PGFeatureSet pGFeatureSet = (PGFeatureSet)layer.DataSet;
-            //    //MapControl.UxMap.ActiveLayer.DataSet = new PGFeatureSet(pGFeatureSet.Server, pGFeatureSet.Table, "Geometry", "Guid");
-            //    //MapControl.UxMap.ActiveLayer.Selection.Configure();
-            //    layer.DataSet = new PGFeatureSet(pGFeatureSet.Server, pGFeatureSet.Table, "Geometry", "Guid");
-            //    layer.Selection.Configure();
-            //    layer.AssignFastDrawnStates();
-            //}
-
-            //MapControl.UxMap.MapFrame.Initialize();
-            //MapDataPasser_UserDistrictsChanged(new object(), new EventArgs());
+            MapControl.UxMap.MapFrame.Initialize();
+            InformationTypesChanged(new object(), new EventArgs());
         }
 
 
@@ -314,7 +305,7 @@ namespace WBIS_2.Modules.ViewModels
 
         private void MapDataPasser_UserMapOptionsChanged(string layerStr)
         {
-            var p = typeof(WBIS2Model).GetProperties().FirstOrDefault(_ => MapDataPasser.CleanLayerStr(_.Name) == MapDataPasser.CleanLayerStr(layerStr));
+            var p = typeof(WBIS2Model).GetProperties().FirstOrDefault(_ => MapDataPasser.SimpleLayerStr(_.Name) == MapDataPasser.SimpleLayerStr(layerStr));
             if (p == null) return;
             var trueType = p.PropertyType.GenericTypeArguments.Single();
            // var runTimeType = p.PropertyType.GenericTypeArguments.Single();
@@ -356,11 +347,19 @@ namespace WBIS_2.Modules.ViewModels
             bool misteap = false;
             for (int i = 0; i < dt.Rows.Count; i++)
             {
-                layer.SetVisible(i, (bool)dt.Rows[i][1]);
-
-                if (!(bool)dt.Rows[i][1])
+                if (dt.Rows[i][1] is DBNull)
+                {
+                    layer.SetVisible(i, false);
                     MapDataPasser.HiddenFeatures[layerStr].Add((Guid)dt.Rows[i][0]);
-
+                }
+                else if (!(bool)dt.Rows[i][1])
+                {
+                    layer.SetVisible(i, false);
+                    MapDataPasser.HiddenFeatures[layerStr].Add((Guid)dt.Rows[i][0]);
+                }
+                else
+                    layer.SetVisible(i, true);
+                                
                 if ((Guid)dt.Rows[i][0] != (Guid)layer.DataSet.DataTable.Rows[i]["guid"])
                     misteap = true;
             }
@@ -391,7 +390,7 @@ namespace WBIS_2.Modules.ViewModels
         private string GetRepositoryQuery(string layerStr, string parent, Type parentType, Type trueType)
         {
             string repository = "";
-            if (CurrentUser.ViewRepository = false)
+            if (!CurrentUser.ViewRepository)
             {
                 if (parent == "")
                 {
@@ -409,7 +408,7 @@ namespace WBIS_2.Modules.ViewModels
         private string GetDeleteQuery(string layerStr, string parent, Type parentType, Type trueType)
         {
             string delete = "";
-            if (CurrentUser.ViewDeleted = false)
+            if (!CurrentUser.ViewDeleted)
             {
                 if (parent == "")
                 {

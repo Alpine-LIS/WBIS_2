@@ -22,10 +22,18 @@ using System.Reflection;
 
 namespace WBIS_2.Modules.ViewModels
 {
-    public class BotanicalSurveyAreaViewModel : ChildrenListViewModel, IDocumentContent, IDetailView
+    public class BotanicalSurveyAreaViewModel : DetailAndChildrenViewModelBase, IDocumentContent, IDetailView
     {
         public static bool AddSingle => true;
-        public BotanicalSurveyArea SurveyArea { get; set; }
+        public BotanicalSurveyArea SurveyArea
+        {
+            get { return GetProperty(() => SurveyArea); }
+            set
+            {
+                SetProperty(() => SurveyArea, value);
+                Record = SurveyArea;
+            }
+        }
 
 
         public string[] ThpNames { get; set; }

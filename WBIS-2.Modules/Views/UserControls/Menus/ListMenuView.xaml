@@ -11,12 +11,15 @@
     <Grid>
         <dxb:ToolBarControl>
             <dxb:BarButtonItem 
-                KeyGesture="Insert"
-                ToolTip="{Binding AddRecordToolTip, UpdateSourceTrigger=PropertyChanged}"
+                ToolTip="Add Record"
                 Command="{Binding AddRecordCommand}"
                 Glyph="{dx:DXImage SvgImages/Icon Builder/Actions_Add.svg}"
-                Content="Add"
-                IsEnabled="{Binding AddRecordsEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                IsEnabled="{Binding AddSingleRecord, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <dxb:BarButtonItem 
+                ToolTip="Import Records"
+                Command="{Binding ImportRecordsCommand}"
+                Glyph="{dx:DXImage SvgImages/Icon Builder/Actions_AddCircled.svg}"
+                IsEnabled="{Binding ImportRecords, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <dxb:BarButtonItem 
                 KeyGesture="Delete"
                 ToolTip="Delete Selected Record(s)"

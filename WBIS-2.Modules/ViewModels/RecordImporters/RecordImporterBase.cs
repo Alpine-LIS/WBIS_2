@@ -17,11 +17,13 @@ using System.Reflection;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using DevExpress.Data.ODataLinq.Helpers;
+using NetTopologySuite.Geometries;
 
 namespace WBIS_2.Modules.ViewModels.RecordImporters
 {
     public abstract class RecordImporterBase : BindableBase
     {
+        public WBIS2Model Database = new WBIS2Model();
         public List<PropertyType> GetProperties(Type InfoType)
         {
             List<PropertyType> properties = new List<PropertyType>();
@@ -35,17 +37,17 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
                 if (prop.PropertyType.GetInterfaces().Contains(typeof(IInformationType)))
                 {
                     var subProps = prop.PropertyType.GetProperties();
-                    foreach(var subProp in subProps)
+                    foreach (var subProp in subProps)
                     {
                         var subAtt = subProp.GetCustomAttributes(true).FirstOrDefault(_ => _.GetType() == typeof(ImportAttribute));
                         if (subAtt == null) continue;
 
-                        string typeName = GetDataTypeString(subProp.PropertyType);                        
-                        properties.Add(new PropertyType() { PropertyName = $"{prop.PropertyType.Name}.{subProp.Name}", TypeName = typeName, Required = ((ImportAttribute)subAtt).Required});
+                        string typeName = GetDataTypeString(subProp.PropertyType);
+                        properties.Add(new PropertyType() { PropertyName = $"{prop.PropertyType.Name}.{subProp.Name}", TypeName = typeName, Required = ((ImportAttribute)subAtt).Required });
                     }
                 }
                 else
-                {                   
+                {
                     string typeName = GetDataTypeString(prop.PropertyType);
                     properties.Add(new PropertyType() { PropertyName = prop.Name, TypeName = typeName, Required = ((ImportAttribute)att).Required });
                 }
@@ -72,55 +74,16 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
 
         public ICommand SaveCommand { get; set; }
         public abstract void SaveClick();
-        public abstract List<object> GenerateChild(string parentId);
-        /// <summary>
-        /// Maintain a list of FIDs of features that are used to generate child records. If parentless records are to be created skip these features.
-        /// </summary>
-        public abstract List<int> SkipFids { get; }
+        public abstract object BuildAttributes(object unit, DataRow dataRow, string id);
 
         /// <summary>
-        /// Convert the feature attribute data into a new record
-        /// </summary>
-        public t BuildAttributes<t>(DataRow dataRow) where t : class
-        {
-            var record = Activator.CreateInstance<t>();
-            var attributes = PropertyCrosswalk.Where(_ => _.PropertyType != null);
-
-            foreach (var attribute in attributes)
-            {
-                PropertyInfo prop;
-                if (!attribute.PropertyType.PropertyName.Contains("."))
-                    prop = typeof(t).GetProperty(attribute.PropertyType.PropertyName);
-                else
-                {
-                    prop = typeof(t).GetProperty(attribute.PropertyType.PropertyName);
-                }
-
-                object val;
-                if (!prop.PropertyType.GetInterfaces().Contains(typeof(IInformationType)))
-                    val = ValueProcessors.GetParseValue(dataRow[attribute.Attribute], prop.PropertyType);
-                else
-                    val = GetRecordEntity(prop.PropertyType, dataRow);
-
-                prop.SetValue(record, val);
-            }
-            return record;
-        }
-
-        /// <summary>
-        /// Perfom checks to see if records can be imported.
-        /// If record is a sub item don't produce a list of erros. This will be aquired through it's parent 'ListSaveCheck'
+        /// Perfom chacks to see if records can be imported.
         /// </summary>
         public bool CheckSave()
         {
             if (ImportShapefile == null)
             {
                 MessageBox.Show("There must be a shapefile selected.");
-                return false;
-            }
-            if (IdAttribute == null)
-            {
-                MessageBox.Show("Please select an attribute to use as a linking field.");
                 return false;
             }
 
@@ -132,31 +95,27 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
                 return false;
             }
 
-            BoolSaveCheck();
-            if (!IsSubElement)
+            int updateCount = GetUpdateCount();
+            if (MessageBox.Show($"The selected shapefile will update {updateCount.ToString("N0")} features. Do you wish to continue?", "", MessageBoxButton.YesNo) == MessageBoxResult.No)
+                return false;
+
+
+            var issues = RecordTypeSaveCheck();
+            if (issues.Count > 0)
             {
-                var issues = ListSaveCheck();
-                if (issues.Count > 0)
+                if (MessageBox.Show("There are issues with the import. Would you like to export a list of issues?", "", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
-                    if (MessageBox.Show("There are issues with the import. Would you like to export a list of issues?", "", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                    {
-                        TextWriters.WriteTextList("TXT|*.txt", "-", issues);
-                    }
-                    return false;
+                    TextWriters.WriteTextList("TXT|*.txt", "-", issues);
                 }
+                return false;
             }
 
             return true;
         }
         /// <summary>
-        /// Perfom checks specific to record types and return a list of issues.
-        /// Also gets a list of issues for it's children
+        /// Perfom checks specific to record types and return a list of issues
         /// </summary>
-        public abstract List<string> ListSaveCheck();
-        /// <summary>
-        /// Used for the simple boolean element of the 'CheckSave' routine
-        /// </summary>
-        public abstract bool BoolSaveCheck();
+        public abstract List<string> RecordTypeSaveCheck();
 
 
 
@@ -213,14 +172,14 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
                         AvailibleFields = AvailibleFields
                     };
                     xWalk.RefreshAvailible += XWalk_RefreshAvailible;
-                    
                     PropertyCrosswalk.Add(xWalk);
                 }
             }
-            IdOptions = PropertyCrosswalk.Select(_=>_.Attribute).ToList();
+            IdOptions = attributes;
             RaisePropertiesChanged(nameof(IdOptions));
             RaisePropertiesChanged(nameof(PropertyCrosswalk));
         }
+
         private void XWalk_RefreshAvailible(object sender, EventArgs e)
         {
             foreach (var xWalk in PropertyCrosswalk)
@@ -237,13 +196,13 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
         }
 
 
-
+        public bool AttemptReplace { get; set; } = false;
+        public Visibility AttemptReplaceEnabled { get; set; } = Visibility.Hidden;
+        public bool ConnectScoping { get; set; } = false;
+        public Visibility ScopingsAvailible { get; set; } = Visibility.Hidden;
 
         public List<string> IdOptions { get; set; }
         public string IdAttribute { get; set; }
-        public bool ImportUnconnected { get; set; } = false;
-        public bool ConnectSpacially { get; set; } = false;
-        public bool ConnectId { get; set; } = true;
         public ICommand CloseCommand { get; set; }
         public void CloseClick()
         {
@@ -297,7 +256,7 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
             {
                 var p = type.GetProperty(xWalk.PropertyType.PropertyName);
 
-                if (xWalk.PropertyType.TypeName != "String")
+                if (xWalk.PropertyType.TypeName != "'String'")
                 {
                     if (!xWalk.PropertyType.TypeName.Contains(xWalk.DataType))
                         issues.Add($"'{xWalk.Attribute}' has a data type of '{xWalk.DataType}' and '{xWalk.PropertyType.PropertyName}' must be {xWalk.PropertyType.TypeName}.");
@@ -305,8 +264,10 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
             }
             return issues;
         }
-        
 
+        public abstract int GetUpdateCount();
+        public abstract string CheckDupIds();
+           
         public ICommand SaveSetupCommand { get; set; }
         public void SaveSetupClick()
         {
@@ -345,7 +306,18 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
             ofd.InitialDirectory = path;
             ofd.Filter = "CSV|*.csv";
             if (!ofd.ShowDialog().Value) return;
-            using (StreamReader sr = new StreamReader(ofd.FileName))
+
+            LoadSetup(ofd.FileName);
+        }
+        public void LoadSetup(string fileName)
+        {
+            foreach (var xWalk in PropertyCrosswalk)
+            {
+                xWalk.PropertyType = null;
+                RaisePropertyChanged(nameof(xWalk.PropertyType));
+            }
+
+            using (StreamReader sr = new StreamReader(fileName))
             {
                 string txt = sr.ReadToEnd();
                 var lines = txt.Split('\n');
@@ -370,21 +342,32 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
         }
 
 
-        public abstract IInformationType ReturnRecordId(string link);
 
-        public abstract IInformationType ReturnRecordSpacial(Feature link);
 
-      
-
-        private void AddNewElement<t>(object newElement)
+        public t BuildAttributes<t>(DataRow dataRow, t record) where t : class
         {
-            if (Holder.NewListElements.ContainsKey(typeof(t)))
-                Holder.NewListElements.Add(typeof(t), new List<object>());
-            Holder.NewListElements[typeof(t)].Add(newElement);
+            var attributes = PropertyCrosswalk.Where(_ => _.PropertyType != null);
+
+            foreach (var attribute in attributes)
+            {
+                PropertyInfo prop;
+                if (!attribute.PropertyType.PropertyName.Contains("."))
+                    prop = typeof(t).GetProperty(attribute.PropertyType.PropertyName);
+                else
+                {
+                    prop = typeof(t).GetProperty(attribute.PropertyType.PropertyName);
+                }
+
+                object val;
+                if (!prop.PropertyType.GetInterfaces().Contains(typeof(IInformationType)))
+                    val = ValueProcessors.GetParseValue(dataRow[attribute.Attribute], prop.PropertyType);
+                else
+                    val = GetRecordEntity(prop.PropertyType, dataRow);
+
+                prop.SetValue(record, val);
+            }
+            return record;
         }
-
-
-
         public object GetRecordEntity(Type propertyType, DataRow dataRow)
         {
             object returnVal = null;
@@ -399,20 +382,78 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
                 returnVal = GetRecordEntity<AmphibianSpecies>(dataRow);
             else if (propertyType == typeof(PlantSpecies))
                 returnVal = GetRecordEntity<PlantSpecies>(dataRow);
+            else if (propertyType == typeof(THP_Area))
+                returnVal = GetRecordEntityThpArea(dataRow);
 
             return returnVal;
         }
 
+        public THP_Area GetRecordEntityThpArea(DataRow dataRow) 
+        {
+            string thpCol = PropertyCrosswalk.Where(_ => _.PropertyType != null).First(_ => _.PropertyType.PropertyName == "THP_Area.THPName").Attribute;
+            string thpName = dataRow[thpCol].ToString();
+
+            var thp = DbHelp.ThpExistance(Database, thpName);
+            if (thp == null)
+            {
+                Expression<Func<THP_Area, bool>> a = _ => _.THPName == thpName;
+                thp = GetHolderEntity<THP_Area>(a);
+            }
+
+            if (thp == null)
+            {
+                thp = new THP_Area()
+                {
+                    THPName = thpName
+                };
+                Database.THP_Areas.Add(thp);
+                AddNewElement<THP_Area>(thp);
+            }
+            return thp;
+        }
+
+        public t GetRecordEntity<t>(DataRow dataRow) where t : class
+        {
+            Dictionary<PropertyInfo, object> propertyInfos = GetPropertyValues<t>(dataRow);
+            var expression = GetEntityExpression<t>(propertyInfos);
+
+            var returnVal = Holder.Database.Set<t>().FirstOrDefault(expression);
+
+            if (returnVal == null)
+                returnVal = GetHolderEntity<t>(expression);
+
+            if (returnVal == null)
+            {
+                returnVal = Activator.CreateInstance<t>();
+
+                if (returnVal is ApplicationUser returnVal2)
+                    returnVal2.ApplicationGroup = Holder.Database.ApplicationGroups.FirstOrDefault(_ => _.GroupName == "Unknown");
+
+                foreach (var valKey in propertyInfos)
+                {
+                    PropertyInfo pi = valKey.Key;
+                    object val = valKey.Value;
+
+                    pi.SetValue(returnVal, val);
+                }
+                if (typeof(t).GetInterfaces().Contains(typeof(IPlaceHolder)))
+                    ((IPlaceHolder)returnVal).PlaceHolder = true;
+
+                Holder.Database.Set<t>().Add(returnVal);
+                AddNewElement<t>(returnVal);
+            }
+            return returnVal;
+        }
         private Dictionary<PropertyInfo, object> GetPropertyValues<t>(DataRow dataRow)
         {
             Dictionary<PropertyInfo, object> propertyInfos = new Dictionary<PropertyInfo, object>();
             string className = typeof(t).Name;
             var propNames = PropertyCrosswalk.Where(_ => _.PropertyType != null).Where(_ => _.PropertyType.PropertyName.StartsWith(className));
 
-            foreach(var prop in propNames)
+            foreach (var prop in propNames)
             {
                 PropertyInfo pi = typeof(t).GetProperty(prop.PropertyType.PropertyName.Replace($"{className}.", ""));
-                string colName = PropertyCrosswalk.Where(_=>_.PropertyType != null).First(_=>_.PropertyType.PropertyName == prop.PropertyType.PropertyName).Attribute;
+                string colName = PropertyCrosswalk.Where(_ => _.PropertyType != null).First(_ => _.PropertyType.PropertyName == prop.PropertyType.PropertyName).Attribute;
                 propertyInfos.Add(pi, dataRow[colName]);
             }
             return propertyInfos;
@@ -445,166 +486,12 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
             return default(t);
         }
 
-        public t GetRecordEntity<t>(DataRow dataRow) where t : class
+        private void AddNewElement<t>(object newElement)
         {
-            Dictionary<PropertyInfo, object> propertyInfos = GetPropertyValues<t>(dataRow);
-            var expression = GetEntityExpression<t>(propertyInfos);
-            
-            var returnVal = Holder.Database.Set<t>().FirstOrDefault(expression);
-
-            if (returnVal == null)
-                returnVal = GetHolderEntity<t>(expression);
-
-            if (returnVal == null)
-            {
-                returnVal = Activator.CreateInstance<t>();
-
-                if (returnVal is ApplicationUser returnVal2)
-                    returnVal2.ApplicationGroup = Holder.Database.ApplicationGroups.FirstOrDefault(_ => _.GroupName == "Unknown");
-
-                foreach (var valKey in propertyInfos)
-                {
-                    PropertyInfo pi = valKey.Key;
-                    object val = valKey.Value;
-
-                    pi.SetValue(returnVal, val);
-                }
-                ((IPlaceHolder)returnVal).PlaceHolder = true;
-
-                Holder.Database.Set<t>().Add(returnVal);
-                AddNewElement<t>(returnVal);
-            }
-            return returnVal;
+            if (Holder.NewListElements.ContainsKey(typeof(t)))
+                Holder.NewListElements.Add(typeof(t), new List<object>());
+            Holder.NewListElements[typeof(t)].Add(newElement);
         }
-        //public BirdSpecies GetRecordEntityBirdSpecies<t>(DataRow dataRow) where t : BirdSpecies
-        //{
-        //    Dictionary<PropertyInfo, object> propertyInfos = GetPropertyValues<t>(dataRow);
-        //    var expression = (Expression<Func<BirdSpecies, bool>>)GetEntityExpression<t>(propertyInfos);
-        //    var returnVal = Holder.Database.BirdSpecies.FirstOrDefault(expression);
-
-        //    if (returnVal == null)
-        //    {
-        //        if (Holder.NewListElements.ContainsKey(typeof(t)))
-        //        {
-        //            var EnityList = Holder.NewListElements[typeof(t)].Cast<t>();
-        //            returnVal = EnityList.AsQueryable().FirstOrDefault(expression);
-        //        }
-        //    }
-
-        //    if (returnVal == null)
-        //    {
-        //        returnVal = new BirdSpecies();
-        //        foreach (var valKey in propertyInfos)
-        //        {
-        //            PropertyInfo pi = valKey.Key;
-        //            object val = valKey.Value;
-
-        //            pi.SetValue(returnVal, val);
-        //        }
-        //        returnVal.PlaceHolder = true;
-
-        //        Holder.Database.BirdSpecies.Add(returnVal);
-        //        AddNewElement<t>(returnVal);
-        //    }
-        //    return returnVal;
-        //}
-        //public WildlifeSpecies GetRecordEntityWildlifeSpecies<t>(DataRow dataRow) where t : WildlifeSpecies
-        //{
-        //    Dictionary<PropertyInfo, object> propertyInfos = GetPropertyValues<t>(dataRow);
-        //    var expression = (Expression<Func<WildlifeSpecies, bool>>)GetEntityExpression<t>(propertyInfos);
-        //    var returnVal = Holder.Database.WildlifeSpecies.FirstOrDefault(expression);
-
-        //    if (returnVal == null)
-        //    {
-        //        if (Holder.NewListElements.ContainsKey(typeof(t)))
-        //        {
-        //            var EnityList = Holder.NewListElements[typeof(t)].Cast<t>();
-        //            returnVal = EnityList.AsQueryable().FirstOrDefault(expression);
-        //        }
-        //    }
-
-        //    if (returnVal == null)
-        //    {
-        //        returnVal = new WildlifeSpecies();
-        //        foreach (var valKey in propertyInfos)
-        //        {
-        //            PropertyInfo pi = valKey.Key;
-        //            object val = valKey.Value;
-
-        //            pi.SetValue(returnVal, val);
-        //        }
-        //        returnVal.PlaceHolder = true;
-
-        //        Holder.Database.WildlifeSpecies.Add(returnVal);
-        //        AddNewElement<t>(returnVal);
-        //    }
-        //    return returnVal;
-        //}
-        //public AmphibianSpecies GetRecordEntityAmphibianSpecies<t>(DataRow dataRow) where t : AmphibianSpecies
-        //{
-        //    Dictionary<PropertyInfo, object> propertyInfos = GetPropertyValues<t>(dataRow);
-        //    var expression = (Expression<Func<AmphibianSpecies, bool>>)GetEntityExpression<t>(propertyInfos);
-        //    var returnVal = Holder.Database.AmphibianSpecies.FirstOrDefault(expression);
-
-        //    if (returnVal == null)
-        //    {
-        //        if (Holder.NewListElements.ContainsKey(typeof(t)))
-        //        {
-        //            var EnityList = Holder.NewListElements[typeof(t)].Cast<t>();
-        //            returnVal = EnityList.AsQueryable().FirstOrDefault(expression);
-        //        }
-        //    }
-
-        //    if (returnVal == null)
-        //    {
-        //        returnVal = new AmphibianSpecies();
-        //        foreach (var valKey in propertyInfos)
-        //        {
-        //            PropertyInfo pi = valKey.Key;
-        //            object val = valKey.Value;
-
-        //            pi.SetValue(returnVal, val);
-        //        }
-        //        returnVal.PlaceHolder = true;
-
-        //        Holder.Database.AmphibianSpecies.Add(returnVal);
-        //        AddNewElement<t>(returnVal);
-        //    }
-        //    return returnVal;
-        //}
-        //public PlantSpecies GetRecordEntityPlantSpecies<t>(DataRow dataRow) where t : PlantSpecies
-        //{
-        //    Dictionary<PropertyInfo, object> propertyInfos = GetPropertyValues<t>(dataRow);
-        //    var expression = (Expression<Func<PlantSpecies, bool>>)GetEntityExpression<t>(propertyInfos);
-        //    var returnVal = Holder.Database.PlantSpecies.FirstOrDefault(expression);
-
-        //    if (returnVal == null)
-        //    {
-        //        if (Holder.NewListElements.ContainsKey(typeof(t)))
-        //        {
-        //            var EnityList = Holder.NewListElements[typeof(t)].Cast<t>();
-        //            returnVal = EnityList.AsQueryable().FirstOrDefault(expression);
-        //        }
-        //    }
-
-        //    if (returnVal == null)
-        //    {
-        //        returnVal = new PlantSpecies();
-        //        foreach (var valKey in propertyInfos)
-        //        {
-        //            PropertyInfo pi = valKey.Key;
-        //            object val = valKey.Value;
-
-        //            pi.SetValue(returnVal, val);
-        //        }
-        //        returnVal.PlaceHolder = true;
-
-        //        Holder.Database.PlantSpecies.Add(returnVal);
-        //        AddNewElement<t>(returnVal);
-        //    }
-        //    return returnVal;
-        //}
-
     }
     public class PropertyCrosswalk : BindableBase
     {

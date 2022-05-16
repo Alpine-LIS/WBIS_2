@@ -143,17 +143,6 @@ namespace WBIS_2.Modules.ViewModels
 
 
 
-        public override void Save()
-        {
-           
-        }
-
-        //public object CurrentRecord { get; set; }
-      
-        //public override void AddRecord()
-        //{
-            
-        //}
         public override void DeleteRecord()
         {
 

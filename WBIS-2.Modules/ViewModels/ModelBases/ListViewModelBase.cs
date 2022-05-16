@@ -22,6 +22,7 @@ using System.IO;
 using DevExpress.Mvvm.ModuleInjection;
 using Npgsql;
 using DevExpress.Mvvm.POCO;
+using System.Windows.Controls;
 
 namespace WBIS_2.Modules.ViewModels
 {
@@ -41,6 +42,7 @@ namespace WBIS_2.Modules.ViewModels
             ShowDetailsCommand = new DelegateCommand(ShowDetails);
             ShowChildrenCommand  = new DelegateCommand(ShowChildren);
             AddRecordCommand = new DelegateCommand(AddRecord);
+            ImportRecordsCommand = new DelegateCommand(ImportRecordsExecute);
             DeleteRecordCommand = new DelegateCommand(DeleteRecord);
             RecordsRefreshCommand = new DelegateCommand(RecordsRefresh);
 
@@ -134,22 +136,18 @@ namespace WBIS_2.Modules.ViewModels
             if (DetailsViewModel != null)
                 AddSingleRecord = (bool)DetailsViewModel.GetProperty("AddSingle").GetValue(null);
 
+            ImportView = Type.GetType("WBIS_2.Modules.Views.RecordImporters." + ListManager.DisplayName.Replace(" ", "") + "ImportView");
+            ImportRecords = ImportView != null;
+
             ActiveUnitMenuVisable = ListManager.CanSetActive;
-            AddRecordsEnabled = ListManager.ImportRecords || AddSingleRecord;
             DeleteRecordsEnabled = ListManager.DeleteRecord;
-            RestoreRecordsEnabled = ListManager.RestoreRecord;
-            if (AddSingleRecord && ListManager.ImportRecords)
-                AddRecordToolTip = "Add/Import Record(s)";
-            else if (AddSingleRecord)
-                AddRecordToolTip = "Add Record";
-            else
-                AddRecordToolTip = "Import Record(s)";
+            RestoreRecordsEnabled = ListManager.RestoreRecord;            
 
             RaisePropertyChanged(nameof(ActiveUnitMenuVisable));
-            RaisePropertyChanged(nameof(AddRecordsEnabled));
+            RaisePropertyChanged(nameof(ImportRecords));
+            RaisePropertyChanged(nameof(AddSingleRecord));
             RaisePropertyChanged(nameof(DeleteRecordsEnabled));
             RaisePropertyChanged(nameof(RestoreRecordsEnabled));
-            RaisePropertyChanged(nameof(AddRecordToolTip));
             RaisePropertyChanged(nameof(ShowDetailsEnabled));
             RaisePropertyChanged(nameof(ShowChildrenEnabled));
 
@@ -173,19 +171,27 @@ namespace WBIS_2.Modules.ViewModels
         }
 
 
-        public bool AddSingleRecord { get; set; }
-        public bool AddRecordsEnabled { get; set; }
-        public string AddRecordToolTip { get; set; }
+        public bool AddSingleRecord { get; set; } = false;
         public ICommand AddRecordCommand { get; set; }
         public void AddRecord()
         {
-            if (AddSingleRecord && ListManager.ImportRecords)
-                AddRecordToolTip = "Add/Import Record(s)";
-            else if (AddSingleRecord)
-                AddSingle();
-            else
-                AddRecordToolTip = "Import Record(s)";
+            AddSingle();
         }
+        public bool ImportRecords { get; set; } = false;
+        public ICommand ImportRecordsCommand { get; set; }
+        public Type ImportView { get; set; }
+        public void ImportRecordsExecute()
+        {
+            Views.RecordImporters.RecordImportHolderView recordImportHolderView = new Views.RecordImporters.RecordImportHolderView((UserControl)Activator.CreateInstance(ImportView));
+            CustomControlWindow window = new CustomControlWindow(recordImportHolderView);
+            if (window.DialogResult)
+            {
+                RefreshDataSource();
+                RaisePropertyChanged(nameof(Records));
+            }
+        }
+
+
         private void AddSingle()
         {
             if (DetailsViewModel == null) return;

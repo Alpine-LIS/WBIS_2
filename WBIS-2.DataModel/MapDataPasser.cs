@@ -123,5 +123,11 @@ namespace WBIS_2.DataModel
             return value.Replace(" ", "_").ToUpper();
             //return value.Replace(" ", "").Replace("_", "").ToUpper();
         }
+
+        public static string SimpleLayerStr(string value)
+        {
+            //return value.Replace(" ", "_").ToUpper();
+            return value.Replace(" ", "").Replace("_", "").ToUpper();
+        }
     }
 }

@@ -17,9 +17,17 @@ using System.Windows.Input;
 
 namespace WBIS_2.Modules.ViewModels
 {
-    public class ApplicationUserViewModel : WBISViewModelBase, IDocumentContent
+    public class ApplicationUserViewModel : DetailViewModelBase, IDocumentContent
     {
-        public ApplicationUser User { get; set; }
+        public ApplicationUser User
+        {
+            get { return GetProperty(() => User); }
+            set
+            {
+                SetProperty(() => User, value);
+                Record = User;
+            }
+        }
         public object Title { get {
                 if (User.UserName != null) return $"User: {User.UserName} {ChangedSign}";
                 else return $"User: (New User)";

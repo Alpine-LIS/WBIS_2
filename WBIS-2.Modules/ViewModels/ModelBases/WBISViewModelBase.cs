@@ -83,7 +83,7 @@ namespace WBIS_2.Modules.ViewModels
             Tracker.ChangesSaved += Tracker_ChangesSaved;
             CurrentUser.CurrentUserChanged += CurrentUserChanged;
             ClosingFormCommand = new DelegateCommand(CloseForm);
-            SaveCommand = new DelegateCommand(Save);
+            //SaveCommand = new DelegateCommand(Save);
 
             Privileges();
             ModuleManager.DefaultManager.GetEvents(viewModel: this).ViewModelRemoving += WBISViewModelBase_ViewModelRemoving;
@@ -180,8 +180,7 @@ namespace WBIS_2.Modules.ViewModels
         }
 
      
-        public ICommand SaveCommand { get; set; }
-        public abstract void Save();
+       
        
         public ICommand ClosingFormCommand { get; set; }
         public abstract void CloseForm();
