@@ -99,12 +99,12 @@ namespace WBIS_2.Modules.Views
         {
             if (MapDataPasser.SelectionFromGrid) return;
             if (((ListViewModelBase)DataContext).ListManager == null) return;
+            if (((ListViewModelBase)DataContext).ListManager.TableName.ToLower() != MapDataPasser.ZoomLayerName.ToLower()) return;
 
-                try
+            try
                 {
-                    List<IFeature> selection = (List<IFeature>)sender;
+                    List<IFeature> selection = ((List<IFeature>)sender).Where(_ => !MapDataPasser.HiddenFeatures[MapDataPasser.ZoomLayerName].Contains((Guid)_.DataRow["guid"])).ToList();
                     if (selection.Count == 0) return;
-
                     var selectedIDs = $"'{string.Join("','",selection.Select(_=>_.DataRow["guid"].ToString()))}'";
                    
                     if (selectedIDs.Length > 0)

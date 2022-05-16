@@ -351,11 +351,16 @@ namespace WBIS_2.Modules.ViewModels
             using (NpgsqlDataAdapter filler = new NpgsqlDataAdapter(query, WBIS2Model.GetRDSConnectionString()))
                 filler.Fill(dt);
 
+
             var layer = MapControl.GetLayer(layerStr);
             bool misteap = false;
             for (int i = 0; i < dt.Rows.Count; i++)
             {
                 layer.SetVisible(i, (bool)dt.Rows[i][1]);
+
+                if (!(bool)dt.Rows[i][1])
+                    MapDataPasser.HiddenFeatures[layerStr].Add((Guid)dt.Rows[i][0]);
+
                 if ((Guid)dt.Rows[i][0] != (Guid)layer.DataSet.DataTable.Rows[i]["guid"])
                     misteap = true;
             }
@@ -421,14 +426,17 @@ namespace WBIS_2.Modules.ViewModels
         }
 
 
+       
         string DistrictGuids = $"'{string.Join("','", CurrentUser.Districts.Select(_ => _.Guid))}'";
         public void InformationTypesChanged(object sender, EventArgs e)
         {
+            MapDataPasser.HiddenFeatures = new Dictionary<string, List<Guid>>();
             foreach (var layer in MapControl.UxMap.Layers)
             {
                 if (CurrentUser.VisibleLayers.Contains(MapDataPasser.CleanLayerStr(layer.LegendText)))
                 {
                     layer.IsVisible = true;
+                    MapDataPasser.HiddenFeatures.Add(layer.LegendText, new List<Guid>()); ;
                     MapDataPasser_UserMapOptionsChanged(layer.LegendText);
                 }
                 else

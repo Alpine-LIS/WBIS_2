@@ -13,6 +13,17 @@ namespace WBIS_2.DataModel
     public class InformationTypeManager<InfoType> : IInfoTypeManager where InfoType : class
     {
         public string DisplayName => GetDisplayName();
+        public string TableName
+        {
+            get
+            {
+                WBIS2Model model = new WBIS2Model();
+                var entityType = model.Model.FindEntityType(InformationType);
+                var schema = entityType.GetSchema();
+                return entityType.GetTableName().ToLower();
+            }
+        }
+
         public Type InformationType => typeof(InfoType);
         private string GetDisplayName()
         {

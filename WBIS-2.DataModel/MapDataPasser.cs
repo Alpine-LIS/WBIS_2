@@ -50,6 +50,11 @@ namespace WBIS_2.DataModel
         {
             MapSelectionChangedEvent?.Invoke(featureList, new EventArgs());
         }
+        /// <summary>
+        /// A list of features hidden from the map.
+        /// This list is used to prevent the map from passing these features to the grid control for filtering.
+        /// </summary>
+        public static Dictionary<string, List<Guid>> HiddenFeatures = new Dictionary<string, List<Guid>>();
 
 
 

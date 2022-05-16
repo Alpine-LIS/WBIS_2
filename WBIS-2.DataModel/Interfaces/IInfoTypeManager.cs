@@ -15,6 +15,7 @@ namespace WBIS_2.DataModel
         /// A string value representing an information type.
         /// </summary>
         public string DisplayName { get; }
+        public string TableName { get; }
         /// <summary>
         /// Information type options to be displayed as children of the current information type.
         /// </summary>
