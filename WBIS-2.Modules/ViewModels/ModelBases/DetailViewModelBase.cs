@@ -24,22 +24,63 @@ using Npgsql;
 using DevExpress.Mvvm.POCO;
 using System.Windows.Controls;
 using NetTopologySuite.Geometries;
+using System.Reflection;
 
 namespace WBIS_2.Modules.ViewModels
 {
     [POCOViewModel]
     public abstract class DetailViewModelBase : WBISViewModelBase, IDetailViewModelBase
     {
-        public IInformationType Record{get;set;}
+        public IInformationType Record { get; set; }
+        public bool HasEditableGeometry => Record.Manager.InformationType.GetProperty("Geometry") != null;
+        public PropertyInfo GeoProperty => Record.Manager.InformationType.GetProperty("Geometry");
+
+
         public abstract void Save();
         public void GeoChanged()
         {
             this.Changed = true;
-            if (MessageBox.Show("The activity geometry has been updated, the new geometry won't be shown until the record is saved. Press ‘OK’ to save or ‘Cancel’ to continue editing.",
+            if (MessageBox.Show("The geometry has been updated, the new geometry won't be shown until the record is saved. Press ‘OK’ to save or ‘Cancel’ to continue editing.",
                       "", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
             {
                 Save();
             }
+        }
+
+        public void FeatureExternal()
+        {
+            Geometry geo = new RecordFeatureBuilder().ExternalFeature(Record.Manager.InformationType.GetProperty("Geometry"));
+            if (geo != null)
+            {
+                GeoProperty.SetValue(Record, geo);
+                GeoChanged();
+            }
+        }
+        public void FeatureRemove()
+        {
+            var geometry = GeoProperty.GetValue(Record);
+            if (geometry != null)
+            {
+                GeoProperty.SetValue(Record, null);
+                GeoChanged();
+            }
+        }
+
+
+        public void FeatureDraw()
+        {
+            MapDataPasser.MapDrawFeature(Record.Guid);
+            MapDataPasser.ActivityDrawnEvent += MapDataPasser_DrawnEvent;
+        }
+        public void MapDataPasser_DrawnEvent(object sender, EventArgs e)
+        {
+            MapDataPasser.ActivityDrawnEvent -= MapDataPasser_DrawnEvent;
+            Geometry geo;
+            if (sender is Polygon) geo = new MultiPolygon(new Polygon[] { (Polygon)sender });
+            else geo = (MultiPolygon)sender;
+            geo.SRID = 26710;
+            GeoProperty.SetValue(Record, geo);
+            GeoChanged();
         }
     }
 }

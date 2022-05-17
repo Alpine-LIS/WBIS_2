@@ -20,9 +20,9 @@
             
             <dxb:BarSubItem ToolTip="Append Feature" IsVisible="{Binding HasEditableGeometry, UpdateSourceTrigger=PropertyChanged}" 
                             Glyph="{dx:DXImage SvgImages/Dashboards/ChoroplethMap.svg}">
-                <dxb:BarButtonItem Content="From Shapefile" Command="{Binding ActivityFeatureExternalCommand}"/>
-                <dxb:BarButtonItem Content="Draw Manually" Command="{Binding ActivityFeatureDrawCommand}"/>
-                <dxb:BarButtonItem Content="Remove Geometry" Command="{Binding ActivityFeatureRemoveCommand}"/>
+                <dxb:BarButtonItem Content="From Shapefile" Command="{Binding FeatureExternalCommand}"/>
+                <dxb:BarButtonItem Content="Draw Manually" Command="{Binding FeatureDrawCommand}"/>
+                <dxb:BarButtonItem Content="Remove Geometry" Command="{Binding FeatureRemoveCommand}"/>
             </dxb:BarSubItem>
         </dxb:ToolBarControl>
     </Grid>

@@ -336,7 +336,9 @@ namespace WBIS_2.Modules.ViewModels
             while (boolQuery.StartsWith(" AND "))
                 boolQuery = boolQuery.Remove(0, 5);
 
-            string query = $"SELECT {layerStr.ToLower()}.guid, {boolQuery} from {layerStr.ToLower()} {joinParent} ORDER BY {layerStr.ToLower()}.guid";
+            string query = $"SELECT {layerStr.ToLower()}.guid, {boolQuery} from {layerStr.ToLower()} {joinParent} " +
+                $"WHERE {layerStr.ToLower()}.geometry IS NOT NULL" +
+                $" ORDER BY {layerStr.ToLower()}.guid";
 
             DataTable dt = new DataTable();
             using (NpgsqlDataAdapter filler = new NpgsqlDataAdapter(query, WBIS2Model.GetRDSConnectionString()))

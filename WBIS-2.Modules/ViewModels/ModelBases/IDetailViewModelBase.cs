@@ -31,51 +31,22 @@ namespace WBIS_2.Modules.ViewModels
     public interface IDetailViewModelBase
     {
         IInformationType Record { get; set; }
-        bool HasEditableGeometry  => Record.Manager.InformationType.GetProperty("Geometry") != null;
-        PropertyInfo GeoProperty => Record.Manager.InformationType.GetProperty("Geometry");
+        bool HasEditableGeometry { get; }
+        PropertyInfo GeoProperty { get; }
 
         ICommand SaveCommand => new DelegateCommand(Save);
         abstract void Save();
         abstract void GeoChanged();
 
-        public ICommand ActivityFeatureExternalCommand => new DelegateCommand(ActivityFeatureExternal);
-        private void ActivityFeatureExternal()
-        {
-            Geometry geo = new RecordFeatureBuilder().ExternalFeature(Record.Manager.InformationType.GetProperty("Geometry"));
-            if (geo != null)
-            {
-                GeoProperty.SetValue(Record,geo);
-                GeoChanged();               
-            }
-        }
-        public ICommand ActivityFeatureRemoveCommand => new DelegateCommand(ActivityFeatureRemove);
-        private void ActivityFeatureRemove()
-        {
-            var geometry = GeoProperty.GetValue(Record);
-            if (geometry != null)
-            {
-                GeoProperty.SetValue(Record, null);
-                GeoChanged();
-            }
-        }
+        ICommand FeatureExternalCommand => new DelegateCommand(FeatureExternal);
+        abstract void FeatureExternal();
+        ICommand FeatureRemoveCommand => new DelegateCommand(FeatureRemove);
+        abstract void FeatureRemove();
 
 
-        public ICommand ActivityFeatureDrawCommand => new DelegateCommand(ActivityFeatureDraw);
-        private void ActivityFeatureDraw()
-        {
-            MapDataPasser.MapDrawFeature(Record.Guid);
-            MapDataPasser.ActivityDrawnEvent += MapDataPasser_ActivityDrawnEvent;
-        }
-        private void MapDataPasser_ActivityDrawnEvent(object sender, EventArgs e)
-        {
-            MapDataPasser.ActivityDrawnEvent -= MapDataPasser_ActivityDrawnEvent;
-            Geometry geo;
-            if (sender is Polygon) geo = new MultiPolygon(new Polygon[] { (Polygon)sender });
-            else geo = (MultiPolygon)sender;
-            geo.SRID = 26710;
-            GeoProperty.SetValue(Record, geo);
-            GeoChanged();
-        }
+        ICommand FeatureDrawCommand => new DelegateCommand(FeatureDraw);
+        abstract void FeatureDraw();
+        abstract void MapDataPasser_DrawnEvent(object sender, EventArgs e);
     }
 }
 

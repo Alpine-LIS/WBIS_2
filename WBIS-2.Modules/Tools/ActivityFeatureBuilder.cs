@@ -37,7 +37,7 @@ namespace WBIS_2.Modules.Tools
 
             PolygonShapefile polygonShapefile = new PolygonShapefile(ofd.FileName);
 
-            if (polygonShapefile.Features.Count > 0)
+            if (polygonShapefile.Features.Count > 1)
             {
                 if (MessageBox.Show("Each record can only have one feature. The features in the selected shapefile will be unionized.", "", MessageBoxButton.OKCancel) == MessageBoxResult.Cancel)
                     return null;
@@ -97,7 +97,7 @@ namespace WBIS_2.Modules.Tools
 
             LineShapefile lineShapefile = new LineShapefile(ofd.FileName);
 
-            if (lineShapefile.Features.Count > 0)
+            if (lineShapefile.Features.Count > 1)
             {
                 if (MessageBox.Show("Each record can only have one feature. The features in the selected shapefile will be unionized.", "", MessageBoxButton.OKCancel) == MessageBoxResult.Cancel)
                     return null;
@@ -144,7 +144,7 @@ namespace WBIS_2.Modules.Tools
 
             PointShapefile pointShapefile = new PointShapefile(ofd.FileName);
 
-            if (pointShapefile.Features.Count > 0)
+            if (pointShapefile.Features.Count > 1)
             {
                 if (MessageBox.Show("Each record can only have one feature. The first feature will be used.", "", MessageBoxButton.OKCancel) == MessageBoxResult.Cancel)
                     return null;
