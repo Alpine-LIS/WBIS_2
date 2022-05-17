@@ -21,6 +21,7 @@ namespace WBIS_2.DataModel
         /// </summary>
         public Type InformationType { get; }
         public IInformationType[] AvailibleChildren { get; }
+        public IInformationType[] PossibleParents { get; }
 
         /// Fields to be displayed when in an alternate information type.
         /// </summary>
@@ -29,8 +30,12 @@ namespace WBIS_2.DataModel
         /// <summary>
         /// Return an IQueryable for the specified information type.
         /// </summary>
-        public abstract IQueryable GetQueryable(WBIS2Model model, List<string> ForceInclude = null);
+        public abstract IQueryable GetQueryable(WBIS2Model model, bool track = false, List<string> ForceInclude = null);
+        public abstract IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model);
+        public abstract IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model, bool showDelete, bool showRepository);
+        public abstract IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model, bool track = false);
         public abstract IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model, List<string> ForceInclude = null);
+        public abstract IQueryable GetQueryableFromChildren(object[] Query, Type QueryType, WBIS2Model model);
         /// <summary>
         /// Can the infromation type be set as active.
         /// </summary>
@@ -49,12 +54,10 @@ namespace WBIS_2.DataModel
         /// <summary>
         /// Record can be deleted.
         /// </summary>
-        public bool DeleteRecord { get; }
+        public bool DeleteRestoreRecord { get; }
+        public bool RepositoryRecord { get; }
 
-        /// <summary>
-        /// Record can be restored.
-        /// </summary>
-        public bool RestoreRecord { get; }
+       
 
         /// <summary>
         /// If true a record can only be added when an indevidual parent is selected and the children(current information type) are presented in a detail view.

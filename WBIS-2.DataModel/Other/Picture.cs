@@ -20,16 +20,16 @@ namespace WBIS_2.DataModel
         public byte[] PreviewData { get; set; }
 
         [Column("site_calling_id")]
-        public Guid SiteCallingId { get; set; }
+        public Guid? SiteCallingId { get; set; }
         public SiteCalling SiteCalling { get; set; }
         [Column("owl_banding_id")]
-        public Guid OwlBandingId { get; set; }
+        public Guid? OwlBandingId { get; set; }
         public OwlBanding OwlBanding { get; set; }
         [Column("botanical_element_id")]
-        public Guid BotanicalElementId { get; set; }
+        public Guid? BotanicalElementId { get; set; }
         public BotanicalElement BotanicalElement { get; set; }
         [Column("amphibian_element_id")]
-        public Guid AmphibianElementId { get; set; }
+        public Guid? AmphibianElementId { get; set; }
         public AmphibianElement AmphibianElement { get; set; }
     }
 }

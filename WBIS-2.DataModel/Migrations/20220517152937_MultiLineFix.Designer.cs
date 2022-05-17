@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,10 @@ using WBIS_2.DataModel;
 namespace WBIS_2.DataModel.Migrations
 {
     [DbContext(typeof(WBIS2Model))]
-    partial class WBIS2ModelModelSnapshot : ModelSnapshot
+    [Migration("20220517152937_MultiLineFix")]
+    partial class MultiLineFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2652,11 +2654,11 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("guid");
 
-                    b.Property<Guid?>("AmphibianElementId")
+                    b.Property<Guid>("AmphibianElementId")
                         .HasColumnType("uuid")
                         .HasColumnName("amphibian_element_id");
 
-                    b.Property<Guid?>("BotanicalElementId")
+                    b.Property<Guid>("BotanicalElementId")
                         .HasColumnType("uuid")
                         .HasColumnName("botanical_element_id");
 
@@ -2668,7 +2670,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("bytea")
                         .HasColumnName("image_data");
 
-                    b.Property<Guid?>("OwlBandingId")
+                    b.Property<Guid>("OwlBandingId")
                         .HasColumnType("uuid")
                         .HasColumnName("owl_banding_id");
 
@@ -2676,7 +2678,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("bytea")
                         .HasColumnName("preview_data");
 
-                    b.Property<Guid?>("SiteCallingId")
+                    b.Property<Guid>("SiteCallingId")
                         .HasColumnType("uuid")
                         .HasColumnName("site_calling_id");
 
@@ -4905,19 +4907,27 @@ namespace WBIS_2.DataModel.Migrations
                 {
                     b.HasOne("WBIS_2.DataModel.AmphibianElement", "AmphibianElement")
                         .WithMany("Pictures")
-                        .HasForeignKey("AmphibianElementId");
+                        .HasForeignKey("AmphibianElementId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WBIS_2.DataModel.BotanicalElement", "BotanicalElement")
                         .WithMany("Pictures")
-                        .HasForeignKey("BotanicalElementId");
+                        .HasForeignKey("BotanicalElementId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WBIS_2.DataModel.OwlBanding", "OwlBanding")
                         .WithMany("Pictures")
-                        .HasForeignKey("OwlBandingId");
+                        .HasForeignKey("OwlBandingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WBIS_2.DataModel.SiteCalling", "SiteCalling")
                         .WithMany("Pictures")
-                        .HasForeignKey("SiteCallingId");
+                        .HasForeignKey("SiteCallingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("AmphibianElement");
 

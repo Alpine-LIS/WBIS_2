@@ -18,10 +18,12 @@ namespace WBIS_2.DataModel
 
         [Column("botanical_survey_area_id")]
         public Guid? BotanicalSurveyAreaId { get; set; }
+        [ListInfo(ParentField = true)]
         public BotanicalSurveyArea BotanicalSurveyArea { get; set; }
 
         [Column("botanical_scoping_id")]
         public Guid? BotanicalScopingId { get; set; }
+        [ListInfo(ParentField = true)]
         public BotanicalScoping BotanicalScoping { get; set; }
 
         [ListInfo(ChildField = true)]
@@ -51,7 +53,7 @@ namespace WBIS_2.DataModel
         public DateTime DateAdded { get; set; }
         [Column("date_modified")]
         public DateTime DateModified { get; set; }
-        [Display(Order = -1)]
+        //[Display(Order = -1)]
         public bool _delete { get; set; }
         [Column("repository")]
         public bool Repository { get; set; }
@@ -72,8 +74,8 @@ namespace WBIS_2.DataModel
 
 
 
-        [Column("geometry", TypeName = "geometry(LineString,26710)")]
-        public LineString Geometry { get; set; }
+        [Column("geometry", TypeName = "geometry(MultiLineString,26710)")]
+        public MultiLineString Geometry { get; set; }
 
 
 

@@ -76,38 +76,38 @@ namespace WBIS_2.Modules.ViewModels
             Privileges();
         }
 
-        public override void ShowChildren()
-        {
-            if (SelectedItems.Count == 0)
-            {
-                return;
-            }
+        //public override void ShowChildren()
+        //{
+        //    if (SelectedItems.Count == 0)
+        //    {
+        //        return;
+        //    }
 
-            //if (SelectedItems.Count == 1 && HasDetailView)
-            //{
-            //    base.ShowDetails();
-            //    return;
-            //}
+        //    //if (SelectedItems.Count == 1 && HasDetailView)
+        //    //{
+        //    //    base.ShowDetails();
+        //    //    return;
+        //    //}
 
-            if (ParentType.Manager.AvailibleChildren.Count() > 0)
-            {
-                IDocumentManagerService service = this.GetRequiredService<IDocumentManagerService>();
-                IDocument document = service.FindDocumentById(ParentType.Manager.DisplayName + " Children");
-                if (document == null)
-                {
-                    ChildrenListViewModel ChildrenView = ChildrenListViewModel.Create(SelectedItems.ToArray(), ParentType);
+        //    if (ParentType.Manager.AvailibleChildren.Count() > 0)
+        //    {
+        //        IDocumentManagerService service = this.GetRequiredService<IDocumentManagerService>();
+        //        IDocument document = service.FindDocumentById(ParentType.Manager.DisplayName + " Children");
+        //        if (document == null)
+        //        {
+        //            ChildrenListViewModel ChildrenView = ChildrenListViewModel.Create(SelectedItems.ToArray(), ParentType);
 
-                    document = service.CreateDocument("ChildrenListView", ChildrenView, ParentType.Manager.DisplayName + " Children", this);
-                    document.Id = ParentType.Manager.DisplayName + " Children";
-                }
-                document.Show();
-            }
-            //else
-            //{ }
+        //            document = service.CreateDocument("ChildrenListView", ChildrenView, ParentType.Manager.DisplayName + " Children", this);
+        //            document.Id = ParentType.Manager.DisplayName + " Children";
+        //        }
+        //        document.Show();
+        //    }
+        //    //else
+        //    //{ }
 
 
 
-        }
+        //}
 
 
 
@@ -125,7 +125,7 @@ namespace WBIS_2.Modules.ViewModels
        
         public override void Records_GetQueryable(object sender, GetQueryableEventArgs e)
         {
-            e.QueryableSource = ParentType.Manager.GetQueryable(CurrentUser.Districts.ToArray(), typeof(District), Database);
+            e.QueryableSource = ParentType.Manager.GetQueryable(CurrentUser.Districts.ToArray(), typeof(District), Database, ViewDeleted, ViewRepository);
 
             //if (ParentType is District)
             //    e.QueryableSource = Database.Set<District>()
@@ -143,14 +143,14 @@ namespace WBIS_2.Modules.ViewModels
 
 
 
-        public override void DeleteRecord()
-        {
+        //public override void DeleteRecord()
+        //{
 
-        }
-        public override void RestoreRecord()
-        {
+        //}
+        //public override void RestoreRecord()
+        //{
 
-        }
+        //}
 
 
         public string FilterExpression

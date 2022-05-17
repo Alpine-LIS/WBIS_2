@@ -43,7 +43,8 @@ namespace WBIS_2.Modules.ViewModels
             ShowChildrenCommand  = new DelegateCommand(ShowChildren);
             AddRecordCommand = new DelegateCommand(AddRecord);
             ImportRecordsCommand = new DelegateCommand(ImportRecordsExecute);
-            DeleteRecordCommand = new DelegateCommand(DeleteRecord);
+            DeleteRecordCommand = new DelegateCommand(DeleteRecords);
+            RestoreRecordCommand = new DelegateCommand(RestoreRecords);
             RecordsRefreshCommand = new DelegateCommand(RecordsRefresh);
 
             ViewActiveCommand = new DelegateCommand(ViewActive);
@@ -140,14 +141,12 @@ namespace WBIS_2.Modules.ViewModels
             ImportRecords = ImportView != null;
 
             ActiveUnitMenuVisable = ListManager.CanSetActive;
-            DeleteRecordsEnabled = ListManager.DeleteRecord;
-            RestoreRecordsEnabled = ListManager.RestoreRecord;            
+            DeleteRestoreRecordsEnabled = ListManager.DeleteRestoreRecord;
 
             RaisePropertyChanged(nameof(ActiveUnitMenuVisable));
             RaisePropertyChanged(nameof(ImportRecords));
             RaisePropertyChanged(nameof(AddSingleRecord));
-            RaisePropertyChanged(nameof(DeleteRecordsEnabled));
-            RaisePropertyChanged(nameof(RestoreRecordsEnabled));
+            RaisePropertyChanged(nameof(DeleteRestoreRecordsEnabled));
             RaisePropertyChanged(nameof(ShowDetailsEnabled));
             RaisePropertyChanged(nameof(ShowChildrenEnabled));
 
@@ -208,17 +207,53 @@ namespace WBIS_2.Modules.ViewModels
             document.Show();
         }
 
-        public bool DeleteRecordsEnabled { get; set; }
+        public bool DeleteRestoreRecordsEnabled { get; set; }
         public ICommand DeleteRecordCommand { get; set; }
-        public abstract void DeleteRecord();
+        public void DeleteRecords()
+        {
+            if (SelectedItems.Count == 0) return;
+            var children = ListManager.AvailibleChildren
+                    .Where(_ => _.Manager.InformationType.GetInterfaces().Contains(typeof(IUserRecords)))
+                    .Select(_ => _.Manager.DisplayName);
+            if (children.Count() > 0)
+            {                
+                if (MessageBox.Show($"Are you sure you want to delete {SelectedItems.Count.ToString("N0")} records?" +
+                  $"\n\nThis will also delete all related children " +
+                  $"({string.Join(", ", children)}" +
+                  $" and any potential sub-children.", "", MessageBoxButton.YesNo) == MessageBoxResult.No) return;
+            }
+            else
+            { if (MessageBox.Show($"Are you sure you want to delete {SelectedItems.Count.ToString("N0")} records?", "", MessageBoxButton.YesNo) == MessageBoxResult.No) return; }
 
-        public bool RestoreRecordsEnabled { get; set; }
+            new DeleteRestoreAndRepository(SelectedItems.ToArray()).DeleteRecords();
+        }
+
         public ICommand RestoreRecordCommand { get; set; }
-        public abstract void RestoreRecord();
+        public void RestoreRecords()
+        {
+            new DeleteRestoreAndRepository(SelectedItems.ToArray()).RestoreRecords();
+        }
 
 
-      
-        
+
+
+
+
+
+        public void RepositoryStoreRecords()
+        {
+
+        }
+        public void RepositoryReviveRecords()
+        {
+
+        }
+
+
+
+
+
+
 
 
         public ICommand RecordsRefreshCommand { get; set; }
@@ -238,7 +273,27 @@ namespace WBIS_2.Modules.ViewModels
 
         public bool ShowChildrenEnabled { get; set; }
         public ICommand ShowChildrenCommand { get; set; }
-        public abstract void ShowChildren();
+        public void ShowChildren()
+        {
+            if (SelectedItems.Count == 0)
+            {
+                return;
+            }
+
+            if (ListManager.AvailibleChildren.Count() > 0)
+            {
+                IDocumentManagerService service = this.GetRequiredService<IDocumentManagerService>();
+                IDocument document = service.FindDocumentById(ListManager.DisplayName + " Children");
+                if (document == null)
+                {
+                    ChildrenListViewModel ChildrenView = ChildrenListViewModel.Create(SelectedItems.ToArray(), (IInformationType)Activator.CreateInstance(ListManager.InformationType));
+
+                    document = service.CreateDocument("ChildrenListView", ChildrenView, ListManager.DisplayName + " Children", this);
+                    document.Id = ListManager.DisplayName + " Children";
+                }
+                document.Show();
+            }
+        }
 
 
 

@@ -41,9 +41,14 @@ namespace WBIS_2.Modules.Views
         {
             ContextMenu contextMenu = new ContextMenu();
             if (((ListViewModelBase)DataContext).ListManager != null)
+            {
                 if (((ListViewModelBase)DataContext).ListManager.CanSetActive)
                     ActiveUnitsMenuItems(ref contextMenu);
-
+                if (((ListViewModelBase)DataContext).ListManager.DeleteRestoreRecord)
+                    DeleteUnitsMenuItems(ref contextMenu);
+                if (((ListViewModelBase)DataContext).ListManager.RepositoryRecord)
+                    RepositoryUnitsMenuItems(ref contextMenu);
+            }
             MyGrid.ContextMenu = contextMenu;
         }
         private void ActiveUnitsMenuItems(ref ContextMenu contextMenu)
@@ -75,6 +80,46 @@ namespace WBIS_2.Modules.Views
         {
             ((ListViewModelBase)DataContext).AddAppendActiveUnits(true);
             ((ListViewModelBase)DataContext).RefreshDataSource();
+        }
+
+        private void DeleteUnitsMenuItems(ref ContextMenu contextMenu)
+        {
+            MenuItem DeleteRecords = new MenuItem() { Header = "Delete selected records" };
+            DeleteRecords.Click += DeleteRecords_Click; ;
+            contextMenu.Items.Add(DeleteRecords);
+            MenuItem RestoreRecords = new MenuItem() { Header = "Restore selected records" };
+            RestoreRecords.Click += RestoreRecords_Click; ;
+            contextMenu.Items.Add(RestoreRecords);
+        }
+
+        private void DeleteRecords_Click(object sender, RoutedEventArgs e)
+        {
+            ((ListViewModelBase)DataContext).DeleteRecords();
+        }
+
+        private void RestoreRecords_Click(object sender, RoutedEventArgs e)
+        {
+            ((ListViewModelBase)DataContext).RestoreRecords();
+        }
+
+        private void RepositoryUnitsMenuItems(ref ContextMenu contextMenu)
+        {
+            MenuItem RepositoryRecords = new MenuItem() { Header = "Store records as repository data" };
+            RepositoryRecords.Click += RepositoryRecords_Click; ;
+            contextMenu.Items.Add(RepositoryRecords);
+            MenuItem ReviveRepository = new MenuItem() { Header = "Revive repository data" };
+            ReviveRepository.Click += ReviveRepository_Click; ;
+            contextMenu.Items.Add(ReviveRepository);
+        }
+
+        private void ReviveRepository_Click(object sender, RoutedEventArgs e)
+        {
+            ((ListViewModelBase)DataContext).RepositoryReviveRecords();
+        }
+
+        private void RepositoryRecords_Click(object sender, RoutedEventArgs e)
+        {
+            ((ListViewModelBase)DataContext).RepositoryStoreRecords();
         }
     }
 }

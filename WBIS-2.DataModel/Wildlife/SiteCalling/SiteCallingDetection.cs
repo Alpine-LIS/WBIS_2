@@ -13,7 +13,7 @@ namespace WBIS_2.DataModel
 
         [Column("site_calling_id")]
         public Guid? SiteCallingId { get; set; }
-        [ListInfo(AutoInclude = true)]
+        [ListInfo(AutoInclude = true, ParentField =true)]
         public SiteCalling SiteCalling { get; set; }
 
 

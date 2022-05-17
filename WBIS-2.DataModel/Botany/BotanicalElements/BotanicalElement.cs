@@ -21,15 +21,17 @@ namespace WBIS_2.DataModel
 
         [ Column("botanical_scoping_id")]
         public Guid? BotanicalScopingId { get; set; }
+        [ListInfo(ParentField = true)]
         public BotanicalScoping BotanicalScoping { get; set; }
 
         [Column("botanical_survey_area_id")]
         public Guid? BotanicalSurveyAreaId { get; set; }
+        [ListInfo(ParentField = true)]
         public BotanicalSurveyArea BotanicalSurveyArea { get; set; }
 
         [Column("botanical_survey_id")]
         public Guid? BotanicalSurveyId { get; set; }
-        [ListInfo(AutoInclude = true)]
+        [ListInfo(AutoInclude = true, ParentField = true)]
         public BotanicalSurvey BotanicalSurvey { get; set; }
 
         //[Column("botanical_point_of_interest_id")]
@@ -57,7 +59,7 @@ namespace WBIS_2.DataModel
         public DateTime DateAdded { get; set; }
         [Column("date_modified")]
         public DateTime DateModified { get; set; }
-        [Display(Order = -1)]
+        //[Display(Order = -1)]
         public bool _delete { get; set; }
         [Column("repository")]
         public bool Repository { get; set; }

@@ -61,6 +61,22 @@ namespace WBIS_2.DataModel
             return children.ToArray();
         }
 
+
+
+        public IInformationType[] PossibleParents => GetPossibleParents();
+        private IInformationType[] GetPossibleParents()
+        {
+            List<IInformationType> parents = new List<IInformationType>();
+
+            var properites = ListInfoProperties.Where(_ => ((ListInfo)_.GetCustomAttribute(typeof(ListInfo))).ParentField);
+            foreach (var item in properites)
+            {
+                parents.Add((IInformationType)Activator.CreateInstance(item.PropertyType));
+            }
+            return parents.ToArray();
+        }
+
+
         /// <summary>
         /// For each of the auto included properties get the fields that should be displayed for them.
         /// </summary>
@@ -148,12 +164,17 @@ namespace WBIS_2.DataModel
         }
 
 
-        public IQueryable GetQueryable(WBIS2Model model, List<string> ForceInclude = null)
+        public IQueryable GetQueryable(WBIS2Model model, bool track = false, List<string> ForceInclude = null)
         {
-            IQueryable<InfoType> returnVal = model.Set<InfoType>()
-                .FromSqlRaw(GetSqlQuery(new List<string>() { "geometry" }))
-                .AsNoTracking();
-
+            IQueryable<InfoType> returnVal;
+            
+            if (track) 
+                returnVal= model.Set<InfoType>()
+                    .FromSqlRaw(GetSqlQuery(new List<string>() { "geometry" }));
+            else
+                returnVal = model.Set<InfoType>()
+                   .FromSqlRaw(GetSqlQuery(new List<string>() { "geometry" }))
+                   .AsNoTracking();
 
             foreach (var include in AutoIncludes)
                 ThenIncludes(ref returnVal, include);
@@ -164,22 +185,47 @@ namespace WBIS_2.DataModel
                      
             return returnVal;
         }
-
-        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model, List<string> ForceInclude = null)
+        private IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model, bool showDelete, bool showRepository, bool track, List<string> ForceInclude)
         {
-            IQueryable<InfoType> returnVal = (IQueryable<InfoType>)GetQueryable(model, ForceInclude);
+            IQueryable<InfoType> returnVal = (IQueryable<InfoType>)GetQueryable(model, track, ForceInclude);
 
-            PropertyInfo queryProperty = ParentChildPropertyProperty(QueryType);
-            if (queryProperty != null)
-                if (!AutoIncludes.Contains(queryProperty))
-                    returnVal = returnVal.Include($"{queryProperty.Name}");
+            PropertyInfo queryProperty = null;
+            if (QueryType != typeof(InfoType))
+            {
+                queryProperty = ParentChildPropertyProperty(QueryType);
+                if (queryProperty != null)
+                    if (!AutoIncludes.Contains(queryProperty))
+                        returnVal = returnVal.Include($"{queryProperty.Name}");
+            }
 
             var info = this.GetType().GetMethod(nameof(GetParentWhere));
             var genInfo = info.MakeGenericMethod(QueryType);
             var a = (Expression<Func<InfoType, bool>>)genInfo
                 .Invoke(this, new object[] { Query.ToList(), queryProperty });
 
-            return returnVal.Where(a);
+            var b = (Expression<Func<InfoType, bool>>)ShowHideDeleteAndRepository(showDelete, showRepository);
+
+            if (b == null)
+                return returnVal.Where(a);
+            else
+                return returnVal.Where(a).Where(b);
+        }
+
+        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
+        {
+            return GetQueryable(Query, QueryType, model, true, true, false, null);
+        }
+        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model, bool showDelete, bool showRepository)
+        {
+            return GetQueryable(Query, QueryType, model, showDelete, showRepository, false, null);
+        }
+        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model, List<string> ForceInclude)
+        {
+            return GetQueryable(Query, QueryType, model, true, true, false, ForceInclude);
+        }
+        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model, bool track)
+        {
+            return GetQueryable(Query, QueryType, model, true, true, track, null);
         }
 
         /// <summary>
@@ -205,7 +251,35 @@ namespace WBIS_2.DataModel
                 query = query.Include($"{includeProp.Name}");
         }
 
+        public Expression ShowHideDeleteAndRepository(bool showDelete, bool showRepository)
+        {
+            Expression<Func<InfoType, bool>> a;
+            var parameterExp = Expression.Parameter(typeof(InfoType), "type");
+            PropertyInfo propDelete = typeof(InfoType).GetProperties().FirstOrDefault(_ => _.Name == "_delete");
+            Expression showDeleteExpression = null;
+            if (propDelete != null && !showDelete)
+            {
+                var propertyExp = Expression.Property(parameterExp, propDelete);
+                showDeleteExpression = Expression.Equal(propertyExp, Expression.Constant(false, typeof(bool)));
+            }
 
+
+            PropertyInfo propRepo = typeof(InfoType).GetProperties().FirstOrDefault(_ => _.Name == "Repository");
+            Expression showRepoExpression = null;
+            if (propRepo != null && !showRepository)
+            {
+                var propertyExp = Expression.Property(parameterExp, propRepo);
+                showRepoExpression = Expression.Equal(propertyExp, Expression.Constant(false, typeof(bool)));
+            }
+
+            if (showRepoExpression != null && showDeleteExpression != null)
+                return a = Expression.Lambda<Func<InfoType, bool>>(Expression.And(showDeleteExpression, showRepoExpression), parameterExp);
+            else if (showRepoExpression != null)
+                return a = Expression.Lambda<Func<InfoType, bool>>(showRepoExpression, parameterExp);
+            else if (showDeleteExpression != null)
+                return a = Expression.Lambda<Func<InfoType, bool>>(showDeleteExpression, parameterExp);
+            else return null;
+        }
 
         public Expression GetParentWhere<z>(List<object> Query, PropertyInfo queryProperty) where z : class
         {
@@ -256,10 +330,54 @@ namespace WBIS_2.DataModel
             return propertyInfo;
         }
 
+
+
+
+
+        public IQueryable GetQueryableFromChildren(object[] Query, Type QueryType, WBIS2Model model)
+        {
+            IQueryable<InfoType> returnVal = (IQueryable<InfoType>)GetQueryable(model, true, null);
+
+            PropertyInfo queryProperty = null;
+            if (QueryType != typeof(InfoType))
+            {
+                queryProperty = ParentChildPropertyProperty(QueryType);
+                if (queryProperty != null)
+                    if (!AutoIncludes.Contains(queryProperty))
+                        returnVal = returnVal.Include($"{queryProperty.Name}");
+            }
+
+            var info = this.GetType().GetMethod(nameof(GetParentFromChild));
+            var genInfo = info.MakeGenericMethod(QueryType);
+            var a = (Expression<Func<InfoType, bool>>)genInfo
+                .Invoke(this, new object[] { Query.ToList(), queryProperty });
+
+            return returnVal.Where(a);
+        }
+
+        public Expression GetParentFromChild<z>(List<object> Query, PropertyInfo queryProperty) where z : class
+        {
+            Expression<Func<InfoType, bool>> a;
+            var parameterExp = Expression.Parameter(typeof(InfoType), "type");
+
+            var propertyExp = Expression.Property(parameterExp, queryProperty);
+            var queryCast = Query.Cast<z>();
+            Expression<Func<z, bool>> predicate = b => queryCast.Contains(b);
+
+            var body = Expression.Call(typeof(Enumerable), "Any", new[] { typeof(z) },
+                propertyExp, predicate);
+
+            return a = Expression.Lambda<Func<InfoType, bool>>(body, parameterExp);
+        }
+
+
+
+
+
         public bool ImportRecords => false;
         public bool AddRequiresParent => false;
-        public bool DeleteRecord => typeof(InfoType).GetProperties().Any(_=>_.Name == "_delete");
-        public bool RestoreRecord => typeof(InfoType).GetProperties().Any(_ => _.Name == "_delete");
+        public bool DeleteRestoreRecord => typeof(InfoType).GetProperties().Any(_=>_.Name == "_delete");
+        public bool RepositoryRecord => typeof(InfoType).GetProperties().Any(_ => _.Name == "Repository");
         public bool CanSetActive => typeof(InfoType).GetInterfaces().Contains(typeof(IActiveUnit));
 
 

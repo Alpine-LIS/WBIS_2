@@ -48,7 +48,7 @@ namespace WBIS_2.Modules.ViewModels
 
         public override void Records_GetQueryable(object sender, GetQueryableEventArgs e)
         {
-            var query = (IQueryable<PlantSpecies>)ParentType.Manager.GetQueryable(Database, new List<string>() { "RegionalPlantLists" });
+            var query = (IQueryable<PlantSpecies>)ParentType.Manager.GetQueryable(Database, ForceInclude: new List<string>() { "RegionalPlantLists" });
             if (CurrentRegion.RegionName != "Master List")
                 query = query.Where(_=>_.RegionalPlantLists.Select(_=>_.Region).Contains(CurrentRegion));
 

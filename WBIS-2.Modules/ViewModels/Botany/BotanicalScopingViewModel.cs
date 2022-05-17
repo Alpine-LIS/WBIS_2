@@ -261,7 +261,7 @@ namespace WBIS_2.Modules.ViewModels
 
             if (Database.BotanicalScopings
                     .Include(_ => _.THP_Area).Any(_ => _.THP_Area == DbHelp.ThpExistance(Database, ThpName)
-                    && _.Guid != Scoping.Guid))
+                    && _.Guid != Scoping.Guid && !_._delete))
             {
                 MessageBox.Show($"There is already a scoping for the thp {ThpName}.");
                 return;

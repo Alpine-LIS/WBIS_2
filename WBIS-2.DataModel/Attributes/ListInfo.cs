@@ -21,5 +21,10 @@ namespace WBIS_2.DataModel
         /// Child information types
         /// </summary>
         public bool ChildField { get; set; } = false;
+        /// <summary>
+        /// Parent information types
+        /// Used primarily for restoring data and may not be applied to non IUserRecords
+        /// </summary>
+        public bool ParentField { get; set; } = false;
     }
 }

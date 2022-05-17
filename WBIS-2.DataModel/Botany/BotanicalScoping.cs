@@ -22,7 +22,7 @@ namespace WBIS_2.DataModel
         public ICollection<BotanicalSurvey> BotanicalSurveys { get; set; }
         [ListInfo(ChildField = true)]
         public ICollection<BotanicalSurveyArea> BotanicalSurveyAreas { get; set; }
-        [ListInfo(ChildField = true)]
+        //[ListInfo(ChildField = true)]
         public ICollection<BotanicalScopingSpecies> BotanicalScopingSpecies { get; set; }
 
 
@@ -56,7 +56,7 @@ namespace WBIS_2.DataModel
         public DateTime DateAdded { get; set; }
         [Column("date_modified")]
         public DateTime DateModified { get; set; }
-        [Display(Order = -1)]
+        //[Display(Order = -1)]
         public bool _delete { get; set; }
         [Column("repository")]
         public bool Repository { get; set; }

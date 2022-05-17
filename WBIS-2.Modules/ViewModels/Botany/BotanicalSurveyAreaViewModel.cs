@@ -118,7 +118,7 @@ namespace WBIS_2.Modules.ViewModels
             if (CurrentChild == null) return;
             if (ParentType == null) return;
 
-            e.QueryableSource = CurrentChild.Manager.GetQueryable(new object[] { SurveyArea }, ParentType.GetType(), Database);
+            e.QueryableSource = CurrentChild.Manager.GetQueryable(new object[] { SurveyArea }, ParentType.GetType(), Database, ViewDeleted, ViewRepository);
         }
 
 

@@ -26,13 +26,13 @@
                 Command="{Binding DeleteRecordCommand}"
                 Glyph="{dx:DXImage SvgImages/Dashboards/Delete.svg}"
                 Content="Delete"
-                IsEnabled="{Binding DeleteRecordsEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                IsEnabled="{Binding DeleteRestoreRecordsEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <dxb:BarButtonItem 
                 ToolTip="Restore Selected Record(s)"
                 Command="{Binding RestoreRecordCommand}"
                 Glyph="{dx:DXImage SvgImages/Icon Builder/Actions_Arrow4Up.svg}"
                 Content="Restore"
-                IsEnabled="{Binding RestoreRecordsEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                IsEnabled="{Binding DeleteRestoreRecordsEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <dxb:BarButtonItem 
                 KeyGesture="F5"
                 ToolTip="Refresh (F5)"
