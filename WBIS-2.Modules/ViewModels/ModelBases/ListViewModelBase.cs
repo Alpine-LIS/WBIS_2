@@ -225,13 +225,26 @@ namespace WBIS_2.Modules.ViewModels
             else
             { if (MessageBox.Show($"Are you sure you want to delete {SelectedItems.Count.ToString("N0")} records?", "", MessageBoxButton.YesNo) == MessageBoxResult.No) return; }
 
-            new DeleteRestoreAndRepository(SelectedItems.ToArray()).DeleteRecords();
+            new DeleteRestoreAndRepository(SelectedItems.ToArray(), "_delete").DeleteRecords();
         }
 
         public ICommand RestoreRecordCommand { get; set; }
         public void RestoreRecords()
         {
-            new DeleteRestoreAndRepository(SelectedItems.ToArray()).RestoreRecords();
+            if (SelectedItems.Count == 0) return;
+            var children = ListManager.PossibleParents
+                    .Where(_ => _.Manager.InformationType.GetInterfaces().Contains(typeof(IUserRecords)))
+                    .Select(_ => _.Manager.DisplayName);
+            if (children.Count() > 0)
+            {
+                if (MessageBox.Show($"Are you sure you want to restore {SelectedItems.Count.ToString("N0")} records?" +
+                  $"\n\nThis will also restore potential parents " +
+                  $"({string.Join(", ", children)}.", "", MessageBoxButton.YesNo) == MessageBoxResult.No) return;
+            }
+            else
+            { if (MessageBox.Show($"Are you sure you want to restore {SelectedItems.Count.ToString("N0")} records?", "", MessageBoxButton.YesNo) == MessageBoxResult.No) return; }
+
+            new DeleteRestoreAndRepository(SelectedItems.ToArray(),"_delete").RestoreRecords();
         }
 
 
@@ -242,11 +255,38 @@ namespace WBIS_2.Modules.ViewModels
 
         public void RepositoryStoreRecords()
         {
+            if (SelectedItems.Count == 0) return;
+            var children = ListManager.AvailibleChildren
+                    .Where(_ => _.Manager.InformationType.GetInterfaces().Contains(typeof(IUserRecords)))
+                    .Select(_ => _.Manager.DisplayName);
+            if (children.Count() > 0)
+            {
+                if (MessageBox.Show($"Are you sure you want to store {SelectedItems.Count.ToString("N0")} records to the repository?" +
+                  $"\n\nThis will also store all related children " +
+                  $"({string.Join(", ", children)}" +
+                  $" and any potential sub-children.", "", MessageBoxButton.YesNo) == MessageBoxResult.No) return;
+            }
+            else
+            { if (MessageBox.Show($"Are you sure you want to store {SelectedItems.Count.ToString("N0")} records to the repository?", "", MessageBoxButton.YesNo) == MessageBoxResult.No) return; }
 
+            new DeleteRestoreAndRepository(SelectedItems.ToArray(), "Repository").DeleteRecords();
         }
         public void RepositoryReviveRecords()
         {
+            if (SelectedItems.Count == 0) return;
+            var children = ListManager.PossibleParents
+                    .Where(_ => _.Manager.InformationType.GetInterfaces().Contains(typeof(IUserRecords)))
+                    .Select(_ => _.Manager.DisplayName);
+            if (children.Count() > 0)
+            {
+                if (MessageBox.Show($"Are you sure you want to revive {SelectedItems.Count.ToString("N0")} records from the repository?" +
+                  $"\n\nThis will also revive potential parents " +
+                  $"({string.Join(", ", children)}.", "", MessageBoxButton.YesNo) == MessageBoxResult.No) return;
+            }
+            else
+            { if (MessageBox.Show($"Are you sure you want to revive {SelectedItems.Count.ToString("N0")} records from the repository?", "", MessageBoxButton.YesNo) == MessageBoxResult.No) return; }
 
+            new DeleteRestoreAndRepository(SelectedItems.ToArray(), "Repository").RestoreRecords();
         }
 
 

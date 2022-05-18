@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -13,10 +14,16 @@ namespace WBIS_2.Modules.Tools
     {
         WBIS2Model Database = new WBIS2Model();
         IQueryable<IUserRecords> TrackedRecords { get; set; }
-        public DeleteRestoreAndRepository(IInformationType[] _UnTrackedRecords)
+        
+        /// <summary>
+        /// sets if repository or _delete is being modified.
+        /// </summary>
+        PropertyInfo property { get; set; }
+        public DeleteRestoreAndRepository(IInformationType[] _UnTrackedRecords, string _propName)
         {
             IInfoTypeManager m= _UnTrackedRecords[0].Manager;
             TrackedRecords = (IQueryable<IUserRecords>)m.GetQueryable(_UnTrackedRecords, m.InformationType, Database, track: true);
+            property = m.InformationType.GetProperty(_propName);
         }
         
 
@@ -51,7 +58,8 @@ namespace WBIS_2.Modules.Tools
         private void DeleteRecords(IQueryable<IUserRecords> records)
         {
             foreach (var record in records)
-                record._delete = true;
+                property.SetValue(record, true);
+                    //record._delete = true;
         }
 
 
@@ -60,7 +68,7 @@ namespace WBIS_2.Modules.Tools
             var w = new WaitWindowHandler();
             w.Start();
 
-            string problem = FindRestorableParents(TrackedRecords);
+            string problem = FindRestorableParents(TrackedRecords.ToArray());
             if (problem != "")
             {
                 w.Stop();
@@ -68,7 +76,7 @@ namespace WBIS_2.Modules.Tools
                 Database.ChangeTracker.Clear();
                 return;
             }
-            problem = RestoreRecords(TrackedRecords);
+            problem = RestoreRecords(TrackedRecords.ToArray());
             if (problem != "")
             {
                 w.Stop();
@@ -80,14 +88,14 @@ namespace WBIS_2.Modules.Tools
 
             w.Stop();
         }
-        private string FindRestorableParents(IQueryable<IUserRecords> records)
+        private string FindRestorableParents(IUserRecords[] records)
         {
             IInfoTypeManager manager = records.First().Manager;
             var parents = manager.PossibleParents
-                    .Where(_ => _.Manager.InformationType.GetInterfaces().Contains(typeof(IUserRecords)));
+                    .Where(_ => _.Manager.InformationType.GetInterfaces().Contains(typeof(IUserRecords))).ToArray();
             foreach (var parent in parents)
             {
-                var parentRecords = (IQueryable<IUserRecords>)parent.Manager.GetQueryableFromChildren(records.ToArray(), manager.InformationType, Database);
+                var parentRecords = ((IQueryable<IUserRecords>)parent.Manager.GetQueryableFromChildren(records.ToArray(), manager.InformationType, Database)).ToArray();
                 if (parentRecords.Count() > 0)
                 {
                     FindRestorableParents(parentRecords);
@@ -97,7 +105,7 @@ namespace WBIS_2.Modules.Tools
             }
             return "";
         }
-        private string RestoreRecords(IQueryable<IUserRecords> records)
+        private string RestoreRecords(IUserRecords[] records)
         {
             foreach (var record in records)
             {
@@ -109,7 +117,8 @@ namespace WBIS_2.Modules.Tools
                     .Include(_ => _.THP_Area).Any(_ => _.THP_Area == thp && _.Guid != ((BotanicalScoping)record).Guid && !_._delete))
                         return $"Records could not be restored. A botanical scoping with the thp {((BotanicalScoping)record).THP_Area.THPName} already exists.";
                 }
-                record._delete = false;
+                property.SetValue(record, false);
+                //record._delete = false;
             }
             return "";
         }
