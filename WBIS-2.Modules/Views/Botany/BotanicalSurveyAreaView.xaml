@@ -164,7 +164,19 @@
             <dxe:TextEdit Text="{Binding SurveyArea.Comments, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
                           TextWrapping="Wrap" Grid.Column="1" Grid.Row="1" VerticalContentAlignment="Top"/>
         </Grid>
+
+        <dx:DXTabControl Grid.Row="4">
+           
+            <dx:DXTabItem Header="Photos">
+                <Grid>
+                    <views:PicturesView/>
+                </Grid>
+            </dx:DXTabItem>
+            <dx:DXTabItem Header="Children">
+                <views:ChildrenListView/>
+            </dx:DXTabItem>
+        </dx:DXTabControl>
         
-        <views:ChildrenListView Grid.Row="4"/>
+        
     </Grid>
 </UserControl>

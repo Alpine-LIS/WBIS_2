@@ -19,6 +19,9 @@ using WBIS_2.DataModel;
 using WBIS_2.Modules.Interfaces;
 using WBIS_2.Modules.Tools;
 using System.Reflection;
+using System.IO;
+using System.Drawing;
+using System.Windows.Media.Imaging;
 
 namespace WBIS_2.Modules.ViewModels
 {
@@ -70,7 +73,8 @@ namespace WBIS_2.Modules.ViewModels
         }
 
         public BotanicalSurveyAreaViewModel(Guid guid)
-        {           
+        {
+            FillPictures();
             ThpNames = Database.THP_Areas.Select(_=>_.THPName).OrderBy(_=>_).ToArray();
 
             SurveyArea = Database.BotanicalSurveyAreas
@@ -112,6 +116,12 @@ namespace WBIS_2.Modules.ViewModels
                 ConnectScoping = true;
                 RaisePropertiesChanged(nameof(ConnectScoping));
             }
+
+            var p = Database.Pictures
+                .Include(_ => _.BotanicalElement).ThenInclude(_ => _.BotanicalSurveyArea)
+                .Where(_ => _.BotanicalElement.BotanicalSurvey.Guid == SurveyArea.Guid)
+                .AsNoTracking().ToArray();
+            
         }
         public override void Records_GetQueryable(object sender, GetQueryableEventArgs e)
         {
@@ -119,12 +129,15 @@ namespace WBIS_2.Modules.ViewModels
             if (ParentType == null) return;
 
             e.QueryableSource = CurrentChild.Manager.GetQueryable(new object[] { SurveyArea }, ParentType.GetType(), Database, ViewDeleted, ViewRepository);
+
+            //var m = new BotanicalElement().Manager;
+            //var elements = (IQueryable<BotanicalElement>)m.GetQueryable(new object[] { SurveyArea }, ParentType.GetType(), Database, ViewDeleted, ViewRepository);
+
+
+            //FillPictures();
+            //PictureDisplay.FillPictures(elements.Cast<IInformationType>().ToList(), m.InformationType);
+            //RaisePropertyChanged(nameof(PictureDisplay));
         }
-
-
-
-
-
 
         public override void CloseForm()
         {
@@ -259,6 +272,36 @@ namespace WBIS_2.Modules.ViewModels
                     SelectionChanged?.Invoke(new object(), new EventArgs());
                 }
             }
+        }
+
+        //public PicturesViewModel PictureDisplay => new PicturesViewModel() { UploadEnabled = true };
+        public ObservableCollection<ImageView> Pictures { get; set; }
+        public void FillPictures()
+        {
+            //var parameterExp = Expression.Parameter(typeof(Picture), "type");
+            //var propertyExp = Expression.Property(parameterExp, typeof(Picture).GetProperty(QueryType.Name));
+            //MethodInfo method = Query.GetType().GetMethod("Contains", new[] { QueryType });
+            //var someValue = Expression.Constant(Query);
+            //var containsMethodExp = Expression.Call(someValue, method, propertyExp);
+            //var a = Expression.Lambda<Func<Picture, bool>>(containsMethodExp, parameterExp);
+
+
+            ////var pictureData = Database.Pictures
+            ////    .Include(QueryType.Name)
+            ////    .Where(a);
+            var pictureData = Database.Pictures.Take(5);
+
+            Pictures = new ObservableCollection<ImageView>();
+            foreach (var p in pictureData)
+            {
+                Pictures.Add(new ImageView(p));
+            }
+            RaisePropertyChanged(nameof(Pictures));
+        }
+        public ImageView SelectedImage
+        {
+            get { return GetProperty(() => SelectedImage);}
+            set { SetProperty(() => SelectedImage, value); }
         }
     }
 }

@@ -135,7 +135,7 @@ namespace WBIS_2.Modules.ViewModels
         public void UpdateParentQuery(object[] parentQuery)
         {
             ParentQuery = parentQuery;
-            RefreshDataSource();
+            //RefreshDataSource();
         }
 
         //public override void ShowChildren()
@@ -186,7 +186,7 @@ namespace WBIS_2.Modules.ViewModels
         public override void Records_GetQueryable(object sender, GetQueryableEventArgs e)
         {
             if (CurrentChild == null) return;
-                       
+                      
             e.QueryableSource = CurrentChild.Manager.GetQueryable(ParentQuery, ParentType.GetType(), Database, ViewDeleted, ViewRepository);
         }
 

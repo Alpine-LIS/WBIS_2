@@ -343,8 +343,18 @@ namespace WBIS_2.Modules.ViewModels
         public bool ShowDetailsEnabled { get; set; }
         public void ShowDetails()
         {
-            if (DetailsViewModel == null) return;
             if (CurrentRecord == null) return;
+            if (DetailsViewModel == null)
+            {
+                ShowChildren();
+                return;
+            }
+
+            if (SelectedItems.Count > 1)
+            {
+                ShowChildren();
+                return;
+            }
 
             IDocumentManagerService service = this.GetRequiredService<IDocumentManagerService>();
             IDocument document = service.FindDocumentById(CurrentRecord.Guid);

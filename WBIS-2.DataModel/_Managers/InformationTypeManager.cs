@@ -189,6 +189,9 @@ namespace WBIS_2.DataModel
         {
             IQueryable<InfoType> returnVal = (IQueryable<InfoType>)GetQueryable(model, track, ForceInclude);
 
+            if (Query.Length == 0)
+                return returnVal.Take(0);
+
             PropertyInfo queryProperty = null;
             if (QueryType != typeof(InfoType))
             {
