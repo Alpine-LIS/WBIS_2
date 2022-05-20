@@ -50,9 +50,9 @@
                 <ColumnDefinition Width="AUTO"/>
                 <ColumnDefinition Width="AUTO"/>
             </Grid.ColumnDefinitions>
-            <Button Margin="2" Grid.Column="1" Content="Upload" Command="{Binding PictureDisplay.UploadCommand}" IsEnabled="{Binding PictureDisplay.UploadEnabled}"/>
-            <Button Margin="2" Grid.Column="2" Content="Save Single" Command="{Binding PictureDisplay.SaveSingleCommand}"/>
-            <Button Margin="2" Grid.Column="3" Content="Save All" Command="{Binding PictureDisplay.SaveAllCommand}"/>
+                <Button Margin="2" Grid.Column="1" Content="Upload" Command="{Binding PictureUploadEnabled}" IsEnabled="{Binding UploadEnabled}"/>
+            <Button Margin="2" Grid.Column="2" Content="Save Single" Command="{Binding SaveSingleCommand}"/>
+            <Button Margin="2" Grid.Column="3" Content="Save All" Command="{Binding SaveAllCommand}"/>
         </Grid>
         </Grid>
     </Grid>

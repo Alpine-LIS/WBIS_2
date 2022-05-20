@@ -207,6 +207,9 @@ namespace WBIS_2.Modules.ViewModels
                 WatershedList = new Watershed[0];
             }
 
+            if (ThpName == null)
+                ThpName = "Unassigned";
+            else if (ThpName == "") ThpName = "Unassigned";
             RaisePropertyChanged(nameof(ThpName));
         }
               

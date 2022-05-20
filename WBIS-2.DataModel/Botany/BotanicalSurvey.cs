@@ -18,7 +18,7 @@ namespace WBIS_2.DataModel
 
         [Column("botanical_survey_area_id")]
         public Guid? BotanicalSurveyAreaId { get; set; }
-        [ListInfo(ParentField = true)]
+        [ListInfo(ParentField = true, AutoInclude =true)]
         public BotanicalSurveyArea BotanicalSurveyArea { get; set; }
 
         [Column("botanical_scoping_id")]
@@ -30,8 +30,8 @@ namespace WBIS_2.DataModel
         public ICollection<BotanicalElement> BotanicalElement { get; set; }
 
 
-        [Column("survey_name")]
-        public string SurveyName { get; set; }
+        //[Column("survey_name")]
+        //public string SurveyName { get; set; }
         [Column("other_surveyors")]
         public string OtherSurveyors { get; set; }
         [Column("start_time")]

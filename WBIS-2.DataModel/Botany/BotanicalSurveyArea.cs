@@ -32,7 +32,7 @@ namespace WBIS_2.DataModel
         public BotanicalScoping BotanicalScoping { get; set; }
 
 
-        [Column("area_name"), ImportAttribute(Required = true)]
+        [Column("area_name"), ImportAttribute(Required = true), ListInfo(DisplayField = true)]
         public string AreaName { get; set; }
         [Column("survey_type")]
         public string SurveyType { get; set; }

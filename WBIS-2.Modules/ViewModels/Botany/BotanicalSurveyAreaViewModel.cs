@@ -22,10 +22,12 @@ using System.Reflection;
 using System.IO;
 using System.Drawing;
 using System.Windows.Media.Imaging;
+using Microsoft.Win32;
+using System.Diagnostics;
 
 namespace WBIS_2.Modules.ViewModels
 {
-    public class BotanicalSurveyAreaViewModel : DetailAndChildrenViewModelBase, IDocumentContent, IDetailView
+    public class BotanicalSurveyAreaViewModel : DetailAndChildrenViewModelBase, IDocumentContent, IDetailView, IPictures
     {
         public static bool AddSingle => true;
         public BotanicalSurveyArea SurveyArea
@@ -74,7 +76,6 @@ namespace WBIS_2.Modules.ViewModels
 
         public BotanicalSurveyAreaViewModel(Guid guid)
         {
-            FillPictures();
             ThpNames = Database.THP_Areas.Select(_=>_.THPName).OrderBy(_=>_).ToArray();
 
             SurveyArea = Database.BotanicalSurveyAreas
@@ -95,6 +96,9 @@ namespace WBIS_2.Modules.ViewModels
                 SurveyArea.Guid = guid;
             }
 
+            if (ThpName == null)
+                ThpName = "Unassigned";
+            else if (ThpName == "") ThpName = "Unassigned";
             RaisePropertyChanged(nameof(ThpName));
 
 
@@ -130,13 +134,7 @@ namespace WBIS_2.Modules.ViewModels
 
             e.QueryableSource = CurrentChild.Manager.GetQueryable(new object[] { SurveyArea }, ParentType.GetType(), Database, ViewDeleted, ViewRepository);
 
-            //var m = new BotanicalElement().Manager;
-            //var elements = (IQueryable<BotanicalElement>)m.GetQueryable(new object[] { SurveyArea }, ParentType.GetType(), Database, ViewDeleted, ViewRepository);
-
-
-            //FillPictures();
-            //PictureDisplay.FillPictures(elements.Cast<IInformationType>().ToList(), m.InformationType);
-            //RaisePropertyChanged(nameof(PictureDisplay));
+            FillPictures();
         }
 
         public override void CloseForm()
@@ -278,18 +276,9 @@ namespace WBIS_2.Modules.ViewModels
         public ObservableCollection<ImageView> Pictures { get; set; }
         public void FillPictures()
         {
-            //var parameterExp = Expression.Parameter(typeof(Picture), "type");
-            //var propertyExp = Expression.Property(parameterExp, typeof(Picture).GetProperty(QueryType.Name));
-            //MethodInfo method = Query.GetType().GetMethod("Contains", new[] { QueryType });
-            //var someValue = Expression.Constant(Query);
-            //var containsMethodExp = Expression.Call(someValue, method, propertyExp);
-            //var a = Expression.Lambda<Func<Picture, bool>>(containsMethodExp, parameterExp);
-
-
-            ////var pictureData = Database.Pictures
-            ////    .Include(QueryType.Name)
-            ////    .Where(a);
-            var pictureData = Database.Pictures.Take(5);
+            var pictureData = Database.Pictures
+                .Include(_ => _.BotanicalElement).ThenInclude(_ => _.BotanicalSurveyArea)
+                .Where(_ => _.BotanicalElement.BotanicalSurveyArea.Guid == SurveyArea.Guid);
 
             Pictures = new ObservableCollection<ImageView>();
             foreach (var p in pictureData)
@@ -298,10 +287,52 @@ namespace WBIS_2.Modules.ViewModels
             }
             RaisePropertyChanged(nameof(Pictures));
         }
+
+        public void Upload()
+        {
+            Picture picture = ((IPictures)this).CreatePicture();
+            if (picture == null) return;
+
+            Pictures.Add(new ImageView(picture));
+            RaisePropertiesChanged(nameof(Pictures));
+        }
+       
+
+        public void SaveSingle()
+        {
+            if (SelectedImage == null) return;
+            string fileName = TextWriters.SaveFileName("JPG|*.jpg");
+            if (fileName == null) return;
+
+            MemoryStream stream = new MemoryStream( SelectedImage.Picture.ImageData);
+            Image image = Image.FromStream(stream);
+            image.Save(fileName);
+            if (MessageBox.Show("Would you like to open your photo?", "", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                new Process { StartInfo = new ProcessStartInfo(fileName) { UseShellExecute = true } }.Start();
+        }
+
+        public void SaveAll()
+        {
+            string fileName = TextWriters.SaveDirectoryName();
+            if (fileName == null) return;
+
+            Directory.CreateDirectory(fileName);
+            int counter = 0;
+            foreach(var pic in Pictures)
+            {
+                MemoryStream stream = new MemoryStream(pic.Picture.ImageData);
+                Image image = Image.FromStream(stream);
+                image.Save($@"{fileName}\{counter.ToString("0000")}.jpg");
+                counter++;
+            }
+            MessageBox.Show($"Photos have been saved to {fileName}");
+        }
+
         public ImageView SelectedImage
         {
             get { return GetProperty(() => SelectedImage);}
-            set { SetProperty(() => SelectedImage, value); }
+            set { SetProperty(() => SelectedImage, value);}
         }
+        public bool PictureUploadEnabled { get; set; } = false;
     }
 }
