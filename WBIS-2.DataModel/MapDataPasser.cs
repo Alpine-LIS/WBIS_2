@@ -71,8 +71,9 @@ namespace WBIS_2.DataModel
 
 
         public static event EventHandler MapDrawFeatureEvent;
-        public static void MapDrawFeature(Guid guid)
+        public static void MapDrawFeature(Guid guid, string layerName)
         {
+            ZoomLayerName = layerName;
             ActivityDrawnEvent = null;
             MapDrawFeatureEvent?.Invoke(guid, new EventArgs());
         }

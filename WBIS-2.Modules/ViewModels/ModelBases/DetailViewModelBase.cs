@@ -69,7 +69,7 @@ namespace WBIS_2.Modules.ViewModels
 
         public void FeatureDraw()
         {
-            MapDataPasser.MapDrawFeature(Record.Guid);
+            MapDataPasser.MapDrawFeature(Record.Guid, Record.Manager.TableName);
             MapDataPasser.ActivityDrawnEvent += MapDataPasser_DrawnEvent;
         }
         public void MapDataPasser_DrawnEvent(object sender, EventArgs e)

@@ -21,20 +21,15 @@ using NetTopologySuite.Geometries;
 
 namespace WBIS_2.Modules.ViewModels.RecordImporters
 {
-    public class BotanicalSurveyAreaImportViewModel : RecordImporterBase
+    public class BotanicalSurveyImportViewModel : RecordImporterBase
     {
-        public BotanicalSurveyAreaImportViewModel()
+        public BotanicalSurveyImportViewModel()
         {
-                   AttemptReplace = true;
-        ConnectScoping  = true;
 
-            Holder.HelpText = "\t‘Attempt Replace’ will attempt to replace the geometry and attribute data of botanical survey area where the THP area and area name are the same. " +
-                "If not selected, then all records will be treated as new area." +
-                "\n\n\t‘Connect to Scoping’ will attempt to create connection between imported areas and botanical scoping records with the same THP area.";
-    }
+        }
 
 
-        public override List<PropertyType> AvailibleFields => GetProperties(typeof(BotanicalSurveyArea));
+        public override List<PropertyType> AvailibleFields => GetProperties(typeof(BotanicalSurvey));
 
         public override void FileSelectClick()
         {
@@ -43,9 +38,9 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
             ofd.Multiselect = false;
             if (!ofd.ShowDialog().Value) return;
             var tempShape = Shapefile.OpenFile(ofd.FileName);
-            if (tempShape.FeatureType != FeatureType.Polygon)
+            if (tempShape.FeatureType != FeatureType.Line)
             {
-                MessageBox.Show("The selected shapefile does not contain polygons.");
+                MessageBox.Show("The selected shapefile does not contain lines.");
                 return;
             }
             ImportShapefile = Shapefile.OpenFile(ofd.FileName);
@@ -54,28 +49,14 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
         }
 
         public override int GetUpdateCount()
-        {
-            WaitWindowHandler w = new WaitWindowHandler();
-            w.Start();
-            int updateCount = 0;
-            string thpCol = PropertyCrosswalk.Where(_ => _.PropertyType != null).First(_ => _.PropertyType.PropertyName == "THP_Area.THPName").Attribute;
-            string nameCol = PropertyCrosswalk.Where(_ => _.PropertyType != null).First(_ => _.PropertyType.PropertyName == "AreaName").Attribute;
-            foreach (var feat in ImportShapefile.Features)
-            {
-                var thp = DbHelp.ThpExistance(Database, feat.DataRow[thpCol].ToString());
-                if (Database.BotanicalSurveyAreas
-                    .Include(_=>_.THP_Area)
-                    .Any(_ => !_._delete && !_.Repository && _.THP_Area == thp && _.AreaName == feat.DataRow[nameCol].ToString()))
-                    updateCount++;
-            }
-            w.Stop();
-            return updateCount;
+        {           
+            return 0;
         }
 
         public string CheckBlanks()
         {           
-            string thpCol = PropertyCrosswalk.Where(_ => _.PropertyType != null).First(_ => _.PropertyType.PropertyName == "THP_Area.THPName").Attribute;
-            string nameCol = PropertyCrosswalk.Where(_ => _.PropertyType != null).First(_ => _.PropertyType.PropertyName == "AreaName").Attribute;
+            string thpCol = PropertyCrosswalk.Where(_ => _.PropertyType != null).First(_ => _.PropertyType.PropertyName == "BotanicalSurveyArea.THP_Area.THPName").Attribute;
+            string nameCol = PropertyCrosswalk.Where(_ => _.PropertyType != null).First(_ => _.PropertyType.PropertyName == "BotanicalSurveyArea.AreaName").Attribute;
             foreach (var feat in ImportShapefile.Features)
             {
                 if (feat.DataRow[thpCol].ToString() == "" || feat.DataRow[nameCol].ToString() == "")

@@ -84,7 +84,7 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
         }
         public ICommand HelpCommand { get; set; }
         public string HelpButtonText { get; set; } = "Show Help";
-        public string HelpText => "";
+        public string HelpText { get; set; }
         public bool IsExpanded
         {
             get => GetValue<bool>();

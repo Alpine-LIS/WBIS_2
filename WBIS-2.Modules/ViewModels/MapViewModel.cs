@@ -213,16 +213,12 @@ namespace WBIS_2.Modules.ViewModels
         private void DrawActivity(object sender, EventArgs e)
         {
             GuidDrawing = (Guid)sender;
-            var lyr = MapControl.GetLayer("ACTIVITIES");
+            var lyr = MapControl.GetLayer(MapDataPasser.ZoomLayerName);
             MapControl.UxMap.ActiveLayer = lyr;
 
-            IMapFunction function = MapControl.UxMap.MapFunctionsManager.MapFunctions.FirstOrDefault(_ => _.Name == "AddPolygonMapFunction");
-            if (function == null)
-            {
-                function = new AddPolygonMapFunction(MapControl.UxMap, new Atlas.Data.Feature());
-                function.Name = "AddPolygonMapFunction";
-                MapControl.UxMap.MapFunctionsManager.Add(function);
-            }
+
+
+            IMapFunction function = GetFunction(lyr);
             MapControl.UxMap.FunctionMode = FunctionMode.Select;
             function.Activate();
 
@@ -233,6 +229,42 @@ namespace WBIS_2.Modules.ViewModels
             MapControl.UxMap.OnActiveLayerChanged += UxMap_OnActiveLayerChanged;
             MapControl.ActiveLayer.DataSet.Features.FeatureAdded -= FeatureAdded;
             MapControl.ActiveLayer.DataSet.Features.FeatureAdded += FeatureAdded;
+        }
+
+        private IMapFunction GetFunction(IMapFeatureLayer layer)
+        {
+            IMapFunction function;
+            if (layer.DataSet.FeatureType == FeatureType.Line)
+            {
+                function = MapControl.UxMap.MapFunctionsManager.MapFunctions.FirstOrDefault(_ => _.Name == "AddLineMapFunction");
+                if (function == null)
+                {
+                    function = new AddLineMapFunction(MapControl.UxMap, new Atlas.Data.Feature());
+                    function.Name = "AddLineMapFunction";
+                    MapControl.UxMap.MapFunctionsManager.Add(function);
+                }
+            }
+            else if (layer.DataSet.FeatureType == FeatureType.Point)
+            {
+                function = MapControl.UxMap.MapFunctionsManager.MapFunctions.FirstOrDefault(_ => _.Name == "AddPointMapFunction");
+                if (function == null)
+                {
+                    function = new AddPointMapFunction(MapControl.UxMap, new Atlas.Data.Feature());
+                    function.Name = "AddPointMapFunction";
+                    MapControl.UxMap.MapFunctionsManager.Add(function);
+                }
+            }
+            else
+            {
+                function = MapControl.UxMap.MapFunctionsManager.MapFunctions.FirstOrDefault(_ => _.Name == "AddPolygonMapFunction");
+                if (function == null)
+                {
+                    function = new AddPolygonMapFunction(MapControl.UxMap, new Atlas.Data.Feature());
+                    function.Name = "AddPolygonMapFunction";
+                    MapControl.UxMap.MapFunctionsManager.Add(function);
+                }
+            }
+            return function;
         }
 
         private void UxMap_OnActiveLayerChanged(object sender, ActiveLayerEventArgs e)
@@ -252,17 +284,7 @@ namespace WBIS_2.Modules.ViewModels
         {
             MapControl.UxMap.ActiveLayer.DataSet.Features.FeatureAdded -= FeatureAdded;
             var g = e.Feature.Geometry.Copy();
-
-            if (e.Feature.ParentFeatureSet.DataTable.Columns.Contains("REGENGUID"))
-            {
-                e.Feature.ParentFeatureSet.DataTable.Columns.Remove("REGENGUID");
-                e.Feature.ParentFeatureSet.DataTable.Columns.Add("regenguid", typeof(Guid));
-            }
-            if (e.Feature.ParentFeatureSet.DataTable.Columns.Contains("FUELBREAKGUID"))
-            {
-                e.Feature.ParentFeatureSet.DataTable.Columns.Remove("FUELBREAKGUID");
-                e.Feature.ParentFeatureSet.DataTable.Columns.Add("fuelbreakguid", typeof(Guid));
-            }
+                     
             if (e.Feature.ParentFeatureSet.DataTable.Columns.Contains("GUID"))
             {
                 e.Feature.ParentFeatureSet.DataTable.Columns.Remove("GUID");

@@ -28,7 +28,13 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
         {
             List<PropertyType> properties = new List<PropertyType>();
             var props = InfoType.GetProperties();
-            //.Where(_ => _.GetCustomAttributesData().Any(_ => _.GetType() == typeof(ImportAttribute)));
+            GetProperties(props, ref properties,"");
+
+            return properties.OrderByDescending(_ => _.Required).ThenBy(_ => _.PropertyName).ToList();
+        }
+
+        private void GetProperties(PropertyInfo[] props, ref List<PropertyType> properties, string dir)
+        {
             foreach (var prop in props)
             {
                 var att = prop.GetCustomAttributes(true).FirstOrDefault(_ => _.GetType() == typeof(ImportAttribute));
@@ -37,24 +43,14 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
                 if (prop.PropertyType.GetInterfaces().Contains(typeof(IInformationType)))
                 {
                     var subProps = prop.PropertyType.GetProperties();
-                    foreach (var subProp in subProps)
-                    {
-                        var subAtt = subProp.GetCustomAttributes(true).FirstOrDefault(_ => _.GetType() == typeof(ImportAttribute));
-                        if (subAtt == null) continue;
-
-                        string typeName = GetDataTypeString(subProp.PropertyType);
-                        properties.Add(new PropertyType() { PropertyName = $"{prop.PropertyType.Name}.{subProp.Name}", TypeName = typeName, Required = ((ImportAttribute)subAtt).Required });
-                    }
+                    GetProperties(subProps, ref properties,$"{dir}{prop.PropertyType.Name}.");
                 }
                 else
                 {
                     string typeName = GetDataTypeString(prop.PropertyType);
-                    properties.Add(new PropertyType() { PropertyName = prop.Name, TypeName = typeName, Required = ((ImportAttribute)att).Required });
+                    properties.Add(new PropertyType() { PropertyName = $"{dir}{prop.Name}", TypeName = typeName, Required = ((ImportAttribute)att).Required });
                 }
-
-
             }
-            return properties.OrderByDescending(_ => _.Required).ThenBy(_ => _.PropertyName).ToList();
         }
 
 
@@ -96,9 +92,11 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
             }
 
             int updateCount = GetUpdateCount();
-            if (MessageBox.Show($"The selected shapefile will update {updateCount.ToString("N0")} features. Do you wish to continue?", "", MessageBoxButton.YesNo) == MessageBoxResult.No)
-                return false;
-
+            if (updateCount > 0)
+            {
+                if (MessageBox.Show($"The selected shapefile will update {updateCount.ToString("N0")} features. Do you wish to continue?", "", MessageBoxButton.YesNo) == MessageBoxResult.No)
+                    return false;
+            }
 
             var issues = RecordTypeSaveCheck();
             if (issues.Count > 0)
@@ -197,9 +195,7 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
 
 
         public bool AttemptReplace { get; set; } = false;
-        public Visibility AttemptReplaceEnabled { get; set; } = Visibility.Hidden;
         public bool ConnectScoping { get; set; } = false;
-        public Visibility ScopingsAvailible { get; set; } = Visibility.Hidden;
 
         public List<string> IdOptions { get; set; }
         public string IdAttribute { get; set; }

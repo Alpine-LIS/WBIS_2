@@ -166,15 +166,12 @@
         </Grid>
 
         <dx:DXTabControl Grid.Row="4">
-           
-            <dx:DXTabItem Header="Photos">
-                <Grid>
-                    <views:PicturesView/>
-                </Grid>
-            </dx:DXTabItem>
             <dx:DXTabItem Header="Children">
                 <views:ChildrenListView/>
             </dx:DXTabItem>
+            <dx:DXTabItem Header="Photos">
+                    <views:PicturesView/>
+            </dx:DXTabItem>            
         </dx:DXTabControl>
         
         

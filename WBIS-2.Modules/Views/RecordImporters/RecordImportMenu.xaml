@@ -26,14 +26,7 @@
 
         <!--<Label Grid.Column="1" Content="Repositiry Data:" ToolTip="Import records as repository data."/>
         <dxe:CheckEdit Grid.Column="2" IsChecked="{Binding RepositryData, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTip="Import records as repository data."/>-->
-        <Label Grid.Column="1" Content="Attempt Replace:" ToolTip="Attempt to replace existing records geometry and attributs data based on the area name and thp name."
-               Visibility="{Binding AttemptReplaceEnabled}"/>
-        <dxe:CheckEdit Grid.Column="2" IsChecked="{Binding AttemptReplace, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                       Visibility="{Binding AttemptReplaceEnabled}" ToolTip="Attempt to replace existing records geometry and attributs data based on the area name and thp name."/>
-        <Label Grid.Column="3" Content="Connect to Scoping:" ToolTip="Attempt to replace existing records geometry and attributs data based on the area name and thp name."
-               Visibility="{Binding ScopingsAvailible}"/>
-        <dxe:CheckEdit Grid.Column="4" IsChecked="{Binding ConnectScoping, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                       Visibility="{Binding ScopingsAvailible}" ToolTip="Attempt to replace existing records geometry and attributs data based on the area name and thp name."/>
+        
 
         <Button Content="Save Setup" Grid.Column="6" Margin="5" Command="{Binding SaveSetupCommand}"/>
         <Button Content="Load Setup" Grid.Column="7" Margin="5" Command="{Binding LoadSetupCommand}"/>

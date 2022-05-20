@@ -61,12 +61,15 @@ namespace WBIS_2.Modules.ViewModels
             }
         }
 
+        [Required(AllowEmptyStrings = false), StringLength(1000, MinimumLength = 1)]
+        public string AreaName { get; set; }
+
 
         public bool ConnectScoping { get; set; } = false;
         public bool CanConnectScoping { get; set; } = false;
 
 
-        public object Title => $"Area: {ThpName}:{SurveyArea.AreaName}{ChangedSign}";
+        public object Title => $"Area: {ThpName}: {SurveyArea.AreaName}{ChangedSign}";
 
 
         public static BotanicalSurveyAreaViewModel Create(Guid guid)
@@ -89,6 +92,7 @@ namespace WBIS_2.Modules.ViewModels
             if (SurveyArea != null)
             {           
                 if (SurveyArea.THP_Area != null) ThpName = SurveyArea.THP_Area.THPName;
+                AreaName = SurveyArea.AreaName;
             }
             else
             {
@@ -112,20 +116,14 @@ namespace WBIS_2.Modules.ViewModels
             GenHabs = MultiChoiceClassBuilder(SurveyArea, "GeneralHabitat");
 
 
-        ParentType = SurveyArea;
+            ParentType = SurveyArea;
             RaisePropertyChanged(nameof(ParentType));
 
             if (SurveyArea.BotanicalScoping != null)
             {
                 ConnectScoping = true;
                 RaisePropertiesChanged(nameof(ConnectScoping));
-            }
-
-            var p = Database.Pictures
-                .Include(_ => _.BotanicalElement).ThenInclude(_ => _.BotanicalSurveyArea)
-                .Where(_ => _.BotanicalElement.BotanicalSurvey.Guid == SurveyArea.Guid)
-                .AsNoTracking().ToArray();
-            
+            }            
         }
         public override void Records_GetQueryable(object sender, GetQueryableEventArgs e)
         {
@@ -179,6 +177,8 @@ namespace WBIS_2.Modules.ViewModels
                 Database.THP_Areas.Add(tHP_Area);
             }
             SurveyArea.THP_Area = tHP_Area;
+
+            SurveyArea.AreaName = AreaName;
 
             if (ConnectScoping)
                 SurveyArea.BotanicalScoping = Database.BotanicalScopings

@@ -69,15 +69,44 @@ namespace WBIS_2.Modules.ViewModels
 
         public void FeatureDraw()
         {
-            MapDataPasser.MapDrawFeature(Record.Guid);
+            MapDataPasser.MapDrawFeature(Record.Guid, Record.Manager.TableName);
             MapDataPasser.ActivityDrawnEvent += MapDataPasser_DrawnEvent;
         }
         public void MapDataPasser_DrawnEvent(object sender, EventArgs e)
         {
             MapDataPasser.ActivityDrawnEvent -= MapDataPasser_DrawnEvent;
             Geometry geo;
-            if (sender is Polygon) geo = new MultiPolygon(new Polygon[] { (Polygon)sender });
-            else geo = (MultiPolygon)sender;
+            if (GeoProperty.PropertyType == typeof(MultiPolygon))
+            {
+                if (sender is Polygon) geo = new MultiPolygon(new Polygon[] { (Polygon)sender });
+                else geo = (MultiPolygon)sender;
+            }
+            else if (GeoProperty.PropertyType == typeof(Polygon))
+            {
+                if (sender is MultiPolygon) geo = ((MultiPolygon)sender).First();
+                else geo = (Polygon)sender;
+            }
+            else if (GeoProperty.PropertyType == typeof(NetTopologySuite.Geometries.Point))
+            {
+                if (sender is MultiPoint) geo = ((MultiPoint)sender).First();
+                else geo = (NetTopologySuite.Geometries.Point)sender;
+            }
+            else if(GeoProperty.PropertyType == typeof(MultiPoint))
+            {
+                if (sender is NetTopologySuite.Geometries.Point) geo = new MultiPoint(new NetTopologySuite.Geometries.Point[] { (NetTopologySuite.Geometries.Point)sender });
+                else geo = (MultiPolygon)sender;
+            }
+            else if (GeoProperty.PropertyType == typeof(MultiLineString))
+            {
+                if (sender is LineString) geo = new MultiLineString(new LineString[] { (LineString)sender });
+                else geo = (MultiLineString)sender;
+            }
+            else// if (GeoProperty.PropertyType == typeof(LineString))
+            {
+                if (sender is MultiLineString) geo = ((MultiLineString)sender).First();
+                else geo = (LineString)sender;
+            }
+
             geo.SRID = 26710;
             GeoProperty.SetValue(Record, geo);
             GeoChanged();
