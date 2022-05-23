@@ -24,10 +24,12 @@ using System.Drawing;
 using System.Windows.Media.Imaging;
 using Microsoft.Win32;
 using System.Diagnostics;
+using System.Windows.Controls;
+using WBIS_2.Modules.Views;
 
 namespace WBIS_2.Modules.ViewModels
 {
-    public class BotanicalElementViewModel : IDetailView
+    public class BotanicalElementViewModel : WBISViewModelBase, IDetailView
     {
         public static bool AddSingle => false;
         public static BotanicalElementViewModel Create(Guid guid)
@@ -35,11 +37,31 @@ namespace WBIS_2.Modules.ViewModels
             return ViewModelSource.Create(() => new BotanicalElementViewModel(guid));
         }
 
+        public override void Tracker_ChangesSaved(object sender, IEnumerable<EntityEntry> e)
+        {
+        }
+
+        public override void CloseForm()
+        {
+        }
 
         public Guid RecordId { get; set; }
         public BotanicalElementViewModel(Guid guid)
         {
             RecordId = guid;
+            if (Database.BotanicalPlantsOfInterest.Any(_ => _.Guid == guid))
+            {
+                UserControl = new PlantSpeciesListView();
+            }
+            else if (Database.BotanicalPointsOfInterest.Any(_ => _.Guid == guid))
+            {
+
+            }
+            else
+            {
+
+            }
         }
+        public UserControl UserControl { get; set; }
     }
 }
