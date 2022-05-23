@@ -34,12 +34,12 @@ namespace WBIS_2.DataModel
         //public string SurveyName { get; set; }
         [Column("other_surveyors"), Import()]
         public string OtherSurveyors { get; set; }
-        [Column("start_time"), Import()]
+        [Column("start_time"), Import(Required = true)]
         public DateTime StartTime { get; set; }
-        [Column("end_time"), Import()]
+        [Column("end_time"), Import(Required = true)]
         public DateTime EndTime { get; set; }
 
-        [Column("time_spent"), Import()]
+        [Column("time_spent")]
         public TimeSpan TimeSpent { get; set; }
 
         [Column("manual_track")]

@@ -357,6 +357,7 @@ namespace WBIS_2.Modules.ViewModels
             string boolQuery = string.Join(" AND ", new string[] { delete, repository, districts });
             while (boolQuery.StartsWith(" AND "))
                 boolQuery = boolQuery.Remove(0, 5);
+            boolQuery = boolQuery.Replace(" AND AND ", " AND ");
 
             string query = $"SELECT {layerStr.ToLower()}.guid, {boolQuery} from {layerStr.ToLower()} {joinParent} " +
                 $"WHERE {layerStr.ToLower()}.geometry IS NOT NULL" +

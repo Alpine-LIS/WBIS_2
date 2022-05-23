@@ -28,7 +28,9 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
 
         }
 
-
+        public override string HelperText => "\t‘Create new survey areas’ will create new records without geometry to represent the survey areas for surveys where no area could be found. " +
+            "If unchecked these records will be excluded form the import. " +
+            "\n\n\t‘Repository Data’ if selected new records will be marked as repository. ";
         public override List<PropertyType> AvailibleFields => GetProperties(typeof(BotanicalSurvey));
 
         public override void FileSelectClick()
@@ -67,26 +69,10 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
             return "";
         }
 
+       //Botanical surveys cannot import duplicates.
         public override string CheckDupIds()
-        {
-            List<string> dupIds = new List<string>();
-            List<string> usedIds = new List<string>();
-            string thpCol = PropertyCrosswalk.Where(_ => _.PropertyType != null).First(_ => _.PropertyType.PropertyName == "THP_Area.THPName").Attribute;
-            string nameCol = PropertyCrosswalk.Where(_ => _.PropertyType != null).First(_ => _.PropertyType.PropertyName == "AreaName").Attribute;
-            foreach (var feat in ImportShapefile.Features)
-            {
-                string fId = $"THP:'{feat.DataRow[thpCol].ToString()}' Area'{feat.DataRow[nameCol].ToString()}'";
-                if (fId != "")
-                {
-                    if (usedIds.Contains(fId))
-                        dupIds.Add(fId);
-                    else usedIds.Add(fId);
-                }
-            }
-            if (dupIds.Count > 0)
-                return $"The following area names were found to have duplicates in the chosen file.\n\t" +
-                                string.Join("\n\t", dupIds);
-            else return "";
+        {           
+            return "";
         }
 
 
@@ -95,73 +81,91 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
             WaitWindowHandler w = new WaitWindowHandler();
             w.Start();
 
-            string thpCol = PropertyCrosswalk.Where(_ => _.PropertyType != null).First(_ => _.PropertyType.PropertyName == "THP_Area.THPName").Attribute;
-            string nameCol = PropertyCrosswalk.Where(_ => _.PropertyType != null).First(_ => _.PropertyType.PropertyName == "AreaName").Attribute;
+            string thpCol = PropertyCrosswalk.Where(_ => _.PropertyType != null).First(_ => _.PropertyType.PropertyName == "BotanicalSurveyArea.THP_Area.THPName").Attribute;
+            string nameCol = PropertyCrosswalk.Where(_ => _.PropertyType != null).First(_ => _.PropertyType.PropertyName == "BotanicalSurveyArea.AreaName").Attribute;
 
             List<THP_Area> newThps = new List<THP_Area>();
+            List<BotanicalSurveyArea> newAreas = new List<BotanicalSurveyArea>();
 
 
             foreach (var feat in ImportShapefile.Features)
             {
+                BotanicalSurveyArea? surveyArea = null;
                 var thp = DbHelp.ThpExistance(Database, feat.DataRow[thpCol].ToString());
                 if (thp == null)
                     thp = newThps.FirstOrDefault(_ => DbHelp.ThpQueryName(feat.DataRow[thpCol].ToString()) == DbHelp.ThpQueryName(_.THPName));
-                if (thp == null)
-                {
-                    thp = new THP_Area() { THPName = feat.DataRow[thpCol].ToString() };
-                    Database.THP_Areas.Add(thp);
-                    newThps.Add(thp);
-                }
 
-                BotanicalSurveyArea? surveyArea =  Database.BotanicalSurveyAreas
-                    .Include(_ => _.THP_Area)
-                    .Include(_ => _.BotanicalScoping)
-                    .FirstOrDefault(_ => !_._delete && !_.Repository && _.THP_Area == thp && _.AreaName == feat.DataRow[nameCol].ToString());
-
-                if (surveyArea == null || !AttemptReplace)
+                if (thp != null)
                 {
-                    surveyArea = new BotanicalSurveyArea() 
-                    { 
-                    AreaName = feat.DataRow[nameCol].ToString(),
-                    THP_Area = thp
-                    };
-                    Database.BotanicalSurveyAreas.Add(surveyArea);
-                }
-
-                if (ConnectScoping || thp != null)
-                {
-                    var scoping = Database.BotanicalScopings
-                        .Include(_ => _.BotanicalSurveyAreas)
+                    surveyArea = Database.BotanicalSurveyAreas
                         .Include(_ => _.THP_Area)
-                        .FirstOrDefault(_ => thp == _.THP_Area);
-                    if (scoping != null)
-                        surveyArea.BotanicalScoping = scoping;
+                        .Include(_ => _.BotanicalScoping)
+                        .FirstOrDefault(_ => !_._delete && _.THP_Area == thp && _.AreaName == feat.DataRow[nameCol].ToString());
+
+                    if (surveyArea == null)
+                        surveyArea = newAreas.FirstOrDefault(_ => !_._delete && _.THP_Area == thp
+                            && _.AreaName == feat.DataRow[nameCol].ToString());
                 }
+
+                if (surveyArea == null)
+                {
+                    if (NewSurveyAreas)
+                    {
+                        if (thp == null)
+                        {
+                            thp = new THP_Area() { THPName = feat.DataRow[thpCol].ToString() };
+                            Database.THP_Areas.Add(thp);
+                            newThps.Add(thp);
+                        }
+
+                        surveyArea = new BotanicalSurveyArea()
+                        {
+                            AreaName = feat.DataRow[nameCol].ToString(),
+                            THP_Area = thp,
+                            Repository = RepositoryData
+                        };
+                        Database.BotanicalSurveyAreas.Add(surveyArea);
+                        newAreas.Add(surveyArea);
+                    }
+                    else
+                        continue;
+                }
+
+                BotanicalSurvey survey = new BotanicalSurvey()
+                {
+                    BotanicalSurveyArea = surveyArea,
+                    THP_Area = surveyArea.THP_Area,
+                    Repository = RepositoryData
+                };
+                BuildAttributes(survey, feat.DataRow);
 
                 if (feat.Geometry.SRID == 0) feat.Geometry.SRID = 26710;
-                if (feat.Geometry is NetTopologySuite.Geometries.Polygon) surveyArea.Geometry = new MultiPolygon(new Polygon[] { (Polygon)feat.Geometry });
-                else surveyArea.Geometry = (MultiPolygon)feat.Geometry;
 
-                surveyArea._delete = false;
+                if (feat.Geometry is LineString) survey.Geometry = new MultiLineString(new LineString[] { (LineString)feat.Geometry });
+                else survey.Geometry = (MultiLineString)feat.Geometry;
+
+                survey._delete = false;
+                Database.BotanicalSurveys.Add(survey);
             }
             Database.SaveChanges();
             w.Stop();
         }
 
-        public override BotanicalSurveyArea BuildAttributes(object unit, DataRow dataRow, string id)
+        public override BotanicalSurvey BuildAttributes(object unit, DataRow dataRow)
         {
-            BotanicalSurveyArea surveyArea = (BotanicalSurveyArea)unit;
+            BotanicalSurvey survey = (BotanicalSurvey)unit;
 
             var attributes = PropertyCrosswalk.Where(_ => _.PropertyType != null);
+            attributes = attributes.Where(_ => !_.PropertyType.PropertyName.Contains("."));
 
             foreach (var attribute in attributes)
             {
-                var prop = typeof(BotanicalSurveyArea).GetProperty(attribute.PropertyType.PropertyName);
+                var prop = typeof(BotanicalSurvey).GetProperty(attribute.PropertyType.PropertyName);
                 var val = ValueProcessors.GetParseValue(dataRow[attribute.Attribute], prop.PropertyType);
-                prop.SetValue(surveyArea, val);
+                prop.SetValue(survey, val);
             }
 
-            return surveyArea;
+            return survey;
         }
         public override List<string> RecordTypeSaveCheck()
         {
@@ -170,10 +174,10 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
 
             string dupIds = CheckBlanks();
             if (dupIds != "") issues.Add(dupIds);
-            dupIds = CheckDupIds();
-            if (dupIds != "") issues.Add(dupIds);
-
+            
             return issues;
         }
+
+        public bool NewSurveyAreas { get; set; } = true;
     }
 }

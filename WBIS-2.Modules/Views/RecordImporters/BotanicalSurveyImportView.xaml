@@ -41,9 +41,11 @@
                 <ColumnDefinition Width="AUTO"/>
             </Grid.ColumnDefinitions>
 
-            <Label Grid.Column="3" Content="Connect to Scoping:" ToolTip="Attempt to replace existing records geometry and attributs data based on the area name and thp name."/>
-            <dxe:CheckEdit Grid.Column="4" IsChecked="{Binding ConnectScoping, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                       ToolTip="Attempt to replace existing records geometry and attributs data based on the area name and thp name."/>
+            <Label Grid.Column="0" Content="Create new survey areas:"/>
+            <dxe:CheckEdit Grid.Column="1" IsChecked="{Binding NewSurveyAreas, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <Label Grid.Column="2" Content="Import as repository:"/>
+            <dxe:CheckEdit Grid.Column="3" IsChecked="{Binding RepositoryData, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
     </Grid>
 </UserControl>

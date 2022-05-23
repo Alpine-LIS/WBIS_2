@@ -70,7 +70,7 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
 
         public ICommand SaveCommand { get; set; }
         public abstract void SaveClick();
-        public abstract object BuildAttributes(object unit, DataRow dataRow, string id);
+        public abstract object BuildAttributes(object unit, DataRow dataRow);
 
         /// <summary>
         /// Perfom chacks to see if records can be imported.
@@ -193,9 +193,7 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
             else return type.Name;
         }
 
-
-        public bool AttemptReplace { get; set; } = false;
-        public bool ConnectScoping { get; set; } = false;
+        public bool RepositoryData { get; set; } = false;       
 
         public List<string> IdOptions { get; set; }
         public string IdAttribute { get; set; }
@@ -488,6 +486,7 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
                 Holder.NewListElements.Add(typeof(t), new List<object>());
             Holder.NewListElements[typeof(t)].Add(newElement);
         }
+        public abstract string HelperText { get; }
     }
     public class PropertyCrosswalk : BindableBase
     {

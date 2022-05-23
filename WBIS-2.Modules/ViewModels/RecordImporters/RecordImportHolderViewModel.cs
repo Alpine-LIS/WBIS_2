@@ -82,9 +82,9 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
             }
             IsExpanded = !IsExpanded;
         }
-        public ICommand HelpCommand { get; set; }
-        public string HelpButtonText { get; set; } = "Show Help";
-        public string HelpText { get; set; }
+        public ICommand HelpCommand => new DelegateCommand(HelpClick);
+        public string HelpButtonText { get; set; } = "Hide Help";
+        public string HelpText => StartingRecordImport.HelperText;
         public bool IsExpanded
         {
             get => GetValue<bool>();

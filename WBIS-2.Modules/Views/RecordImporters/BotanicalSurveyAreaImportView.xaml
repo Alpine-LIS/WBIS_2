@@ -45,6 +45,8 @@
             <dxe:CheckEdit Grid.Column="2" IsChecked="{Binding AttemptReplace, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <Label Grid.Column="3" Content="Connect to Scoping:"/>
             <dxe:CheckEdit Grid.Column="4" IsChecked="{Binding ConnectScoping, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <Label Grid.Column="5" Content="Repository Data:"/>
+            <dxe:CheckEdit Grid.Column="6" IsChecked="{Binding RepositoryData, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>            
         </Grid>
     </Grid>
 </UserControl>

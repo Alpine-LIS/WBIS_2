@@ -24,16 +24,13 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
     public class BotanicalSurveyAreaImportViewModel : RecordImporterBase
     {
         public BotanicalSurveyAreaImportViewModel()
-        {
-                   AttemptReplace = true;
-        ConnectScoping  = true;
-
-            Holder.HelpText = "\t‘Attempt Replace’ will attempt to replace the geometry and attribute data of botanical survey area where the THP area and area name are the same. " +
-                "If not selected, then all records will be treated as new area." +
-                "\n\n\t‘Connect to Scoping’ will attempt to create connection between imported areas and botanical scoping records with the same THP area.";
+        {                       
     }
 
-
+        public override string HelperText => "\t‘Attempt Replace’ will attempt to replace the geometry and attribute data of botanical survey area where the THP area and area name are the same. " +
+                "If not selected, then all records will be treated as new area." +
+                "\n\n\t‘Connect to Scoping’ will attempt to create connection between imported areas and botanical scoping records with the same THP area." +
+            "\n\n\t‘Repository Data’ if selected new records will be marked as repository. ";
         public override List<PropertyType> AvailibleFields => GetProperties(typeof(BotanicalSurveyArea));
 
         public override void FileSelectClick()
@@ -142,7 +139,8 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
                     surveyArea = new BotanicalSurveyArea() 
                     { 
                     AreaName = feat.DataRow[nameCol].ToString(),
-                    THP_Area = thp
+                    THP_Area = thp,
+                    Repository = RepositoryData
                     };
                     Database.BotanicalSurveyAreas.Add(surveyArea);
                 }
@@ -167,7 +165,7 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
             w.Stop();
         }
 
-        public override BotanicalSurveyArea BuildAttributes(object unit, DataRow dataRow, string id)
+        public override BotanicalSurveyArea BuildAttributes(object unit, DataRow dataRow)
         {
             BotanicalSurveyArea surveyArea = (BotanicalSurveyArea)unit;
 
@@ -194,5 +192,8 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
 
             return issues;
         }
+
+        public bool AttemptReplace { get; set; } = true;
+        public bool ConnectScoping { get; set; } = true;
     }
 }
