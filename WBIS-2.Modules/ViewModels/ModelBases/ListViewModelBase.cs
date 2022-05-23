@@ -361,7 +361,10 @@ namespace WBIS_2.Modules.ViewModels
             if (document == null)
             {
                 var viewModel = DetailsViewModel.GetMethod("Create").Invoke(new object(), new object[] { CurrentRecord.Guid });
-                document = service.CreateDocument(ListManager.DisplayName.Replace(" ", "") + "View", viewModel, CurrentRecord.Guid, this);
+                if (viewModel is BotanicalElementViewModel)
+                    document = service.CreateDocument(((BotanicalElementViewModel)viewModel).UserControl.GetType().Name, viewModel, CurrentRecord.Guid, this);
+                else
+                    document = service.CreateDocument(ListManager.DisplayName.Replace(" ", "") + "View", viewModel, CurrentRecord.Guid, this);
                 document.Id = CurrentRecord.Guid;
             }
             document.Show();
