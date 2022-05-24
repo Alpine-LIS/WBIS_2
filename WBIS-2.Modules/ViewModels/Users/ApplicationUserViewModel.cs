@@ -61,17 +61,17 @@ namespace WBIS_2.Modules.ViewModels
             }
         }
 
-        public void OnClose(CancelEventArgs e)
-        {
-            if (Changed)
-            {
-                var result = ThemedMessageBox.Show(title: "Confirmation", text: UnsavedMessageText, messageBoxButtons: MessageBoxButton.YesNo);
-                if (result != MessageBoxResult.Yes)
-                {
-                    e.Cancel = true;
-                }
-            }
-        }
+        //public void OnClose(CancelEventArgs e)
+        //{
+        //    if (Changed)
+        //    {
+        //        var result = ThemedMessageBox.Show(title: "Confirmation", text: UnsavedMessageText, messageBoxButtons: MessageBoxButton.YesNo);
+        //        if (result != MessageBoxResult.Yes)
+        //        {
+        //            e.Cancel = true;
+        //        }
+        //    }
+        //}
 
         public void OnDestroy()
         {

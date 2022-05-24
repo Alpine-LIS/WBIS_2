@@ -43,6 +43,10 @@ namespace WBIS_2.DataModel
         [ListInfo(AutoInclude = true)]
         public Hex160 Hex160 { get; set; }
 
+        [Column("district_id")]
+        public Guid? DistrictId { get; set; }
+        public District District { get; set; }
+
         [NotMapped, Display(Order = -1)]
         public IInfoTypeManager Manager => new InformationTypeManager<PermanentCallStation>();
     }

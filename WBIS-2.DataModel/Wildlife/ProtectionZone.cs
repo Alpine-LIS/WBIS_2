@@ -36,7 +36,7 @@ namespace WBIS_2.DataModel
         [Column("geometry", TypeName = "geometry(MultiPolygon,26710)")]
         public MultiPolygon Geometry { get; set; }
 
-        [Column("pz_id"), ListInfo(DisplayField = true)]
+        [Column("pz_id"), ListInfo(DisplayField = true), Import(Required = true)]
         public string PZ_ID { get; set; }
 
         public ICollection<SiteCalling> SiteCallings { get; set; }
@@ -45,6 +45,11 @@ namespace WBIS_2.DataModel
         public ICollection<Hex160> Hex160s { get; set; }
         [InverseProperty("CurrentProtectionZone"), ListInfo(AutoInclude = true)]
         public ICollection<Hex160> CurrentHex160s { get; set; }
+
+
+        [Column("district_id")]
+        public Guid? DistrictId { get; set; }
+        public District District { get; set; }
 
         [NotMapped, Display(Order = -1)]
         public IInfoTypeManager Manager => new InformationTypeManager<ProtectionZone>();

@@ -69,6 +69,8 @@ namespace WBIS_2
             Manager.Register(Regions.NavigationBotany, new Module(AppModules.ModuleBotanicalSurvey, () => new NavigationItem("Botanical Surveys")));
             Manager.Register(Regions.NavigationBotany, new Module(AppModules.ModuleBotanicalSurveyElement, () => new NavigationItem("Botanical Survey Elements")));
 
+            Manager.Register(Regions.NavigationWildlife, new Module(AppModules.ModulePermanentCallStation, () => new NavigationItem("Permanent Call Stations")));
+            Manager.Register(Regions.NavigationWildlife, new Module(AppModules.ModuleProtectionZone, () => new NavigationItem("Protection Zones")));
 
             //Manager.Register(Regions.NavigationCalifornia, new Module(AppModules.ModuleCnddbOccurrence, () => new NavigationItem("CnddbOccurrence")));
             //Manager.Register(Regions.NavigationCalifornia, new Module(AppModules.ModuleCdfwSpottedOwl, () => new NavigationItem("CdfwSpottedOwl")));
@@ -97,6 +99,11 @@ namespace WBIS_2
                 () => ParentListViewModel.Create(new BotanicalSurvey()), typeof(ParentListView)));
             Manager.Register(Regions.Documents, new Module(AppModules.ModuleBotanicalSurveyElement,
                 () => ParentListViewModel.Create(new BotanicalElement()), typeof(ParentListView)));
+
+            Manager.Register(Regions.Documents, new Module(AppModules.ModulePermanentCallStation,
+                () => ParentListViewModel.Create(new PermanentCallStation()), typeof(ParentListView)));
+            Manager.Register(Regions.Documents, new Module(AppModules.ModuleProtectionZone,
+                () => ParentListViewModel.Create(new ProtectionZone()), typeof(ParentListView)));
 
             //Manager.Register(Regions.Documents, new Module(AppModules.ModuleCnddbOccurrence,
             //   () => CnddbsListViewModel.Create("CnddbOccurrence", "CnddbOccurrence"), typeof(CnddbsListView)));
@@ -151,6 +158,8 @@ namespace WBIS_2
             Manager.Inject(Regions.NavigationBotany, AppModules.ModuleBotanicalSurvey);
             Manager.Inject(Regions.NavigationBotany, AppModules.ModuleBotanicalSurveyElement);
 
+            Manager.Inject(Regions.NavigationWildlife, AppModules.ModuleProtectionZone);
+            Manager.Inject(Regions.NavigationWildlife, AppModules.ModulePermanentCallStation);
             //Manager.Inject(Regions.NavigationCalifornia, AppModules.ModuleCnddbOccurrence);
             //Manager.Inject(Regions.NavigationCalifornia, AppModules.ModuleCdfwSpottedOwl);
         }

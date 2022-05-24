@@ -31,5 +31,9 @@ namespace WBIS_2.Common
         public static string ModuleBotanicalSurveyArea { get { return "BotnaicalSurveyArea"; } }
         public static string ModuleBotanicalSurvey { get { return "BotnaicalSurvey"; } }
         public static string ModuleBotanicalSurveyElement { get { return "BotanicalSurveyElement"; } }
+
+
+        public static string ModulePermanentCallStation { get { return "PermanentCallStation"; } }
+        public static string ModuleProtectionZone { get { return "ProtectionZone"; } }
     }
 }
