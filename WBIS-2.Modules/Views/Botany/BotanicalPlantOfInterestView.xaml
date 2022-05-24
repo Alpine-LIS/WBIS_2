@@ -132,10 +132,9 @@
                     <ColumnDefinition Width="AUTO"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Label Content="Num Indiv:" Grid.Column="0"/>
-                <dxe:TextEdit Text="{Binding element.Lat, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" MaskType="Numeric" Grid.Column="0" IsReadOnly="True"/>
+                <dxe:TextEdit Text="{Binding element.Lat, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, StringFormat=N5}" MaskType="Numeric" Grid.Column="0" IsReadOnly="True"/>
                 <Label Content="Lon:" Grid.Column="1"/>
-                <dxe:TextEdit Text="{Binding element.Lon, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" MaskType="Numeric" Grid.Column="2" IsReadOnly="True"/>
+                <dxe:TextEdit Text="{Binding element.Lon, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, StringFormat=N5}" MaskType="Numeric" Grid.Column="2" IsReadOnly="True"/>
             </Grid>
 
             <Label Content="Site Quality:" Grid.Column="0" Grid.Row="3"/>
@@ -187,9 +186,32 @@
         </Grid>
 
             <dx:DXTabControl Grid.Row="3">
-                <dx:DXTabItem Header="Children">
-                    <views:ChildrenListView/>
-                </dx:DXTabItem>
+            <dx:DXTabItem Header="Associated Plants">
+                <dxg:GridControl Grid.Row="4" MinHeight="200"
+            MaxHeight="1920"
+            AutoGenerateColumns="None"
+            AllowInitiallyFocusedRow="True"
+            SelectionMode="Row"
+            ItemsSource="{Binding Records}">
+                    <dxg:GridControl.Columns>
+
+                        <dxg:GridColumn FieldName="PlantSpecies.SciName" Header="SciName"/>
+                        <dxg:GridColumn FieldName="PlantSpecies.ComName" Header="ComName"/>
+                        <dxg:GridColumn FieldName="PlantSpecies.Family" Header="Family"/>
+                        <dxg:GridColumn FieldName="DateTime" Header="DateTime"/>
+
+                    </dxg:GridControl.Columns>
+                    <dxg:GridControl.View>
+                        <dxg:TableView 
+                    ShowTotalSummary="False" 
+                    ShowGroupPanel="False"
+                    AllowEditing ="False" 
+                    NavigationStyle="Cell"
+                    ColumnFilterPopupMode="Excel">
+                        </dxg:TableView>
+                    </dxg:GridControl.View>
+                </dxg:GridControl>
+            </dx:DXTabItem>
                 <dx:DXTabItem Header="Photos">
                     <views:PicturesView/>
                 </dx:DXTabItem>

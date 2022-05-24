@@ -26,6 +26,7 @@ using Microsoft.Win32;
 using System.Diagnostics;
 using System.Windows.Controls;
 using WBIS_2.Modules.Views;
+using WBIS_2.Modules.Views.Botany;
 
 namespace WBIS_2.Modules.ViewModels
 {
@@ -51,7 +52,9 @@ namespace WBIS_2.Modules.ViewModels
             RecordId = guid;
             if (Database.BotanicalPlantsOfInterest.Any(_ => _.Guid == guid))
             {
-                UserControl = new PlantSpeciesListView();
+                ViewName = typeof(BotanicalPlantOfInterestView).Name;
+                ViewModel = typeof(BotanicalPlantOfInterestViewModel);
+
             }
             else if (Database.BotanicalPointsOfInterest.Any(_ => _.Guid == guid))
             {
@@ -62,6 +65,7 @@ namespace WBIS_2.Modules.ViewModels
 
             }
         }
-        public UserControl UserControl { get; set; }
+        public string ViewName { get; set; }
+        public Type ViewModel { get; set; }
     }
 }

@@ -191,21 +191,7 @@ namespace WBIS_2.Modules.ViewModels
         }
 
 
-        private void AddSingle()
-        {
-            if (DetailsViewModel == null) return;
-
-            IDocumentManagerService service = this.GetRequiredService<IDocumentManagerService>();
-            Guid newGuid = Guid.NewGuid();
-            IDocument document = service.FindDocumentById(newGuid);
-            if (document == null)
-            {
-                var viewModel = DetailsViewModel.GetMethod("Create").Invoke(new object(), new object[] { newGuid });
-                document = service.CreateDocument(ListManager.DisplayName.Replace(" ", "") + "View", viewModel, newGuid, this);
-                document.Id = newGuid;
-            }
-            document.Show();
-        }
+       
 
         public bool DeleteRestoreRecordsEnabled { get; set; }
         public ICommand DeleteRecordCommand { get; set; }
@@ -361,18 +347,29 @@ namespace WBIS_2.Modules.ViewModels
             if (document == null)
             {
                 var viewModel = DetailsViewModel.GetMethod("Create").Invoke(new object(), new object[] { CurrentRecord.Guid });
-                if (viewModel is BotanicalElementViewModel)
-                    document = service.CreateDocument(((BotanicalElementViewModel)viewModel).UserControl.GetType().Name, viewModel, CurrentRecord.Guid, this);
+                if (viewModel is BotanicalElementViewModel vm)
+                    document = service.CreateDocument(vm.ViewName, vm.ViewModel.GetMethod("Create").Invoke(new object(), new object[] { CurrentRecord.Guid }), CurrentRecord.Guid, this);
                 else
                     document = service.CreateDocument(ListManager.DisplayName.Replace(" ", "") + "View", viewModel, CurrentRecord.Guid, this);
                 document.Id = CurrentRecord.Guid;
             }
             document.Show();
         }
+        private void AddSingle()
+        {
+            if (DetailsViewModel == null) return;
 
-
-
-
+            IDocumentManagerService service = this.GetRequiredService<IDocumentManagerService>();
+            Guid newGuid = Guid.NewGuid();
+            IDocument document = service.FindDocumentById(newGuid);
+            if (document == null)
+            {
+                var viewModel = DetailsViewModel.GetMethod("Create").Invoke(new object(), new object[] { newGuid });
+                document = service.CreateDocument(ListManager.DisplayName.Replace(" ", "") + "View", viewModel, newGuid, this);
+                document.Id = newGuid;
+            }
+            document.Show();
+        }
 
         public bool ToggleAutoZoom { get; set; } = true;
 

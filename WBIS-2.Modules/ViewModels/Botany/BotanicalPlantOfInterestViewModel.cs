@@ -27,7 +27,7 @@ using System.Diagnostics;
 
 namespace WBIS_2.Modules.ViewModels
 {
-    public class BotanicalPlantOfInterestViewModel : DetailAndChildrenViewModelBase, IDocumentContent, IDetailView, IPictures
+    public class BotanicalPlantOfInterestViewModel : DetailViewModelBase, IDocumentContent, IDetailView, IPictures
     {
         public static bool AddSingle => false;
         public BotanicalElement element
@@ -65,36 +65,42 @@ namespace WBIS_2.Modules.ViewModels
                 .Include(_=>_.User)
                 .Include(_=>_.Pictures)
                 .First(_ => _.Guid == guid);
-            plantOfInterest = element.BotanicalPlantOfInterest;
+           
+                plantOfInterest = element.BotanicalPlantOfInterest;
 
-            SetDateValues();
-         
-            ParentType = element;
-            RaisePropertyChanged(nameof(ParentType));
+                SetDateValues();
+                User = element.User.UserName;
+                RefreshDataSource();
 
-            PlantSpecies = Database.PlantSpecies.Where(_=>!_.PlaceHolder || _.Guid == plantOfInterest.PlantSpecies.Guid).ToArray();
+                PlantSpecies = Database.PlantSpecies.Where(_ => !_.PlaceHolder || _.Guid == plantOfInterest.PlantSpecies.Guid).ToArray();
+            SciNames = PlantSpecies.Select(_ => _.ComName).Distinct().OrderBy(_ => _).ToArray();
+            ComNames = PlantSpecies.Select(_ => _.ComName).Distinct().OrderBy(_ => _).ToArray();
+            Families = PlantSpecies.Select(_ => _.Family).Distinct().OrderBy(_ => _).ToArray();
 
-            SciName = plantOfInterest.PlantSpecies.SciName;
-            ComName = plantOfInterest.PlantSpecies.ComName;
-            Family = plantOfInterest.PlantSpecies.Family;
-
-            SciNames = PlantSpecies.Select(_ => _.ComName).Distinct().ToArray();
-            ComNames = PlantSpecies.Select(_ => _.ComName).Distinct().ToArray();
-            Families = PlantSpecies.Select(_ => _.Family).Distinct().ToArray();
-
-            User = element.User.UserName;
+            if (plantOfInterest.PlantSpecies != null)
+                SciName = plantOfInterest.PlantSpecies.SciName;            
         }
-        public override void Records_GetQueryable(object sender, GetQueryableEventArgs e)
-        {
-            if (CurrentChild == null) return;
-            if (ParentType == null) return;
 
-            e.QueryableSource = Database.BotanicalElements
-                .Include(_ => _.BotanicalPlantList).ThenInclude(_ => _.PlantSpecies)
-                .Include(_ => _.BotanicalPlantList).ThenInclude(_ => _.BotanicalPlantOfInterest)
-                .Where(_ => _.BotanicalPlantList != null)
-                .Where(_ => _.BotanicalPlantList.BotanicalPlantOfInterest != null)
-                .Where(_ => _.BotanicalPlantList.BotanicalPlantOfInterest.Guid == plantOfInterest.Guid);
+
+        public EntityInstantFeedbackSource Records { get; set; }
+        internal virtual void RefreshDataSource()
+        {
+            Records = new EntityInstantFeedbackSource
+            {
+                AreSourceRowsThreadSafe = true,
+                KeyExpression = $"Guid",
+            };
+            Records.GetQueryable += Records_GetQueryable;
+            Records.Refresh();
+            RaisePropertyChanged(nameof(Records));
+        }
+        public void Records_GetQueryable(object sender, GetQueryableEventArgs e)
+        {
+            e.QueryableSource = Database.BotanicalPlantsList
+                .Include(_ => _.PlantSpecies)
+                .Include(_ => _.BotanicalPlantOfInterest)
+                .Where(_ => _.BotanicalPlantOfInterest != null)
+                .Where(_ => _.BotanicalPlantOfInterest.Guid == plantOfInterest.Guid);
 
             FillPictures();
         }
@@ -116,11 +122,7 @@ namespace WBIS_2.Modules.ViewModels
             }
         }
 
-        public override void OnDestroy()
-        {
-            //throw new NotImplementedException();
-        }
-
+        
         public override void Save()
         {
             if (!this.Changed) return;
@@ -131,12 +133,20 @@ namespace WBIS_2.Modules.ViewModels
                 return;
             }
 
+            if (!FurtherChecks()) return;
+           
+
             WaitWindowHandler w = new WaitWindowHandler();
             w.Start();
 
             var ps = Database.PlantSpecies.Include(_ => _.BotanicalPlantsOfInterest)
                 .First(_ => _.SciName == SciName && _.ComName == ComName && _.Family == Family);
             plantOfInterest.PlantSpecies = ps;
+
+            if (User != element.User.UserName)
+            {
+                element.User = Database.ApplicationUsers.First(_ => (_.Botany && !_._delete && !_.PlaceHolder) && _.UserName == User);
+            }
 
             GetDateValues();
 
@@ -146,6 +156,21 @@ namespace WBIS_2.Modules.ViewModels
             Database.SaveChanges();
             this.Changed = false;
             w.Stop();
+        }
+
+        private bool FurtherChecks()
+        {
+            if (!plantOfInterest.SpeciesFound && plantOfInterest.SpeciesFoundText == null)
+            {
+                MessageBox.Show("If not species was found then a reason must be stated.");
+                return false;
+            }
+            if (!plantOfInterest.SpeciesFound && plantOfInterest.SpeciesFoundText == "")
+            {
+                MessageBox.Show("If not species was found then a reason must be stated.");
+                return false;
+            }
+            return true;
         }
 
         public string[] SiteQualities => Database.DropdownOptions.Where(_ => _.Entity == DbHelp.GetDbString(typeof(BotanicalPlantOfInterest)) && _.Property == "site_quality").Select(_ => _.SelectionText).ToArray();
@@ -182,6 +207,7 @@ namespace WBIS_2.Modules.ViewModels
             get { return GetProperty(()=>SciName); }
             set 
             {
+                if (SciName == value) return;
                 SetProperty(()=>SciName, value);
                 FillFromSciName();
             }
@@ -192,6 +218,7 @@ namespace WBIS_2.Modules.ViewModels
             get { return GetProperty(() => ComName); }
             set
             {
+                if (ComName == value) return;
                 SetProperty(() => ComName, value);
                 FillFromComName();
             }
@@ -202,6 +229,7 @@ namespace WBIS_2.Modules.ViewModels
             get { return GetProperty(() => Family); }
             set
             {
+                if (Family == value) return;
                 SetProperty(() => Family, value);
                 FillFromFamily();
             }
@@ -210,22 +238,45 @@ namespace WBIS_2.Modules.ViewModels
 
         private void FillFromSciName()
         {
-            ComNames = PlantSpecies.Where(_=>_.SciName == SciName).Select(_=>_.ComName).Distinct().ToArray();
-            Families = PlantSpecies.Where(_ => _.SciName == SciName).Select(_ => _.Family).Distinct().ToArray();
+            if (SciName == null) return;
+            var ps = PlantSpecies.FirstOrDefault(_ => _.SciName == SciName);
+            if (ps == null)
+            {
+                ComName ="";
+                Family = "";
+            }
+            else
+            {
+                ComName = ps.ComName;
+                Family = ps.Family;
+            }
+            ComName = ps.ComName;
+            Family = ps.Family;
             RaisePropertyChanged(nameof(ComNames));
             RaisePropertyChanged(nameof(Families));
         }
         private void FillFromComName()
         {
-            SciNames = PlantSpecies.Where(_ => _.ComName == ComName).Select(_ => _.SciName).Distinct().ToArray();
-            Families = PlantSpecies.Where(_ => _.ComName == ComName).Select(_ => _.Family).Distinct().ToArray();
+            if (SciName == null) return;
+            var ps = PlantSpecies.FirstOrDefault(_ => _.ComName == ComName);
+            if (ps == null)
+            {
+                SciName = "";
+                Family = "";
+            }
+            else
+            {
+                SciName = ps.SciName;
+                Family = ps.Family;
+            }
             RaisePropertyChanged(nameof(SciNames));
             RaisePropertyChanged(nameof(Families));
         }
         private void FillFromFamily()
         {
-            SciNames = PlantSpecies.Where(_ => _.Family == Family).Select(_ => _.SciName).Distinct().ToArray();
-            ComNames = PlantSpecies.Where(_ => _.Family == Family).Select(_ => _.ComName).Distinct().ToArray();
+            if (Family == null) return;
+            SciNames = PlantSpecies.Where(_ => _.Family == Family).Select(_ => _.SciName).Distinct().OrderBy(_ => _).ToArray();
+            ComNames = PlantSpecies.Where(_ => _.Family == Family).Select(_ => _.ComName).Distinct().OrderBy(_=>_).ToArray();
             RaisePropertyChanged(nameof(SciNames));
             RaisePropertyChanged(nameof(ComNames));
         }
@@ -289,6 +340,18 @@ namespace WBIS_2.Modules.ViewModels
                 counter++;
             }
             MessageBox.Show($"Photos have been saved to {fileName}");
+        }
+
+        public override void Tracker_ChangesSaved(object sender, IEnumerable<EntityEntry> e)
+        {
+            if (e.Any(_ => _.Entity.GetType() == typeof(BotanicalPlantList)))
+            {
+                RefreshDataSource();
+            }
+        }
+
+        public void OnDestroy()
+        {
         }
 
         public ImageView SelectedImage

@@ -195,36 +195,49 @@ namespace WBIS_2.Modules.ViewModels
         public ICommand ViewPhotosCommand { get; set; }
 
 
-    //    private string _TableName = "";
-    //    public string TableName
-    //    {
-    //        get => _TableName;
-    //        set
-    //        {
-    //            if (_TableName != value)
-    //            {
-    //                _TableName = value;
-    //                if (_TableName == null)
-    //                    RestoreGridColumnDefaultVisable = false;
-    //                else if (_TableName == "")
-    //                    RestoreGridColumnDefaultVisable = false;
-    //                else
-    //                    RestoreGridColumnDefaultVisable = true;
-    //                RaisePropertyChanged(nameof(RestoreGridColumnDefaultVisable));
-    //            }
-    //        }
-    //    }
-    //    public bool RestoreGridColumnDefaultVisable { get; set; }
-    //    public ICommand RestoreGridColumnDefaultCommand { get; set; }
-    //    bool DontSaveLayout = false;
-    //    public void DoRestoreGridColumnDefault()
-    //    {
-    //        DontSaveLayout = true;
-    //        string path = @$"{AppDomain.CurrentDomain.BaseDirectory}\GridLayouts";
-    //        if (File.Exists($@"{ path}\{ TableName}.xml")) File.Delete($@"{ path}\{ TableName}.xml");
-    //        RefreshDataSource();
-    //        DontSaveLayout = false;
-    //    }
+        public virtual void OnClose(CancelEventArgs e)
+        {
+            if (Changed)
+            {
+                var result = ThemedMessageBox.Show(title: "Confirmation", text: UnsavedMessageText, messageBoxButtons: MessageBoxButton.YesNo);
+                if (result != MessageBoxResult.Yes)
+                {
+                    e.Cancel = true;
+                }
+            }
+        }
+
+
+        //    private string _TableName = "";
+        //    public string TableName
+        //    {
+        //        get => _TableName;
+        //        set
+        //        {
+        //            if (_TableName != value)
+        //            {
+        //                _TableName = value;
+        //                if (_TableName == null)
+        //                    RestoreGridColumnDefaultVisable = false;
+        //                else if (_TableName == "")
+        //                    RestoreGridColumnDefaultVisable = false;
+        //                else
+        //                    RestoreGridColumnDefaultVisable = true;
+        //                RaisePropertyChanged(nameof(RestoreGridColumnDefaultVisable));
+        //            }
+        //        }
+        //    }
+        //    public bool RestoreGridColumnDefaultVisable { get; set; }
+        //    public ICommand RestoreGridColumnDefaultCommand { get; set; }
+        //    bool DontSaveLayout = false;
+        //    public void DoRestoreGridColumnDefault()
+        //    {
+        //        DontSaveLayout = true;
+        //        string path = @$"{AppDomain.CurrentDomain.BaseDirectory}\GridLayouts";
+        //        if (File.Exists($@"{ path}\{ TableName}.xml")) File.Delete($@"{ path}\{ TableName}.xml");
+        //        RefreshDataSource();
+        //        DontSaveLayout = false;
+        //    }
     }
 
 

@@ -95,17 +95,7 @@ namespace WBIS_2.Modules.ViewModels
                 CurrentUser.AddRemoveInfoType(CurrentChild.Manager.DisplayName, false);
         }
 
-        public virtual void OnClose(CancelEventArgs e)
-        {
-            if (Changed)
-            {
-                var result = ThemedMessageBox.Show(title: "Confirmation", text: UnsavedMessageText, messageBoxButtons: MessageBoxButton.YesNo);
-                if (result != MessageBoxResult.Yes)
-                {
-                    e.Cancel = true;
-                }
-            }
-        }
+       
 
         public virtual void OnDestroy()
         {
