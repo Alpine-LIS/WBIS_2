@@ -50,7 +50,7 @@ namespace WBIS_2.Modules.ViewModels
 
 
 
-        public object Title => $"{plantOfInterest.PlantSpecies.SpeciesCode}{ChangedSign}";
+        public object Title => plantOfInterest.PlantSpecies == null? $"{plantOfInterest.DateTime}{ChangedSign}" : $"{plantOfInterest.PlantSpecies.SpeciesCode}{ChangedSign}";
 
 
         public static BotanicalPlantOfInterestViewModel Create(Guid guid)
@@ -80,6 +80,37 @@ namespace WBIS_2.Modules.ViewModels
             if (plantOfInterest.PlantSpecies != null)
                 SciName = plantOfInterest.PlantSpecies.SciName;            
         }
+
+
+
+
+        public static BotanicalPlantOfInterestViewModel CreateNew(BotanicalElement botanicalElement, string userName)
+        {
+            return ViewModelSource.Create(() => new BotanicalPlantOfInterestViewModel(botanicalElement, userName));
+        }
+
+        public BotanicalPlantOfInterestViewModel(BotanicalElement botanicalElement, string userName)
+        {
+            element = botanicalElement;
+
+            plantOfInterest = element.BotanicalPlantOfInterest;
+
+            SetDateValues();
+            User = userName;
+            RefreshDataSource();
+
+            if (plantOfInterest.PlantSpecies == null)
+                PlantSpecies = Database.PlantSpecies.Where(_ => !_.PlaceHolder).ToArray();
+            else PlantSpecies = Database.PlantSpecies.Where(_ => !_.PlaceHolder || _.Guid == plantOfInterest.PlantSpecies.Guid).ToArray();
+
+            SciNames = PlantSpecies.Select(_ => _.ComName).Distinct().OrderBy(_ => _).ToArray();
+            ComNames = PlantSpecies.Select(_ => _.ComName).Distinct().OrderBy(_ => _).ToArray();
+            Families = PlantSpecies.Select(_ => _.Family).Distinct().OrderBy(_ => _).ToArray();
+
+            if (plantOfInterest.PlantSpecies != null)
+                SciName = plantOfInterest.PlantSpecies.SciName;
+        }
+
 
 
         public EntityInstantFeedbackSource Records { get; set; }
@@ -143,15 +174,37 @@ namespace WBIS_2.Modules.ViewModels
                 .First(_ => _.SciName == SciName && _.ComName == ComName && _.Family == Family);
             plantOfInterest.PlantSpecies = ps;
 
-            if (User != element.User.UserName)
+            if (element.User != null)
+            {
+                if (User != element.User.UserName)
+                {
+                    element.User = Database.ApplicationUsers.First(_ => (_.Botany && !_._delete && !_.PlaceHolder) && _.UserName == User);
+                }
+            }
+            else
             {
                 element.User = Database.ApplicationUsers.First(_ => (_.Botany && !_._delete && !_.PlaceHolder) && _.UserName == User);
             }
 
             GetDateValues();
 
-            Database.BotanicalElements.Update(element);
-            Database.BotanicalPlantsOfInterest.Update(plantOfInterest);
+            if (Database.BotanicalElements.All(_ => _.Guid == element.Guid))
+            {
+                Database.BotanicalElements.Update(element);
+                Database.BotanicalPlantsOfInterest.Update(plantOfInterest);
+            }
+            else
+            {
+                if (element.BotanicalScoping != null)
+                    element.BotanicalScoping = Database.BotanicalScopings.First(_ => _.Guid == element.BotanicalScoping.Guid);
+                if (element.BotanicalSurveyArea != null)
+                    element.BotanicalSurveyArea = Database.BotanicalSurveyAreas.First(_ => _.Guid == element.BotanicalSurveyArea.Guid);
+                if (element.BotanicalSurvey != null)
+                    element.BotanicalSurvey = Database.BotanicalSurveys.First(_ => _.Guid == element.BotanicalSurvey.Guid);
+
+                Database.BotanicalElements.Add(element);
+                Database.BotanicalPlantsOfInterest.Add(plantOfInterest);
+            }
 
             Database.SaveChanges();
             this.Changed = false;

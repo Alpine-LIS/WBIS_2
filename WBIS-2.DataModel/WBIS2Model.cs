@@ -489,8 +489,9 @@ namespace WBIS_2.DataModel
                 {
                     if (e.Entity.GetType().GetInterfaces().Contains(typeof(IUserRecords)))
                     {
-                        if (user != null)
+                        if (user == null)
                             ((IUserRecords)e.Entity).User = user;
+                        ((IUserRecords)e.Entity).UserModified = user;
                     }
                     if (e.CurrentValues.Properties.Any(_ => _.Name == "Geometry"))
                     {
@@ -501,7 +502,7 @@ namespace WBIS_2.DataModel
                 {
                     if (e.Entity.GetType().GetInterfaces().Contains(typeof(IUserRecords)))
                     {
-                        if (user != null)
+                       // if (user != null)
                             ((IUserRecords)e.Entity).UserModified = user;
                     }
 

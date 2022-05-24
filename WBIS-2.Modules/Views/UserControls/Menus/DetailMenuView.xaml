@@ -9,7 +9,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <dxb:ToolBarControl>
+        <dxb:ToolBarControl AllowQuickCustomization="False">
             <dxb:BarButtonItem 
                 Command="{Binding SaveCommand}"
                 KeyGesture="Control+S"

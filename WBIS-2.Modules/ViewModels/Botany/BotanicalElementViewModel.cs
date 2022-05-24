@@ -54,11 +54,11 @@ namespace WBIS_2.Modules.ViewModels
             {
                 ViewName = typeof(BotanicalPlantOfInterestView).Name;
                 ViewModel = typeof(BotanicalPlantOfInterestViewModel);
-
             }
             else if (Database.BotanicalPointsOfInterest.Any(_ => _.Guid == guid))
             {
-
+                ViewName = typeof(BotanicalPointOfInterestView).Name;
+                ViewModel = typeof(BotanicalPointOfInterestViewModel);
             }
             else
             {

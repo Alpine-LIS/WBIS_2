@@ -1,0 +1,20 @@
+﻿<UserControl x:Class="WBIS_2.Modules.Views.BotanicalPointOfInterestMenu"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WBIS_2.Modules.Views"
+             xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
+             xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <dxb:ToolBarControl AllowQuickCustomization="False">
+            <dxb:BarButtonItem 
+                Command="{Binding PlantOfInterstCommane}"
+                ToolTip="Copy to new plant of interest"
+                Glyph="{dx:DXImage SvgImages/Spreadsheet/MovePivotTable.svg}"/>          
+           
+        </dxb:ToolBarControl>
+    </Grid>
+</UserControl>
