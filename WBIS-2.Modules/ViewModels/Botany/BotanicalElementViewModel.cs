@@ -62,7 +62,8 @@ namespace WBIS_2.Modules.ViewModels
             }
             else
             {
-
+                ViewName = typeof(BotanicalPlantListView).Name;
+                ViewModel = typeof(BotanicalPlantListViewModel);
             }
         }
         public string ViewName { get; set; }

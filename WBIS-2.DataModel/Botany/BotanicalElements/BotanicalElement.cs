@@ -17,7 +17,8 @@ namespace WBIS_2.DataModel
         [Column("record_type")]
         public string RecordType { get; set; }
 
-
+        [Column("record_detail")]
+        public string RecordDetail { get; set; }
 
         [ Column("botanical_scoping_id")]
         public Guid? BotanicalScopingId { get; set; }

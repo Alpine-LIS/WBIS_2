@@ -56,6 +56,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Views\Botany\BotanicalPlantListView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\Botany\BotanicalPointOfInterestView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -110,6 +113,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Update="Views\Botany\BotanicalPlantListView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Views\Botany\BotanicalPointOfInterestView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
