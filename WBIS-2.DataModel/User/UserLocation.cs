@@ -11,12 +11,12 @@ namespace WBIS_2.DataModel
 {
     public class UserLocation: IPointLayer
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid"), ForeignKey("SiteCallingDetection")]
         public Guid Guid { get; set; }
 
-        [Column("site_calling_detection_id"), ForeignKey("SiteCallingDetection")]
-        public Guid SiteCallingDetectionId { get; set; }
-        public SiteCallingDetection SiteCallingDetection { get; set; }
+        //[Column("site_calling_detection_id"), ForeignKey("SiteCallingDetection")]
+        //public Guid SiteCallingDetectionId { get; set; }
+        //public SiteCallingDetection SiteCallingDetection { get; set; }
 
 
 

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,10 @@ using WBIS_2.DataModel;
 namespace WBIS_2.DataModel.Migrations
 {
     [DbContext(typeof(WBIS2Model))]
-    partial class WBIS2ModelModelSnapshot : ModelSnapshot
+    [Migration("20220525163635_RequiredPassDistricts")]
+    partial class RequiredPassDistricts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3334,13 +3336,9 @@ namespace WBIS_2.DataModel.Migrations
 
                     b.HasIndex("Quad75Id");
 
-                    b.HasIndex("SiteCallingId");
-
                     b.HasIndex("SpeciesFoundId");
 
                     b.HasIndex("UserId");
-
-                    b.HasIndex("UserLocationId");
 
                     b.HasIndex("UserModifiedId");
 
@@ -3613,7 +3611,14 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("double precision")
                         .HasColumnName("lon");
 
+                    b.Property<Guid>("SiteCallingDetectionId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("site_calling_detection_id");
+
                     b.HasKey("Guid");
+
+                    b.HasIndex("SiteCallingDetectionId")
+                        .IsUnique();
 
                     b.ToTable("user_locations", (string)null);
                 });
@@ -5089,6 +5094,12 @@ namespace WBIS_2.DataModel.Migrations
                         .WithMany("SiteCallingDetections")
                         .HasForeignKey("DistrictId");
 
+                    b.HasOne("WBIS_2.DataModel.SiteCalling", "SiteCalling")
+                        .WithMany("SiteCallingDetections")
+                        .HasForeignKey("Guid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("WBIS_2.DataModel.Hex160", "Hex160")
                         .WithMany("SiteCallingDetections")
                         .HasForeignKey("Hex160Id");
@@ -5096,10 +5107,6 @@ namespace WBIS_2.DataModel.Migrations
                     b.HasOne("WBIS_2.DataModel.Quad75", "Quad75")
                         .WithMany("SiteCallingDetections")
                         .HasForeignKey("Quad75Id");
-
-                    b.HasOne("WBIS_2.DataModel.SiteCalling", "SiteCalling")
-                        .WithMany("SiteCallingDetections")
-                        .HasForeignKey("SiteCallingId");
 
                     b.HasOne("WBIS_2.DataModel.BirdSpecies", "SpeciesFound")
                         .WithMany("SpeciesFound")
@@ -5110,10 +5117,6 @@ namespace WBIS_2.DataModel.Migrations
                     b.HasOne("WBIS_2.DataModel.ApplicationUser", "User")
                         .WithMany("SiteCallingDetections")
                         .HasForeignKey("UserId");
-
-                    b.HasOne("WBIS_2.DataModel.UserLocation", "UserLocation")
-                        .WithMany()
-                        .HasForeignKey("UserLocationId");
 
                     b.HasOne("WBIS_2.DataModel.ApplicationUser", "UserModified")
                         .WithMany("SiteCallingDetectionsModified")
@@ -5134,8 +5137,6 @@ namespace WBIS_2.DataModel.Migrations
                     b.Navigation("SpeciesFound");
 
                     b.Navigation("User");
-
-                    b.Navigation("UserLocation");
 
                     b.Navigation("UserModified");
 
@@ -5203,6 +5204,17 @@ namespace WBIS_2.DataModel.Migrations
                     b.Navigation("District");
 
                     b.Navigation("PlantSpecies");
+                });
+
+            modelBuilder.Entity("WBIS_2.DataModel.UserLocation", b =>
+                {
+                    b.HasOne("WBIS_2.DataModel.SiteCallingDetection", "SiteCallingDetection")
+                        .WithOne("UserLocation")
+                        .HasForeignKey("WBIS_2.DataModel.UserLocation", "SiteCallingDetectionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("SiteCallingDetection");
                 });
 
             modelBuilder.Entity("WBIS_2.DataModel.UserMapLayer", b =>
@@ -5483,6 +5495,11 @@ namespace WBIS_2.DataModel.Migrations
                     b.Navigation("SiteCallingDetections");
 
                     b.Navigation("SiteCallingTrack");
+                });
+
+            modelBuilder.Entity("WBIS_2.DataModel.SiteCallingDetection", b =>
+                {
+                    b.Navigation("UserLocation");
                 });
 
             modelBuilder.Entity("WBIS_2.DataModel.THP_Area", b =>

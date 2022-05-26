@@ -18,21 +18,22 @@ using WBIS_2.Modules.Views.RecordImporters;
 using WBIS_2.Modules.Tools;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite.Geometries;
+using Point = NetTopologySuite.Geometries.Point;
 
 namespace WBIS_2.Modules.ViewModels.RecordImporters
 {
-    public class ProtectionZoneImportViewModel : RecordImporterBase
+    public class PermanentCallStationImportViewModel : RecordImporterBase
     {
-        public ProtectionZoneImportViewModel()
+        public PermanentCallStationImportViewModel()
         {
-
+            AttemptReplace = false;
         }
 
         public bool AttemptReplace { get; set; } = true;
-        public override string HelperText => "\t‘Attempt Replace’ will attempt to replace the geometry and attribute data of protection zones. " +
+        public override string HelperText => "\t‘Attempt Replace’ will attempt to replace the geometry and attribute data of permanent call stations. " +
                 "If not selected, then all records will be treated as new." +
                 "\n\n\t‘Repository Data’ if selected new records will be marked as repository. ";
-        public override List<PropertyType> AvailibleFields => GetProperties(typeof(ProtectionZone));
+        public override List<PropertyType> AvailibleFields => GetProperties(typeof(PermanentCallStation));
 
         public override void FileSelectClick()
         {
@@ -41,9 +42,9 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
             ofd.Multiselect = false;
             if (!ofd.ShowDialog().Value) return;
             var tempShape = Shapefile.OpenFile(ofd.FileName);
-            if (tempShape.FeatureType != FeatureType.Polygon)
+            if (tempShape.FeatureType != FeatureType.Point)
             {
-                MessageBox.Show("The selected shapefile does not contain polygons.");
+                MessageBox.Show("The selected shapefile does not contain points.");
                 return;
             }
             ImportShapefile = Shapefile.OpenFile(ofd.FileName);
@@ -58,12 +59,12 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
 
         public string CheckBlanks()
         {           
-            string idCol = PropertyCrosswalk.Where(_ => _.PropertyType != null).First(_ => _.PropertyType.PropertyName == "PZ_ID").Attribute;
+            string idCol = PropertyCrosswalk.Where(_ => _.PropertyType != null).First(_ => _.PropertyType.PropertyName == "PCS_ID").Attribute;
             foreach (var feat in ImportShapefile.Features)
             {
                 if (feat.DataRow[idCol].ToString() == "")
                 {
-                    return "There are records missing a protection zone id.";
+                    return "There are records missing a permanent call station id.";
                 }
             }
             return "";
@@ -73,7 +74,7 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
         {
             List<string> dupIds = new List<string>();
             List<string> usedIds = new List<string>();
-            string idCol = PropertyCrosswalk.Where(_ => _.PropertyType != null).First(_ => _.PropertyType.PropertyName == "PZ_ID").Attribute;
+            string idCol = PropertyCrosswalk.Where(_ => _.PropertyType != null).First(_ => _.PropertyType.PropertyName == "PCS_ID").Attribute;
             foreach (var feat in ImportShapefile.Features)
             {
                 string fId = feat.DataRow[idCol].ToString();
@@ -97,54 +98,46 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
             w.Start();
             DateTime startImport = DateTime.Now;
 
-            string idCol = PropertyCrosswalk.Where(_ => _.PropertyType != null).First(_ => _.PropertyType.PropertyName == "PZ_ID").Attribute;
+            string idCol = PropertyCrosswalk.Where(_ => _.PropertyType != null).First(_ => _.PropertyType.PropertyName == "PCS_ID").Attribute;
                    
             foreach (var feat in ImportShapefile.Features)
             {
-                ProtectionZone? pz = null;
-                
+                PermanentCallStation? pcs = null;
+
                 if (AttemptReplace)
-                    pz = Database.ProtectionZones
-                    .FirstOrDefault(_ => !_._delete && !_.Repository && _.PZ_ID == feat.DataRow[idCol].ToString());
+                    pcs = Database.PermanentCallStations
+                    .FirstOrDefault(_ => !_._delete && !_.Repository && _.PCS_ID == feat.DataRow[idCol].ToString());
 
-
-
-                if (pz == null)
+                if (pcs == null)
                 {
-                    pz = new ProtectionZone()
+                    pcs = new PermanentCallStation()
                     {
-                        PZ_ID = feat.DataRow[idCol].ToString(),
+                        PCS_ID = feat.DataRow[idCol].ToString(),
                         Repository = RepositoryData
                     };
-                    Database.ProtectionZones.Add(pz);
+                    Database.PermanentCallStations.Add(pcs);
                 }
 
                 if (feat.Geometry.SRID == 0) feat.Geometry.SRID = 26710;
-                if (feat.Geometry is NetTopologySuite.Geometries.Polygon) pz.Geometry = new MultiPolygon(new Polygon[] { (Polygon)feat.Geometry });
-                else pz.Geometry = (MultiPolygon)feat.Geometry;
+                pcs.Geometry = (Point)feat.Geometry;
 
-                pz._delete = false;
+                pcs._delete = false;
             }
             Database.SaveChanges();
-
-            var hexs = Database.Hex160s
-                .Include(_ => _.ProtectionZones)
-                .Where(_ => _.ProtectionZones.Any(x => x.DateModified >= startImport)).Select(_=>_.Hex160ID).ToArray();
-            new Hex160_PZs(hexs);
 
             w.Stop();
         }
 
-        public override ProtectionZone BuildAttributes(object unit, DataRow dataRow)
+        public override PermanentCallStation BuildAttributes(object unit, DataRow dataRow)
         {
-            ProtectionZone survey = (ProtectionZone)unit;
+            PermanentCallStation survey = (PermanentCallStation)unit;
 
             var attributes = PropertyCrosswalk.Where(_ => _.PropertyType != null);
             attributes = attributes.Where(_ => !_.PropertyType.PropertyName.Contains("."));
 
             foreach (var attribute in attributes)
             {
-                var prop = typeof(ProtectionZone).GetProperty(attribute.PropertyType.PropertyName);
+                var prop = typeof(PermanentCallStation).GetProperty(attribute.PropertyType.PropertyName);
                 var val = ValueProcessors.GetParseValue(dataRow[attribute.Attribute], prop.PropertyType);
                 prop.SetValue(survey, val);
             }
@@ -154,7 +147,7 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
         public override List<string> RecordTypeSaveCheck()
         {
             List<string> issues = new List<string>();
-            issues.AddRange(CheckTpes(typeof(ProtectionZone)));
+            issues.AddRange(CheckTpes(typeof(PermanentCallStation)));
 
             string dupIds = CheckBlanks();
             if (dupIds != "") issues.Add(dupIds);

@@ -35,7 +35,7 @@ namespace WBIS_2.DataModel
         [Column("geometry", TypeName = "geometry(Point,26710)")]
         public Point Geometry { get; set; }
 
-        [Column("pcs_id"), ListInfo(DisplayField = true)]
+        [Column("pcs_id"), ListInfo(DisplayField = true), Import(Required = true)]
         public string PCS_ID { get; set; }
 
         [Required, Column("hex160_id")]

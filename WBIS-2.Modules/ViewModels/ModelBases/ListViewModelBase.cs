@@ -23,6 +23,7 @@ using DevExpress.Mvvm.ModuleInjection;
 using Npgsql;
 using DevExpress.Mvvm.POCO;
 using System.Windows.Controls;
+using WBIS_2.Modules.Views.UserControls;
 
 namespace WBIS_2.Modules.ViewModels
 {
@@ -151,6 +152,9 @@ namespace WBIS_2.Modules.ViewModels
             RaisePropertyChanged(nameof(ShowChildrenEnabled));
 
             if (ListManager.CanSetActive && CurrentUser.AutoFilterActiveUnits) ViewActive();
+
+            AddRequiredPassesAvailible = ListManager.InformationType == typeof(Hex160);
+            RaisePropertyChanged(nameof(AddRequiredPassesAvailible));
         }
 
 
@@ -531,6 +535,20 @@ namespace WBIS_2.Modules.ViewModels
                 }
             }
             conn.Close();
+        }
+
+
+        public bool AddRequiredPassesAvailible { get; set; } = false;
+        public ICommand AddRequiredPassesCommand => new DelegateCommand(AddRequiredPassesClick);
+        private void AddRequiredPassesClick()
+        {
+            if (SelectedItems.Count == 0)
+            {
+                MessageBox.Show("There must be records selected.");
+                return;
+            }
+            SetRequiredPassesControl SetRequiredPassesControl = new SetRequiredPassesControl(SelectedItems.Cast<Hex160>().ToArray());
+            CustomControlWindow window = new CustomControlWindow(SetRequiredPassesControl);
         }
     }
 }

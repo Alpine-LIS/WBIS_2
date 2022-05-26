@@ -31,10 +31,19 @@ namespace WBIS_2.Modules.Tools
         {
             var w = new WaitWindowHandler();
             w.Start();
+            DateTime dateTime = DateTime.Now;
 
             FindDeletableChildren(TrackedRecords);
             DeleteRecords(TrackedRecords);
             Database.SaveChanges();
+
+            if (TrackedRecords.First().Manager.InformationType == typeof(ProtectionZone))
+            {
+                var hexs = Database.Hex160s
+               .Include(_ => _.ProtectionZones)
+               .Where(_ => _.ProtectionZones.Any(x => x.DateModified >= dateTime)).Select(_ => _.Hex160ID).ToArray();
+                new Hex160_PZs(hexs);
+            }
 
             w.Stop();
         }
@@ -67,6 +76,7 @@ namespace WBIS_2.Modules.Tools
         {
             var w = new WaitWindowHandler();
             w.Start();
+            DateTime dateTime = DateTime.Now;
 
             string problem = FindRestorableParents(TrackedRecords.ToArray());
             if (problem != "")
@@ -85,6 +95,14 @@ namespace WBIS_2.Modules.Tools
                 return;
             }
             Database.SaveChanges();
+           
+            if (TrackedRecords.First().Manager.InformationType == typeof(ProtectionZone))
+            {
+                var hexs = Database.Hex160s
+               .Include(_ => _.ProtectionZones)
+               .Where(_ => _.ProtectionZones.Any(x => x.DateModified >= dateTime)).Select(_ => _.Hex160ID).ToArray();
+                new Hex160_PZs(hexs);
+            }
 
             w.Stop();
         }

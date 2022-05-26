@@ -424,7 +424,7 @@ namespace WBIS_2.Modules.ViewModels
                 }
                 else
                 {
-                    if (Type.GetType(parent).GetProperties().Any(_ => _.Name == "Repository"))
+                    if (parentType.GetProperties().Any(_ => _.Name == "Repository"))
                         repository = $"{parent}.repository = FALSE";
                 }
             }
@@ -442,7 +442,7 @@ namespace WBIS_2.Modules.ViewModels
                 }
                 else
                 {
-                    if (Type.GetType(parent).GetProperties().Any(_ => _.Name == "_delete"))
+                    if (parentType.GetProperties().Any(_ => _.Name == "_delete"))
                         delete = $"{parent}._delete = FALSE";
                 }
             }

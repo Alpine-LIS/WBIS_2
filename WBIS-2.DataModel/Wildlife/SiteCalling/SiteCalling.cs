@@ -181,7 +181,7 @@ namespace WBIS_2.DataModel
 
 
 
-        [ListInfo(ChildField = true)]
+        //[ListInfo(ChildField = true)]
         public ICollection<OtherWildlife> OtherWildlifeRecords { get; set; }
         public ICollection<Picture> Pictures { get; set; }
 

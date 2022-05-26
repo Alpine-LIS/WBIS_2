@@ -8,7 +8,7 @@ namespace WBIS_2.DataModel
 {
     public class SiteCallingDetection: IPointParents, IPointLayer, IUserRecords
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid"), ForeignKey("SiteCalling")]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
 
         [Column("site_calling_id")]

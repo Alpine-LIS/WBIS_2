@@ -70,6 +70,7 @@ namespace WBIS_2.DataModel
 
         public ICollection<ProtectionZone> ProtectionZones { get; set; }
         public ICollection<PermanentCallStation> PermanentCallStations { get; set; }
+        public ICollection<Hex160RequiredPass> Hex160RequiredPasses { get; set; }
 
 
         [NotMapped, Display(Order = -1)]

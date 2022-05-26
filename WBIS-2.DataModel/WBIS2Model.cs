@@ -189,6 +189,13 @@ namespace WBIS_2.DataModel
                         x => x.HasOne<District>().WithMany().HasForeignKey("district_id"),
                         x => x.ToTable("hex160s_districts", "public"));
             modelBuilder.Entity<District>()
+               .HasMany(_ => _.Hex160RequiredPasses)
+               .WithMany(p => p.Districts)
+               .UsingEntity<Dictionary<string, object>>("hex160_required_passes_districts",
+                       x => x.HasOne<Hex160RequiredPass>().WithMany().HasForeignKey("hex160_required_pass_id"),
+                       x => x.HasOne<District>().WithMany().HasForeignKey("district_id"),
+                       x => x.ToTable("hex160_required_passes_districts", "public"));
+            modelBuilder.Entity<District>()
                 .HasMany(_ => _.Watersheds)
                 .WithMany(p => p.Districts)
                 .UsingEntity<Dictionary<string, object>>("watersheds_districts",

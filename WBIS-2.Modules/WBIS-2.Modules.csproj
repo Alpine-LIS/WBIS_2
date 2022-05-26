@@ -86,6 +86,9 @@
     <Compile Update="Views\GeneralLists\ChildrenListView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\RecordImporters\PermanentCallStationImportView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\RecordImporters\ProtectionZoneImportView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -108,6 +111,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\UserControls\Menus\HexMenuTools.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\UserControls\SetRequiredPassesControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\UserControls\SelectBotanicalSpeciesControl.xaml.cs">
@@ -156,6 +162,10 @@
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Views\RecordImporters\PermanentCallStationImportView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Views\RecordImporters\ProtectionZoneImportView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
@@ -185,6 +195,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\UserControls\Menus\HexMenuTools.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\UserControls\SetRequiredPassesControl.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

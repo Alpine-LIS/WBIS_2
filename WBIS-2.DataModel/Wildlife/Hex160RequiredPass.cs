@@ -1,5 +1,6 @@
 ﻿using NetTopologySuite.Geometries;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
@@ -44,6 +45,7 @@ namespace WBIS_2.DataModel
         public Guid Hex160Id { get; set; }
         [ListInfo(AutoInclude = true)]
         public Hex160 Hex160 { get; set; }
+        public ICollection<District> Districts { get; set; }
         [Required, Column("bird_species_id")]
         public Guid BirdSpeciesId { get; set; }
         [ListInfo(AutoInclude = true)]

@@ -65,7 +65,13 @@
                 IsVisible="{Binding IsIMapNavigationList}"
                 Content="Toggle map auto zoom" Glyph="{dx:DXImage SvgImages/Dashboards/GeoPointMaps.svg}"/>
 
-            <!--<dxb:BarSubItem Glyph="{dx:DXImage SvgImages/Dashboards/EditFilter.svg}" ToolTip="Filter Tools">
+            <dxb:BarSubItem Glyph="{dx:DXImage SvgImages/Dashboards/EditFilter.svg}" ToolTip="Filter Tools">
+                <dxb:BarButtonItem Content="Add Required Passes"
+                                   Command="{Binding AddRequiredPassesCommand}"
+                                   IsVisible="{Binding AddRequiredPassesAvailible}"/>
+            </dxb:BarSubItem>
+
+                <!--<dxb:BarSubItem Glyph="{dx:DXImage SvgImages/Dashboards/EditFilter.svg}" ToolTip="Filter Tools">
                 <dxb:BarButtonItem 
                     ToolTip="Save Filter"
                     Content="Save Filter"
