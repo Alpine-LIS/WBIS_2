@@ -51,7 +51,7 @@ namespace WBIS_2.Modules.ViewModels
                     rp = new Hex160RequiredPass()
                     {
                         Hex160 = hex160,
-                        Districts = hex160.Districts,
+                        //Districts = hex160.Districts,
                         BirdSpecies = SelectedSpecies,
                         Dropped = false,
                         _delete = false,

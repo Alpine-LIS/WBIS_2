@@ -68,9 +68,9 @@ namespace WBIS_2.DataModel
         public ICollection<CNDDBQuadElement> CNDDBQuadElements { get; set; }
         public ICollection<PlantProtectionSummary> PlantProtectionSummaries { get; set; }
 
-        public ICollection<ProtectionZone> ProtectionZones { get; set; }
-        public ICollection<PermanentCallStation> PermanentCallStations { get; set; }
-        public ICollection<Hex160RequiredPass> Hex160RequiredPasses { get; set; }
+        //public ICollection<ProtectionZone> ProtectionZones { get; set; }
+        //public ICollection<PermanentCallStation> PermanentCallStations { get; set; }
+        //public ICollection<Hex160RequiredPass> Hex160RequiredPasses { get; set; }
 
 
         [NotMapped, Display(Order = -1)]

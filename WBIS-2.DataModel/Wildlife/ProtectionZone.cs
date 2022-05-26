@@ -47,9 +47,9 @@ namespace WBIS_2.DataModel
         public ICollection<Hex160> CurrentHex160s { get; set; }
 
 
-        [Column("district_id")]
-        public Guid? DistrictId { get; set; }
-        public District District { get; set; }
+        //[Column("district_id")]
+        //public Guid? DistrictId { get; set; }
+        //public District District { get; set; }
 
         [NotMapped, Display(Order = -1)]
         public IInfoTypeManager Manager => new InformationTypeManager<ProtectionZone>();

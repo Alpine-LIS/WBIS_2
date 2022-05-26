@@ -192,6 +192,34 @@ namespace WBIS_2.DataModel
             if (Query.Length == 0)
                 return returnVal.Take(0);
 
+            PropertyInfo queryProperty = GetQueryProperty(returnVal,QueryType);
+
+            var ShowOptions = (Expression<Func<InfoType, bool>>)ShowHideDeleteAndRepository(showDelete, showRepository);
+
+            if (queryProperty == null)
+            {
+                if (ShowOptions == null)
+                    return returnVal;
+                else
+                    return returnVal.Where(ShowOptions);
+            }
+            else
+            {
+                var info = this.GetType().GetMethod(nameof(GetParentWhere));
+                var genInfo = info.MakeGenericMethod(QueryType);
+                var ParentQuery = (Expression<Func<InfoType, bool>>)genInfo
+                    .Invoke(this, new object[] { Query.ToList(), queryProperty });
+
+
+                if (ShowOptions == null)
+                    return returnVal.Where(ParentQuery);
+                else
+                    return returnVal.Where(ParentQuery).Where(ShowOptions);
+            }           
+        }
+
+        private PropertyInfo GetQueryProperty(IQueryable<InfoType> returnVal, Type QueryType)
+        {
             PropertyInfo queryProperty = null;
             if (QueryType != typeof(InfoType))
             {
@@ -200,18 +228,7 @@ namespace WBIS_2.DataModel
                     if (!AutoIncludes.Contains(queryProperty))
                         returnVal = returnVal.Include($"{queryProperty.Name}");
             }
-
-            var info = this.GetType().GetMethod(nameof(GetParentWhere));
-            var genInfo = info.MakeGenericMethod(QueryType);
-            var a = (Expression<Func<InfoType, bool>>)genInfo
-                .Invoke(this, new object[] { Query.ToList(), queryProperty });
-
-            var b = (Expression<Func<InfoType, bool>>)ShowHideDeleteAndRepository(showDelete, showRepository);
-
-            if (b == null)
-                return returnVal.Where(a);
-            else
-                return returnVal.Where(a).Where(b);
+            return queryProperty;
         }
 
         public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
