@@ -9,7 +9,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class OtherWildlife : UserDataValidator//, IUserRecords
+    public class OtherWildlife : UserDataValidator, IInformationType//, IUserRecords
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
@@ -20,11 +20,21 @@ namespace WBIS_2.DataModel
 
         [Required, Column("wildlife_species_id")]
         public Guid WildlifeSpeciesId { get; set; }
+        [ListInfo(AutoInclude = true)]
         public WildlifeSpecies WildlifeSpecies { get; set; }
-        
+
+        [Column("detection"),]
+        public string Detection { get; set; }
+        [Column("number"),]
+        public int Number { get; set; }
+        [Column("date_time"),]
+        public DateTime DateTime { get; set; }
+
         [Column("site_calling_id"), ]
         public Guid SiteCallingId { get; set; }
         public SiteCalling SiteCalling { get; set; }
 
+        [NotMapped, Display(Order = -1)]
+        public IInfoTypeManager Manager { get { return new InformationTypeManager<OtherWildlife>(); } }
     }
 }

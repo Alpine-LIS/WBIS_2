@@ -62,6 +62,9 @@ namespace WBIS_2.Modules.ViewModels
             ProtectionZones = Database.ProtectionZones
             .Where(_ => (_.Geometry.IsWithinDistance(Calling.Geometry, 4828.03) && !_._delete && !_.Repository) || _ == Calling.ProtectionZone).ToArray();
             SetDateValues();
+            PassNumber = Calling.PassNumber;
+            //RefreshOtherWildlifeRecords();
+           // RefreshOtherWildlifeRecords();
         }
         public override void Records_GetQueryable(object sender, GetQueryableEventArgs e)
         {
@@ -97,40 +100,37 @@ namespace WBIS_2.Modules.ViewModels
 
         public override void Save()
         {
-            //if (!this.Changed) return;
+            if (!this.Changed) return;
 
-            //if (HasErrors() || SurveyArea.HasErrors())
-            //{
-            //    MessageBox.Show("Please ensure that all field requirements are met.");
-            //    return;
-            //}
+            if (HasErrors() || Calling.HasErrors())
+            {
+                MessageBox.Show("Please ensure that all field requirements are met.");
+                return;
+            }
+            if (new string[] { "SPOW", "NSOW", "SPOW+BDOW"}.Contains(Calling.SurveySpecies.Species) && Calling.SPOW_OccupancyStatus == null)
+            {
+                MessageBox.Show("The SPOW occupancy status must be filled when the survey species is a spotted owl.");
+                return;
+            }
 
-            //WaitWindowHandler w = new WaitWindowHandler();
-            //w.Start();
-                      
-            //THP_Area tHP_Area = DbHelp.ThpExistance(Database, ThpName);
-            //if (tHP_Area == null)
-            //{
-            //    tHP_Area = new THP_Area() { THPName = ThpName };
-            //    Database.THP_Areas.Add(tHP_Area);
-            //}
-            //SurveyArea.THP_Area = tHP_Area;
+            WaitWindowHandler w = new WaitWindowHandler();
+            w.Start();
 
-            //SurveyArea.AreaName = AreaName;
+            GetDateValues();
 
-            //if (ConnectScoping)
-            //    SurveyArea.BotanicalScoping = Database.BotanicalScopings
-            //        .Include(_=>_.THP_Area)
-            //        .Include(_=>_.BotanicalSurveyAreas)
-            //        .FirstOrDefault(_=>_.THP_Area == SurveyArea.THP_Area);
+            if (PassNumber != Calling.PassNumber)
+            {
+                Calling.ManualPassChanged = true;
+                Calling.PassNumber = PassNumber;
+            }
 
-            //if (!Database.BotanicalSurveyAreas.Contains(SurveyArea))
-            //    Database.BotanicalSurveyAreas.Add(SurveyArea);
-            //else Database.BotanicalSurveyAreas.Update(SurveyArea);
+            if (!Database.SiteCallings.Contains(Calling))
+                Database.SiteCallings.Add(Calling);
+            else Database.SiteCallings.Update(Calling);
 
-            //Database.SaveChanges();
-            //this.Changed = false;
-            //w.Stop();
+            Database.SaveChanges();
+            this.Changed = false;
+            w.Stop();
         }
 
 
@@ -150,16 +150,28 @@ namespace WBIS_2.Modules.ViewModels
         [Required]
         public DateTime StartDate { get { return GetProperty(() => StartDate); } set { SetProperty(() => StartDate, value); UpdateTimeSpent(); } }
         [Required, Range(0, 23, ErrorMessage = "Please enter a value between 0 and 23.")]
-        public int StartHour { get { return GetProperty(() => StartHour); } set { SetProperty(() => StartHour, value); UpdateTimeSpent(); } }
+        public int StartHour { get { return GetProperty(() => StartHour); } 
+            set { SetProperty(() => StartHour, value);
+                UpdateTimeSpent();
+            } }
         [Required, Range(0, 59, ErrorMessage = "Please enter a value between 0 and 59.")]
-        public int StartMinute { get { return GetProperty(() => StartMinute); } set { SetProperty(() => StartMinute, value); UpdateTimeSpent(); } }
+        public int StartMinute { get { return GetProperty(() => StartMinute); } 
+            set { SetProperty(() => StartMinute, value); 
+                UpdateTimeSpent();
+            } }
 
         [Required]
         public DateTime EndDate { get { return GetProperty(() => EndDate); } set { SetProperty(() => EndDate, value); UpdateTimeSpent(); } }
         [Required, Range(0, 23, ErrorMessage = "Please enter a value between 0 and 23.")]
-        public int EndHour { get { return GetProperty(() => EndHour); } set { SetProperty(() => EndHour, value); UpdateTimeSpent(); } }
+        public int EndHour { get { return GetProperty(() => EndHour); } 
+            set { SetProperty(() => EndHour, value);
+                UpdateTimeSpent();
+            } }
         [Required, Range(0, 59, ErrorMessage = "Please enter a value between 0 and 59.")]
-        public int EndMinute { get { return GetProperty(() => EndMinute); } set { SetProperty(() => EndMinute, value); UpdateTimeSpent(); } }
+        public int EndMinute { get { return GetProperty(() => EndMinute); } 
+            set { SetProperty(() => EndMinute, value);
+                UpdateTimeSpent();
+            } }
         private void SetDateValues()
         {
             StartDate = Calling.StartTime.Date;
@@ -177,19 +189,30 @@ namespace WBIS_2.Modules.ViewModels
         }
         private void UpdateTimeSpent()
         {
-            var start = new DateTime(StartDate.Year, StartDate.Month, StartDate.Day, StartHour, StartMinute, 0);
-            var end = new DateTime(EndDate.Year, EndDate.Month, EndDate.Day, EndHour, EndMinute, 0);
-            TimeSpent = end.Subtract(start).TotalMinutes.ToString("N2");
-            RaisePropertyChanged(nameof(TimeSpent));
+            try
+            {
+                var start = new DateTime(StartDate.Year, StartDate.Month, StartDate.Day, StartHour, StartMinute, 0);
+                var end = new DateTime(EndDate.Year, EndDate.Month, EndDate.Day, EndHour, EndMinute, 0);
+                TimeSpent = end.Subtract(start).TotalMinutes.ToString("N2");
+                RaisePropertyChanged(nameof(TimeSpent));
 
-            var conn = new Npgsql.NpgsqlConnection(WBIS2Model.GetRDSConnectionString());
-            conn.Open();
-            string a = $"SELECT RISE_SET_TIME(ST_Y(ST_Transform(geometry, 4267)), ST_X(ST_Transform(geometry, 4267)), FALSE, '{StartDate.Year}-{StartDate.Month}-{StartDate.Day} {EndHour}:{EndMinute}') at time zone 'America/Los_Angeles'" +
-                $"FROM site_callings WHERE guid = '{Calling.Guid}'";
-            var cmd = new Npgsql.NpgsqlCommand(a, conn));
-            Calling.SunsetTime = (DateTime)cmd.ExecuteScalar();
-            conn.Close();
+                var conn = new Npgsql.NpgsqlConnection(WBIS2Model.GetRDSConnectionString());
+                conn.Open();
+                string a = $"SELECT RISE_SET_TIME(ST_Y(ST_Transform(geometry, 4267)), ST_X(ST_Transform(geometry, 4267)), FALSE, '{start}') at time zone 'America/Los_Angeles' + (INTERVAL '1 day')" +
+                    $"FROM site_callings WHERE guid = '{Calling.Guid}' limit 1";
+                var cmd = new Npgsql.NpgsqlCommand(a, conn);
+                var test = cmd.ExecuteScalar();
+                if (!(test is DBNull))
+                {
+                    Calling.SunsetTime = (DateTime)test;
+                    RaisePropertyChanged(nameof(Calling));
+                }
+                conn.Close();
+            }
+            catch (Exception)
+            {
 
+            }
         }
         public string TimeSpent { get; set; }
 
@@ -197,9 +220,34 @@ namespace WBIS_2.Modules.ViewModels
         public BirdSpecies[] AvailibleSpecies => Database.BirdSpecies.Where(_=>_.IsSurveyable).ToArray();
         public ProtectionZone[] ProtectionZones { get; set; }
 
+        public int PassNumber { get; set; } = 0;
 
 
 
+
+
+        //public EntityInstantFeedbackSource OtherWildlifeRecords { get; set; }
+        //internal virtual void RefreshOtherWildlifeRecords()
+        //{
+        //    OtherWildlifeRecords = new EntityInstantFeedbackSource
+        //    {
+        //        AreSourceRowsThreadSafe = true,
+        //        KeyExpression = $"Guid",
+        //    };
+        //    OtherWildlifeRecords.GetQueryable += RecordsOtherWildlifeRecords;
+        //    OtherWildlifeRecords.Refresh();
+        //    RaisePropertyChanged(nameof(OtherWildlifeRecords));
+        //}
+        //public void RecordsOtherWildlifeRecords(object sender, GetQueryableEventArgs e)
+        //{
+        //    e.QueryableSource = Database.OtherWildlifeRecords
+        //        .Include(_ => _.SiteCalling)
+        //        .Where(_ => _.SiteCalling == Calling);
+        //    //e.QueryableSource = Database.SiteCallings
+        //    //    .Include(_ => _.OtherWildlifeRecords)
+        //    //    .Where(_ => _.Guid == Calling.Guid)
+        //    //    .Select(_=>_.OtherWildlifeRecords);
+        //}
 
 
 

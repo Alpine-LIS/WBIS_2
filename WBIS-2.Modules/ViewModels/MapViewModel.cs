@@ -349,17 +349,10 @@ namespace WBIS_2.Modules.ViewModels
 
                 joinParent = $" INNER JOIN {parent} ON {layerStr.ToLower()}.guid = {parent}.guid";
             }
+                      
+            string boolQuery = BuildBoolQuerry(layerStr, parent, parentType, trueType);
 
-            string delete = GetDeleteQuery(layerStr, parent, parentType, trueType);
-            string repository = GetRepositoryQuery(layerStr, parent, parentType, trueType);
-            string districts = GetDistrictQuery(layerStr, parent, parentType, trueType);
-
-            string boolQuery = string.Join(" AND ", new string[] { delete, repository, districts });
-            while (boolQuery.StartsWith(" AND "))
-                boolQuery = boolQuery.Remove(0, 5);
-            boolQuery = boolQuery.Replace(" AND AND ", " AND ");
-
-            string query = $"SELECT {layerStr.ToLower()}.guid, {boolQuery} from {layerStr.ToLower()} {joinParent} " +
+            string query = $"SELECT {layerStr.ToLower()}.guid{boolQuery} from {layerStr.ToLower()} {joinParent} " +
                 $"WHERE {layerStr.ToLower()}.geometry IS NOT NULL" +
                 $" ORDER BY {layerStr.ToLower()}.guid";
 
@@ -392,6 +385,23 @@ namespace WBIS_2.Modules.ViewModels
                 MessageBox.Show($"There was a misalignment displaying layer {layerStr}");
         }
 
+        private string BuildBoolQuerry(string layerStr, string parent, Type parentType, Type trueType)
+        {
+            string delete = GetDeleteQuery(layerStr, parent, parentType, trueType);
+            string repository = GetRepositoryQuery(layerStr, parent, parentType, trueType);
+            string districts = GetDistrictQuery(layerStr, parent, parentType, trueType);
+
+            var boolQuery = string.Join(" AND ", new string[] { delete, repository, districts });
+            boolQuery = boolQuery.Replace(" AND AND ", " AND ");
+            while (boolQuery.StartsWith(" AND "))
+                boolQuery = boolQuery.Remove(0, 5);
+            while (boolQuery.EndsWith(" AND "))
+                boolQuery = boolQuery.Remove(boolQuery.Length - 5, 5);
+            if (boolQuery.Length > 0)
+                boolQuery = ", " + boolQuery;
+            return boolQuery;
+        }
+
         private string GetDistrictQuery(string layerStr, string parent, Type parentType, Type trueType)
         {
             string districts = "";
@@ -400,14 +410,14 @@ namespace WBIS_2.Modules.ViewModels
             {
                 if (trueType.GetProperty("District") != null)
                     districts = $" {layerStr.ToLower()}.district_id IN ({DistrictGuids})";
-                else
+                else if (trueType.GetProperty("Districts") != null)
                     districts = $" {layerStr.ToLower()}.guid IN (SELECT {DbHelp.GetDbString(trueType)}_id FROM {layerStr.ToLower()}_districts WHERE district_id IN ({DistrictGuids}))";
             }
             else
             {
                 if (parentType.GetProperty("District") != null)
                     districts = $" {parent}.district_id IN ({DistrictGuids})";
-                else
+                else if (trueType.GetProperty("Districts") != null)
                     districts = $" {layerStr.ToLower()}.guid IN (SELECT {DbHelp.GetDbString(parentType)}_id FROM {parent}_districts WHERE district_id IN ({DistrictGuids}))";
             }
             return districts;

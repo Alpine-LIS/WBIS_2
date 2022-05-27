@@ -13,7 +13,7 @@ namespace WBIS_2.Modules.Tools
     public class DeleteRestoreAndRepository
     {
         WBIS2Model Database = new WBIS2Model();
-        IQueryable<IUserRecords> TrackedRecords { get; set; }
+        IQueryable<object> TrackedRecords { get; set; }
         
         /// <summary>
         /// sets if repository or _delete is being modified.
@@ -22,7 +22,7 @@ namespace WBIS_2.Modules.Tools
         public DeleteRestoreAndRepository(IInformationType[] _UnTrackedRecords, string _propName)
         {
             IInfoTypeManager m= _UnTrackedRecords[0].Manager;
-            TrackedRecords = (IQueryable<IUserRecords>)m.GetQueryable(_UnTrackedRecords, m.InformationType, Database, track: true);
+            TrackedRecords = (IQueryable<object>)m.GetQueryable(_UnTrackedRecords, m.InformationType, Database, track: true);
             property = m.InformationType.GetProperty(_propName);
         }
         
@@ -37,7 +37,7 @@ namespace WBIS_2.Modules.Tools
             DeleteRecords(TrackedRecords);
             Database.SaveChanges();
 
-            if (TrackedRecords.First().Manager.InformationType == typeof(ProtectionZone))
+            if (((IInformationType)TrackedRecords.First()).Manager.InformationType == typeof(ProtectionZone))
             {
                 var hexs = Database.Hex160s
                .Include(_ => _.ProtectionZones)
@@ -47,14 +47,14 @@ namespace WBIS_2.Modules.Tools
 
             w.Stop();
         }
-        private void FindDeletableChildren(IQueryable<IUserRecords> records)
+        private void FindDeletableChildren(IQueryable<object> records)
         {
-            IInfoTypeManager manager = records.First().Manager;
+            IInfoTypeManager manager = ((IInformationType)records.First()).Manager;
             var children = manager.AvailibleChildren
-                    .Where(_ => _.Manager.InformationType.GetInterfaces().Contains(typeof(IUserRecords)));
+                    .Where(_ => _.Manager.InformationType.GetInterfaces().Contains(typeof(object)));
             foreach (var child in children)
             {
-                var childrenRecords = (IQueryable<IUserRecords>)child.Manager.GetQueryable(records.ToArray(), manager.InformationType, Database, track: true);
+                var childrenRecords = (IQueryable<object>)child.Manager.GetQueryable(records.ToArray(), manager.InformationType, Database, track: true);
                 if (childrenRecords.Count() > 0)
                 {
                     FindDeletableChildren(childrenRecords);
@@ -64,7 +64,7 @@ namespace WBIS_2.Modules.Tools
 
             //.ChangeTracker.Clear();
         }
-        private void DeleteRecords(IQueryable<IUserRecords> records)
+        private void DeleteRecords(IQueryable<object> records)
         {
             foreach (var record in records)
                 property.SetValue(record, true);
@@ -96,7 +96,7 @@ namespace WBIS_2.Modules.Tools
             }
             Database.SaveChanges();
            
-            if (TrackedRecords.First().Manager.InformationType == typeof(ProtectionZone))
+            if (((IInformationType)TrackedRecords.First()).Manager.InformationType == typeof(ProtectionZone))
             {
                 var hexs = Database.Hex160s
                .Include(_ => _.ProtectionZones)
@@ -106,14 +106,14 @@ namespace WBIS_2.Modules.Tools
 
             w.Stop();
         }
-        private string FindRestorableParents(IUserRecords[] records)
+        private string FindRestorableParents(object[] records)
         {
-            IInfoTypeManager manager = records.First().Manager;
+            IInfoTypeManager manager = ((IInformationType)records.First()).Manager;
             var parents = manager.PossibleParents
-                    .Where(_ => _.Manager.InformationType.GetInterfaces().Contains(typeof(IUserRecords))).ToArray();
+                    .Where(_ => _.Manager.InformationType.GetInterfaces().Contains(typeof(object))).ToArray();
             foreach (var parent in parents)
             {
-                var parentRecords = ((IQueryable<IUserRecords>)parent.Manager.GetQueryableFromChildren(records.ToArray(), manager.InformationType, Database)).ToArray();
+                var parentRecords = ((IQueryable<object>)parent.Manager.GetQueryableFromChildren(records.ToArray(), manager.InformationType, Database)).ToArray();
                 if (parentRecords.Count() > 0)
                 {
                     FindRestorableParents(parentRecords);
@@ -123,7 +123,7 @@ namespace WBIS_2.Modules.Tools
             }
             return "";
         }
-        private string RestoreRecords(IUserRecords[] records)
+        private string RestoreRecords(object[] records)
         {
             foreach (var record in records)
             {

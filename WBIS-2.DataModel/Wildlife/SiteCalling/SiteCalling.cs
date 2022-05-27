@@ -7,7 +7,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class SiteCalling : IUserRecords,  IPointParents, IPointLayer
+    public class SiteCalling : UserDataValidator, IUserRecords,  IPointParents, IPointLayer
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
@@ -181,7 +181,7 @@ namespace WBIS_2.DataModel
 
 
 
-        //[ListInfo(ChildField = true)]
+        [ListInfo(ChildField = true)]
         public ICollection<OtherWildlife> OtherWildlifeRecords { get; set; }
         public ICollection<Picture> Pictures { get; set; }
 

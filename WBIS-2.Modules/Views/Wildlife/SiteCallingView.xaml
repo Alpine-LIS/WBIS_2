@@ -43,9 +43,9 @@
             </Grid.RowDefinitions>
 
             <Label Content="Record Type:" Grid.Row="0" Grid.Column="0"/>
-            <dxe:TextEdit Text="{Binding Calling.RecordType}" IsReadOnly="True" Grid.Row="0" Grid.Column="1"/>
+            <dxe:TextEdit Text="{Binding Calling.RecordType, ValidatesOnDataErrors=True}" IsReadOnly="True" Grid.Row="0" Grid.Column="1"/>
             <Label Content="Surveyor:" Grid.Row="0" Grid.Column="2"/>
-            <dxe:TextEdit Text="{Binding Calling.User.UserName}" IsReadOnly="True" Grid.Row="0" Grid.Column="3"/>
+            <dxe:TextEdit Text="{Binding Calling.User.UserName, ValidatesOnDataErrors=True}" IsReadOnly="True" Grid.Row="0" Grid.Column="3"/>
             <Label Content="Start Lat:" Grid.Row="0" Grid.Column="4"/>
             <Grid Grid.Row="0" Grid.Column="5">
                 <Grid.ColumnDefinitions>
@@ -54,10 +54,10 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <dxe:TextEdit Text="{Binding Calling.Lat}" Grid.Row="0" Grid.Column="0"/>
+                <dxe:TextEdit Text="{Binding Calling.Lat, ValidatesOnDataErrors=True, StringFormat=N5}" IsReadOnly="True" Grid.Row="0" Grid.Column="0"/>
                 <Label Content="Lon:" Grid.Row="0" Grid.Column="1"/>
-                <dxe:TextEdit Text="{Binding Calling.Lon}" Grid.Row="0" Grid.Column="2"/>
-                <dxe:TextEdit Text="{Binding Calling.Datum}" Grid.Row="0" Grid.Column="3"/>
+                <dxe:TextEdit Text="{Binding Calling.Lon, ValidatesOnDataErrors=True, StringFormat=N5}" IsReadOnly="True" Grid.Row="0" Grid.Column="2"/>
+                <dxe:TextEdit Text="{Binding Calling.Datum, ValidatesOnDataErrors=True}" IsReadOnly="True" Grid.Row="0" Grid.Column="3"/>
             </Grid>
 
             <Label Content="Survey Type:" Grid.Row="1" Grid.Column="0"/>
@@ -66,19 +66,19 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width=".35*"/>
                 </Grid.ColumnDefinitions>
-                <dxe:ComboBoxEdit SelectedItem="{Binding Calling.SurveyType1}" ItemsSource="{Binding Type1Surveys}" Grid.Column="0"/>
-                <dxe:ComboBoxEdit SelectedItem="{Binding Calling.SurveyType2}" ItemsSource="{Binding Type2Surveys}" Grid.Column="1"/>
+                <dxe:ComboBoxEdit SelectedItem="{Binding Calling.SurveyType1, ValidatesOnDataErrors=True}" ItemsSource="{Binding Type1Surveys}" Grid.Column="0"/>
+                <dxe:ComboBoxEdit SelectedItem="{Binding Calling.SurveyType2, ValidatesOnDataErrors=True}" ItemsSource="{Binding Type2Surveys}" Grid.Column="1"/>
             </Grid>
             <Label Content="Survey Species:" Grid.Row="1" Grid.Column="2"/>
-            <dxe:ComboBoxEdit SelectedItem="{Binding Calling.SurveySpecies}" ItemsSource="{Binding AvailibleSpecies}" DisplayMember="Species" Grid.Row="1" Grid.Column="3"/>
+            <dxe:ComboBoxEdit SelectedItem="{Binding Calling.SurveySpecies, ValidatesOnDataErrors=True}" ItemsSource="{Binding AvailibleSpecies}" DisplayMember="Species" Grid.Row="1" Grid.Column="3"/>
             <Label Content="PCS/PZ ID:" Grid.Row="1" Grid.Column="4"/>
             <Grid Grid.Row="1" Grid.Column="5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <dxe:TextEdit Text="{Binding Calling.SiteID}" Grid.Column="0"/>
-                <dxe:ComboBoxEdit SelectedItem="{Binding Calling.ProtectionZone}" ItemsSource="{Binding ProtectionZones}" DisplayMember="PZ_ID" Grid.Column="1"/>
+                <dxe:TextEdit Text="{Binding Calling.SiteID, ValidatesOnDataErrors=True}" Grid.Column="0"/>
+                <dxe:ComboBoxEdit SelectedItem="{Binding Calling.ProtectionZone, ValidatesOnDataErrors=True}" ItemsSource="{Binding ProtectionZones}" DisplayMember="PZ_ID" Grid.Column="1"/>
             </Grid>
 
 
@@ -90,8 +90,8 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <dxe:TextEdit Text="{Binding Calling.PassNumber}" MaskType="Numeric" Grid.Column="0"/>
-                <dxe:TextEdit Text="{Binding Calling.PZPassNumber}" MaskType="Numeric" Grid.Column="1"/>
+                <dxe:TextEdit Text="{Binding PassNumber, ValidatesOnDataErrors=True}" MaskType="Numeric" Grid.Column="0"/>
+                <dxe:TextEdit Text="{Binding Calling.PZPassNumber, ValidatesOnDataErrors=True}" MaskType="Numeric" Grid.Column="1"/>
             </Grid>
 
             <Label Content="Elapsed(m):" Grid.Row="2" Grid.Column="4"/>
@@ -101,17 +101,18 @@
                     <ColumnDefinition Width="AUTO"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <dxe:TextEdit Text="{Binding TimeSpent}" IsReadOnly="True" Grid.Column="0"/>
+                <dxe:TextEdit Text="{Binding TimeSpent, ValidatesOnDataErrors=True}" IsReadOnly="True" Grid.Column="0"/>
                 <Label Content="Sunset:" Grid.Column="1"/>
-                <dxe:TextEdit Text="{Binding Calling.SunsetTime, StringFormat=HH:mm}" IsReadOnly="True" MaskType="DateTime" Grid.Column="2"/>
+                <dxe:TextEdit Text="{Binding Calling.SunsetTime, StringFormat=HH:mm, ValidatesOnDataErrors=True}" IsReadOnly="True" Grid.Column="2"/>
+                <!--<dxe:TextEdit Text="{Binding Calling.SunsetTime, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Grid.Column="2"/>-->
             </Grid>
 
             <Label Content="Wind:" Grid.Row="3" Grid.Column="0"/>
-            <dxe:ComboBoxEdit SelectedItem="{Binding Calling.Wind}" ItemsSource="{Binding Winds}" Grid.Row="3" Grid.Column="1"/>
+            <dxe:ComboBoxEdit SelectedItem="{Binding Calling.Wind, ValidatesOnDataErrors=True}" ItemsSource="{Binding Winds}" Grid.Row="3" Grid.Column="1"/>
             <Label Content="Precip:" Grid.Row="3" Grid.Column="2"/>
-            <dxe:ComboBoxEdit SelectedItem="{Binding Calling.Precipitation}" ItemsSource="{Binding Precips}" Grid.Row="3" Grid.Column="3"/>
+            <dxe:ComboBoxEdit SelectedItem="{Binding Calling.Precipitation, ValidatesOnDataErrors=True}" ItemsSource="{Binding Precips}" Grid.Row="3" Grid.Column="3"/>
 
-            <Label Content="Time Spent:" Grid.Column="4" Grid.Row="3"/>
+            <Label Content="Start Time:" Grid.Column="4" Grid.Row="3"/>
             <Grid Grid.Column="5" Grid.Row="3">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="2*"/>
@@ -119,13 +120,13 @@
                     <ColumnDefinition Width="AUTO"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <dxe:DateEdit EditValue="{Binding StartDate, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" MaskType="DateTime" Grid.Column="0"/>
-                <dxe:TextEdit Text="{Binding StartHour, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat=00}" MaskType="Numeric" Grid.Column="1"/>
+                <dxe:DateEdit EditValue="{Binding StartDate, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" MaskType="DateTime" Grid.Column="0"/>
+                <dxe:TextEdit Text="{Binding StartHour, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat=00, ValidatesOnDataErrors=True}" MaskType="Numeric" Grid.Column="1"/>
                 <Label Content=":" Grid.Column="2"/>
-                <dxe:TextEdit Text="{Binding StartMinute, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat=00}" MaskType="Numeric" Grid.Column="3"/>
+                <dxe:TextEdit Text="{Binding StartMinute, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat=00, ValidatesOnDataErrors=True}" MaskType="Numeric" Grid.Column="3"/>
             </Grid>
 
-            <Label Content="Time Spent:" Grid.Column="4" Grid.Row="4"/>
+            <Label Content="End Time:" Grid.Column="4" Grid.Row="4"/>
             <Grid Grid.Column="5" Grid.Row="4">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="2*"/>
@@ -133,10 +134,10 @@
                     <ColumnDefinition Width="AUTO"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <dxe:DateEdit EditValue="{Binding EndDate, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" MaskType="DateTime" Grid.Column="0"/>
-                <dxe:TextEdit Text="{Binding EndHour, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat=00}" MaskType="Numeric" Grid.Column="1"/>
+                <dxe:DateEdit EditValue="{Binding EndDate, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" MaskType="DateTime" Grid.Column="0"/>
+                <dxe:TextEdit Text="{Binding EndHour, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat=00, ValidatesOnDataErrors=True}" MaskType="Numeric" Grid.Column="1"/>
                 <Label Content=":" Grid.Column="2"/>
-                <dxe:TextEdit Text="{Binding EndMinute, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat=00}" MaskType="Numeric" Grid.Column="3"/>
+                <dxe:TextEdit Text="{Binding EndMinute, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat=00, ValidatesOnDataErrors=True}" MaskType="Numeric" Grid.Column="3"/>
             </Grid>
 
             <Label Content="YAC:" Grid.Column="2" Grid.Row="4"/>
@@ -146,11 +147,11 @@
                 <TextBlock Text="Status Options:" TextDecorations="Underline"/>
             </Label>-->
             <Label Content="SPOW Occupancy:" Grid.Row="6" Grid.Column="0"/>
-            <dxe:ComboBoxEdit SelectedItem="{Binding Calling.SPOW_OccupancyStatus}" ItemsSource="{Binding OccupancyOptions}" Grid.Row="6" Grid.Column="1"/>
+            <dxe:ComboBoxEdit SelectedItem="{Binding Calling.SPOW_OccupancyStatus, ValidatesOnDataErrors=True}" ItemsSource="{Binding OccupancyOptions}" Grid.Row="6" Grid.Column="1"/>
             <Label Content="Reproductive:" Grid.Row="6" Grid.Column="2"/>
-            <dxe:ComboBoxEdit SelectedItem="{Binding Calling.ReproductiveStatus}" ItemsSource="{Binding ReproductiveOptions}" Grid.Row="6" Grid.Column="3"/>
+            <dxe:ComboBoxEdit SelectedItem="{Binding Calling.ReproductiveStatus, ValidatesOnDataErrors=True}" ItemsSource="{Binding ReproductiveOptions}" Grid.Row="6" Grid.Column="3"/>
             <Label Content="Nesting:" Grid.Row="6" Grid.Column="4"/>
-            <dxe:ComboBoxEdit SelectedItem="{Binding Calling.NestingStatus}" ItemsSource="{Binding NestingOptions}" Grid.Row="6" Grid.Column="5"/>
+            <dxe:ComboBoxEdit SelectedItem="{Binding Calling.NestingStatus, ValidatesOnDataErrors=True}" ItemsSource="{Binding NestingOptions}" Grid.Row="6" Grid.Column="5"/>
         </Grid>
 
         <Grid Grid.Row="2">
@@ -175,7 +176,7 @@
                     <ColumnDefinition Width="AUTO"/>
                 </Grid.ColumnDefinitions>
                 <Label Content="Nest Tree:" Grid.Column="0"/>
-                <dxe:CheckEdit IsChecked="{Binding Calling.NestTree}" Grid.Column="1"/>
+                <dxe:CheckEdit IsChecked="{Binding Calling.NestTree, ValidatesOnDataErrors=True}" Grid.Column="1"/>
             </Grid>
             <Grid Grid.Row="0" Grid.Column="1">
                 <Grid.ColumnDefinitions>
@@ -183,16 +184,16 @@
                     <ColumnDefinition Width="AUTO"/>
                 </Grid.ColumnDefinitions>
                 <Label Content="Nest Tree Tagged:" Grid.Column="0"/>
-                <dxe:CheckEdit IsChecked="{Binding Calling.TreeTagged}" Grid.Column="1"/>
+                <dxe:CheckEdit IsChecked="{Binding Calling.TreeTagged, ValidatesOnDataErrors=True}" Grid.Column="1"/>
             </Grid>
             <Label Content="Species:" Grid.Column="0" Grid.Row="1"/>
-            <dxe:ComboBoxEdit SelectedItem="{Binding Calling.TreeSpecies}" ItemsSource="{Binding TreeSpesies}" Grid.Column="1" Grid.Row="1"/>
+            <dxe:ComboBoxEdit SelectedItem="{Binding Calling.TreeSpecies, ValidatesOnDataErrors=True}" ItemsSource="{Binding TreeSpesies}" Grid.Column="1" Grid.Row="1"/>
             <Label Content="DBH:" Grid.Column="2" Grid.Row="1"/>
-            <dxe:TextEdit Text="{Binding Calling.DBH}" MaskType="Numeric" Grid.Column="3" Grid.Row="1"/>
+            <dxe:TextEdit Text="{Binding Calling.DBH, ValidatesOnDataErrors=True}" MaskType="Numeric" Grid.Column="3" Grid.Row="1"/>
             <Label Content="Height:" Grid.Column="4" Grid.Row="1"/>
-            <dxe:TextEdit Text="{Binding Calling.NestHeight}" MaskType="Numeric" Grid.Column="5" Grid.Row="1"/>
+            <dxe:TextEdit Text="{Binding Calling.NestHeight, ValidatesOnDataErrors=True}" MaskType="Numeric" Grid.Column="5" Grid.Row="1"/>
             <Label Content="Nest Type:" Grid.Column="6" Grid.Row="1"/>
-            <dxe:ComboBoxEdit SelectedItem="{Binding Calling.NestType}" ItemsSource="{Binding NestTypes}" Grid.Column="7" Grid.Row="1"/>
+            <dxe:ComboBoxEdit SelectedItem="{Binding Calling.NestType, ValidatesOnDataErrors=True}" ItemsSource="{Binding NestTypes}" Grid.Column="7" Grid.Row="1"/>
         </Grid>
 
         <Grid Grid.Row="3">
@@ -214,11 +215,8 @@
             <dx:DXTabItem Header="Children">
                 <views:ChildrenListView/>
             </dx:DXTabItem>
-            <dx:DXTabItem Header="Other Wildlife">
-                <!--<views:ChildrenListView/>-->
-            </dx:DXTabItem>
             <dx:DXTabItem Header="Photos">
-                    <views:PicturesView/>
+                <views:PicturesView/>
             </dx:DXTabItem>            
         </dx:DXTabControl>
         

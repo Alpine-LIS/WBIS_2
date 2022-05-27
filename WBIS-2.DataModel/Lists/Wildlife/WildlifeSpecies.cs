@@ -14,11 +14,11 @@ namespace WBIS_2.DataModel
         public string AlphaCode { get; set; }
         [Column("wildlife_species_description")]
         public string WildlifeSpeciesDescription { get; set; }
-        [Column("class")]
+        [Column("class"), ListInfo(DisplayField = true)]
         public string Class { get; set; }
         [Column("order")]
         public string Order { get; set; }
-        [Column("family")]
+        [Column("family"), ListInfo(DisplayField = true)]
         public string Family { get; set; }
         [Column("genus")]
         public string Genus { get; set; }
