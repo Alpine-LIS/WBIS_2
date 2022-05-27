@@ -409,8 +409,8 @@ namespace WBIS_2.DataModel
         public DbSet<PermanentCallStation> PermanentCallStations { get; set; }
         public DbSet<ProtectionZone> ProtectionZones { get; set; }
         public DbSet<DeletedGeometry> DeletedGeometries { get; set; }
-        public DbSet<SiteCallingDetection> siteCallingDetections { get; set; }
-        public DbSet<SiteCallingTrack> siteCallingTracks { get; set; }
+        public DbSet<SiteCallingDetection> SiteCallingDetections { get; set; }
+        public DbSet<SiteCallingTrack> SiteCallingTracks { get; set; }
         public DbSet<DeviceInfo> DeviceInfos { get; set; }
         public DbSet<UserLocation> UserLocations { get; set; }
         public DbSet<AmphibianSpecies> AmphibianSpecies { get; set; }

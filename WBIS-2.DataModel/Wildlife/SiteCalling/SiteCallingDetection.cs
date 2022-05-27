@@ -6,7 +6,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class SiteCallingDetection: IPointParents, IPointLayer, IUserRecords
+    public class SiteCallingDetection: UserDataValidator, IPointParents, IPointLayer, IUserRecords
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
@@ -68,15 +68,16 @@ namespace WBIS_2.DataModel
         [Column("species_site")]
         public string SpeciesSite { get; set; }
         [Column("male_banding_leg")]
-        public string MaleBindingLeg { get; set; }
+        public string MaleBandingLeg { get; set; }
         [Column("male_banding_pattern")]
-        public string MaleBindingPattern { get; set; }
+        public string MaleBandingPattern { get; set; }
         [Column("female_banding_leg")]
-        public string FemaleBindingLeg { get; set; }
+        public string FemaleBandingLeg { get; set; }
         [Column("female_banding_pattern")]
-        public string FemaleBindingPattern { get; set; }
+        public string FemaleBandingPattern { get; set; }
 
-
+        [Column("moused"), ImportAttribute]
+        public bool Moused { get; set; }
 
 
         [Column("user_id")]

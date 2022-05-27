@@ -68,6 +68,9 @@
     <Compile Update="Views\Botany\BotanicalPlantOfInterestView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\Wildlife\SiteCallingDetectionView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\Wildlife\SiteCallingView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -138,6 +141,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\Botany\BotanicalPlantOfInterestView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Wildlife\SiteCallingDetectionView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

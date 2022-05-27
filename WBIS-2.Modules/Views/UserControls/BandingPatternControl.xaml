@@ -1,0 +1,143 @@
+﻿<UserControl x:Class="WBIS_2.Modules.Views.UserControls.BandingPatternControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WBIS_2.Modules.Views.UserControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid Name="grid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0"/>
+            <ColumnDefinition Width="AUTO"/>
+            <ColumnDefinition Width="0"/>
+            <ColumnDefinition Width="AUTO"/>
+            <ColumnDefinition Width="0"/>
+            <ColumnDefinition Width="AUTO"/>
+            <ColumnDefinition Width="0"/>
+            <ColumnDefinition Width="AUTO"/>
+            <ColumnDefinition Width="0"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0"/>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="0"/>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="0"/>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="0"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="Pattern" Grid.Row="1" Grid.Column="3" HorizontalAlignment="Left"/>
+        <TextBlock Text="Prominent Color" Grid.Row="1" Grid.Column="5" HorizontalAlignment="Left"/>
+        <TextBlock Text="Second Color" Grid.Row="1" Grid.Column="7" HorizontalAlignment="Left"/>
+
+        <Grid Name="GridLeg" Grid.Column="1" Grid.Row="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <CheckBox Margin="5" Name="ChbxUnknown" Content="Unknown" Click="ChbxUnknown_Click" Grid.Row="0" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+            <CheckBox Margin="5" Name="ChbxNotBanded" Content="Not Banded" Click="ChbxNotBanded_Click" Grid.Row="1" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+            <CheckBox Margin="5" Name="ChbxLeftLeg" Content="Left Leg" Click="ChbxLeftLeg_Click" Grid.Row="3" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+            <CheckBox Margin="5" Name="ChbxRightLeg" Content="RightLeg" Click="ChbxRightLeg_Click" Grid.Row="4" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+        </Grid>
+
+        <Grid Name="GridPattern" Grid.Row="3" Grid.Column="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <CheckBox Margin="5" Name="ChbxBi" Content="Bi-Colored" Click="ChbxPattern_Click" Grid.Row="0" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+            <CheckBox Margin="5" Name="ChbxChk" Content="Checkered" Click="ChbxPattern_Click" Grid.Row="1" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+            <CheckBox Margin="5" Name="ChbxDia" Content="Diagonal" Click="ChbxPattern_Click" Grid.Row="2" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+            <CheckBox Margin="5" Name="ChbxDot" Content="Polka-Dot" Click="ChbxPattern_Click" Grid.Row="3" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+            <CheckBox Margin="5" Name="ChbxJuv" Content="Juvenile(Stripe)" Click="ChbxPattern_Click" Grid.Row="4" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+            <CheckBox Margin="5" Name="ChbxSld" Content="Solid" Click="ChbxPattern_Click" Grid.Row="5" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+            <CheckBox Margin="5" Name="ChbxTri" Content="Triangle" Click="ChbxPattern_Click" Grid.Row="6" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+            <CheckBox Margin="5" Name="ChbxZig" Content="Zig-Zag" Click="ChbxPattern_Click" Grid.Row="7" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+            <CheckBox Margin="5" Name="ChbxUnk" Content="Unknown" Click="ChbxPattern_Click" Grid.Row="8" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+        </Grid>
+
+        <Grid Name="GridProminentColor" Grid.Row="3" Grid.Column="5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <CheckBox Margin="5" Name="ChbxBlkP" Content="Black" Click="ChbxPriminentColor_Click" Grid.Row="0" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+            <CheckBox Margin="5" Name="ChbxBluP" Content="Blue" Click="ChbxPriminentColor_Click" Grid.Row="1" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+            <CheckBox Margin="5" Name="ChbxChrP" Content="Chartruese" Click="ChbxPriminentColor_Click" Grid.Row="2" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+            <CheckBox Margin="5" Name="ChbxFldP" Content="Flesh" Click="ChbxPriminentColor_Click" Grid.Row="3" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+            <CheckBox Margin="5" Name="ChbxGrnP" Content="Green" Click="ChbxPriminentColor_Click" Grid.Row="4" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+            <CheckBox Margin="5" Name="ChbxOrgP" Content="Orange" Click="ChbxPriminentColor_Click" Grid.Row="5" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+            <CheckBox Margin="5" Name="ChbxPnkP" Content="Pink" Click="ChbxPriminentColor_Click" Grid.Row="6" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+            <CheckBox Margin="5" Name="ChbxPurP" Content="Purple" Click="ChbxPriminentColor_Click" Grid.Row="7" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+            <CheckBox Margin="5" Name="ChbxRedP" Content="Red" Click="ChbxPriminentColor_Click" Grid.Row="8" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+            <CheckBox Margin="5" Name="ChbxVerP" Content="Verde" Click="ChbxPriminentColor_Click" Grid.Row="9" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+            <CheckBox Margin="5" Name="ChbxWhtP" Content="White" Click="ChbxPriminentColor_Click" Grid.Row="10" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+            <CheckBox Margin="5" Name="ChbxYlwP" Content="Yellow" Click="ChbxPriminentColor_Click" Grid.Row="11" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+        </Grid>
+
+        <Grid Name="GridSecondColor" Grid.Row="3" Grid.Column="7">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <CheckBox Margin="5" Name="ChbxBlkS" Content="Black" Click="ChbxSecondColor_Click" Grid.Row="0" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+            <CheckBox Margin="5" Name="ChbxBluS" Content="Blue" Click="ChbxSecondColor_Click" Grid.Row="1" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+            <CheckBox Margin="5" Name="ChbxChrS" Content="Chartruese" Click="ChbxSecondColor_Click" Grid.Row="2" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+            <CheckBox Margin="5" Name="ChbxFldS" Content="Flesh" Click="ChbxSecondColor_Click" Grid.Row="3" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+            <CheckBox Margin="5" Name="ChbxGrnS" Content="Green" Click="ChbxSecondColor_Click" Grid.Row="4" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+            <CheckBox Margin="5" Name="ChbxOrgS" Content="Orange" Click="ChbxSecondColor_Click" Grid.Row="5" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+            <CheckBox Margin="5" Name="ChbxPnkS" Content="Pink" Click="ChbxSecondColor_Click" Grid.Row="6" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+            <CheckBox Margin="5" Name="ChbxPurS" Content="Purple" Click="ChbxSecondColor_Click" Grid.Row="7" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+            <CheckBox Margin="5" Name="ChbxRedS" Content="Red" Click="ChbxSecondColor_Click" Grid.Row="8" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+            <CheckBox Margin="5" Name="ChbxVerS" Content="Verde" Click="ChbxSecondColor_Click" Grid.Row="9" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+            <CheckBox Margin="5" Name="ChbxWhtS" Content="White" Click="ChbxSecondColor_Click" Grid.Row="10" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+            <CheckBox Margin="5" Name="ChbxYlwS" Content="Yellow" Click="ChbxSecondColor_Click" Grid.Row="11" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+        </Grid>
+
+        <Button Name="BtnSave" Content="Ok" Grid.Row="5" Grid.Column="5"  Click="BtnSave_Click" HorizontalAlignment="Right"/>
+        <Button Name="BtnCancel" Content="Cancel" Grid.Row="5" Grid.Column="7" Click="BtnCancel_Click" HorizontalAlignment="Left"/>
+
+    </Grid>
+</UserControl>

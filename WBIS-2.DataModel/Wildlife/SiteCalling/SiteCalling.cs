@@ -127,9 +127,7 @@ namespace WBIS_2.DataModel
         public double NestHeight { get; set; }
         [Column("tree_tagged"), ImportAttribute]
         public bool TreeTagged { get; set; }
-        [Column("moused"), ImportAttribute]
-        public bool Moused { get; set; }
-
+        
 
 
         [Column("area_description"), ImportAttribute]

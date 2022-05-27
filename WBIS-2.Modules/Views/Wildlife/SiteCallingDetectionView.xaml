@@ -1,0 +1,117 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WBIS_2.Modules.Views.Botany" 
+             xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors" 
+             xmlns:views="clr-namespace:WBIS_2.Modules.Views" 
+             xmlns:viewModels="clr-namespace:WBIS_2.Modules.ViewModels" 
+             xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
+             xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core" xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" x:Class="WBIS_2.Modules.Views.Botany.SiteCallingDetectionView"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type={x:Type viewModels:SiteCallingDetectionViewModel}}"
+            d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="2.5*"/>
+        </Grid.RowDefinitions>
+
+        <views:DetailMenuView Grid.Row="0"/>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="AUTO"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="AUTO"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="AUTO"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="AUTO"/>
+                <RowDefinition Height="AUTO"/>
+                <RowDefinition Height="AUTO"/>
+                <RowDefinition Height="AUTO"/>
+                <RowDefinition Height="AUTO"/>
+                <RowDefinition Height="AUTO"/>
+                <RowDefinition Height="AUTO"/>
+            </Grid.RowDefinitions>
+
+            <Label Content="Detection Time:" Grid.Column="0" Grid.Row="0"/>
+            <Grid Grid.Column="1" Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="AUTO"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <dxe:DateEdit EditValue="{Binding DetectionDate, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" MaskType="DateTime" Grid.Column="0"/>
+                <dxe:TextEdit Text="{Binding DetectionHour, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat=00, ValidatesOnDataErrors=True}" MaskType="Numeric" Grid.Column="1"/>
+                <Label Content=":" Grid.Column="2"/>
+                <dxe:TextEdit Text="{Binding DetectionMinute, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat=00, ValidatesOnDataErrors=True}" MaskType="Numeric" Grid.Column="3"/>
+            </Grid>
+            <Label Content="Survey Species:" Grid.Row="0" Grid.Column="2"/>
+            <dxe:ComboBoxEdit SelectedItem="{Binding Detection.SpeciesFound, ValidatesOnDataErrors=True}" ItemsSource="{Binding AvailibleSpecies}" DisplayMember="Species" Grid.Row="0" Grid.Column="3"/>
+            <Label Content="Detection Method:" Grid.Row="0" Grid.Column="4"/>
+            <dxe:ComboBoxEdit SelectedItem="{Binding Detection.DetectionMethod, ValidatesOnDataErrors=True}" ItemsSource="{Binding DetectionMethods}" Grid.Row="0" Grid.Column="5"/>
+
+            <Label Content="Age:" Grid.Row="1" Grid.Column="0"/>
+            <dxe:ComboBoxEdit SelectedItem="{Binding Detection.Age, ValidatesOnDataErrors=True}" ItemsSource="{Binding Ages}" Grid.Row="1" Grid.Column="1"/>
+            <Label Content="Sex:" Grid.Row="1" Grid.Column="2"/>
+            <dxe:ComboBoxEdit SelectedItem="{Binding Detection.Sex, ValidatesOnDataErrors=True}" ItemsSource="{Binding Sexs}" Grid.Row="1" Grid.Column="3"/>
+            <Label Content="#of Young:" Grid.Row="1" Grid.Column="4"/>
+            <dxe:TextEdit Text="{Binding Detection.NumberOfYoung, ValidatesOnDataErrors=True}" MaskType="Numeric" Grid.Row="1" Grid.Column="5"/>
+
+            <Label Content="Lat:" Grid.Row="2" Grid.Column="0"/>
+            <Grid Grid.Row="2" Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="AUTO"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <dxe:TextEdit Text="{Binding Detection.Lat, ValidatesOnDataErrors=True, StringFormat=N5}" IsReadOnly="True" Grid.Row="0" Grid.Column="0"/>
+                <Label Content="Lon:" Grid.Row="0" Grid.Column="1"/>
+                <dxe:TextEdit Text="{Binding Detection.Lon, ValidatesOnDataErrors=True, StringFormat=N5}" IsReadOnly="True" Grid.Row="0" Grid.Column="2"/>
+                <dxe:TextEdit Text="{Binding Detection.Datum, ValidatesOnDataErrors=True}" IsReadOnly="True" Grid.Row="0" Grid.Column="3"/>
+            </Grid>
+            <Label Content="Distance(ft.):" Grid.Row="2" Grid.Column="2"/>
+            <dxe:TextEdit Text="{Binding Detection.Distance, ValidatesOnDataErrors=True}" MaskType="Numeric" Grid.Row="2" Grid.Column="3"/>
+            <Label Content="Azimuth:" Grid.Row="2" Grid.Column="4"/>
+            <dxe:TextEdit Text="{Binding Detection.Bearing, ValidatesOnDataErrors=True}" MaskType="Numeric" Grid.Row="2" Grid.Column="5"/>
+
+            <Label Content="Species Site:" Grid.Row="3" Grid.Column="0"/>
+            <dxe:ComboBoxEdit Text="{Binding Detection.SpeciesSite, ValidatesOnDataErrors=True}" ItemsSource="{Binding SpeciesSites}" IsTextEditable="True" Grid.Row="3" Grid.Column="1"/>
+            <Label Content="Moused To Protocol:" Grid.Row="3" Grid.Column="2"/>
+            <dxe:CheckEdit IsChecked="{Binding Detection.Moused}" Grid.Column="3" Grid.Row="3"/>
+            <Label Content="Estimated Location:" Grid.Row="3" Grid.Column="4"/>
+            <dxe:CheckEdit IsChecked="{Binding Detection.EstimatedLocation}" Grid.Column="5" Grid.Row="3"/>
+
+            <Label Content="Male Banding:" Grid.Row="4" Grid.Column="0"/>
+            <dxe:TextEdit Text="{Binding Detection.MaleBandingLeg, ValidatesOnDataErrors=True}"  Grid.Row="4" Grid.Column="1">
+                <dxmvvm:Interaction.Behaviors>
+                    <dxmvvm:EventToCommand EventName="MouseUp" Command="{Binding MaleBandingLegCommand}"/>
+                </dxmvvm:Interaction.Behaviors>
+                <!--<Button Command="{Binding MaleBandingLegCommand}"/>-->
+            </dxe:TextEdit>
+            <Label Content="Color:" Grid.Row="5" Grid.Column="0"/>
+            <dxe:TextEdit Text="{Binding Detection.MaleBandingPattern, ValidatesOnDataErrors=True}" Grid.Row="5" Grid.Column="1">
+                <Button Command="{Binding MaleBandingPatternCommand}"/>
+            </dxe:TextEdit>
+
+            <Label Content="Female Banding:" Grid.Row="4" Grid.Column="2"/>
+            <dxe:TextEdit Text="{Binding Detection.FemaleBandingLeg, ValidatesOnDataErrors=True}"  Grid.Row="4" Grid.Column="3">
+                <Button Command="{Binding FemaleBandingLegCommand}"/>
+            </dxe:TextEdit>
+            <Label Content="Color:" Grid.Row="5" Grid.Column="2"/>
+            <dxe:TextEdit Text="{Binding Detection.FemaleBandingPattern, ValidatesOnDataErrors=True}" Grid.Row="5" Grid.Column="3">
+                <Button Command="{Binding FemaleBandingPatternCommand}"/>
+            </dxe:TextEdit>
+        </Grid>     
+    </Grid>
+</UserControl>
