@@ -80,6 +80,19 @@ namespace WBIS_2.DataModel
         [ListInfo(ChildField = true)]
         public ICollection<CNDDBQuadElement> CNDDBQuadElements { get; set; }
 
+
+
+        [ListInfo(ChildField = true)]
+        public ICollection<ForestCarnivoreCameraStation> ForestCarnivoreCameraStations { get; set; }
+        [ListInfo(ChildField = true)]
+        public ICollection<RanchPhotoPoint> RanchPhotoPoints { get; set; }
+
+        [ListInfo(ChildField = true)]
+        public ICollection<DOMonitoring> DOMonitorings { get; set; }
+        [ListInfo(ChildField = true)]
+        public ICollection<BDOWSighting> BDOWSightings { get; set; }
+
+
         [NotMapped, Display(Order = -1)]
         public IInfoTypeManager Manager => new InformationTypeManager<Quad75>();
     }
