@@ -7,7 +7,8 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class District : IInformationType
+    [DisplayOrder(Index = 0)]
+    public class District : IInformationType, IWildlifeRecord, IBotanyRecord
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
@@ -67,11 +68,6 @@ namespace WBIS_2.DataModel
         [ListInfo(ChildField = true)]
         public ICollection<CNDDBQuadElement> CNDDBQuadElements { get; set; }
         public ICollection<PlantProtectionSummary> PlantProtectionSummaries { get; set; }
-
-        //public ICollection<ProtectionZone> ProtectionZones { get; set; }
-        //public ICollection<PermanentCallStation> PermanentCallStations { get; set; }
-        //public ICollection<Hex160RequiredPass> Hex160RequiredPasses { get; set; }
-
 
         [ListInfo(ChildField = true)]
         public ICollection<ForestCarnivoreCameraStation> ForestCarnivoreCameraStations { get; set; }

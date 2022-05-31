@@ -56,9 +56,11 @@ namespace WBIS_2.DataModel
             {
                 var runTimeType = item.PropertyType.GenericTypeArguments.Single();
                 var trueType = Type.GetType(runTimeType.FullName);
-                children.Add((IInformationType)Activator.CreateInstance(trueType));
+
+                if ((trueType.GetInterfaces().Contains(typeof(IWildlifeRecord)) && CurrentUser.User.Wildlife) || (trueType.GetInterfaces().Contains(typeof(IBotanyRecord)) && CurrentUser.User.Botany))
+                    children.Add((IInformationType)Activator.CreateInstance(trueType));
             }
-            return children.ToArray();
+            return children.OrderBy(_ => ((DisplayOrder)_.GetType().GetCustomAttribute(typeof(DisplayOrder))).Index).ToArray();
         }
 
 

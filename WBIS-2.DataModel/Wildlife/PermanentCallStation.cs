@@ -6,7 +6,8 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class PermanentCallStation : UserDataValidator, IUserRecords
+    [DisplayOrder(Index = 19)]
+    public class PermanentCallStation : UserDataValidator, IUserRecords, IWildlifeRecord
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }

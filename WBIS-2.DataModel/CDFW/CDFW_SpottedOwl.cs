@@ -6,7 +6,8 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class CDFW_SpottedOwl : IInformationType,  IPointParents
+    [DisplayOrder(Index = 7)]
+    public class CDFW_SpottedOwl : IInformationType,  IPointParents, IWildlifeRecord, IBotanyRecord
     {
         [Key, Column("guid")]
         public Guid Guid { get; set; }

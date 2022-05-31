@@ -7,7 +7,8 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class THP_Area : IInformationType
+    [DisplayOrder(Index = 4)]
+    public class THP_Area : IInformationType, IWildlifeRecord, IBotanyRecord
     {
         [Key,DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }

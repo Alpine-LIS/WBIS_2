@@ -7,7 +7,8 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class AmphibianElement : UserDataValidator, IUserRecords, IPointParents, IPointLayer
+    [DisplayOrder(Index = 21)]
+    public class AmphibianElement : UserDataValidator, IUserRecords, IPointParents, IPointLayer, IWildlifeRecord
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
@@ -20,8 +21,8 @@ namespace WBIS_2.DataModel
 
 
 
-        [Required, Column("amphibian_survey_id")]
-        public Guid AmphibianSurveyId { get; set; }
+        [Column("amphibian_survey_id")]
+        public Guid? AmphibianSurveyId { get; set; }
         [ListInfo(ParentField = true)]
         public AmphibianSurvey AmphibianSurvey { get; set; }
 

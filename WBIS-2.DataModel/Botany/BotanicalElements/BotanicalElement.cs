@@ -7,7 +7,8 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class BotanicalElement : UserDataValidator, IUserRecords, IPointParents, IPointLayer
+    [DisplayOrder(Index = 11)]
+    public class BotanicalElement : UserDataValidator, IUserRecords, IPointParents, IPointLayer, IBotanyRecord
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }

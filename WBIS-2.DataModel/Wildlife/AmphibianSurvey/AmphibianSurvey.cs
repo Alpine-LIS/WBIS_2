@@ -7,7 +7,8 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class AmphibianSurvey : UserDataValidator, IUserRecords, INonPointParents
+    [DisplayOrder(Index = 20)]
+    public class AmphibianSurvey : UserDataValidator, IUserRecords, INonPointParents, IWildlifeRecord
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
@@ -104,8 +105,8 @@ namespace WBIS_2.DataModel
 
 
 
-        [Column("geometry", TypeName = "geometry(LineString,26710)")]
-        public LineString Geometry { get; set; }
+        [Column("geometry", TypeName = "geometry(MultiLineString,26710)")]
+        public MultiLineString Geometry { get; set; }
 
 
 

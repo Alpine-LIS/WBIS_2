@@ -7,7 +7,8 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class CNDDBQuadElement : IInformationType
+    [DisplayOrder(Index = 6)]
+    public class CNDDBQuadElement : IInformationType, IWildlifeRecord, IBotanyRecord
     {
         [Key, Column("guid")]
         public Guid Guid { get; set; }

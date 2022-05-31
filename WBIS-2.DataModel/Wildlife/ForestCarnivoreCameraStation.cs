@@ -7,7 +7,8 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class ForestCarnivoreCameraStation : UserDataValidator, IUserRecords,  IPointParents, IPointLayer
+    [DisplayOrder(Index = 25)]
+    public class ForestCarnivoreCameraStation : UserDataValidator, IUserRecords,  IPointParents, IPointLayer, IWildlifeRecord
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }

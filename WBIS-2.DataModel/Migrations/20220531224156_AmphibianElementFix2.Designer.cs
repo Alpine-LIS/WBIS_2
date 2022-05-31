@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,10 @@ using WBIS_2.DataModel;
 namespace WBIS_2.DataModel.Migrations
 {
     [DbContext(typeof(WBIS2Model))]
-    partial class WBIS2ModelModelSnapshot : ModelSnapshot
+    [Migration("20220531224156_AmphibianElementFix2")]
+    partial class AmphibianElementFix2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -578,7 +580,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("guid");
 
-                    b.Property<Guid?>("AmphibianSpeciesId")
+                    b.Property<Guid>("AmphibianSpeciesId")
                         .HasColumnType("uuid")
                         .HasColumnName("amphibian_species_id");
 
@@ -620,7 +622,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("guid");
 
-                    b.Property<Guid?>("OtherWildlifeId")
+                    b.Property<Guid>("OtherWildlifeId")
                         .HasColumnType("uuid")
                         .HasColumnName("other_wildlife_id");
 
@@ -4893,7 +4895,9 @@ namespace WBIS_2.DataModel.Migrations
                 {
                     b.HasOne("WBIS_2.DataModel.AmphibianSpecies", "AmphibianSpecies")
                         .WithMany("AmphibianLocationsFound")
-                        .HasForeignKey("AmphibianSpeciesId");
+                        .HasForeignKey("AmphibianSpeciesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WBIS_2.DataModel.AmphibianElement", "AmphibianElement")
                         .WithOne("AmphibianLocationFound")
@@ -4916,7 +4920,9 @@ namespace WBIS_2.DataModel.Migrations
 
                     b.HasOne("WBIS_2.DataModel.AmphibianSpecies", "OtherWildlife")
                         .WithMany("AmphibianPointsOfInterest")
-                        .HasForeignKey("OtherWildlifeId");
+                        .HasForeignKey("OtherWildlifeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("AmphibianElement");
 

@@ -19,8 +19,8 @@ namespace WBIS_2.DataModel
         //public Guid SiteCallingId { get; set; }
         public SiteCalling SiteCalling { get; set; }
 
-        [Column("geometry", TypeName = "geometry(LineString,26710)")]
-        public LineString Geometry { get; set; }
+        [Column("geometry", TypeName = "geometry(MultiLineString,26710)")]
+        public MultiLineString Geometry { get; set; }
 
 
     }

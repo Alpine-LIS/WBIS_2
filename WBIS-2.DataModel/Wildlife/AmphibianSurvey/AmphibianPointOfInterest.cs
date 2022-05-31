@@ -23,7 +23,7 @@ namespace WBIS_2.DataModel
         public string PointOfInterest { get; set; }
 
         [Column("other_wildlife_id")]
-        public Guid OtherWildlifeId { get; set; }
+        public Guid? OtherWildlifeId { get; set; }
         public AmphibianSpecies OtherWildlife { get; set; }
     }
 }

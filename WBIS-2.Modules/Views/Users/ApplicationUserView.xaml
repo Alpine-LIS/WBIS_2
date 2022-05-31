@@ -63,6 +63,7 @@
                     <RowDefinition Height="AUTO"/>
                     <RowDefinition Height="AUTO"/>
                     <RowDefinition Height="AUTO"/>
+                    <RowDefinition Height="AUTO"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="AUTO"/>
@@ -79,6 +80,11 @@
 
                 <Label Grid.Row="5" Grid.Column="0" Margin="5" Content="Hint:"/>
                 <dxe:TextEdit Margin="2" Grid.Row="5" Grid.Column="1" Text="{Binding User.Hint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
+
+                <Label Grid.Row="6" Grid.Column="0" Margin="5" Content="Wildife:"/>
+                <dxe:CheckEdit Grid.Row="6" Grid.Column="1" IsChecked="{Binding User.Wildlife, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
+                <Label Grid.Row="7" Grid.Column="0" Margin="5" Content="Botany:"/>
+                <dxe:CheckEdit Grid.Row="7" Grid.Column="1" IsChecked="{Binding User.Botany, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
             </Grid>
         </Grid>
 

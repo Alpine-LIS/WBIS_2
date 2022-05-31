@@ -8,7 +8,8 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class Hex160 : IInformationType, IActiveUnit
+    [DisplayOrder(Index = 3)]
+    public class Hex160 : IInformationType, IActiveUnit, IWildlifeRecord, IBotanyRecord
     {
         [Key,DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }

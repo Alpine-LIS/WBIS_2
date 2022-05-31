@@ -19,11 +19,10 @@ namespace WBIS_2.DataModel
         public AmphibianElement AmphibianElement { get; set; }
 
 
-        [Required, Column("point_of_interest")]
-        public string PointOfInterest { get; set; }
+       
 
-        [Required, Column("amphibian_species_id")]
-        public Guid AmphibianSpeciesId { get; set; }
+        [Column("amphibian_species_id")]
+        public Guid? AmphibianSpeciesId { get; set; }
         public AmphibianSpecies AmphibianSpecies { get; set; }
 
 

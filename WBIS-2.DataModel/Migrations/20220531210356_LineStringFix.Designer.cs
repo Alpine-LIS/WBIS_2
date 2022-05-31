@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,10 @@ using WBIS_2.DataModel;
 namespace WBIS_2.DataModel.Migrations
 {
     [DbContext(typeof(WBIS2Model))]
-    partial class WBIS2ModelModelSnapshot : ModelSnapshot
+    [Migration("20220531210356_LineStringFix")]
+    partial class LineStringFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -481,7 +483,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("guid");
 
-                    b.Property<Guid?>("AmphibianSurveyId")
+                    b.Property<Guid>("AmphibianSurveyId")
                         .HasColumnType("uuid")
                         .HasColumnName("amphibian_survey_id");
 
@@ -578,7 +580,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("guid");
 
-                    b.Property<Guid?>("AmphibianSpeciesId")
+                    b.Property<Guid>("AmphibianSpeciesId")
                         .HasColumnType("uuid")
                         .HasColumnName("amphibian_species_id");
 
@@ -602,6 +604,11 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("double precision")
                         .HasColumnName("number_of_subadults");
 
+                    b.Property<string>("PointOfInterest")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("point_of_interest");
+
                     b.Property<bool>("Visual")
                         .HasColumnType("boolean")
                         .HasColumnName("visual");
@@ -620,7 +627,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("guid");
 
-                    b.Property<Guid?>("OtherWildlifeId")
+                    b.Property<Guid>("OtherWildlifeId")
                         .HasColumnType("uuid")
                         .HasColumnName("other_wildlife_id");
 
@@ -719,7 +726,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("text")
                         .HasColumnName("flow");
 
-                    b.Property<MultiLineString>("Geometry")
+                    b.Property<LineString>("Geometry")
                         .HasColumnType("geometry(MultiLineString,26710)")
                         .HasColumnName("geometry");
 
@@ -3896,7 +3903,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("guid");
 
-                    b.Property<MultiLineString>("Geometry")
+                    b.Property<LineString>("Geometry")
                         .HasColumnType("geometry(MultiLineString,26710)")
                         .HasColumnName("geometry");
 
@@ -4848,7 +4855,9 @@ namespace WBIS_2.DataModel.Migrations
                 {
                     b.HasOne("WBIS_2.DataModel.AmphibianSurvey", "AmphibianSurvey")
                         .WithMany("AmphibianElements")
-                        .HasForeignKey("AmphibianSurveyId");
+                        .HasForeignKey("AmphibianSurveyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WBIS_2.DataModel.District", "District")
                         .WithMany("AmphibianElements")
@@ -4893,7 +4902,9 @@ namespace WBIS_2.DataModel.Migrations
                 {
                     b.HasOne("WBIS_2.DataModel.AmphibianSpecies", "AmphibianSpecies")
                         .WithMany("AmphibianLocationsFound")
-                        .HasForeignKey("AmphibianSpeciesId");
+                        .HasForeignKey("AmphibianSpeciesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("WBIS_2.DataModel.AmphibianElement", "AmphibianElement")
                         .WithOne("AmphibianLocationFound")
@@ -4916,7 +4927,9 @@ namespace WBIS_2.DataModel.Migrations
 
                     b.HasOne("WBIS_2.DataModel.AmphibianSpecies", "OtherWildlife")
                         .WithMany("AmphibianPointsOfInterest")
-                        .HasForeignKey("OtherWildlifeId");
+                        .HasForeignKey("OtherWildlifeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("AmphibianElement");
 

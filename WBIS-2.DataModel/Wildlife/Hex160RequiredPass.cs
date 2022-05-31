@@ -7,7 +7,8 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class Hex160RequiredPass : UserDataValidator, IUserRecords
+    [DisplayOrder(Index = 17)]
+    public class Hex160RequiredPass : UserDataValidator, IUserRecords, IWildlifeRecord
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; } 
