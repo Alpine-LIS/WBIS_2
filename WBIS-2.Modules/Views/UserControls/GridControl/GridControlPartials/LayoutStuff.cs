@@ -202,6 +202,10 @@ namespace WBIS_2.Modules.Views
                 col.EditSettings = new TextEditSettings() { DisplayFormat = "N5" };
             }
             else if (col.FieldName == "_delete") col.VisibleIndex = 100;
+            else if (col.FieldName.Contains("Time"))
+            {
+                col.EditSettings = new DateEditSettings() { DisplayFormat = "MM/dd/yyyy HH:mm" };
+            }
         }
 
         //Columns should show up in order of how they'll be displayed

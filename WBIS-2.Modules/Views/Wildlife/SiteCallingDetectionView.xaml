@@ -81,37 +81,26 @@
                 <dxe:TextEdit Text="{Binding Detection.Datum, ValidatesOnDataErrors=True}" IsReadOnly="True" Grid.Row="0" Grid.Column="3"/>
             </Grid>
             <Label Content="Distance(ft.):" Grid.Row="2" Grid.Column="2"/>
-            <dxe:TextEdit Text="{Binding Detection.Distance, ValidatesOnDataErrors=True}" MaskType="Numeric" Grid.Row="2" Grid.Column="3"/>
+            <dxe:TextEdit Text="{Binding Detection.Distance, ValidatesOnDataErrors=True}" IsReadOnly="True" MaskType="Numeric" Grid.Row="2" Grid.Column="3"/>
             <Label Content="Azimuth:" Grid.Row="2" Grid.Column="4"/>
-            <dxe:TextEdit Text="{Binding Detection.Bearing, ValidatesOnDataErrors=True}" MaskType="Numeric" Grid.Row="2" Grid.Column="5"/>
+            <dxe:TextEdit Text="{Binding Detection.Bearing, ValidatesOnDataErrors=True}" IsReadOnly="True" MaskType="Numeric" Grid.Row="2" Grid.Column="5"/>
 
             <Label Content="Species Site:" Grid.Row="3" Grid.Column="0"/>
-            <dxe:ComboBoxEdit Text="{Binding Detection.SpeciesSite, ValidatesOnDataErrors=True}" ItemsSource="{Binding SpeciesSites}" IsTextEditable="True" Grid.Row="3" Grid.Column="1"/>
+            <dxe:ComboBoxEdit Text="{Binding Detection.SpeciesSite, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" ItemsSource="{Binding SpeciesSites}" IsTextEditable="True" Grid.Row="3" Grid.Column="1"/>
             <Label Content="Moused To Protocol:" Grid.Row="3" Grid.Column="2"/>
             <dxe:CheckEdit IsChecked="{Binding Detection.Moused}" Grid.Column="3" Grid.Row="3"/>
             <Label Content="Estimated Location:" Grid.Row="3" Grid.Column="4"/>
             <dxe:CheckEdit IsChecked="{Binding Detection.EstimatedLocation}" Grid.Column="5" Grid.Row="3"/>
 
             <Label Content="Male Banding:" Grid.Row="4" Grid.Column="0"/>
-            <dxe:TextEdit Text="{Binding Detection.MaleBandingLeg, ValidatesOnDataErrors=True}"  Grid.Row="4" Grid.Column="1">
-                <dxmvvm:Interaction.Behaviors>
-                    <dxmvvm:EventToCommand EventName="MouseUp" Command="{Binding MaleBandingLegCommand}"/>
-                </dxmvvm:Interaction.Behaviors>
-                <!--<Button Command="{Binding MaleBandingLegCommand}"/>-->
-            </dxe:TextEdit>
+            <dxe:TextEdit Text="{Binding Detection.MaleBandingLeg, ValidatesOnDataErrors=True}" IsReadOnly="True" Grid.Row="4" Grid.Column="1" IsMouseCaptureWithinChanged="MaleBanding_IsMouseCaptureWithinChanged"/>
             <Label Content="Color:" Grid.Row="5" Grid.Column="0"/>
-            <dxe:TextEdit Text="{Binding Detection.MaleBandingPattern, ValidatesOnDataErrors=True}" Grid.Row="5" Grid.Column="1">
-                <Button Command="{Binding MaleBandingPatternCommand}"/>
-            </dxe:TextEdit>
+            <dxe:TextEdit Text="{Binding Detection.MaleBandingPattern, ValidatesOnDataErrors=True}" IsReadOnly="True" Grid.Row="5" Grid.Column="1" IsMouseCaptureWithinChanged="MaleBanding_IsMouseCaptureWithinChanged"/>
 
             <Label Content="Female Banding:" Grid.Row="4" Grid.Column="2"/>
-            <dxe:TextEdit Text="{Binding Detection.FemaleBandingLeg, ValidatesOnDataErrors=True}"  Grid.Row="4" Grid.Column="3">
-                <Button Command="{Binding FemaleBandingLegCommand}"/>
-            </dxe:TextEdit>
+            <dxe:TextEdit Text="{Binding Detection.FemaleBandingLeg, ValidatesOnDataErrors=True}" IsReadOnly="True" Grid.Row="4" Grid.Column="3" IsMouseCaptureWithinChanged="FemaleBanding_IsMouseCaptureWithinChanged"/>
             <Label Content="Color:" Grid.Row="5" Grid.Column="2"/>
-            <dxe:TextEdit Text="{Binding Detection.FemaleBandingPattern, ValidatesOnDataErrors=True}" Grid.Row="5" Grid.Column="3">
-                <Button Command="{Binding FemaleBandingPatternCommand}"/>
-            </dxe:TextEdit>
+            <dxe:TextEdit Text="{Binding Detection.FemaleBandingPattern, ValidatesOnDataErrors=True}" IsReadOnly="True" Grid.Row="5" Grid.Column="3" IsMouseCaptureWithinChanged="FemaleBanding_IsMouseCaptureWithinChanged"/>
         </Grid>     
     </Grid>
 </UserControl>

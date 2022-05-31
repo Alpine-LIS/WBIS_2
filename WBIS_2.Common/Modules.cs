@@ -37,5 +37,6 @@ namespace WBIS_2.Common
         public static string ModuleProtectionZone { get { return "ProtectionZone"; } }
         public static string ModuleHex160RequiredPasses { get { return "Hex160RequiredPasses"; } }
         public static string ModuleSiteCallings { get { return "SiteCallings"; } }
+        public static string ModuleSiteCallingDetections { get { return "SiteCallingDetections"; } }
     }
 }

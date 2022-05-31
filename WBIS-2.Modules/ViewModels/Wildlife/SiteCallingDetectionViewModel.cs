@@ -57,7 +57,8 @@ namespace WBIS_2.Modules.ViewModels
                 .First(_ => _.Guid == guid);
 
             SpeciesSites = Database.ProtectionZones
-              .Where(_ => (_.Geometry.IsWithinDistance(Detection.Geometry, 4828.03) && !_._delete && !_.Repository)).Select(_=>_.PZ_ID).ToArray();
+              .Where(_ => (_.Geometry.IsWithinDistance(Detection.Geometry, 3218.69) && !_._delete && !_.Repository)).Select(_=>_.PZ_ID).ToArray();
+            SetDateValues();
         }
 
         public override void CloseForm()
@@ -86,11 +87,8 @@ namespace WBIS_2.Modules.ViewModels
                 MessageBox.Show("Please ensure that all field requirements are met.");
                 return;
             }
-            //if (new string[] { "SPOW", "NSOW", "SPOW+BDOW"}.Contains(Calling.SurveySpecies.Species) && Calling.SPOW_OccupancyStatus == null)
-            //{
-            //    MessageBox.Show("The SPOW occupancy status must be filled when the survey species is a spotted owl.");
-            //    return;
-            //}
+
+            if (!CheckSave()) return;
 
             WaitWindowHandler w = new WaitWindowHandler();
             w.Start();
@@ -104,6 +102,40 @@ namespace WBIS_2.Modules.ViewModels
             Database.SaveChanges();
             this.Changed = false;
             w.Stop();
+        }
+
+        private bool CheckSave()
+        {
+            if (new string[] {"NSOW","CSOW","SPOW+BDOW" }.Contains(Detection.SpeciesFound.Species))
+            {
+                if(Detection.Sex.Contains("Male"))
+                {
+                    if (Detection.MaleBandingLeg == null)
+                    {
+                        MessageBox.Show("Male spotted owls must have banding information filled.");
+                        return false;
+                    }
+                    if (Detection.MaleBandingLeg == "")
+                    {
+                        MessageBox.Show("Male spotted owls must have banding information filled.");
+                        return false;
+                    }
+                }
+                if (Detection.Sex.Contains("Female"))
+                {
+                    if (Detection.FemaleBandingLeg == null)
+                    {
+                        MessageBox.Show("Female spotted owls must have banding information filled.");
+                        return false;
+                    }
+                    if (Detection.FemaleBandingLeg == "")
+                    {
+                        MessageBox.Show("Male spotted owls must have banding information filled.");
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
 
 
@@ -143,9 +175,9 @@ namespace WBIS_2.Modules.ViewModels
         public string[] Ages => Database.DropdownOptions.Where(_ => _.Entity == DbHelp.GetDbString(typeof(SiteCallingDetection)) && _.Property == "age").Select(_ => _.SelectionText).ToArray();
         public string[] DetectionMethods => Database.DropdownOptions.Where(_ => _.Entity == DbHelp.GetDbString(typeof(SiteCallingDetection)) && _.Property == "detection_method").Select(_ => _.SelectionText).ToArray();
 
-        public ICommand MaleBandingLegCommand => new DelegateCommand(MalBandingClick);
-        public ICommand MaleBandingPatternCommand => new DelegateCommand(MalBandingClick);
-        private void MalBandingClick()
+        //public ICommand MaleBandingLegCommand => new DelegateCommand(MalBandingClick);
+        //public ICommand MaleBandingPatternCommand => new DelegateCommand(MalBandingClick);
+        public void MalBandingClick()
         {
            BandingPatternControl bandingPatternControl = new BandingPatternControl(Detection.MaleBandingLeg + ":" +Detection.MaleBandingPattern);
             CustomControlWindow window = new CustomControlWindow(bandingPatternControl);
@@ -158,9 +190,9 @@ namespace WBIS_2.Modules.ViewModels
             }
         }
 
-        public ICommand FemaleBandingLegCommand => new DelegateCommand(FemalBandingClick);
-        public ICommand FemaleBandingPatternCommand => new DelegateCommand(FemalBandingClick);
-        private void FemalBandingClick()
+        //public ICommand FemaleBandingLegCommand => new DelegateCommand(FemalBandingClick);
+        //public ICommand FemaleBandingPatternCommand => new DelegateCommand(FemalBandingClick);
+        public void FemalBandingClick()
         {
             BandingPatternControl bandingPatternControl = new BandingPatternControl(Detection.FemaleBandingLeg + ":" + Detection.FemaleBandingPattern);
             CustomControlWindow window = new CustomControlWindow(bandingPatternControl);

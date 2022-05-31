@@ -73,6 +73,7 @@ namespace WBIS_2
             Manager.Register(Regions.NavigationWildlife, new Module(AppModules.ModuleProtectionZone, () => new NavigationItem("Protection Zones")));
             Manager.Register(Regions.NavigationWildlife, new Module(AppModules.ModuleHex160RequiredPasses, () => new NavigationItem("Hex160 Required Passes")));
             Manager.Register(Regions.NavigationWildlife, new Module(AppModules.ModuleSiteCallings, () => new NavigationItem("Site Callings")));
+            Manager.Register(Regions.NavigationWildlife, new Module(AppModules.ModuleSiteCallingDetections, () => new NavigationItem("Site Calling Detections")));
 
             //Manager.Register(Regions.NavigationCalifornia, new Module(AppModules.ModuleCnddbOccurrence, () => new NavigationItem("CnddbOccurrence")));
             //Manager.Register(Regions.NavigationCalifornia, new Module(AppModules.ModuleCdfwSpottedOwl, () => new NavigationItem("CdfwSpottedOwl")));
@@ -110,6 +111,8 @@ namespace WBIS_2
                 () => ParentListViewModel.Create(new Hex160RequiredPass()), typeof(ParentListView)));
             Manager.Register(Regions.Documents, new Module(AppModules.ModuleSiteCallings,
                () => ParentListViewModel.Create(new SiteCalling()), typeof(ParentListView)));
+            Manager.Register(Regions.Documents, new Module(AppModules.ModuleSiteCallingDetections,
+              () => ParentListViewModel.Create(new SiteCallingDetection()), typeof(ParentListView)));
 
             //Manager.Register(Regions.Documents, new Module(AppModules.ModuleCnddbOccurrence,
             //   () => CnddbsListViewModel.Create("CnddbOccurrence", "CnddbOccurrence"), typeof(CnddbsListView)));
@@ -168,6 +171,7 @@ namespace WBIS_2
             Manager.Inject(Regions.NavigationWildlife, AppModules.ModulePermanentCallStation);
             Manager.Inject(Regions.NavigationWildlife, AppModules.ModuleHex160RequiredPasses);
             Manager.Inject(Regions.NavigationWildlife, AppModules.ModuleSiteCallings);
+            Manager.Inject(Regions.NavigationWildlife, AppModules.ModuleSiteCallingDetections);
             //Manager.Inject(Regions.NavigationCalifornia, AppModules.ModuleCnddbOccurrence);
             //Manager.Inject(Regions.NavigationCalifornia, AppModules.ModuleCdfwSpottedOwl);
         }

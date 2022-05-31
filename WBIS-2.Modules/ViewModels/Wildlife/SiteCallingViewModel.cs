@@ -60,7 +60,7 @@ namespace WBIS_2.Modules.ViewModels
             RaisePropertyChanged(nameof(ParentType));  
             
             ProtectionZones = Database.ProtectionZones
-            .Where(_ => (_.Geometry.IsWithinDistance(Calling.Geometry, 4828.03) && !_._delete && !_.Repository) || _ == Calling.ProtectionZone).ToArray();
+            .Where(_ => (_.Geometry.IsWithinDistance(Calling.Geometry, 3218.69) && !_._delete && !_.Repository) || _ == Calling.ProtectionZone).ToArray();
             SetDateValues();
             PassNumber = Calling.PassNumber;
             //RefreshOtherWildlifeRecords();

@@ -69,6 +69,9 @@
                 <dxb:BarButtonItem Content="Add Required Passes"
                                    Command="{Binding AddRequiredPassesCommand}"
                                    IsVisible="{Binding AddRequiredPassesAvailible}"/>
+                <dxb:BarButtonItem Content="Drop Selected Hex160s"
+                                   Command="{Binding DropHexagonCommand}"
+                                   IsVisible="{Binding AddRequiredPassesAvailible}"/>
             </dxb:BarSubItem>
 
                 <!--<dxb:BarSubItem Glyph="{dx:DXImage SvgImages/Dashboards/EditFilter.svg}" ToolTip="Filter Tools">

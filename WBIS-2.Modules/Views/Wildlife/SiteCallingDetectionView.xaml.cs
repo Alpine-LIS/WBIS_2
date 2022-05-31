@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WBIS_2.Modules.ViewModels;
 
 namespace WBIS_2.Modules.Views.Botany
 {
@@ -25,6 +26,21 @@ namespace WBIS_2.Modules.Views.Botany
         {
             InitializeComponent();
             new UserControlExtension(this);
+        }
+
+        private void MaleBanding_IsMouseCaptureWithinChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+           if (!(bool)e.NewValue)
+            {
+                ((SiteCallingDetectionViewModel)DataContext).MalBandingClick();
+            }
+        }
+        private void FemaleBanding_IsMouseCaptureWithinChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (!(bool)e.NewValue)
+            {
+                ((SiteCallingDetectionViewModel)DataContext).FemalBandingClick();
+            }
         }
     }
 }

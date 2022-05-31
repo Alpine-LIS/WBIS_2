@@ -550,6 +550,17 @@ namespace WBIS_2.Modules.ViewModels
             SetRequiredPassesControl SetRequiredPassesControl = new SetRequiredPassesControl(SelectedItems.Cast<Hex160>().ToArray());
             CustomControlWindow window = new CustomControlWindow(SetRequiredPassesControl);
         }
+        public ICommand DropHexagonCommand => new DelegateCommand(DropHexagonClick);
+        private void DropHexagonClick()
+        {
+            if (SelectedItems.Count == 0)
+            {
+                MessageBox.Show("There must be records selected.");
+                return;
+            }
+            DropHexagonsControl DropHexagonsControl = new DropHexagonsControl(SelectedItems.Cast<Hex160>().ToArray());
+            CustomControlWindow window = new CustomControlWindow(DropHexagonsControl);
+        }
     }
 }
 
