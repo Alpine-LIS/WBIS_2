@@ -55,6 +55,7 @@ namespace WBIS_2
         private static void RegisterData()
         {
             Manager.Register(Regions.NavigationUser, new Module(AppModules.ModuleUser, () => new NavigationItem("User")));
+            Manager.Register(Regions.NavigationAdminUser, new Module(AppModules.ModuleAdminUser, () => new NavigationItem("Users")));
             //Manager.Register(Regions.NavigationAdminUser, new Module(AppModules.ModuleAdminUser, () => new NavigationItem("Users")));
 
             Manager.Register(Regions.NavigationAreas, new Module(AppModules.ModuleDistricts, () => new NavigationItem("Districts")));
@@ -62,25 +63,40 @@ namespace WBIS_2
             Manager.Register(Regions.NavigationAreas, new Module(AppModules.ModuleQuad75s, () => new NavigationItem("Quad75s")));
             Manager.Register(Regions.NavigationAreas, new Module(AppModules.ModuleHex160s, () => new NavigationItem("Hex160s")));
 
-            Manager.Register(Regions.NavigationBotany, new Module(AppModules.ModulePlantsList, () => new NavigationItem("Plants List")));
+            Manager.Register(Regions.NavigationCalifornia, new Module(AppModules.ModuleCnddbOccurrences, () => new NavigationItem("CNDDB Occurrences")));
+            Manager.Register(Regions.NavigationCalifornia, new Module(AppModules.ModuleCnddbQuadElements, () => new NavigationItem("CNDDB Quad Elements")));
+            Manager.Register(Regions.NavigationCalifornia, new Module(AppModules.ModuleCdfwSpottedOwls, () => new NavigationItem("CDFW Spotted Owls")));
+
+
+            Manager.Register(Regions.NavigationSupport, new Module(AppModules.ModulePermanentCallStation, () => new NavigationItem("Permanent Call Stations")));
+            Manager.Register(Regions.NavigationSupport, new Module(AppModules.ModuleProtectionZone, () => new NavigationItem("Protection Zones")));
+            Manager.Register(Regions.NavigationSupport, new Module(AppModules.ModuleWildlifeSpeciesList, () => new NavigationItem("Wildlife Species List")));
+            Manager.Register(Regions.NavigationSupport, new Module(AppModules.ModuleAmphibianSpeciesList, () => new NavigationItem("Amphibian Species List")));
+            Manager.Register(Regions.NavigationSupport, new Module(AppModules.ModuleBirdSpeciesList, () => new NavigationItem("Bird Species List")));
+            Manager.Register(Regions.NavigationSupport, new Module(AppModules.ModulePlantSpeciesList, () => new NavigationItem("Plant Species List")));
 
             Manager.Register(Regions.NavigationBotany, new Module(AppModules.ModuleBotanicalScoping, () => new NavigationItem("Botanical Scopings")));
             Manager.Register(Regions.NavigationBotany, new Module(AppModules.ModuleBotanicalSurveyArea, () => new NavigationItem("Botanical Survey Areas")));
             Manager.Register(Regions.NavigationBotany, new Module(AppModules.ModuleBotanicalSurvey, () => new NavigationItem("Botanical Surveys")));
             Manager.Register(Regions.NavigationBotany, new Module(AppModules.ModuleBotanicalSurveyElement, () => new NavigationItem("Botanical Survey Elements")));
 
-            Manager.Register(Regions.NavigationWildlife, new Module(AppModules.ModulePermanentCallStation, () => new NavigationItem("Permanent Call Stations")));
-            Manager.Register(Regions.NavigationWildlife, new Module(AppModules.ModuleProtectionZone, () => new NavigationItem("Protection Zones")));
+
             Manager.Register(Regions.NavigationWildlife, new Module(AppModules.ModuleHex160RequiredPasses, () => new NavigationItem("Hex160 Required Passes")));
             Manager.Register(Regions.NavigationWildlife, new Module(AppModules.ModuleSiteCallings, () => new NavigationItem("Site Callings")));
             Manager.Register(Regions.NavigationWildlife, new Module(AppModules.ModuleSiteCallingDetections, () => new NavigationItem("Site Calling Detections")));
 
-            //Manager.Register(Regions.NavigationCalifornia, new Module(AppModules.ModuleCnddbOccurrence, () => new NavigationItem("CnddbOccurrence")));
-            //Manager.Register(Regions.NavigationCalifornia, new Module(AppModules.ModuleCdfwSpottedOwl, () => new NavigationItem("CdfwSpottedOwl")));
+            Manager.Register(Regions.NavigationWildlife, new Module(AppModules.ModuleAmphibianSurveys, () => new NavigationItem("Amphibian Surveys")));
+            Manager.Register(Regions.NavigationWildlife, new Module(AppModules.ModuleAmphibianElements, () => new NavigationItem("Amphibian Elements")));
+            Manager.Register(Regions.NavigationWildlife, new Module(AppModules.ModuleBDOWSightings, () => new NavigationItem("BDOW Sightings")));
+            Manager.Register(Regions.NavigationWildlife, new Module(AppModules.ModuleDOMonitoring, () => new NavigationItem("DO Monitoring")));
+            Manager.Register(Regions.NavigationWildlife, new Module(AppModules.ModuleForestCarnivoreCameraStations, () => new NavigationItem("Forest Carnivore Camera Stations")));
+            Manager.Register(Regions.NavigationWildlife, new Module(AppModules.ModuleRanchPhotoPoints, () => new NavigationItem("Ranch Photo Points")));
+
+
             Manager.Register(Regions.Documents, new Module(AppModules.ModuleUser,
-               () => ApplicationUserViewModel.Create(CurrentUser.User), typeof(ApplicationUserView)));
-            //Manager.Register(Regions.Documents, new Module(AppModules.ModuleAdminUser,
-            //  () => ApplicationUserAdminViewModel.Create(), typeof(ApplicationUserAdminView)));
+               () => ApplicationUserViewModel.Create(CurrentUser.User.Guid), typeof(ApplicationUserView)));
+            Manager.Register(Regions.Documents, new Module(AppModules.ModuleAdminUser,
+               () => ParentListViewModel.Create(new ApplicationUser()), typeof(ParentListView)));
 
             Manager.Register(Regions.Documents, new Module(AppModules.ModuleDistricts,
                 () => ParentListViewModel.Create(new District()), typeof(ParentListView)));
@@ -91,9 +107,14 @@ namespace WBIS_2
             Manager.Register(Regions.Documents, new Module(AppModules.ModuleQuad75s,
                 () => ParentListViewModel.Create(new Quad75()), typeof(ParentListView)));
 
+            Manager.Register(Regions.Documents, new Module(AppModules.ModuleCnddbOccurrences,
+                () => ParentListViewModel.Create(new CNDDBOccurrence()), typeof(ParentListView)));
+            Manager.Register(Regions.Documents, new Module(AppModules.ModuleCnddbQuadElements,
+                () => ParentListViewModel.Create(new CNDDBQuadElement()), typeof(ParentListView)));
+            Manager.Register(Regions.Documents, new Module(AppModules.ModuleCdfwSpottedOwls,
+                () => ParentListViewModel.Create(new CDFW_SpottedOwl()), typeof(ParentListView)));
 
-            Manager.Register(Regions.Documents, new Module(AppModules.ModulePlantsList,
-                () => PlantSpeciesListViewModel.Create(new PlantSpecies()), typeof(PlantSpeciesListView)));
+
             Manager.Register(Regions.Documents, new Module(AppModules.ModuleBotanicalScoping,
                 () => ParentListViewModel.Create(new BotanicalScoping()), typeof(ParentListView)));
             Manager.Register(Regions.Documents, new Module(AppModules.ModuleBotanicalSurveyArea,
@@ -103,10 +124,7 @@ namespace WBIS_2
             Manager.Register(Regions.Documents, new Module(AppModules.ModuleBotanicalSurveyElement,
                 () => ParentListViewModel.Create(new BotanicalElement()), typeof(ParentListView)));
 
-            Manager.Register(Regions.Documents, new Module(AppModules.ModulePermanentCallStation,
-                () => ParentListViewModel.Create(new PermanentCallStation()), typeof(ParentListView)));
-            Manager.Register(Regions.Documents, new Module(AppModules.ModuleProtectionZone,
-                () => ParentListViewModel.Create(new ProtectionZone()), typeof(ParentListView)));
+            
             Manager.Register(Regions.Documents, new Module(AppModules.ModuleHex160RequiredPasses,
                 () => ParentListViewModel.Create(new Hex160RequiredPass()), typeof(ParentListView)));
             Manager.Register(Regions.Documents, new Module(AppModules.ModuleSiteCallings,
@@ -114,10 +132,33 @@ namespace WBIS_2
             Manager.Register(Regions.Documents, new Module(AppModules.ModuleSiteCallingDetections,
               () => ParentListViewModel.Create(new SiteCallingDetection()), typeof(ParentListView)));
 
-            //Manager.Register(Regions.Documents, new Module(AppModules.ModuleCnddbOccurrence,
-            //   () => CnddbsListViewModel.Create("CnddbOccurrence", "CnddbOccurrence"), typeof(CnddbsListView)));
-            //Manager.Register(Regions.Documents, new Module(AppModules.ModuleCdfwSpottedOwl,
-            //   () => CdfwOwlsListViewModel.Create("CdfwSpottedOwl", "CdfwSpottedOwl"), typeof(CdfwOwlsListView)));
+            Manager.Register(Regions.Documents, new Module(AppModules.ModuleAmphibianSurveys,
+               () => ParentListViewModel.Create(new AmphibianSurvey()), typeof(ParentListView)));
+            Manager.Register(Regions.Documents, new Module(AppModules.ModuleAmphibianElements,
+               () => ParentListViewModel.Create(new AmphibianElement()), typeof(ParentListView)));
+            Manager.Register(Regions.Documents, new Module(AppModules.ModuleBDOWSightings,
+               () => ParentListViewModel.Create(new BDOWSighting()), typeof(ParentListView)));
+            Manager.Register(Regions.Documents, new Module(AppModules.ModuleDOMonitoring,
+               () => ParentListViewModel.Create(new DOMonitoring()), typeof(ParentListView)));
+            Manager.Register(Regions.Documents, new Module(AppModules.ModuleForestCarnivoreCameraStations,
+               () => ParentListViewModel.Create(new ForestCarnivoreCameraStation()), typeof(ParentListView)));
+            Manager.Register(Regions.Documents, new Module(AppModules.ModuleRanchPhotoPoints,
+               () => ParentListViewModel.Create(new RanchPhotoPoint()), typeof(ParentListView)));
+
+
+            Manager.Register(Regions.Documents, new Module(AppModules.ModulePermanentCallStation,
+                () => ParentListViewModel.Create(new PermanentCallStation()), typeof(ParentListView)));
+            Manager.Register(Regions.Documents, new Module(AppModules.ModuleProtectionZone,
+                () => ParentListViewModel.Create(new ProtectionZone()), typeof(ParentListView)));
+            Manager.Register(Regions.Documents, new Module(AppModules.ModulePlantSpeciesList,
+               () => PlantSpeciesListViewModel.Create(new PlantSpecies()), typeof(PlantSpeciesListView)));
+            Manager.Register(Regions.Documents, new Module(AppModules.ModuleAmphibianSpeciesList,
+               () => ParentListViewModel.Create(new AmphibianSpecies()), typeof(ParentListView)));
+            Manager.Register(Regions.Documents, new Module(AppModules.ModuleBirdSpeciesList,
+               () => ParentListViewModel.Create(new BirdSpecies()), typeof(ParentListView)));
+            Manager.Register(Regions.Documents, new Module(AppModules.ModuleWildlifeSpeciesList,
+               () => ParentListViewModel.Create(new WildlifeSpecies()), typeof(ParentListView)));
+            
         }
 
 
@@ -151,35 +192,49 @@ namespace WBIS_2
             Manager.Inject(Regions.MainWindow, AppModules.Main);
 
             Manager.Inject(Regions.NavigationUser, AppModules.ModuleUser);
-            //Manager.Inject(Regions.NavigationUser, AppModules.ModuleMap);
-
-            //Manager.Inject(Regions.NavigationAdminUser, AppModules.ModuleAdminUser);
-            //Manager.Inject(Regions.NavigationAdminUser, AppModules.ModuleMap);
+            Manager.Inject(Regions.NavigationAdminUser, AppModules.ModuleAdminUser);
 
             Manager.Inject(Regions.NavigationAreas, AppModules.ModuleDistricts);
             Manager.Inject(Regions.NavigationAreas, AppModules.ModuleWatersheds);
             Manager.Inject(Regions.NavigationAreas, AppModules.ModuleQuad75s);
             Manager.Inject(Regions.NavigationAreas, AppModules.ModuleHex160s);
 
-            Manager.Inject(Regions.NavigationBotany, AppModules.ModulePlantsList);
+            Manager.Inject(Regions.NavigationCalifornia, AppModules.ModuleCnddbOccurrences);
+            Manager.Inject(Regions.NavigationCalifornia, AppModules.ModuleCnddbQuadElements);
+            Manager.Inject(Regions.NavigationCalifornia, AppModules.ModuleCdfwSpottedOwls);
+
+
             Manager.Inject(Regions.NavigationBotany, AppModules.ModuleBotanicalScoping);
             Manager.Inject(Regions.NavigationBotany, AppModules.ModuleBotanicalSurveyArea);
             Manager.Inject(Regions.NavigationBotany, AppModules.ModuleBotanicalSurvey);
             Manager.Inject(Regions.NavigationBotany, AppModules.ModuleBotanicalSurveyElement);
 
-            Manager.Inject(Regions.NavigationWildlife, AppModules.ModuleProtectionZone);
-            Manager.Inject(Regions.NavigationWildlife, AppModules.ModulePermanentCallStation);
+
             Manager.Inject(Regions.NavigationWildlife, AppModules.ModuleHex160RequiredPasses);
             Manager.Inject(Regions.NavigationWildlife, AppModules.ModuleSiteCallings);
             Manager.Inject(Regions.NavigationWildlife, AppModules.ModuleSiteCallingDetections);
-            //Manager.Inject(Regions.NavigationCalifornia, AppModules.ModuleCnddbOccurrence);
-            //Manager.Inject(Regions.NavigationCalifornia, AppModules.ModuleCdfwSpottedOwl);
+
+            Manager.Inject(Regions.NavigationWildlife, AppModules.ModuleAmphibianSurveys);
+            Manager.Inject(Regions.NavigationWildlife, AppModules.ModuleAmphibianElements);
+            Manager.Inject(Regions.NavigationWildlife, AppModules.ModuleBDOWSightings);
+            Manager.Inject(Regions.NavigationWildlife, AppModules.ModuleDOMonitoring);
+            Manager.Inject(Regions.NavigationWildlife, AppModules.ModuleForestCarnivoreCameraStations);
+            Manager.Inject(Regions.NavigationWildlife, AppModules.ModuleRanchPhotoPoints);
+
+
+            Manager.Inject(Regions.NavigationSupport, AppModules.ModuleProtectionZone);
+            Manager.Inject(Regions.NavigationSupport, AppModules.ModulePermanentCallStation);
+            Manager.Inject(Regions.NavigationSupport, AppModules.ModulePlantSpeciesList);
+            Manager.Inject(Regions.NavigationSupport, AppModules.ModuleWildlifeSpeciesList);
+            Manager.Inject(Regions.NavigationSupport, AppModules.ModuleBirdSpeciesList);
+            Manager.Inject(Regions.NavigationSupport, AppModules.ModuleAmphibianSpeciesList);
+
         }
 
         protected virtual void ConfigureNavigation()
         {
             Manager.GetEvents(Regions.NavigationUser).Navigation += OnNavigation;
-            //Manager.GetEvents(Regions.NavigationAdminUser).Navigation += OnNavigation;
+            Manager.GetEvents(Regions.NavigationAdminUser).Navigation += OnNavigation;
             Manager.GetEvents(Regions.NavigationAreas).Navigation += OnNavigation;
             Manager.GetEvents(Regions.NavigationCalifornia).Navigation += OnNavigation;
             Manager.GetEvents(Regions.NavigationWildlife).Navigation += OnNavigation;

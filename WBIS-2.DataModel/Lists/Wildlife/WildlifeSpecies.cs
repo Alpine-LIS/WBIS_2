@@ -6,7 +6,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class WildlifeSpecies : IInformationType, IPlaceHolder
+    public class WildlifeSpecies : UserDataValidator, IInformationType, IPlaceHolder
     {
         [Key,Column("guid")]
         public Guid Guid { get; set; }

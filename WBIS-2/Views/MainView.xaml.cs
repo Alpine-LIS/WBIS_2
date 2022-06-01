@@ -67,6 +67,17 @@ namespace WBIS_2.Views
 
         private void CurrentUserChanged(object sender, EventArgs e)
         {
+            if (CurrentUser.AdminPrivileges)
+            {
+                AdminUserRegion.Height = double.NaN;
+                UserRegion.Height = 0d;
+            }
+            else
+            {
+                AdminUserRegion.Height = 0d;
+                UserRegion.Height = double.NaN;
+            }
+
             //double height = 0;
             //if (AdminUserRegion.Height > 0) height = AdminUserRegion.Height;
             //if (UserRegion.Height > 0) height = UserRegion.Height;

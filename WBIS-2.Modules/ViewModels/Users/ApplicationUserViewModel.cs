@@ -14,11 +14,14 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using System.ComponentModel.DataAnnotations;
 
 namespace WBIS_2.Modules.ViewModels
 {
     public class ApplicationUserViewModel : DetailViewModelBase, IDocumentContent
     {
+        public static bool AddSingle => true;
+
         public ApplicationUser User
         {
             get { return GetProperty(() => User); }
@@ -33,12 +36,10 @@ namespace WBIS_2.Modules.ViewModels
                 else return $"User: (New User)";
             }
         }
-        public static ApplicationUserViewModel Create(ApplicationUser user)
+        public static ApplicationUserViewModel Create(Guid guid)
         {
-            return ViewModelSource.Create(() => new ApplicationUserViewModel(user)
+            return ViewModelSource.Create(() => new ApplicationUserViewModel(guid)
             {
-                Caption = user.UserName,
-                Content = user.UserName
             });
         }
 
@@ -78,15 +79,23 @@ namespace WBIS_2.Modules.ViewModels
            
         }
 
-        protected ApplicationUserViewModel(ApplicationUser user)
+        protected ApplicationUserViewModel(Guid guid)
         {
             User = Database.ApplicationUsers
                 .Include(_ => _.ApplicationGroup).ThenInclude(r => r.ApplicationUsers)
                 .Include(_ => _.Districts)
-                .First(_ => _.Guid == user.Guid);
-            if (User == null) User = user;
+                .FirstOrDefault(_ => _.Guid == guid);
+            if (User == null) User = new ApplicationUser()
+            {
+                Districts = new List<District>()
+            };
 
-            ApplicationGroups = Database.ApplicationGroups.Where(_=>_.GroupName != "Admin").ToArray();
+            UserName = User.UserName;
+
+            if (CurrentUser.AdminPrivileges)
+                ApplicationGroups = Database.ApplicationGroups.ToArray();
+            else
+                ApplicationGroups = Database.ApplicationGroups.Where(_ => _.GroupName != "Admin").ToArray();
             CreateDistrictList();
             RaisePropertyChanged(nameof(DistrictList));
             CreateLayerList();
@@ -101,6 +110,10 @@ namespace WBIS_2.Modules.ViewModels
         public override void Tracker_ChangesSaved(object sender, IEnumerable<Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry> e)
         {
         }
+
+        [Required(AllowEmptyStrings = false), StringLength(1000, MinimumLength = 1)]
+        public string UserName { get; set; }
+
         public string NewPassword { get; set; }
         public string ConfirmPassword { get; set; }
         public override void Save()
@@ -126,6 +139,9 @@ namespace WBIS_2.Modules.ViewModels
                 MessageBox.Show("There must be at least on district selected.");
                 return;
             }
+
+
+            User.UserName = UserName;
 
 
             User.Districts = new List<District>();

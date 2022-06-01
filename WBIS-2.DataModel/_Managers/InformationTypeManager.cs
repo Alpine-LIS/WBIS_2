@@ -198,7 +198,7 @@ namespace WBIS_2.DataModel
 
             var ShowOptions = (Expression<Func<InfoType, bool>>)ShowHideDeleteAndRepository(showDelete, showRepository);
 
-            if (queryProperty == null && typeof(InfoType) != QueryType)
+            if ((queryProperty == null && typeof(InfoType) != QueryType) || typeof(InfoType) == typeof(ApplicationUser))
             {
                 if (ShowOptions == null)
                     return returnVal;

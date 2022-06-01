@@ -52,16 +52,23 @@
             FloatingMode="Desktop" ClosedPanelsBarVisibility="Auto" ClosedPanelsBarPosition="Bottom" EnableWin32Compatibility="True" Loaded="DockLayoutManager_Loaded">
             <dxdo:LayoutGroup Orientation="Horizontal">
                 <dxdo:LayoutPanel Name="Navigation" Caption="Navigation" AllowClose="False" ItemWidth="200">
-                    <dxa:AccordionControl AutoExpandAllItems="True" SelectionUnit="SubItem" Name="AccordionControl">
+                    <dxa:AccordionControl SelectionUnit="SubItem" Name="AccordionControl">
 
-                        <dxa:AccordionItem Header="User" dxmvvm:UIRegion.Region="{x:Static common:Regions.NavigationUser}" IsExpanded="False" x:Name="UserRegion">
+                        <dxa:AccordionItem Header="User" dxmvvm:UIRegion.Region="{x:Static common:Regions.NavigationUser}" IsExpanded="True" x:Name="UserRegion">
                             <dxa:AccordionItem.ItemContainerStyle>
                                 <Style TargetType="dxa:AccordionItem">
                                     <Setter Property="Header" Value="{Binding Caption}"/>
                                 </Style>
                             </dxa:AccordionItem.ItemContainerStyle>
                         </dxa:AccordionItem>
-                        <dxa:AccordionItem Header="Areas" dxmvvm:UIRegion.Region="{x:Static common:Regions.NavigationAreas}" IsExpanded="False">
+                        <dxa:AccordionItem Header="User" dxmvvm:UIRegion.Region="{x:Static common:Regions.NavigationAdminUser}" IsExpanded="True" x:Name="AdminUserRegion">
+                            <dxa:AccordionItem.ItemContainerStyle>
+                                <Style TargetType="dxa:AccordionItem">
+                                    <Setter Property="Header" Value="{Binding Caption}"/>
+                                </Style>
+                            </dxa:AccordionItem.ItemContainerStyle>
+                        </dxa:AccordionItem>
+                        <dxa:AccordionItem Header="Areas" dxmvvm:UIRegion.Region="{x:Static common:Regions.NavigationAreas}" IsExpanded="True">
                             <dxa:AccordionItem.ItemContainerStyle>
                                 <Style TargetType="dxa:AccordionItem">
                                     <Setter Property="Header" Value="{Binding Caption}"/>

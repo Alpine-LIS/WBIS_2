@@ -18,12 +18,16 @@ namespace WBIS_2.Common
         public static string ModuleQuad75s { get { return "Quad75"; } }
         public static string ModuleHex160s { get { return "Hex160"; } }
 
-        public static string ModuleCnddbOccurrence { get { return "CnddbOccurrence"; } }
-        public static string ModuleCdfwSpottedOwl { get { return "CdfwSpottedOwl"; } }
+        public static string ModuleCnddbOccurrences { get { return "CnddbOccurrences"; } }
+        public static string ModuleCnddbQuadElements { get { return "CnddbQuadElements"; } }
+        public static string ModuleCdfwSpottedOwls { get { return "CdfwSpottedOwls"; } }
 
 
 
-        public static string ModulePlantsList { get { return "PlantsList"; } }
+        public static string ModulePlantSpeciesList { get { return "PlantSpeciesList"; } }
+        public static string ModuleAmphibianSpeciesList { get { return "AmphibianSpeciesList"; } }
+        public static string ModuleBirdSpeciesList { get { return "BirdSpeciesList"; } }
+        public static string ModuleWildlifeSpeciesList { get { return "WildlifeSpeciesList"; } }
 
 
 
@@ -38,5 +42,12 @@ namespace WBIS_2.Common
         public static string ModuleHex160RequiredPasses { get { return "Hex160RequiredPasses"; } }
         public static string ModuleSiteCallings { get { return "SiteCallings"; } }
         public static string ModuleSiteCallingDetections { get { return "SiteCallingDetections"; } }
+
+        public static string ModuleAmphibianSurveys { get { return "AmphibianSurveys"; } }
+        public static string ModuleAmphibianElements { get { return "AmphibianElements"; } }
+        public static string ModuleBDOWSightings { get { return "BDOWSightings"; } }
+        public static string ModuleDOMonitoring { get { return "DOMonitoring"; } }
+        public static string ModuleForestCarnivoreCameraStations { get { return "ForestCarnivoreCameraStations"; } }
+        public static string ModuleRanchPhotoPoints { get { return "RanchPhotoPoint"; } }
     }
 }

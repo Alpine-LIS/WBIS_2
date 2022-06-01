@@ -32,7 +32,7 @@ namespace WBIS_2.Modules.ViewModels
                 Record = CurrentSpecies;
             }
         }
-        public object Title => $"{CurrentSpecies.SciName}";
+        public object Title => $"{CurrentSpecies.SciName}{Changed}";
 
        
         //Sci name outside of plant species because it needs to be required, but can be empty in the database
@@ -139,17 +139,17 @@ namespace WBIS_2.Modules.ViewModels
             throw new NotImplementedException();
         }
 
-        public void OnClose(CancelEventArgs e)
-        {
-            if (Changed)
-            {
-                var result = ThemedMessageBox.Show(title: "Confirmation", text: UnsavedMessageText, messageBoxButtons: MessageBoxButton.YesNo);
-                if (result != MessageBoxResult.Yes)
-                {
-                    e.Cancel = true;
-                }
-            }
-        }
+        //public void OnClose(CancelEventArgs e)
+        //{
+        //    if (Changed)
+        //    {
+        //        var result = ThemedMessageBox.Show(title: "Confirmation", text: UnsavedMessageText, messageBoxButtons: MessageBoxButton.YesNo);
+        //        if (result != MessageBoxResult.Yes)
+        //        {
+        //            e.Cancel = true;
+        //        }
+        //    }
+        //}
 
         public void OnDestroy()
         {

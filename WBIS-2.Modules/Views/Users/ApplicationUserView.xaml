@@ -31,6 +31,7 @@
             <Grid Grid.Column="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="AUTO"/>
+                    <RowDefinition Height="AUTO"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
@@ -39,10 +40,13 @@
                 </Grid.ColumnDefinitions>
 
                 <Label Grid.Row="0" Grid.Column="0" Margin="5" Content="Name:"/>
-                <dxe:TextEdit Grid.Row="0" Grid.Column="1" Text="{Binding User.UserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
+                <dxe:TextEdit Grid.Row="0" Grid.Column="1" Text="{Binding UserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
+                <Label Grid.Row="1" Grid.Column="0" Margin="5" Content="Group:"/>
+                <dxe:ComboBoxEdit Grid.Row="1" Grid.Column="1" SelectedItem="{Binding User.ApplicationGroup, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                                  ItemsSource="{Binding ApplicationGroups}" DisplayMember="GroupName"/>
 
-                <Label Grid.Row="1" Grid.Column="0" Content="Districts:" VerticalAlignment="Top"/>
-                <ListBox ItemsSource="{Binding DistrictList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5" Grid.Row="1" Grid.Column="1">
+                <Label Grid.Row="2" Grid.Column="0" Content="Districts:" VerticalAlignment="Top"/>
+                <ListBox ItemsSource="{Binding DistrictList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5" Grid.Row="2" Grid.Column="1">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal" >
