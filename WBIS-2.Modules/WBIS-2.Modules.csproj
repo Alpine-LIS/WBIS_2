@@ -30,8 +30,8 @@
     <PackageReference Include="Atlas3.Controls" Version="3.1.1" />
     <PackageReference Include="Atlas3.Manager" Version="3.1.1" />
     <PackageReference Include="Compat.Private.Serialization" Version="1.0.0" />
-    <PackageReference Include="DevExpress.Data" Version="21.2.6-pre-22040" />
-    <PackageReference Include="DevExpress.Wpf.Grid" Version="21.2.6-pre-22040" />
+    <PackageReference Include="DevExpress.Data" Version="21.2.7" />
+    <PackageReference Include="DevExpress.Wpf.Grid" Version="21.2.7" />
     <PackageReference Include="Npgsql.NetTopologySuite" Version="6.0.3" />
     <PackageReference Include="Octokit" Version="0.50.0" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.0" />

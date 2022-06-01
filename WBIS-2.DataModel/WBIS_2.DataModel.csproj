@@ -12,7 +12,7 @@
 
   <ItemGroup>
     <PackageReference Include="Atlas.Projections" Version="3.1.1" />
-    <PackageReference Include="DevExpress.Mvvm" Version="21.2.6-pre-22040" />
+    <PackageReference Include="DevExpress.Mvvm" Version="21.2.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.2">
       <PrivateAssets>all</PrivateAssets>
