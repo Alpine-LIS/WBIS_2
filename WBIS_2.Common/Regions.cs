@@ -19,5 +19,6 @@ namespace WBIS_2.Common
         public static string NavigationSupport { get { return "NavigationSupport"; } }
         //public static string NavigationOption { get { return "NavigationOption"; } }
         public static string NavigationReports { get { return "NavigationReports"; } }
+        public static string NavigationAdditionalSurveys { get { return "NavigationAdditionalSurveys"; } }
     }
 }

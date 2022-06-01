@@ -45,9 +45,18 @@ namespace WBIS_2.Common
 
         public static string ModuleAmphibianSurveys { get { return "AmphibianSurveys"; } }
         public static string ModuleAmphibianElements { get { return "AmphibianElements"; } }
-        public static string ModuleBDOWSightings { get { return "BDOWSightings"; } }
-        public static string ModuleDOMonitoring { get { return "DOMonitoring"; } }
-        public static string ModuleForestCarnivoreCameraStations { get { return "ForestCarnivoreCameraStations"; } }
-        public static string ModuleRanchPhotoPoints { get { return "RanchPhotoPoint"; } }
+        //public static string ModuleBDOWSightings { get { return "BDOWSightings"; } }
+        //public static string ModuleDOMonitoring { get { return "DOMonitoring"; } }
+        //public static string ModuleForestCarnivoreCameraStations { get { return "ForestCarnivoreCameraStations"; } }
+        //public static string ModuleRanchPhotoPoints { get { return "RanchPhotoPoint"; } }
+
+
+
+
+
+
+
+        public static string ModuleAdditionalSurveys { get { return "AdditionalSurveys"; } }
+
     }
 }

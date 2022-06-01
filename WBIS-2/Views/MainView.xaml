@@ -103,7 +103,15 @@
                                 </Style>
                             </dxa:AccordionItem.ItemContainerStyle>
                         </dxa:AccordionItem>
-                        
+
+                        <dxa:AccordionItem Header="Additional Surveys" dxmvvm:UIRegion.Region="{x:Static common:Regions.NavigationAdditionalSurveys}" IsExpanded="False">
+                            <dxa:AccordionItem.ItemContainerStyle>
+                                <Style TargetType="dxa:AccordionItem">
+                                    <Setter Property="Header" Value="{Binding Caption}"/>
+                                </Style>
+                            </dxa:AccordionItem.ItemContainerStyle>
+                        </dxa:AccordionItem>
+
                         <dxa:AccordionItem Header="Reports" dxmvvm:UIRegion.Region="{x:Static common:Regions.NavigationReports}" IsExpanded="False">
                             <dxa:AccordionItem.ItemContainerStyle>
                                 <Style TargetType="dxa:AccordionItem">

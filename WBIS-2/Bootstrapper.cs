@@ -15,6 +15,7 @@ using System;
 using WBIS_2.Modules.Views;
 using WBIS_2.Modules.ViewModels;
 using WBIS_2.Modules;
+using Alpine.FlexForms.Controls;
 
 namespace WBIS_2
 {
@@ -42,7 +43,8 @@ namespace WBIS_2
         {
             var mainAssembly = typeof(MainViewModel).Assembly;
             var modulesAssembly = typeof(ParentListView).Assembly;
-            var assemblies = new[] { mainAssembly, modulesAssembly };
+            var flexAssembly = typeof(TemplatesListView).Assembly;
+            var assemblies = new[] { mainAssembly, modulesAssembly, flexAssembly };
             ViewModelLocator.Default = new ViewModelLocator(assemblies);
             ViewLocator.Default = new ViewLocator(assemblies);
         }
@@ -87,10 +89,13 @@ namespace WBIS_2
 
             Manager.Register(Regions.NavigationWildlife, new Module(AppModules.ModuleAmphibianSurveys, () => new NavigationItem("Amphibian Surveys")));
             Manager.Register(Regions.NavigationWildlife, new Module(AppModules.ModuleAmphibianElements, () => new NavigationItem("Amphibian Elements")));
-            Manager.Register(Regions.NavigationWildlife, new Module(AppModules.ModuleBDOWSightings, () => new NavigationItem("BDOW Sightings")));
-            Manager.Register(Regions.NavigationWildlife, new Module(AppModules.ModuleDOMonitoring, () => new NavigationItem("DO Monitoring")));
-            Manager.Register(Regions.NavigationWildlife, new Module(AppModules.ModuleForestCarnivoreCameraStations, () => new NavigationItem("Forest Carnivore Camera Stations")));
-            Manager.Register(Regions.NavigationWildlife, new Module(AppModules.ModuleRanchPhotoPoints, () => new NavigationItem("Ranch Photo Points")));
+            //Manager.Register(Regions.NavigationWildlife, new Module(AppModules.ModuleBDOWSightings, () => new NavigationItem("BDOW Sightings")));
+            //Manager.Register(Regions.NavigationWildlife, new Module(AppModules.ModuleDOMonitoring, () => new NavigationItem("DO Monitoring")));
+            //Manager.Register(Regions.NavigationWildlife, new Module(AppModules.ModuleForestCarnivoreCameraStations, () => new NavigationItem("Forest Carnivore Camera Stations")));
+            //Manager.Register(Regions.NavigationWildlife, new Module(AppModules.ModuleRanchPhotoPoints, () => new NavigationItem("Ranch Photo Points")));
+
+
+            Manager.Register(Regions.NavigationAdditionalSurveys, new Module(AppModules.ModuleAdditionalSurveys, () => new NavigationItem("Additional Surveys")));
 
 
             Manager.Register(Regions.Documents, new Module(AppModules.ModuleUser,
@@ -136,14 +141,14 @@ namespace WBIS_2
                () => ParentListViewModel.Create(new AmphibianSurvey()), typeof(ParentListView)));
             Manager.Register(Regions.Documents, new Module(AppModules.ModuleAmphibianElements,
                () => ParentListViewModel.Create(new AmphibianElement()), typeof(ParentListView)));
-            Manager.Register(Regions.Documents, new Module(AppModules.ModuleBDOWSightings,
-               () => ParentListViewModel.Create(new BDOWSighting()), typeof(ParentListView)));
-            Manager.Register(Regions.Documents, new Module(AppModules.ModuleDOMonitoring,
-               () => ParentListViewModel.Create(new DOMonitoring()), typeof(ParentListView)));
-            Manager.Register(Regions.Documents, new Module(AppModules.ModuleForestCarnivoreCameraStations,
-               () => ParentListViewModel.Create(new ForestCarnivoreCameraStation()), typeof(ParentListView)));
-            Manager.Register(Regions.Documents, new Module(AppModules.ModuleRanchPhotoPoints,
-               () => ParentListViewModel.Create(new RanchPhotoPoint()), typeof(ParentListView)));
+            //Manager.Register(Regions.Documents, new Module(AppModules.ModuleBDOWSightings,
+            //   () => ParentListViewModel.Create(new BDOWSighting()), typeof(ParentListView)));
+            //Manager.Register(Regions.Documents, new Module(AppModules.ModuleDOMonitoring,
+            //   () => ParentListViewModel.Create(new DOMonitoring()), typeof(ParentListView)));
+            //Manager.Register(Regions.Documents, new Module(AppModules.ModuleForestCarnivoreCameraStations,
+            //   () => ParentListViewModel.Create(new ForestCarnivoreCameraStation()), typeof(ParentListView)));
+            //Manager.Register(Regions.Documents, new Module(AppModules.ModuleRanchPhotoPoints,
+            //   () => ParentListViewModel.Create(new RanchPhotoPoint()), typeof(ParentListView)));
 
 
             Manager.Register(Regions.Documents, new Module(AppModules.ModulePermanentCallStation,
@@ -158,7 +163,10 @@ namespace WBIS_2
                () => ParentListViewModel.Create(new BirdSpecies()), typeof(ParentListView)));
             Manager.Register(Regions.Documents, new Module(AppModules.ModuleWildlifeSpeciesList,
                () => ParentListViewModel.Create(new WildlifeSpecies()), typeof(ParentListView)));
-            
+
+
+            Manager.Register(Regions.Documents, new Module(AppModules.ModuleAdditionalSurveys,
+               () => TemplatesListViewModel.Create(), typeof(TemplatesListView)));
         }
 
 
@@ -216,10 +224,10 @@ namespace WBIS_2
 
             Manager.Inject(Regions.NavigationWildlife, AppModules.ModuleAmphibianSurveys);
             Manager.Inject(Regions.NavigationWildlife, AppModules.ModuleAmphibianElements);
-            Manager.Inject(Regions.NavigationWildlife, AppModules.ModuleBDOWSightings);
-            Manager.Inject(Regions.NavigationWildlife, AppModules.ModuleDOMonitoring);
-            Manager.Inject(Regions.NavigationWildlife, AppModules.ModuleForestCarnivoreCameraStations);
-            Manager.Inject(Regions.NavigationWildlife, AppModules.ModuleRanchPhotoPoints);
+            //Manager.Inject(Regions.NavigationWildlife, AppModules.ModuleBDOWSightings);
+            //Manager.Inject(Regions.NavigationWildlife, AppModules.ModuleDOMonitoring);
+            //Manager.Inject(Regions.NavigationWildlife, AppModules.ModuleForestCarnivoreCameraStations);
+            //Manager.Inject(Regions.NavigationWildlife, AppModules.ModuleRanchPhotoPoints);
 
 
             Manager.Inject(Regions.NavigationSupport, AppModules.ModuleProtectionZone);
@@ -229,6 +237,7 @@ namespace WBIS_2
             Manager.Inject(Regions.NavigationSupport, AppModules.ModuleBirdSpeciesList);
             Manager.Inject(Regions.NavigationSupport, AppModules.ModuleAmphibianSpeciesList);
 
+            Manager.Inject(Regions.NavigationAdditionalSurveys, AppModules.ModuleAdditionalSurveys);
         }
 
         protected virtual void ConfigureNavigation()
@@ -240,6 +249,7 @@ namespace WBIS_2
             Manager.GetEvents(Regions.NavigationWildlife).Navigation += OnNavigation;
             Manager.GetEvents(Regions.NavigationBotany).Navigation += OnNavigation;
             Manager.GetEvents(Regions.NavigationSupport).Navigation += OnNavigation;
+            Manager.GetEvents(Regions.NavigationAdditionalSurveys).Navigation += OnNavigation;
             //Manager.GetEvents(Regions.NavigationOption).Navigation += OnNavigation;
             Manager.GetEvents(Regions.NavigationReports).Navigation += OnNavigation;
             Manager.GetEvents(Regions.Documents).Navigation += OnDocumentsNavigation;

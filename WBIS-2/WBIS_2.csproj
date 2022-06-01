@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\THP\TimberHarvestPlanDesktop\Alpine.FlexForms.Controls\Alpine.FlexForms.Controls.csproj" />
     <ProjectReference Include="..\WBIS-2.DataModel\WBIS_2.DataModel.csproj" />
     <ProjectReference Include="..\WBIS-2.Modules\WBIS-2.Modules.csproj" />
     <ProjectReference Include="..\WBIS_2.Common\WBIS_2.Common.csproj" />
