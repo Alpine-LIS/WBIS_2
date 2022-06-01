@@ -45,7 +45,7 @@ namespace WBIS_2.DataModel
 
         [Column("plant_species_id")]
         public Guid? PlantSpeciesId { get; set; }
-        [ListInfo(AutoInclude = true)]
+        //[ListInfo(AutoInclude = true)]
         public PlantSpecies PlantSpecies { get; set; }
 
 

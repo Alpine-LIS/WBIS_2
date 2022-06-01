@@ -1,0 +1,176 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WBIS_2.Modules.Views.Botany" 
+             xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors" 
+             xmlns:views="clr-namespace:WBIS_2.Modules.Views" 
+             xmlns:viewModels="clr-namespace:WBIS_2.Modules.ViewModels" 
+             xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
+             xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core" xmlns:dxe1="clr-namespace:DevExpress.XtraEditors;assembly=DevExpress.XtraEditors.v21.2" x:Class="WBIS_2.Modules.Views.Botany.CNDDBOccurrenceView"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type={x:Type viewModels:CNDDBOccurrenceViewModel}}"
+            d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>                     
+        <Grid.RowDefinitions>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <views:DetailMenuView Grid.Row="0"/>
+
+        <dx:DXTabControl Grid.Row="1">
+            <dx:DXTabItem Header="General Info">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="AUTO"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="AUTO"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="AUTO"/>
+                        <RowDefinition Height="AUTO"/>
+                        <RowDefinition Height="AUTO"/>
+                        <RowDefinition Height="AUTO"/>
+                        <RowDefinition Height="AUTO"/>
+                        <RowDefinition Height="AUTO"/>
+                        <RowDefinition Height="AUTO"/>
+                        <RowDefinition Height="AUTO"/>
+                        <RowDefinition Height="AUTO"/>
+                        <RowDefinition Height="AUTO"/>
+                        <RowDefinition Height="AUTO"/>
+                        <RowDefinition Height="AUTO"/>
+                        <RowDefinition Height="AUTO"/>
+                        <RowDefinition Height="AUTO"/>
+                        <RowDefinition Height="AUTO"/>
+                        <RowDefinition Height="AUTO"/>
+                        <RowDefinition Height="AUTO"/>
+                        <RowDefinition Height="AUTO"/>
+                        <RowDefinition Height="AUTO"/>
+                        <RowDefinition Height="AUTO"/>
+                        <RowDefinition Height="AUTO"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" Grid.Column="0" Content="SNAME"/>
+                    <dxe:TextEdit Grid.Row="0" Grid.Column="1" Text="{Binding Occurrence.SNAME}" IsReadOnly="True"/>
+                    <Label Grid.Row="0" Grid.Column="2" Content="CNAME"/>
+                    <dxe:TextEdit Grid.Row="0" Grid.Column="3" Text="{Binding Occurrence.CNAME}" IsReadOnly="True"/>
+
+                    <Label Grid.Row="1" Grid.Column="0" Content="ELMCODE"/>
+                    <dxe:TextEdit Grid.Row="1" Grid.Column="1" Text="{Binding Occurrence.ELMCODE}" IsReadOnly="True"/>
+                    <Label Grid.Row="1" Grid.Column="2" Content="OCCNUMBER"/>
+                    <dxe:TextEdit Grid.Row="1" Grid.Column="3" Text="{Binding Occurrence.OCCNUMBER}" IsReadOnly="True"/>
+
+                    <Label Grid.Row="2" Grid.Column="0" Content="MAPNDX"/>
+                    <dxe:TextEdit Grid.Row="2" Grid.Column="1" Text="{Binding Occurrence.MAPNDX}" IsReadOnly="True"/>
+                    <Label Grid.Row="2" Grid.Column="2" Content="EONDX"/>
+                    <dxe:TextEdit Grid.Row="2" Grid.Column="3" Text="{Binding Occurrence.EONDX}" IsReadOnly="True"/>
+
+                    <Label Grid.Row="3" Grid.Column="0" Content="KEYQUAD"/>
+                    <dxe:TextEdit Grid.Row="3" Grid.Column="1" Text="{Binding Occurrence.KEYQUAD}" IsReadOnly="True"/>
+                    <Label Grid.Row="3" Grid.Column="2" Content="KQUADNAME"/>
+                    <dxe:TextEdit Grid.Row="3" Grid.Column="3" Text="{Binding Occurrence.KQUADNAME}" IsReadOnly="True"/>
+
+                    <Label Grid.Row="4" Grid.Column="0" Content="KEYCOUNTY"/>
+                    <dxe:TextEdit Grid.Row="4" Grid.Column="1" Text="{Binding Occurrence.KEYCOUNTY}" IsReadOnly="True"/>
+                    <Label Grid.Row="4" Grid.Column="2" Content="PLSS"/>
+                    <dxe:TextEdit Grid.Row="4" Grid.Column="3" Text="{Binding Occurrence.PLSS}" IsReadOnly="True"/>
+
+                    <Label Grid.Row="5" Grid.Column="0" Content="ELEVATION"/>
+                    <dxe:TextEdit Grid.Row="5" Grid.Column="1" Text="{Binding Occurrence.ELEVATION}" IsReadOnly="True"/>
+                    <Label Grid.Row="5" Grid.Column="2" Content="PARTS"/>
+                    <dxe:TextEdit Grid.Row="5" Grid.Column="3" Text="{Binding Occurrence.PARTS}" IsReadOnly="True"/>
+
+                    <Label Grid.Row="6" Grid.Column="0" Content="ELMTYPE"/>
+                    <dxe:TextEdit Grid.Row="6" Grid.Column="1" Text="{Binding Occurrence.ELMTYPE}" IsReadOnly="True"/>
+                    <Label Grid.Row="6" Grid.Column="2" Content="TAXONGROUP"/>
+                    <dxe:TextEdit Grid.Row="6" Grid.Column="3" Text="{Binding Occurrence.TAXONGROUP}" IsReadOnly="True"/>
+
+                    <Label Grid.Row="7" Grid.Column="0" Content="EOCOUNT"/>
+                    <dxe:TextEdit Grid.Row="7" Grid.Column="1" Text="{Binding Occurrence.EOCOUNT}" IsReadOnly="True"/>
+                    <Label Grid.Row="7" Grid.Column="2" Content="ACCURACY"/>
+                    <dxe:TextEdit Grid.Row="7" Grid.Column="3" Text="{Binding Occurrence.ACCURACY}" IsReadOnly="True"/>
+
+                    <Label Grid.Row="8" Grid.Column="0" Content="PRESENCE"/>
+                    <dxe:TextEdit Grid.Row="8" Grid.Column="1" Text="{Binding Occurrence.PRESENCE}" IsReadOnly="True"/>
+                    <Label Grid.Row="8" Grid.Column="2" Content="OCCTYPE"/>
+                    <dxe:TextEdit Grid.Row="8" Grid.Column="3" Text="{Binding Occurrence.OCCTYPE}" IsReadOnly="True"/>
+
+                    <Label Grid.Row="9" Grid.Column="0" Content="OCCRANK"/>
+                    <dxe:TextEdit Grid.Row="9" Grid.Column="1" Text="{Binding Occurrence.OCCRANK}" IsReadOnly="True"/>
+                    <Label Grid.Row="9" Grid.Column="2" Content="SENSITIVE"/>
+                    <dxe:TextEdit Grid.Row="9" Grid.Column="3" Text="{Binding Occurrence.SENSITIVE}" IsReadOnly="True"/>
+
+                    <Label Grid.Row="10" Grid.Column="0" Content="SITEDATE"/>
+                    <dxe:TextEdit Grid.Row="10" Grid.Column="1" Text="{Binding Occurrence.SITEDATE}" IsReadOnly="True"/>
+                    <Label Grid.Row="10" Grid.Column="2" Content="ELMDATE"/>
+                    <dxe:TextEdit Grid.Row="10" Grid.Column="3" Text="{Binding Occurrence.ELMDATE}" IsReadOnly="True"/>
+
+                    <Label Grid.Row="11" Grid.Column="0" Content="OWNERMGT"/>
+                    <dxe:TextEdit Grid.Row="11" Grid.Column="1" Text="{Binding Occurrence.OWNERMGT}" IsReadOnly="True"/>
+                    <Label Grid.Row="11" Grid.Column="2" Content="FEDLIST"/>
+                    <dxe:TextEdit Grid.Row="11" Grid.Column="3" Text="{Binding Occurrence.FEDLIST}" IsReadOnly="True"/>
+
+                    <Label Grid.Row="12" Grid.Column="0" Content="CALLIST"/>
+                    <dxe:TextEdit Grid.Row="12" Grid.Column="1" Text="{Binding Occurrence.CALLIST}" IsReadOnly="True"/>
+                    <Label Grid.Row="12" Grid.Column="2" Content="GRANK"/>
+                    <dxe:TextEdit Grid.Row="12" Grid.Column="3" Text="{Binding Occurrence.GRANK}" IsReadOnly="True"/>
+
+                    <Label Grid.Row="13" Grid.Column="0" Content="SRANK"/>
+                    <dxe:TextEdit Grid.Row="13" Grid.Column="1" Text="{Binding Occurrence.SRANK}" IsReadOnly="True"/>
+                    <Label Grid.Row="13" Grid.Column="2" Content="RPLANTRANK"/>
+                    <dxe:TextEdit Grid.Row="13" Grid.Column="3" Text="{Binding Occurrence.RPLANTRANK}" IsReadOnly="True"/>
+
+                    <Label Grid.Row="14" Grid.Column="0" Content="CDFWSTATUS"/>
+                    <dxe:TextEdit Grid.Row="14" Grid.Column="1" Text="{Binding Occurrence.CDFWSTATUS}" IsReadOnly="True"/>
+                    <Label Grid.Row="14" Grid.Column="2" Content="OTHRSTATUS"/>
+                    <dxe:TextEdit Grid.Row="14" Grid.Column="3" Text="{Binding Occurrence.OTHRSTATUS}" IsReadOnly="True"/>
+
+                    <Label Grid.Row="15" Grid.Column="0" Content="LASTUPDATE"/>
+                    <dxe:TextEdit Grid.Row="15" Grid.Column="1" Text="{Binding Occurrence.LASTUPDATE}" IsReadOnly="True"/>
+                    <Label Grid.Row="15" Grid.Column="2" Content="AREA"/>
+                    <dxe:TextEdit Grid.Row="15" Grid.Column="3" Text="{Binding Occurrence.AREA}" IsReadOnly="True"/>
+
+                    <Label Grid.Row="16" Grid.Column="0" Content="PERIMETER"/>
+                    <dxe:TextEdit Grid.Row="16" Grid.Column="1" Text="{Binding Occurrence.PERIMETER}" IsReadOnly="True"/>
+                    <Label Grid.Row="16" Grid.Column="2" Content="AVLCODE"/>
+                    <dxe:TextEdit Grid.Row="16" Grid.Column="3" Text="{Binding Occurrence.AVLCODE}" IsReadOnly="True"/>
+
+                    <Label Grid.Row="17" Grid.Column="0" Content="Symbology"/>
+                    <dxe:TextEdit Grid.Row="17" Grid.Column="1" Text="{Binding Occurrence.Symbology}" IsReadOnly="True"/>
+                    <Label Grid.Row="17" Grid.Column="2" Content="SymbologyText"/>
+                    <dxe:TextEdit Grid.Row="17" Grid.Column="3" Text="{Binding Occurrence.SymbologyText}" IsReadOnly="True"/>
+                </Grid>
+            </dx:DXTabItem>
+            <dx:DXTabItem Header="Descriptions">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="AUTO"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" Grid.Column="0" Content="LOCATION" VerticalAlignment="Top"/>
+                    <dxe:TextEdit Grid.Row="0" Grid.Column="1" Text="{Binding Occurrence.LOCATION}" IsReadOnly="True" VerticalContentAlignment="Top"/>
+                    <Label Grid.Row="1" Grid.Column="0" Content="LOCDETAILS" VerticalAlignment="Top"/>
+                    <dxe:TextEdit Grid.Row="1" Grid.Column="1" Text="{Binding Occurrence.LOCDETAILS}" IsReadOnly="True" VerticalContentAlignment="Top"/>
+                    <Label Grid.Row="2" Grid.Column="0" Content="ECOLOGICAL" VerticalAlignment="Top"/>
+                    <dxe:TextEdit Grid.Row="2" Grid.Column="1" Text="{Binding Occurrence.ECOLOGICAL}" IsReadOnly="True" VerticalContentAlignment="Top"/>
+                    <Label Grid.Row="3" Grid.Column="0" Content="GENERAL" VerticalAlignment="Top"/>
+                    <dxe:TextEdit Grid.Row="3" Grid.Column="1" Text="{Binding Occurrence.GENERAL}" IsReadOnly="True" VerticalContentAlignment="Top"/>
+                    <Label Grid.Row="4" Grid.Column="0" Content="THREAT" VerticalAlignment="Top"/>
+                    <dxe:TextEdit Grid.Row="4" Grid.Column="1" Text="{Binding Occurrence.THREAT}" IsReadOnly="True" VerticalContentAlignment="Top"/>
+                    <Label Grid.Row="5" Grid.Column="0" Content="THREATLIST" VerticalAlignment="Top"/>
+                    <dxe:TextEdit Grid.Row="5" Grid.Column="1" Text="{Binding Occurrence.THREATLIST}" IsReadOnly="True" VerticalContentAlignment="Top"/>
+                </Grid>
+            </dx:DXTabItem>
+        </dx:DXTabControl>
+    </Grid>
+</UserControl>

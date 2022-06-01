@@ -1,0 +1,84 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WBIS_2.Modules.Views.Botany" 
+             xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors" 
+             xmlns:views="clr-namespace:WBIS_2.Modules.Views" 
+             xmlns:viewModels="clr-namespace:WBIS_2.Modules.ViewModels" 
+             xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
+             xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core" xmlns:dxe1="clr-namespace:DevExpress.XtraEditors;assembly=DevExpress.XtraEditors.v21.2" x:Class="WBIS_2.Modules.Views.Botany.CNDDBQuadElementView"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type={x:Type viewModels:CNDDBQuadElementViewModel}}"
+            d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>                     
+        <Grid.RowDefinitions>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <views:DetailMenuView Grid.Row="0"/>
+        
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="AUTO"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="AUTO"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="AUTO"/>
+                        <RowDefinition Height="AUTO"/>
+                        <RowDefinition Height="AUTO"/>
+                        <RowDefinition Height="AUTO"/>
+                        <RowDefinition Height="AUTO"/>
+                        <RowDefinition Height="AUTO"/>
+                        <RowDefinition Height="AUTO"/>
+                        <RowDefinition Height="AUTO"/>
+                        <RowDefinition Height="AUTO"/>
+                        <RowDefinition Height="AUTO"/>
+                        <RowDefinition Height="AUTO"/>
+                        <RowDefinition Height="AUTO"/>
+                        <RowDefinition Height="AUTO"/>
+                        <RowDefinition Height="AUTO"/>
+                        <RowDefinition Height="AUTO"/>
+                        <RowDefinition Height="AUTO"/>
+                        <RowDefinition Height="AUTO"/>
+                        <RowDefinition Height="AUTO"/>
+                        <RowDefinition Height="AUTO"/>
+                        <RowDefinition Height="AUTO"/>
+                        <RowDefinition Height="AUTO"/>
+                    </Grid.RowDefinitions>
+            <Label Grid.Row="0" Grid.Column="0" Content="Elm Type"/>
+            <dxe:TextEdit Grid.Row="0" Grid.Column="1" Text="{Binding Element.ElmType}" IsReadOnly="True"/>
+            <Label Grid.Row="0" Grid.Column="2" Content="Elm Code"/>
+            <dxe:TextEdit Grid.Row="0" Grid.Column="3" Text="{Binding Element.ElmCode}" IsReadOnly="True"/>
+
+            <Label Grid.Row="1" Grid.Column="0" Content="Scientific Name"/>
+            <dxe:TextEdit Grid.Row="1" Grid.Column="1" Text="{Binding Element.SciName}" IsReadOnly="True"/>
+            <Label Grid.Row="1" Grid.Column="2" Content="Common Name"/>
+            <dxe:TextEdit Grid.Row="1" Grid.Column="3" Text="{Binding Element.CommonName}" IsReadOnly="True"/>
+            
+            <Label Grid.Row="2" Grid.Column="0" Content="Fed Status"/>
+            <dxe:TextEdit Grid.Row="2" Grid.Column="1" Text="{Binding Element.FedStatus}" IsReadOnly="True"/>
+            <Label Grid.Row="2" Grid.Column="2" Content="Cal Status"/>
+            <dxe:TextEdit Grid.Row="2" Grid.Column="3" Text="{Binding Element.CalStatus}" IsReadOnly="True"/>
+
+            <Label Grid.Row="3" Grid.Column="0" Content="CDFW Status"/>
+            <dxe:TextEdit Grid.Row="3" Grid.Column="1" Text="{Binding Element.CDFWStatus}" IsReadOnly="True"/>
+            <Label Grid.Row="3" Grid.Column="2" Content="RPlant Rank"/>
+            <dxe:TextEdit Grid.Row="3" Grid.Column="3" Text="{Binding Element.RPlantRank}" IsReadOnly="True"/>
+
+            <Label Grid.Row="4" Grid.Column="0" Content="Data Status"/>
+            <dxe:TextEdit Grid.Row="4" Grid.Column="1" Text="{Binding Element.DataStatus}" IsReadOnly="True"/>
+            <Label Grid.Row="4" Grid.Column="2" Content="Taxon Sort"/>
+            <dxe:TextEdit Grid.Row="4" Grid.Column="3" Text="{Binding Element.TaxonSort}" IsReadOnly="True"/>
+
+            <Label Grid.Row="5" Grid.Column="0" Content="Quad Code"/>
+            <dxe:TextEdit Grid.Row="5" Grid.Column="1" Text="{Binding Element.Quad75.QuadCode}" IsReadOnly="True"/>
+            <Label Grid.Row="5" Grid.Column="2" Content="Quad Name"/>
+            <dxe:TextEdit Grid.Row="5" Grid.Column="3" Text="{Binding Element.Quad75.QuadName}" IsReadOnly="True"/>
+                </Grid>
+    </Grid>
+</UserControl>

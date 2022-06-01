@@ -32,9 +32,9 @@ namespace WBIS_2.Modules.ViewModels
     public abstract class DetailAndChildrenViewModelBase : ChildrenListViewModel, IDetailViewModelBase
     {
         public IInformationType Record { get; set; }
-        public bool HasEditableGeometry => Record.Manager.InformationType.GetProperty("Geometry") != null;
+        public bool HasEditableGeometry => Record.Manager.InformationType.GetProperty("Geometry") != null && ReplacebleGeometry;
         public PropertyInfo GeoProperty => Record.Manager.InformationType.GetProperty("Geometry");
-
+        public virtual bool ReplacebleGeometry => true;
 
         public abstract void Save();
         public void GeoChanged()
