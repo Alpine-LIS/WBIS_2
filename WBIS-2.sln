@@ -11,6 +11,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WBIS-2.Modules", "WBIS-2.Mo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WBIS_2.Common", "WBIS_2.Common\WBIS_2.Common.csproj", "{0F7837EC-9A8A-43E9-B903-8BDD41A3AA4C}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alpine.FlexForms", "..\..\THP\TimberHarvestPlanDesktop\Alpine.FlexForms\Alpine.FlexForms.csproj", "{C340364E-DA0B-46C9-AA79-F6E494F38296}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alpine.FlexForms.Controls", "..\..\THP\TimberHarvestPlanDesktop\Alpine.FlexForms.Controls\Alpine.FlexForms.Controls.csproj", "{9F67DA41-8002-4FCD-8503-8D5E18D64F9E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +55,22 @@ Global
 		{0F7837EC-9A8A-43E9-B903-8BDD41A3AA4C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0F7837EC-9A8A-43E9-B903-8BDD41A3AA4C}.Release|x64.ActiveCfg = Release|Any CPU
 		{0F7837EC-9A8A-43E9-B903-8BDD41A3AA4C}.Release|x64.Build.0 = Release|Any CPU
+		{C340364E-DA0B-46C9-AA79-F6E494F38296}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C340364E-DA0B-46C9-AA79-F6E494F38296}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C340364E-DA0B-46C9-AA79-F6E494F38296}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C340364E-DA0B-46C9-AA79-F6E494F38296}.Debug|x64.Build.0 = Debug|Any CPU
+		{C340364E-DA0B-46C9-AA79-F6E494F38296}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C340364E-DA0B-46C9-AA79-F6E494F38296}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C340364E-DA0B-46C9-AA79-F6E494F38296}.Release|x64.ActiveCfg = Release|Any CPU
+		{C340364E-DA0B-46C9-AA79-F6E494F38296}.Release|x64.Build.0 = Release|Any CPU
+		{9F67DA41-8002-4FCD-8503-8D5E18D64F9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F67DA41-8002-4FCD-8503-8D5E18D64F9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F67DA41-8002-4FCD-8503-8D5E18D64F9E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9F67DA41-8002-4FCD-8503-8D5E18D64F9E}.Debug|x64.Build.0 = Debug|Any CPU
+		{9F67DA41-8002-4FCD-8503-8D5E18D64F9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F67DA41-8002-4FCD-8503-8D5E18D64F9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F67DA41-8002-4FCD-8503-8D5E18D64F9E}.Release|x64.ActiveCfg = Release|Any CPU
+		{9F67DA41-8002-4FCD-8503-8D5E18D64F9E}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

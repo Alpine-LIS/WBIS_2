@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
+using Alpine.FlexForms;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using NetTopologySuite.Geometries;
@@ -399,6 +400,11 @@ namespace WBIS_2.DataModel
         }
 
         #region "DbSets"
+
+        public DbSet<DataForm> DataForms => Set<DataForm>();
+        public DbSet<Template> Templates => Set<Template>();
+        public DbSet<TemplateField> TemplateFields => Set<TemplateField>();
+
         public DbSet<District> Districts { get; set; }
         public DbSet<DistrictExtendedGeometry> DistrictExtendedGeometries { get; set; }
         public DbSet<Quad75> Quad75s { get; set; }

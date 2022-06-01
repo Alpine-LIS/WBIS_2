@@ -29,4 +29,8 @@
     <PackageReference Include="Npgsql.NetTopologySuite" Version="6.0.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\THP\TimberHarvestPlanDesktop\Alpine.FlexForms\Alpine.FlexForms.csproj" />
+  </ItemGroup>
+
 </Project>
