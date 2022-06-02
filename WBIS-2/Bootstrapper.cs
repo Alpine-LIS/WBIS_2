@@ -95,7 +95,8 @@ namespace WBIS_2
             //Manager.Register(Regions.NavigationWildlife, new Module(AppModules.ModuleRanchPhotoPoints, () => new NavigationItem("Ranch Photo Points")));
 
 
-            Manager.Register(Regions.NavigationAdditionalSurveys, new Module(AppModules.ModuleAdditionalSurveys, () => new NavigationItem("Additional Surveys")));
+            Manager.Register(Regions.NavigationAdditionalSurveys, new Module(AppModules.ModuleAdditionalSurveyTemplates, () => new NavigationItem("Additional Survey Templates")));
+            Manager.Register(Regions.NavigationAdditionalSurveys, new Module(AppModules.ModuleAdditionalSurveys, () => new NavigationItem("Additional Survey Types")));
 
 
             Manager.Register(Regions.Documents, new Module(AppModules.ModuleUser,
@@ -165,8 +166,10 @@ namespace WBIS_2
                () => ParentListViewModel.Create(new WildlifeSpecies()), typeof(ParentListView)));
 
 
-            Manager.Register(Regions.Documents, new Module(AppModules.ModuleAdditionalSurveys,
+            Manager.Register(Regions.Documents, new Module(AppModules.ModuleAdditionalSurveyTemplates,
                () => TemplatesListViewModel.Create(), typeof(TemplatesListView)));
+            Manager.Register(Regions.Documents, new Module(AppModules.ModuleAdditionalSurveys,
+               () => FlexTemplateListViewModel.Create(), typeof(FlexTemplateListView)));
         }
 
 
@@ -237,6 +240,7 @@ namespace WBIS_2
             Manager.Inject(Regions.NavigationSupport, AppModules.ModuleBirdSpeciesList);
             Manager.Inject(Regions.NavigationSupport, AppModules.ModuleAmphibianSpeciesList);
 
+            Manager.Inject(Regions.NavigationAdditionalSurveys, AppModules.ModuleAdditionalSurveyTemplates);
             Manager.Inject(Regions.NavigationAdditionalSurveys, AppModules.ModuleAdditionalSurveys);
         }
 

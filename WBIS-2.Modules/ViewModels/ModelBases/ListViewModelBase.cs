@@ -54,6 +54,7 @@ namespace WBIS_2.Modules.ViewModels
 
         public override void WBISViewModelBase_ViewModelRemoving(object? sender, ViewModelRemovingEventArgs e)
         {
+            if (ListManager == null) return;
             CurrentUser.AddRemoveInfoType(ListManager.DisplayName, false);
             base.WBISViewModelBase_ViewModelRemoving(sender, e);
         }
@@ -303,7 +304,7 @@ namespace WBIS_2.Modules.ViewModels
 
         public bool ShowChildrenEnabled { get; set; }
         public ICommand ShowChildrenCommand { get; set; }
-        public void ShowChildren()
+        public virtual void ShowChildren()
         {
             if (SelectedItems.Count == 0)
             {
@@ -331,7 +332,7 @@ namespace WBIS_2.Modules.ViewModels
         public Type DetailsViewModel { get; set; }
         public ICommand ShowDetailsCommand { get; set; }
         public bool ShowDetailsEnabled { get; set; }
-        public void ShowDetails()
+        public virtual void ShowDetails()
         {
             if (CurrentRecord == null) return;
             if (DetailsViewModel == null)
@@ -359,7 +360,7 @@ namespace WBIS_2.Modules.ViewModels
             }
             document.Show();
         }
-        private void AddSingle()
+        public virtual void AddSingle()
         {
             if (DetailsViewModel == null) return;
 

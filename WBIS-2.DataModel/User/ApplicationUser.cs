@@ -89,6 +89,9 @@ namespace WBIS_2.DataModel
         [InverseProperty("User")]
         public ICollection<BDOWSighting> BDOWSightings { get; set; }
 
+        [InverseProperty("User")]
+        public ICollection<UserFlexRecord> UserFlexRecords { get; set; }
+
 
 
 
@@ -125,6 +128,8 @@ namespace WBIS_2.DataModel
         public ICollection<DOMonitoring> DOMonitoringsUserModified { get; set; }
         [InverseProperty("UserModified")]
         public ICollection<BDOWSighting> BDOWSightingsUserModified { get; set; }
+        [InverseProperty("UserModified")]
+        public ICollection<UserFlexRecord> UserFlexRecordUserModifieds { get; set; }
 
         [InverseProperty("ApplicationUser")]
         public ICollection<UserMapLayer> UserMapLayers { get; set; }

@@ -1,0 +1,41 @@
+﻿<UserControl x:Class="WBIS_2.Modules.Views.FlexTemplateListView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WBIS_2.Modules.Views" xmlns:viewmodels="clr-namespace:WBIS_2.Modules.ViewModels" xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors" xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=viewmodels:FlexTemplateListViewModel}"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <!--<RowDefinition Height="30"/>-->
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <!--<local:ListMenuView Grid.Row="0" Grid.ColumnSpan="6"/>-->
+        <dxg:GridControl 
+            Grid.Row="1"
+            ItemsSource="{Binding Records}" 
+            SelectedItem="{Binding CurrentRecord}"
+            AutoGenerateColumns="None">
+            <dxmvvm:Interaction.Behaviors>
+                <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding ShowDetailsCommand}">
+                    <dxmvvm:EventToCommand.EventArgsConverter>
+                        <dx:EventArgsToDataRowConverter/>
+                    </dxmvvm:EventToCommand.EventArgsConverter>
+                </dxmvvm:EventToCommand>
+            </dxmvvm:Interaction.Behaviors>
+            <dxg:GridControl.View>
+                <dxg:TableView 
+                    AllowBestFit="True"
+                    BestFitArea="All"
+                    BestFitMode="Smart"
+                    ShowGroupPanel="False"
+                    AllowEditing="False"/>
+            </dxg:GridControl.View>
+            <dxg:GridColumn FieldName="IsDeleted"/>
+            <dxg:GridColumn FieldName="Name"/>
+            <dxg:GridColumn FieldName="NavigationTableName" Header="Table"/>
+        </dxg:GridControl>
+    </Grid>
+</UserControl>

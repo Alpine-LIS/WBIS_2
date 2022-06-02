@@ -56,7 +56,7 @@ namespace WBIS_2.Common
 
 
 
+        public static string ModuleAdditionalSurveyTemplates { get { return "AdditionalSurveyTemplates"; } }
         public static string ModuleAdditionalSurveys { get { return "AdditionalSurveys"; } }
-
     }
 }

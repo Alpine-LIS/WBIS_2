@@ -163,8 +163,9 @@ namespace WBIS_2.DataModel
             modelBuilder.Entity<UserMapLayer>().ToTable("user_map_layers");
             modelBuilder.Entity<DropdownOption>().ToTable("dropdown_options");
             modelBuilder.Entity<TableModified>().ToTable("tables_modified");
-        }
-        private void ManyToManyRelations(ModelBuilder modelBuilder)
+            modelBuilder.Entity<UserFlexRecord>().ToTable("user_flex_records");
+    }
+    private void ManyToManyRelations(ModelBuilder modelBuilder)
         {
             ManyToManyUsers(modelBuilder);
             ManyToManyDistricts(modelBuilder);
@@ -401,6 +402,7 @@ namespace WBIS_2.DataModel
 
         #region "DbSets"
 
+        public DbSet<UserFlexRecord> UserFlexRecords => Set<UserFlexRecord>();
         public DbSet<DataForm> DataForms => Set<DataForm>();
         public DbSet<Template> Templates => Set<Template>();
         public DbSet<TemplateField> TemplateFields => Set<TemplateField>();
@@ -478,6 +480,7 @@ namespace WBIS_2.DataModel
             {
                 Tracker.ChangesSaving = true;
                 ApplicationUser user = ApplicationUsers.FirstOrDefault(_ => _.Guid == CurrentUser.User.Guid);
+                GenerateFlexUserRecord(user);
 
                 var entries = ChangeTracker.Entries();
                 var GeoModified = SaveToChangesTable(entries, user);
@@ -554,6 +557,34 @@ namespace WBIS_2.DataModel
             }
 
             return GeoModified.Distinct().ToList();
+        }
+
+
+        private void GenerateFlexUserRecord(ApplicationUser user)
+        {
+            var dataForms = ChangeTracker.Entries().Where(_ => _.State != EntityState.Unchanged && _.Entity is DataForm).ToList();
+            foreach(var entry in dataForms)
+            {
+                if (entry.State == EntityState.Added)
+                {
+                    UserFlexRecord userFlexRecord = new UserFlexRecord()
+                    {
+                        _delete = false,
+                        Repository = false,
+                        DataFormID = (Guid)entry.CurrentValues["Id"],
+                        User = user
+                    };
+                    UserFlexRecords.Add(userFlexRecord);
+                }
+                else if (entry.State == EntityState.Modified)
+                {
+                   var userFlexRecord = UserFlexRecords
+                        .Include(_=>_.DataForm)
+                        .FirstOrDefault(_ => _.DataFormID == (Guid)entry.CurrentValues["Id"]);
+                    if (userFlexRecord != null)
+                        UserFlexRecords.Update(userFlexRecord);
+                }
+            }
         }
 
     }

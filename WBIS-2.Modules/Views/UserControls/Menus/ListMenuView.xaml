@@ -57,7 +57,7 @@
                 ToolTip="View Deleted" 
                 IsChecked="{Binding ViewDeleted, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <dxb:BarCheckItem Glyph="{dx:DXImage SvgImages/Spreadsheet/ShowAllSubtotalsAtBottomPivotTable.svg}"
-                ToolTip="View Deleted" 
+                ToolTip="View Repository" 
                 IsChecked="{Binding ViewRepository, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <dxb:BarCheckItem 
                 ToolTip="Toggle map auto zoom"

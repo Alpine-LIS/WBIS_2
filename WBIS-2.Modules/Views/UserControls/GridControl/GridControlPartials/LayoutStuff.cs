@@ -155,7 +155,7 @@ namespace WBIS_2.Modules.Views
 
             foreach (var col in gc.Columns)
             {
-                if (col.FieldType.GetInterfaces().Contains(typeof(IInformationType)) || col.FieldType.Namespace.Contains("WBIS_2.DataModel"))
+                if (col.FieldType.GetInterfaces().Contains(typeof(IInformationType)) || col.FieldType.Namespace.Contains("WBIS_2.DataModel") || col.FieldType.Namespace.Contains("Alpine.FlexForms"))
                 {
                     //IInformationType instance = (IInformationType)Activator.CreateInstance(col.FieldType);
                     //var colValues = instance.Manager.DisplayFields;
