@@ -33,20 +33,20 @@ namespace WBIS_2.DataModel
         public AmphibianElement AmphibianElement { get; set; }
 
 
-        [Column("forest_carnivore_camera_station_id"), ForeignKey("ForestCarnivoreCameraStation")]
-        public Guid? ForestCarnivoreCameraStationId { get; set; }
-        public ForestCarnivoreCameraStation ForestCarnivoreCameraStation { get; set; }
+        //[Column("forest_carnivore_camera_station_id"), ForeignKey("ForestCarnivoreCameraStation")]
+        //public Guid? ForestCarnivoreCameraStationId { get; set; }
+        //public ForestCarnivoreCameraStation ForestCarnivoreCameraStation { get; set; }
 
-        [Column("ranch_photo_point_id"), ForeignKey("RanchPhotoPoint")]
-        public Guid? RanchPhotoPointId { get; set; }
-        public RanchPhotoPoint RanchPhotoPoint { get; set; }
+        //[Column("ranch_photo_point_id"), ForeignKey("RanchPhotoPoint")]
+        //public Guid? RanchPhotoPointId { get; set; }
+        //public RanchPhotoPoint RanchPhotoPoint { get; set; }
 
-        [Column("do_monitoring_id"), ForeignKey("DOMonitoring")]
-        public Guid? DOMonitoringId { get; set; }
-        public DOMonitoring DOMonitoring { get; set; }
+        //[Column("do_monitoring_id"), ForeignKey("DOMonitoring")]
+        //public Guid? DOMonitoringId { get; set; }
+        //public DOMonitoring DOMonitoring { get; set; }
 
-        [Column("bdow_sighting_id"), ForeignKey("BDOWSighting")]
-        public Guid? BDOWSightingId { get; set; }
-        public BDOWSighting BDOWSighting { get; set; }
+        //[Column("bdow_sighting_id"), ForeignKey("BDOWSighting")]
+        //public Guid? BDOWSightingId { get; set; }
+        //public BDOWSighting BDOWSighting { get; set; }
     }
 }

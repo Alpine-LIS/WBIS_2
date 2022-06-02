@@ -153,11 +153,11 @@ namespace WBIS_2.DataModel
             modelBuilder.Entity<BotanicalScopingSpecies>().ToTable("botanical_scoping_species");
             modelBuilder.Entity<Picture>().ToTable("pictures");
 
-            modelBuilder.Entity<ForestCarnivoreCameraStation>().ToTable("forest_carnivore_camera_stations");
-            modelBuilder.Entity<CarnivoreOccurrence>().ToTable("carnivore_occurrences");
-            modelBuilder.Entity<RanchPhotoPoint>().ToTable("ranch_photo_points");
-            modelBuilder.Entity<DOMonitoring>().ToTable("do_monitorings");
-            modelBuilder.Entity<BDOWSighting>().ToTable("bdow_sightings");
+            //modelBuilder.Entity<ForestCarnivoreCameraStation>().ToTable("forest_carnivore_camera_stations");
+            //modelBuilder.Entity<CarnivoreOccurrence>().ToTable("carnivore_occurrences");
+            //modelBuilder.Entity<RanchPhotoPoint>().ToTable("ranch_photo_points");
+            //modelBuilder.Entity<DOMonitoring>().ToTable("do_monitorings");
+            //modelBuilder.Entity<BDOWSighting>().ToTable("bdow_sightings");
 
 
             modelBuilder.Entity<UserMapLayer>().ToTable("user_map_layers");
@@ -461,11 +461,11 @@ namespace WBIS_2.DataModel
         public DbSet<TableModified> TablesModified { get; set; }
 
 
-        public DbSet<ForestCarnivoreCameraStation> ForestCarnivoreCameraStations { get; set; }
-        public DbSet<CarnivoreOccurrence> CarnivoreOccurrences { get; set; }
-        public DbSet<RanchPhotoPoint> RanchPhotoPoints { get; set; }
-        public DbSet<DOMonitoring> DOMonitorings { get; set; }
-        public DbSet<BDOWSighting> BDOWSightings { get; set; }
+        //public DbSet<ForestCarnivoreCameraStation> ForestCarnivoreCameraStations { get; set; }
+        //public DbSet<CarnivoreOccurrence> CarnivoreOccurrences { get; set; }
+        //public DbSet<RanchPhotoPoint> RanchPhotoPoints { get; set; }
+        //public DbSet<DOMonitoring> DOMonitorings { get; set; }
+        //public DbSet<BDOWSighting> BDOWSightings { get; set; }
 
         #endregion
 

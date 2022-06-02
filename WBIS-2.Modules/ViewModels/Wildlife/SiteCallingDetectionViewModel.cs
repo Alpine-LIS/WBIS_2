@@ -186,6 +186,7 @@ namespace WBIS_2.Modules.ViewModels
                 var vals = bandingPatternControl.ReturnValue.ToString().Split(':');
                 Detection.MaleBandingLeg = vals[0];
                 if (vals.Length > 1) Detection.MaleBandingPattern = vals[1];
+                else Detection.MaleBandingPattern = "";
                 RaisePropertyChanged(nameof(Detection));
             }
         }
@@ -201,6 +202,7 @@ namespace WBIS_2.Modules.ViewModels
                 var vals = bandingPatternControl.ReturnValue.ToString().Split(':');
                 Detection.FemaleBandingLeg = vals[0];
                 if (vals.Length > 1) Detection.FemaleBandingPattern = vals[1];
+                else Detection.FemaleBandingPattern = "";
                 RaisePropertyChanged(nameof(Detection));
             }
         }

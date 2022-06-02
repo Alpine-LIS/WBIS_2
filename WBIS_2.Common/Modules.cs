@@ -42,6 +42,7 @@ namespace WBIS_2.Common
         public static string ModuleHex160RequiredPasses { get { return "Hex160RequiredPasses"; } }
         public static string ModuleSiteCallings { get { return "SiteCallings"; } }
         public static string ModuleSiteCallingDetections { get { return "SiteCallingDetections"; } }
+        public static string ModuleOwlBandings { get { return "OwlBandings"; } }
 
         public static string ModuleAmphibianSurveys { get { return "AmphibianSurveys"; } }
         public static string ModuleAmphibianElements { get { return "AmphibianElements"; } }

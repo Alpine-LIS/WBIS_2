@@ -80,14 +80,14 @@ namespace WBIS_2.DataModel
         [InverseProperty("User")]
         public ICollection<BotanicalSurveyArea> BotanicalSurveyAreas { get; set; }
 
-        [InverseProperty("User")]
-        public ICollection<ForestCarnivoreCameraStation> ForestCarnivoreCameraStations { get; set; }
-        [InverseProperty("User")]
-        public ICollection<RanchPhotoPoint> RanchPhotoPoints { get; set; }
-        [InverseProperty("User")]
-        public ICollection<DOMonitoring> DOMonitorings { get; set; }
-        [InverseProperty("User")]
-        public ICollection<BDOWSighting> BDOWSightings { get; set; }
+        //[InverseProperty("User")]
+        //public ICollection<ForestCarnivoreCameraStation> ForestCarnivoreCameraStations { get; set; }
+        //[InverseProperty("User")]
+        //public ICollection<RanchPhotoPoint> RanchPhotoPoints { get; set; }
+        //[InverseProperty("User")]
+        //public ICollection<DOMonitoring> DOMonitorings { get; set; }
+        //[InverseProperty("User")]
+        //public ICollection<BDOWSighting> BDOWSightings { get; set; }
 
         [InverseProperty("User")]
         public ICollection<UserFlexRecord> UserFlexRecords { get; set; }
@@ -120,14 +120,14 @@ namespace WBIS_2.DataModel
         [InverseProperty("UserModified")]
         public ICollection<BotanicalSurveyArea> BotanicalSurveyAreasModified { get; set; }
 
-        [InverseProperty("UserModified")]
-        public ICollection<ForestCarnivoreCameraStation> ForestCarnivoreCameraStationsUserModified { get; set; }
-        [InverseProperty("UserModified")]
-        public ICollection<RanchPhotoPoint> RanchPhotoPointsUserModified { get; set; }
-        [InverseProperty("UserModified")]
-        public ICollection<DOMonitoring> DOMonitoringsUserModified { get; set; }
-        [InverseProperty("UserModified")]
-        public ICollection<BDOWSighting> BDOWSightingsUserModified { get; set; }
+        //[InverseProperty("UserModified")]
+        //public ICollection<ForestCarnivoreCameraStation> ForestCarnivoreCameraStationsUserModified { get; set; }
+        //[InverseProperty("UserModified")]
+        //public ICollection<RanchPhotoPoint> RanchPhotoPointsUserModified { get; set; }
+        //[InverseProperty("UserModified")]
+        //public ICollection<DOMonitoring> DOMonitoringsUserModified { get; set; }
+        //[InverseProperty("UserModified")]
+        //public ICollection<BDOWSighting> BDOWSightingsUserModified { get; set; }
         [InverseProperty("UserModified")]
         public ICollection<UserFlexRecord> UserFlexRecordUserModifieds { get; set; }
 

@@ -25,9 +25,16 @@ namespace WBIS_2.Modules.Views.UserControls
         string Prominent = "";
         string Second = "";
         public string ReturnValue { get; set; }
-        public BandingPatternControl(string val)
+        public BandingPatternControl(string val, bool allowUnknown = true)
         {
             InitializeComponent();
+
+            if (!allowUnknown)
+            {
+                ChbxUnknown.IsEnabled = false;
+                ChbxNotBanded.IsEnabled = false;
+            }
+
             if (val != "")
             {
                 //string leg = "";

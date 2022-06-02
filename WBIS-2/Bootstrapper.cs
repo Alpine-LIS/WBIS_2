@@ -86,6 +86,7 @@ namespace WBIS_2
             Manager.Register(Regions.NavigationWildlife, new Module(AppModules.ModuleHex160RequiredPasses, () => new NavigationItem("Hex160 Required Passes")));
             Manager.Register(Regions.NavigationWildlife, new Module(AppModules.ModuleSiteCallings, () => new NavigationItem("Site Callings")));
             Manager.Register(Regions.NavigationWildlife, new Module(AppModules.ModuleSiteCallingDetections, () => new NavigationItem("Site Calling Detections")));
+            Manager.Register(Regions.NavigationWildlife, new Module(AppModules.ModuleOwlBandings, () => new NavigationItem("Owl Bandings")));
 
             Manager.Register(Regions.NavigationWildlife, new Module(AppModules.ModuleAmphibianSurveys, () => new NavigationItem("Amphibian Surveys")));
             Manager.Register(Regions.NavigationWildlife, new Module(AppModules.ModuleAmphibianElements, () => new NavigationItem("Amphibian Elements")));
@@ -137,6 +138,8 @@ namespace WBIS_2
                () => ParentListViewModel.Create(new SiteCalling()), typeof(ParentListView)));
             Manager.Register(Regions.Documents, new Module(AppModules.ModuleSiteCallingDetections,
               () => ParentListViewModel.Create(new SiteCallingDetection()), typeof(ParentListView)));
+            Manager.Register(Regions.Documents, new Module(AppModules.ModuleOwlBandings,
+             () => ParentListViewModel.Create(new OwlBanding()), typeof(ParentListView)));
 
             Manager.Register(Regions.Documents, new Module(AppModules.ModuleAmphibianSurveys,
                () => ParentListViewModel.Create(new AmphibianSurvey()), typeof(ParentListView)));
@@ -224,6 +227,7 @@ namespace WBIS_2
             Manager.Inject(Regions.NavigationWildlife, AppModules.ModuleHex160RequiredPasses);
             Manager.Inject(Regions.NavigationWildlife, AppModules.ModuleSiteCallings);
             Manager.Inject(Regions.NavigationWildlife, AppModules.ModuleSiteCallingDetections);
+            Manager.Inject(Regions.NavigationWildlife, AppModules.ModuleOwlBandings);
 
             Manager.Inject(Regions.NavigationWildlife, AppModules.ModuleAmphibianSurveys);
             Manager.Inject(Regions.NavigationWildlife, AppModules.ModuleAmphibianElements);
