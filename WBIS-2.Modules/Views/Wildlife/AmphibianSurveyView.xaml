@@ -1,0 +1,159 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WBIS_2.Modules.Views.Botany" 
+             xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors" 
+             xmlns:views="clr-namespace:WBIS_2.Modules.Views" 
+             xmlns:viewModels="clr-namespace:WBIS_2.Modules.ViewModels" 
+             xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
+             xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core" x:Class="WBIS_2.Modules.Views.Botany.AmphibianSurveyView"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type={x:Type viewModels:AmphibianSurveyViewModel}}"
+            d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <views:DetailMenuView Grid.Row="0"/>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="AUTO"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="AUTO"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="AUTO"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="AUTO"/>
+                <RowDefinition Height="AUTO"/>
+                <RowDefinition Height="AUTO"/>
+                <RowDefinition Height="AUTO"/>
+                <RowDefinition Height="AUTO"/>
+                <RowDefinition Height="AUTO"/>
+                <RowDefinition Height="AUTO"/>
+            </Grid.RowDefinitions>
+
+            <Label Content="Site ID:" Grid.Row="0" Grid.Column="0"/>
+            <dxe:TextEdit Text="{Binding Survey.SiteID, ValidatesOnDataErrors=True}"  Grid.Row="0" Grid.Column="1"/>
+            <Label Content="Surveyor(s):" Grid.Row="0" Grid.Column="2"/>
+            <dxe:TextEdit Text="{Binding Survey.Surveyors, ValidatesOnDataErrors=True}"  Grid.Row="0" Grid.Column="3"/>
+            <Label Content="Date:" Grid.Row="0" Grid.Column="4"/>
+            <Grid Grid.Column="5" Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="AUTO"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <dxe:DateEdit EditValue="{Binding SurveyDate, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" MaskType="DateTime" Grid.Column="0"/>
+                <dxe:TextEdit Text="{Binding SurveyHour, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat=00, ValidatesOnDataErrors=True}" MaskType="Numeric" Grid.Column="1"/>
+                <Label Content=":" Grid.Column="2"/>
+                <dxe:TextEdit Text="{Binding SurveyMinute, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat=00, ValidatesOnDataErrors=True}" MaskType="Numeric" Grid.Column="3"/>
+            </Grid>
+
+            <Label Content="Planning Watershed:" Grid.Row="1" Grid.Column="0"/>
+            <dxe:TextEdit Text="{Binding Survey.PlanningWatershed, ValidatesOnDataErrors=True}"  Grid.Row="1" Grid.Column="1"/>
+            <Label Content="County:" Grid.Row="1" Grid.Column="2"/>
+            <dxe:ComboBoxEdit SelectedItem="{Binding Survey.County, ValidatesOnDataErrors=True}" ItemsSource="{Binding Counties}" Grid.Row="1" Grid.Column="3"/>
+            <Label Content="Elevation:" Grid.Row="1" Grid.Column="4"/>
+            <dxe:TextEdit Text="{Binding Survey.Elevation, ValidatesOnDataErrors=True}"  Grid.Row="1" Grid.Column="5"/>
+
+            <Label Content="Lake Stream:" Grid.Row="2" Grid.Column="0"/>
+            <dxe:TextEdit Text="{Binding Survey.LakeStreamName, ValidatesOnDataErrors=True}"  Grid.Row="2" Grid.Column="1"/>
+            <Label Content="Water Type:" Grid.Row="2" Grid.Column="2"/>
+            <dxe:ComboBoxEdit SelectedItem="{Binding Survey.WaterType, ValidatesOnDataErrors=True}" ItemsSource="{Binding WaterTypes}"  Grid.Row="2" Grid.Column="3"/>
+            <Label Content="Seasonality Of Flow:" Grid.Row="2" Grid.Column="4"/>
+            <dxe:ComboBoxEdit SelectedItem="{Binding Survey.SeasonalityOfFlow, ValidatesOnDataErrors=True}"  ItemsSource="{Binding FlowSeasonality}" Grid.Row="2" Grid.Column="5"/>
+
+            <Label Content="Location:" Grid.Row="3" Grid.Column="0"/>
+            <dxe:TextEdit Text="{Binding Survey.Location, ValidatesOnDataErrors=True}"  Grid.Row="3" Grid.Column="1"/>
+            <Label Content="Weather:" Grid.Row="3" Grid.Column="2"/>
+            <dxe:ComboBoxEdit SelectedItem="{Binding Survey.Weather, ValidatesOnDataErrors=True}" ItemsSource="{Binding Weathers}" Grid.Row="3" Grid.Column="3"/>
+            <Label Content="Wind:" Grid.Row="3" Grid.Column="4"/>
+            <dxe:ComboBoxEdit SelectedItem="{Binding Survey.Wind, ValidatesOnDataErrors=True}" ItemsSource="{Binding Winds}" Grid.Row="3" Grid.Column="5"/>
+
+            <Label Content="Location Comments:" Grid.Row="4" Grid.Column="0"/>
+            <dxe:TextEdit Text="{Binding Survey.LocationComments, ValidatesOnDataErrors=True}"  Grid.Row="4" Grid.Column="1"/>
+            <Label Content="Canopy Closure:" Grid.Row="4" Grid.Column="2"/>
+            <dxe:TextEdit Text="{Binding Survey.CanopyClosure, ValidatesOnDataErrors=True}" MaskType="Numeric" Grid.Row="4" Grid.Column="3"/>
+            <Label Content="Stream Gradient:" Grid.Row="4" Grid.Column="4"/>
+            <dxe:TextEdit Text="{Binding Survey.StreamGradient, ValidatesOnDataErrors=True}"  Grid.Row="4" Grid.Column="5"/>
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="AUTO"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="AUTO"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="AUTO"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="AUTO"/>
+                <RowDefinition Height="AUTO"/>
+                <RowDefinition Height="AUTO"/>
+                <RowDefinition Height="AUTO"/>
+                <RowDefinition Height="AUTO"/>
+                <RowDefinition Height="AUTO"/>
+                <RowDefinition Height="AUTO"/>
+            </Grid.RowDefinitions>
+
+            <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" Content="Substrate % - estimated (should add to 100)" FontWeight="Bold"/>
+
+            <Label Content="Silt:" Grid.Row="1" Grid.Column="0"/>
+            <dxe:TextEdit Text="{Binding Survey.Silt, ValidatesOnDataErrors=True}" MaskType="Numeric" Grid.Row="1" Grid.Column="1"/>
+            <Label Content="Sand:" Grid.Row="1" Grid.Column="2"/>
+            <dxe:TextEdit Text="{Binding Survey.Sand, ValidatesOnDataErrors=True}" MaskType="Numeric" Grid.Row="1" Grid.Column="3"/>
+            <Label Content="Gravel:" Grid.Row="1" Grid.Column="4"/>
+            <dxe:TextEdit Text="{Binding Survey.Gravel, ValidatesOnDataErrors=True}" MaskType="Numeric" Grid.Row="1" Grid.Column="5"/>
+
+            <Label Content="Cobble:" Grid.Row="2" Grid.Column="0"/>
+            <dxe:TextEdit Text="{Binding Survey.Cobble, ValidatesOnDataErrors=True}" MaskType="Numeric" Grid.Row="2" Grid.Column="1"/>
+            <Label Content="Boulders:" Grid.Row="2" Grid.Column="2"/>
+            <dxe:TextEdit Text="{Binding Survey.Boulders, ValidatesOnDataErrors=True}" MaskType="Numeric" Grid.Row="2" Grid.Column="3"/>
+            <Label Content="Bedrock:" Grid.Row="2" Grid.Column="4"/>
+            <dxe:TextEdit Text="{Binding Survey.Bedrock, ValidatesOnDataErrors=True}" MaskType="Numeric" Grid.Row="2" Grid.Column="5"/>
+
+            <Label Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" Content="Habitat Percentage:" FontWeight="Bold"/>
+
+            <Label Content="Pool:" Grid.Row="4" Grid.Column="0"/>
+            <dxe:TextEdit Text="{Binding Survey.Pool, ValidatesOnDataErrors=True}" MaskType="Numeric" Grid.Row="4" Grid.Column="1"/>
+            <Label Content="Riffle:" Grid.Row="4" Grid.Column="2"/>
+            <dxe:TextEdit Text="{Binding Survey.Riffle, ValidatesOnDataErrors=True}" MaskType="Numeric" Grid.Row="4" Grid.Column="3"/>
+            <Label Content="Run:" Grid.Row="4" Grid.Column="4"/>
+            <dxe:TextEdit Text="{Binding Survey.Run, ValidatesOnDataErrors=True}" MaskType="Numeric" Grid.Row="4" Grid.Column="5"/>
+
+            <Label Content="Est. Avg. Stream Width:" Grid.Row="5" Grid.Column="0"/>
+            <dxe:TextEdit Text="{Binding Survey.EstAvgStreamWidth, ValidatesOnDataErrors=True}" MaskType="Numeric" Grid.Row="5" Grid.Column="1"/>
+            <Label Content="Water Temp(f):" Grid.Row="5" Grid.Column="2"/>
+            <dxe:TextEdit Text="{Binding Survey.WaterTemp, ValidatesOnDataErrors=True}" MaskType="Numeric" Grid.Row="5" Grid.Column="3"/>
+            <Label Content="Air Temp(f):" Grid.Row="5" Grid.Column="4"/>
+            <dxe:TextEdit Text="{Binding Survey.AirTemp, ValidatesOnDataErrors=True}" MaskType="Numeric" Grid.Row="5" Grid.Column="5"/>
+
+            <Label Content="Flow:" Grid.Row="6" Grid.Column="0"/>
+            <dxe:ComboBoxEdit SelectedItem="{Binding Survey.Flow, ValidatesOnDataErrors=True}" ItemsSource="{Binding Flows}" Grid.Row="6" Grid.Column="1"/>
+
+        </Grid>
+  
+
+        <dx:DXTabControl Grid.Row="3">
+            <dx:DXTabItem Header="Children">
+                <views:ChildrenListView/>
+            </dx:DXTabItem>
+            <dx:DXTabItem Header="Photos">
+                <views:PicturesView/>
+            </dx:DXTabItem>            
+        </dx:DXTabControl>
+        
+        
+    </Grid>
+</UserControl>

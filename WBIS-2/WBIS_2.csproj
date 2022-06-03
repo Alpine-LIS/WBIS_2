@@ -8,7 +8,12 @@
     <Platforms>AnyCPU;x64</Platforms>
     <PlatformTarget>x64</PlatformTarget>
     <AssemblyVersion>2.0.0.1</AssemblyVersion>
+    <ApplicationIcon>WBIS2.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="WBIS2.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="DevExpress.Wpf" Version="21.2.7" />

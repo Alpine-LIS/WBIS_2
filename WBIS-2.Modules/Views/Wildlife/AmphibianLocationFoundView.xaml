@@ -1,0 +1,88 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WBIS_2.Modules.Views.Botany" 
+             xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors" 
+             xmlns:views="clr-namespace:WBIS_2.Modules.Views" 
+             xmlns:viewModels="clr-namespace:WBIS_2.Modules.ViewModels" 
+             xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
+             xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core" xmlns:dxe1="clr-namespace:DevExpress.XtraEditors;assembly=DevExpress.XtraEditors.v21.2" x:Class="WBIS_2.Modules.Views.AmphibianLocationFoundView"
+             mc:Ignorable="d" 
+            d:DesignHeight="450" d:DesignWidth="800"
+    d:DataContext="{d:DesignInstance Type={x:Type viewModels:AmphibianLocationFoundViewModel}}">
+    <!--d:DataContext="{d:DesignInstance Type={x:Type viewModels:BotanicalPlantOfInterestViewModel}}"-->
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="2*"/>
+        </Grid.RowDefinitions>
+
+        <views:DetailMenuView Grid.Row="0"/>
+
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="AUTO"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="AUTO"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="AUTO"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="AUTO"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="AUTO"/>
+                <RowDefinition Height="AUTO"/>
+                <RowDefinition Height="AUTO"/>
+                <RowDefinition Height="AUTO"/>
+            </Grid.RowDefinitions>
+
+            <Label Content="Point Of Interest:" Grid.Column="0" Grid.Row="0"/>
+            <dxe:ComboBoxEdit SelectedItem="{Binding locationFound.AmphibianSpecies, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" ItemsSource="{Binding AmphibianSpecies, UpdateSourceTrigger=PropertyChanged}" 
+                              DisplayMember="SpeciesName" Grid.Column="1" Grid.Row="0" AutoComplete="True" Grid.ColumnSpan="2"/>
+            <Label Content="DateTime:" Grid.Column="3" Grid.Row="0"/>
+            <Grid Grid.Column="4" Grid.Row="0" Grid.ColumnSpan="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="AUTO"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <dxe:DateEdit EditValue="{Binding foundDate, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" MaskType="DateTime" Grid.Column="0"/>
+                <dxe:TextEdit Text="{Binding foundHour, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat=00}" MaskType="Numeric" Grid.Column="1"/>
+                <Label Content=":" Grid.Column="2"/>
+                <dxe:TextEdit Text="{Binding foundMinute, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat=00}" MaskType="Numeric" Grid.Column="3"/>
+            </Grid>
+
+            <Label Content="Adults:" Grid.Column="0" Grid.Row="1"/>
+            <dxe:TextEdit Text="{Binding locationFound.NumberOfAdults}" MaskType="Numeric" Grid.Row="1" Grid.Column="1"/>
+            <Label Content="Subadults:" Grid.Column="2" Grid.Row="1"/>
+            <dxe:TextEdit Text="{Binding locationFound.NumberOfSubadults}" MaskType="Numeric" Grid.Row="1" Grid.Column="3"/>
+            <Label Content="Larve:" Grid.Column="4" Grid.Row="1"/>
+            <dxe:TextEdit Text="{Binding locationFound.NumberOfLarve}" MaskType="Numeric" Grid.Row="1" Grid.Column="5"/>
+            <Label Content="Egg Masses:" Grid.Column="6" Grid.Row="1"/>
+            <dxe:TextEdit Text="{Binding locationFound.NumberOfEggMasses}" MaskType="Numeric" Grid.Row="1" Grid.Column="7"/>
+
+            <Label Content="Visual:" Grid.Column="0" Grid.Row="2"/>
+            <dxe:CheckEdit IsChecked="{Binding locationFound.Visual}" Grid.Row="2" Grid.Column="1"/>
+            <Label Content="Aural:" Grid.Column="2" Grid.Row="2"/>
+            <dxe:CheckEdit IsChecked="{Binding locationFound.Aural}" Grid.Row="2" Grid.Column="3"/>
+
+            <Label Content="Comments:" Grid.Column="0" Grid.Row="4" VerticalAlignment="Top"/>
+            <dxe:TextEdit Text="{Binding element.Comments, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
+                          TextWrapping="Wrap" Grid.Column="1" Grid.Row="4" VerticalContentAlignment="Top" Grid.ColumnSpan="6" MinHeight="66"/>
+
+        </Grid>
+
+
+        <Label Content="Photos" Grid.Row="2" HorizontalAlignment="Left" FontWeight="Bold"/>
+        <views:PicturesView Grid.Row="3"/>
+
+
+    </Grid>
+</UserControl>

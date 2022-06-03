@@ -59,6 +59,12 @@
     <Compile Update="Views\Botany\BotanicalPlantListView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\Wildlife\AmphibianLocationFoundView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Wildlife\AmphibianPointOfInterestView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\Botany\BotanicalPointOfInterestView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -102,6 +108,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\Wildlife\SiteCallingDetectionView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Wildlife\AmphibianSurveyView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\Wildlife\SiteCallingView.xaml.cs">
@@ -165,6 +174,14 @@
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Views\Wildlife\AmphibianLocationFoundView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Wildlife\AmphibianPointOfInterestView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Views\Botany\BotanicalPointOfInterestView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
@@ -222,6 +239,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\Wildlife\SiteCallingDetectionView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Wildlife\AmphibianSurveyView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

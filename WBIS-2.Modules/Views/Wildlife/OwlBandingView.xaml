@@ -19,7 +19,7 @@
             <RowDefinition Height="AUTO"/>
             <RowDefinition Height="AUTO"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="2*"/>
+            <RowDefinition Height="2.5*"/>
         </Grid.RowDefinitions>
 
         <views:DetailMenuView Grid.Row="0"/>
@@ -46,7 +46,7 @@
             <Label Content="Record Type:" Grid.Row="0" Grid.Column="0"/>
             <dxe:TextEdit Text="{Binding Banding.RecordType, ValidatesOnDataErrors=True}" IsReadOnly="True" Grid.Row="0" Grid.Column="1"/>
             <Label Content="Bands:" Grid.Row="0" Grid.Column="2"/>
-            <dxe:ComboBoxEdit SelectedItem="{Binding Banding.Bands, ValidatesOnDataErrors=True}" ItemsSource="{Binding Bands}" Grid.Row="0" Grid.Column="3"/>
+            <dxe:ComboBoxEdit SelectedItem="{Binding Banding.Bands, ValidatesOnDataErrors=True}" IsReadOnly="{Binding BandingRecord, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Bands}" Grid.Row="0" Grid.Column="3"/>
             <Label Content="Species:" Grid.Row="0" Grid.Column="4"/>
             <dxe:ComboBoxEdit SelectedItem="{Binding Banding.BirdSpecies, ValidatesOnDataErrors=True}" DisplayMember="Species" ItemsSource="{Binding AvailibleSpecies}" Grid.Row="0" Grid.Column="5"/>
 
@@ -189,8 +189,10 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <Label Content="Comments" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left"/>
+            <Label Content="Comments:" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left"/>
             <dxe:TextEdit Text="{Binding Banding.Comments}" VerticalContentAlignment="Top" TextWrapping="Wrap" Grid.Row="1"/>           
         </Grid>
+
+        <views:PicturesView Grid.Row="5"/>
     </Grid>
 </UserControl>

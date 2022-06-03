@@ -14,7 +14,7 @@ namespace WBIS_2.DataModel
         public Guid Guid { get; set; }
                
 
-        [Required, Column("bands")]
+        [Column("bands")]
         public string Bands { get; set; }
         [Column("record_type")]
         public string RecordType { get; set; }

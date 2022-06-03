@@ -354,6 +354,8 @@ namespace WBIS_2.Modules.ViewModels
                 var viewModel = DetailsViewModel.GetMethod("Create").Invoke(new object(), new object[] { CurrentRecord.Guid });
                 if (viewModel is BotanicalElementViewModel vm)
                     document = service.CreateDocument(vm.ViewName, vm.ViewModel.GetMethod("Create").Invoke(new object(), new object[] { CurrentRecord.Guid }), CurrentRecord.Guid, this);
+                else if (viewModel is AmphibianElementViewModel vm2)
+                    document = service.CreateDocument(vm2.ViewName, vm2.ViewModel.GetMethod("Create").Invoke(new object(), new object[] { CurrentRecord.Guid }), CurrentRecord.Guid, this);
                 else
                     document = service.CreateDocument(ListManager.DisplayName.Replace(" ", "") + "View", viewModel, CurrentRecord.Guid, this);
                 document.Id = CurrentRecord.Guid;

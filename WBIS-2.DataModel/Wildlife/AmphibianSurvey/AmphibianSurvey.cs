@@ -29,7 +29,7 @@ namespace WBIS_2.DataModel
         public string LakeStreamName { get; set; }
         [Column("water_type")]
         public string WaterType { get; set; }
-        [Column("seasonality_if_flow")]
+        [Column("seasonality_of_flow")]
         public string SeasonalityOfFlow { get; set; }
         [Column("planning_watershed")]
         public string PlanningWatershed { get; set; }

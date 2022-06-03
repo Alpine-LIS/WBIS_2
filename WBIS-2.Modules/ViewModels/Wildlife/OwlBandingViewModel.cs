@@ -28,7 +28,7 @@ using WBIS_2.Modules.Views.UserControls;
 
 namespace WBIS_2.Modules.ViewModels
 {
-    public class OwlBandingViewModel : DetailViewModelBase, IDocumentContent, IDetailView
+    public class OwlBandingViewModel : DetailViewModelBase, IDocumentContent, IDetailView, IPictures
     {
         public static bool AddSingle => false;
         public OwlBanding Banding
@@ -60,6 +60,9 @@ namespace WBIS_2.Modules.ViewModels
             SpeciesSites = Database.ProtectionZones
               .Where(_ => (_.Geometry.IsWithinDistance(Banding.Geometry, 3218.69) && !_._delete && !_.Repository) || _ == Banding.ProtectionZone).ToArray();
             SetDateValues();
+
+            BandingRecord = Banding.RecordType == "Banding";
+            RaisePropertyChanged(nameof(BandingRecord));
         }
 
         public override void CloseForm()
@@ -105,9 +108,24 @@ namespace WBIS_2.Modules.ViewModels
             w.Stop();
         }
 
+        public bool BandingRecord { get; set; }
+
         private bool CheckSave()
         {
-           
+           if (Banding.Bands == "Yes")
+            {
+                if (Banding.USFWS_BandColor == null)
+                {
+                    MessageBox.Show("USFWS band color must be filled if bands were seen.");
+                    return false;
+                }
+                if (Banding.USFWS_BandColor == "")
+                {
+                    MessageBox.Show("USFWS band color must be filled if bands were seen.");
+                    return false;
+                }
+            }
+
             return true;
         }
 
@@ -187,5 +205,73 @@ namespace WBIS_2.Modules.ViewModels
                 RaisePropertyChanged(nameof(Banding));
             }
         }
+
+
+
+
+
+
+
+        public ObservableCollection<ImageView> Pictures { get; set; }
+        public void FillPictures()
+        {
+            var pictureData = Database.Pictures
+                .Include(_ => _.OwlBanding)
+                .Where(_ => _.OwlBanding.Guid == Banding.Guid);
+
+            Pictures = new ObservableCollection<ImageView>();
+            foreach (var p in pictureData)
+            {
+                Pictures.Add(new ImageView(p));
+            }
+            RaisePropertyChanged(nameof(Pictures));
+        }
+
+        public void Upload()
+        {
+            Picture picture = ((IPictures)this).CreatePicture();
+            if (picture == null) return;
+
+            Pictures.Add(new ImageView(picture));
+            RaisePropertiesChanged(nameof(Pictures));
+        }
+
+
+        public void SaveSingle()
+        {
+            if (SelectedImage == null) return;
+            string fileName = TextWriters.SaveFileName("JPG|*.jpg");
+            if (fileName == null) return;
+
+            MemoryStream stream = new MemoryStream(SelectedImage.Picture.ImageData);
+            Image image = Image.FromStream(stream);
+            image.Save(fileName);
+            if (MessageBox.Show("Would you like to open your photo?", "", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                new Process { StartInfo = new ProcessStartInfo(fileName) { UseShellExecute = true } }.Start();
+        }
+
+        public void SaveAll()
+        {
+            string fileName = TextWriters.SaveDirectoryName();
+            if (fileName == null) return;
+
+            Directory.CreateDirectory(fileName);
+            int counter = 0;
+            foreach (var pic in Pictures)
+            {
+                MemoryStream stream = new MemoryStream(pic.Picture.ImageData);
+                Image image = Image.FromStream(stream);
+                image.Save($@"{fileName}\{counter.ToString("0000")}.jpg");
+                counter++;
+            }
+            MessageBox.Show($"Photos have been saved to {fileName}");
+        }
+
+        public ImageView SelectedImage
+        {
+            get { return GetProperty(() => SelectedImage); }
+            set { SetProperty(() => SelectedImage, value); }
+        }
+        public bool PictureUploadEnabled { get; set; } = false;
     }
 }

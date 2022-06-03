@@ -1,0 +1,77 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WBIS_2.Modules.Views.Botany" 
+             xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors" 
+             xmlns:views="clr-namespace:WBIS_2.Modules.Views" 
+             xmlns:viewModels="clr-namespace:WBIS_2.Modules.ViewModels" 
+             xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
+             xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core" xmlns:dxe1="clr-namespace:DevExpress.XtraEditors;assembly=DevExpress.XtraEditors.v21.2" x:Class="WBIS_2.Modules.Views.AmphibianPointOfInterestView"
+             mc:Ignorable="d" 
+            d:DesignHeight="450" d:DesignWidth="800"
+    d:DataContext="{d:DesignInstance Type={x:Type viewModels:AmphibianPointOfInterestViewModel}}">
+    <!--d:DataContext="{d:DesignInstance Type={x:Type viewModels:BotanicalPlantOfInterestViewModel}}"-->
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="2*"/>
+        </Grid.RowDefinitions>
+
+            <views:DetailMenuView Grid.Row="0"/>
+      
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="AUTO"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="AUTO"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="AUTO"/>
+                <ColumnDefinition Width="AUTO"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="AUTO"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="AUTO"/>
+                <RowDefinition Height="AUTO"/>
+            </Grid.RowDefinitions>
+
+            <Label Content="Point Of Interest:" Grid.Column="0" Grid.Row="0"/>
+            <dxe:ComboBoxEdit SelectedItem="{Binding pointOfInterest.PointOfInterest, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" ItemsSource="{Binding PointsOfInterest, UpdateSourceTrigger=PropertyChanged}" 
+                              Grid.Column="1" Grid.Row="0" AutoComplete="True"/>
+            <Label Content="Other Wildlife:" Grid.Column="2" Grid.Row="0"/>
+            <dxe:ComboBoxEdit SelectedItem="{Binding pointOfInterest.OtherWildlife, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" ItemsSource="{Binding AmphibianSpecies, UpdateSourceTrigger=PropertyChanged}" 
+                              DisplayMember="SpeciesName" Grid.Column="3" Grid.Row="0" AutoComplete="True"/>
+            <Label Content="DateTime:" Grid.Column="4" Grid.Row="0" Grid.ColumnSpan="2"/>
+            <Grid Grid.Column="6" Grid.Row="0" Grid.ColumnSpan="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="AUTO"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <dxe:DateEdit EditValue="{Binding foundDate, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" MaskType="DateTime" Grid.Column="0"/>
+                <dxe:TextEdit Text="{Binding foundHour, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat=00}" MaskType="Numeric" Grid.Column="1"/>
+                <Label Content=":" Grid.Column="2"/>
+                <dxe:TextEdit Text="{Binding foundMinute, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat=00}" MaskType="Numeric" Grid.Column="3"/>
+            </Grid>
+
+           
+
+            <Label Content="Comments:" Grid.Column="0" Grid.Row="2" VerticalAlignment="Top"/>
+            <dxe:TextEdit Text="{Binding element.Comments, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
+                          TextWrapping="Wrap" Grid.Column="1" Grid.Row="2" VerticalContentAlignment="Top" Grid.ColumnSpan="6" MinHeight="66"/>
+
+        </Grid>
+
+       
+        <Label Content="Photos" Grid.Row="2" HorizontalAlignment="Left" FontWeight="Bold"/>
+        <views:PicturesView Grid.Row="3"/>
+        
+        
+    </Grid>
+</UserControl>

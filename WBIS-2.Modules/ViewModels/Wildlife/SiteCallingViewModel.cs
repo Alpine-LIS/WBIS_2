@@ -257,8 +257,8 @@ namespace WBIS_2.Modules.ViewModels
         public void FillPictures()
         {
             var pictureData = Database.Pictures
-                .Include(_ => _.BotanicalElement).ThenInclude(_ => _.BotanicalSurveyArea)
-                .Where(_ => _.BotanicalElement.BotanicalSurveyArea.Guid == Calling.Guid);
+                .Include(_ => _.SiteCalling)
+                .Where(_ => _.SiteCalling.Guid == Calling.Guid);
 
             Pictures = new ObservableCollection<ImageView>();
             foreach (var p in pictureData)
