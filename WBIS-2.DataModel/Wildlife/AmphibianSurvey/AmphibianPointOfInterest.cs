@@ -9,7 +9,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class AmphibianPointOfInterest : UserDataValidator
+    public class AmphibianPointOfInterest : UserDataValidator, IInformationType
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid"), ForeignKey("AmphibianElement")]
         public Guid Guid { get; set; }
@@ -19,11 +19,15 @@ namespace WBIS_2.DataModel
         public AmphibianElement AmphibianElement { get; set; }
 
 
-        [Required,Column("point_of_interest")]
+        [Required,Column("point_of_interest"), ListInfo(DisplayField = true)]
         public string PointOfInterest { get; set; }
 
-        [Column("other_wildlife_id")]
+        [Column("other_wildlife_id"), ListInfo(AutoInclude = true)]
         public Guid? OtherWildlifeId { get; set; }
         public AmphibianSpecies OtherWildlife { get; set; }
+
+
+        [NotMapped, Display(Order = -1)]
+        public IInfoTypeManager Manager => new InformationTypeManager<AmphibianPointOfInterest>();
     }
 }

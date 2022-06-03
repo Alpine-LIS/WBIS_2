@@ -28,10 +28,12 @@ namespace WBIS_2.DataModel
 
         //[Column("amphibian_location_found_id")]
         //public Guid AmphibianLocationFoundId { get; set; }
+        [ListInfo(AutoInclude = true)]
         public AmphibianLocationFound AmphibianLocationFound { get; set; }
 
         //[Column("amphibian_point_of_interest_id")]
         //public Guid AmphibianPointOfInterestId { get; set; }
+        [ListInfo(AutoInclude = true)]
         public AmphibianPointOfInterest AmphibianPointOfInterest { get; set; }
 
 
