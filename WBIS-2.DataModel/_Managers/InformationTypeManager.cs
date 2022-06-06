@@ -166,16 +166,20 @@ namespace WBIS_2.DataModel
         }
 
 
-        public IQueryable GetQueryable(WBIS2Model model, bool track = false, List<string> ForceInclude = null)
+        public IQueryable GetQueryable(WBIS2Model model, bool track = false, List<string> ForceInclude = null, bool includeGeometry = false)
         {
             IQueryable<InfoType> returnVal;
-            
+
+            List<string> QueryExclude = new List<string>();
+            if (!includeGeometry)
+                QueryExclude.Add("geometry");
+
             if (track) 
                 returnVal= model.Set<InfoType>()
-                    .FromSqlRaw(GetSqlQuery(new List<string>() { "geometry" }));
+                    .FromSqlRaw(GetSqlQuery(QueryExclude));
             else
                 returnVal = model.Set<InfoType>()
-                   .FromSqlRaw(GetSqlQuery(new List<string>() { "geometry" }))
+                   .FromSqlRaw(GetSqlQuery(QueryExclude))
                    .AsNoTracking();
 
             foreach (var include in AutoIncludes)
@@ -187,9 +191,9 @@ namespace WBIS_2.DataModel
                      
             return returnVal;
         }
-        private IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model, bool showDelete, bool showRepository, bool track, List<string> ForceInclude)
+        private IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model, bool showDelete, bool showRepository, bool track, List<string> ForceInclude, bool includeGeometry = false)
         {
-            IQueryable<InfoType> returnVal = (IQueryable<InfoType>)GetQueryable(model, track, ForceInclude);
+            IQueryable<InfoType> returnVal = (IQueryable<InfoType>)GetQueryable(model, track, ForceInclude, includeGeometry);
 
             if (Query.Length == 0)
                 return returnVal.Take(0);
@@ -240,6 +244,10 @@ namespace WBIS_2.DataModel
         public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model, bool showDelete, bool showRepository)
         {
             return GetQueryable(Query, QueryType, model, showDelete, showRepository, false, null);
+        }
+        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model, bool showDelete, bool showRepository, bool includeGeometry)
+        {
+            return GetQueryable(Query, QueryType, model, showDelete, showRepository, false, null, includeGeometry);
         }
         public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model, List<string> ForceInclude)
         {

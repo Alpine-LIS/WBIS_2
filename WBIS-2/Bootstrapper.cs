@@ -16,6 +16,7 @@ using WBIS_2.Modules.Views;
 using WBIS_2.Modules.ViewModels;
 using WBIS_2.Modules;
 using Alpine.FlexForms.Controls;
+using WBIS_2.Modules.ViewModels.Reports;
 
 namespace WBIS_2
 {
@@ -99,6 +100,9 @@ namespace WBIS_2
             Manager.Register(Regions.NavigationAdditionalSurveys, new Module(AppModules.ModuleAdditionalSurveyTemplates, () => new NavigationItem("Additional Survey Templates")));
             Manager.Register(Regions.NavigationAdditionalSurveys, new Module(AppModules.ModuleAdditionalSurveys, () => new NavigationItem("Additional Survey Types")));
 
+            Manager.Register(Regions.NavigationReports, new Module(AppModules.ModuleDistrictReport, () => new NavigationItem("District Report")));
+
+
 
             Manager.Register(Regions.Documents, new Module(AppModules.ModuleUser,
                () => ApplicationUserViewModel.Create(CurrentUser.User.Guid), typeof(ApplicationUserView)));
@@ -145,14 +149,6 @@ namespace WBIS_2
                () => ParentListViewModel.Create(new AmphibianSurvey()), typeof(ParentListView)));
             Manager.Register(Regions.Documents, new Module(AppModules.ModuleAmphibianElements,
                () => ParentListViewModel.Create(new AmphibianElement()), typeof(ParentListView)));
-            //Manager.Register(Regions.Documents, new Module(AppModules.ModuleBDOWSightings,
-            //   () => ParentListViewModel.Create(new BDOWSighting()), typeof(ParentListView)));
-            //Manager.Register(Regions.Documents, new Module(AppModules.ModuleDOMonitoring,
-            //   () => ParentListViewModel.Create(new DOMonitoring()), typeof(ParentListView)));
-            //Manager.Register(Regions.Documents, new Module(AppModules.ModuleForestCarnivoreCameraStations,
-            //   () => ParentListViewModel.Create(new ForestCarnivoreCameraStation()), typeof(ParentListView)));
-            //Manager.Register(Regions.Documents, new Module(AppModules.ModuleRanchPhotoPoints,
-            //   () => ParentListViewModel.Create(new RanchPhotoPoint()), typeof(ParentListView)));
 
 
             Manager.Register(Regions.Documents, new Module(AppModules.ModulePermanentCallStation,
@@ -173,6 +169,10 @@ namespace WBIS_2
                () => TemplatesListViewModel.Create(), typeof(TemplatesListView)));
             Manager.Register(Regions.Documents, new Module(AppModules.ModuleAdditionalSurveys,
                () => FlexTemplateListViewModel.Create(), typeof(FlexTemplateListView)));
+
+
+            Manager.Register(Regions.Documents, new Module(AppModules.ModuleDistrictReport,
+              () => DistrictReportViewModel.Create(), typeof(DistrictReportView)));
         }
 
 
@@ -246,6 +246,9 @@ namespace WBIS_2
 
             Manager.Inject(Regions.NavigationAdditionalSurveys, AppModules.ModuleAdditionalSurveyTemplates);
             Manager.Inject(Regions.NavigationAdditionalSurveys, AppModules.ModuleAdditionalSurveys);
+
+            Manager.Inject(Regions.NavigationReports, AppModules.ModuleDistrictReport);
+
         }
 
         protected virtual void ConfigureNavigation()

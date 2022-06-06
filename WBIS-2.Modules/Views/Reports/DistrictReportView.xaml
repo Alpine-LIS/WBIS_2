@@ -1,0 +1,59 @@
+﻿<UserControl x:Class="WBIS_2.Modules.Views.DistrictReportView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WBIS_2.Modules.Views"
+             xmlns:viewModels="clr-namespace:WBIS_2.Modules.ViewModels.Reports"
+             xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars" 
+             xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core" 
+             xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors" 
+             xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+             xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+             d:DataContext="{d:DesignInstance Type=viewModels:DistrictReportViewModel}"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="AUTO"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="AUTO"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Label Grid.Row="0" Grid.Column="0" Content="Districts:" VerticalAlignment="Top"/>
+        <ListBox ItemsSource="{Binding SelectableDistricts, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5" Grid.Row="0" Grid.Column="1">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal" >
+                        <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="{Binding District.DistrictName}" Margin="0" MinWidth="100"/>
+                        <Label Content="{Binding District.ManagementArea}" Margin="0"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <Label Grid.Row="0" Grid.Column="2" Content="Export Layers:" VerticalAlignment="Top"/>
+        <ListBox ItemsSource="{Binding SelectableInfoTypes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5" Grid.Row="0" Grid.Column="31">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal" >
+                        <CheckBox IsChecked="{Binding Selected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="{Binding InfoTypeName}" Margin="0" MinWidth="100"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <Label Content="Include Repository" Grid.Row="1" Grid.Column="0"/>
+        <dxe:CheckEdit IsChecked="{Binding IncludeRepository, Mode=TwoWay}" Grid.Row="1" Grid.Column="1"/>
+
+        <Button Content="Save" Grid.Row="1" Grid.Column="3" Width="120" Command="{Binding SaveCommand}"/>
+    </Grid>
+</UserControl>

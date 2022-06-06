@@ -80,6 +80,13 @@ namespace WBIS_2.DataModel
         //public ICollection<BDOWSighting> BDOWSightings { get; set; }
 
 
+        public ICollection<SPI_GGOW> SPI_GGOWs { get; set; }
+        public ICollection<SPI_SPOW> SPI_SPOWs { get; set; }
+        public ICollection<SPI_NOGO> SPI_NOGOs { get; set; }
+        public ICollection<SPI_WildlifeSighting> SPI_WildlifeSightings { get; set; }
+
+
+
         [NotMapped, Display(Order = -1)]
         public IInfoTypeManager Manager => new InformationTypeManager<District>();
     }

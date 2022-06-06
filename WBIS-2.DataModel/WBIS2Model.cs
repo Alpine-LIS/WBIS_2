@@ -164,6 +164,13 @@ namespace WBIS_2.DataModel
             modelBuilder.Entity<DropdownOption>().ToTable("dropdown_options");
             modelBuilder.Entity<TableModified>().ToTable("tables_modified");
             modelBuilder.Entity<UserFlexRecord>().ToTable("user_flex_records");
+
+
+
+            modelBuilder.Entity<SPI_GGOW>().ToTable("spi_ggows");
+            modelBuilder.Entity<SPI_SPOW>().ToTable("spi_spows");
+            modelBuilder.Entity<SPI_NOGO>().ToTable("spi_nogos");
+            modelBuilder.Entity<SPI_WildlifeSighting>().ToTable("spi_wildlife_sightings");
     }
     private void ManyToManyRelations(ModelBuilder modelBuilder)
         {
@@ -460,6 +467,11 @@ namespace WBIS_2.DataModel
         public DbSet<DropdownOption> DropdownOptions { get; set; }
         public DbSet<TableModified> TablesModified { get; set; }
 
+
+        public DbSet<SPI_GGOW> SPI_GGOWs { get; set; }
+        public DbSet<SPI_SPOW> SPI_SPOWs { get; set; }
+        public DbSet<SPI_NOGO> SPI_NOGOs { get; set; }
+        public DbSet<SPI_WildlifeSighting> SPI_WildlifeSightings { get; set; }
 
         //public DbSet<ForestCarnivoreCameraStation> ForestCarnivoreCameraStations { get; set; }
         //public DbSet<CarnivoreOccurrence> CarnivoreOccurrences { get; set; }
