@@ -473,6 +473,7 @@ namespace WBIS_2.DataModel
         public DbSet<SPI_NOGO> SPI_NOGOs { get; set; }
         public DbSet<SPI_WildlifeSighting> SPI_WildlifeSightings { get; set; }
         public DbSet<CdfwVintage> CdfwVintages { get; set; }
+        public DbSet<ScopingText> ScopingTexts { get; set; }
 
         //public DbSet<ForestCarnivoreCameraStation> ForestCarnivoreCameraStations { get; set; }
         //public DbSet<CarnivoreOccurrence> CarnivoreOccurrences { get; set; }

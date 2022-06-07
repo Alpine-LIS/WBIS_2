@@ -101,6 +101,7 @@ namespace WBIS_2
             Manager.Register(Regions.NavigationAdditionalSurveys, new Module(AppModules.ModuleAdditionalSurveys, () => new NavigationItem("Additional Survey Types")));
 
             Manager.Register(Regions.NavigationReports, new Module(AppModules.ModuleDistrictReport, () => new NavigationItem("District Report")));
+            Manager.Register(Regions.NavigationReports, new Module(AppModules.ModuleBotanicalReports, () => new NavigationItem("Botanical Reports")));
 
 
 
@@ -173,6 +174,8 @@ namespace WBIS_2
 
             Manager.Register(Regions.Documents, new Module(AppModules.ModuleDistrictReport,
               () => DistrictReportViewModel.Create(), typeof(DistrictReportView)));
+            Manager.Register(Regions.Documents, new Module(AppModules.ModuleBotanicalReports,
+              () => BotanyReportsViewModel.Create(), typeof(BotanyReportsView)));
         }
 
 
@@ -248,6 +251,7 @@ namespace WBIS_2
             Manager.Inject(Regions.NavigationAdditionalSurveys, AppModules.ModuleAdditionalSurveys);
 
             Manager.Inject(Regions.NavigationReports, AppModules.ModuleDistrictReport);
+            Manager.Inject(Regions.NavigationReports, AppModules.ModuleBotanicalReports);
 
         }
 

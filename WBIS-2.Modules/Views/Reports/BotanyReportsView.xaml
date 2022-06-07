@@ -1,0 +1,65 @@
+﻿<UserControl x:Class="WBIS_2.Modules.Views.BotanyReportsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WBIS_2.Modules.Views"
+             xmlns:viewModels="clr-namespace:WBIS_2.Modules.ViewModels.Reports"
+             xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars" 
+             xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core" 
+             xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors" 
+             xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+             xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+             d:DataContext="{d:DesignInstance Type=viewModels:BotanyReportsViewModel}"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="AUTO"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="AUTO"/>
+                <ColumnDefinition Width="AUTO"/>
+                <ColumnDefinition Width="AUTO"/>
+                <ColumnDefinition Width="AUTO"/>
+                <ColumnDefinition Width="AUTO"/>
+                <ColumnDefinition Width="AUTO"/>
+            </Grid.ColumnDefinitions>
+            <Label Content="Botanical Scopings:" Grid.Column="0"/>
+            <Label Content="{Binding ScopingCount}" Grid.Column="1"/>
+            <Label Content="Survey Areas:" Grid.Column="2"/>
+            <Label Content="{Binding AreaCount}" Grid.Column="3"/>
+            <Label Content="Surveys:" Grid.Column="4"/>
+            <Label Content="{Binding SurveyCount}" Grid.Column="5"/>
+        </Grid>
+        
+        
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="AUTO"/>
+                <RowDefinition Height="AUTO"/>
+                <RowDefinition Height="AUTO"/>
+                <RowDefinition Height="AUTO"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="AUTO"/>
+                <ColumnDefinition Width="AUTO"/>
+                <ColumnDefinition Width="AUTO"/>
+            </Grid.ColumnDefinitions>
+
+            <Label Content="THP Area:" Grid.Column="0" Grid.Row="0"/>
+            <dxe:ComboBoxEdit SelectedItem="{Binding SelectedThp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              ItemsSource="{Binding ThpAreas}" DisplayMember="THPName" Grid.Column="1" SelectedIndex="0"/>
+
+            <Button Content="Botanical Scoping Report" Command="{Binding BotanicalScopingCommand}" Grid.Row="0" Grid.Column="2"/>
+            <Button Content="Botanical Survey Report" Command="{Binding BotanicalSurveyCommand}" Grid.Row="1" Grid.Column="2"/>
+            <Button Content="THP Botanical Survey Report" Command="{Binding ThpBotanicalSurveyCommand}" Grid.Row="2" Grid.Column="2"/>
+        </Grid>
+
+    </Grid>
+</UserControl>

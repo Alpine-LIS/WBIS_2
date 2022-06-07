@@ -129,5 +129,18 @@ namespace WBIS_2.Modules.Tools
                 q.Words[index].Italic = 0;
             }
         }
+        public void AddPage(Word.Document doc)
+        {
+            doc.Content.Paragraphs.Add();
+            Word.Paragraph Line20;
+            Line20 = doc.Content.Paragraphs.Add();
+            Line20.Range.Text = string.Empty;
+            object oCollapseEnd = Word.WdCollapseDirection.wdCollapseEnd;
+            object oPageBreak = Word.WdBreakType.wdPageBreak;
+            Line20.Range.Collapse(ref oCollapseEnd);
+            Line20.Range.InsertBreak(ref oPageBreak);
+            Line20.Range.Collapse(ref oCollapseEnd);
+            // Line20.Range.InsertParagraphAfter();
+        }
     }
 }
