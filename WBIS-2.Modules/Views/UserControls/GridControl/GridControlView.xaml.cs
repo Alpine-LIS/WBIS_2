@@ -77,8 +77,8 @@ namespace WBIS_2.Modules.Views
             DataContextChanged -= GridControlView_DataContextChanged;
 
             ((ListViewModelBase)DataContext).ExportToXlsxEvent += GridControlView_ExportToXlsxEvent;
-            //((ListViewModelBase)DataContext).SaveFilterEvent += GridControlView_SaveFilterEvent;
-            //((ListViewModelBase)DataContext).LoadFilterEvent += GridControlView_LoadFilterEvent;
+            ((ListViewModelBase)DataContext).SaveFilterEvent += GridControlView_SaveFilterEvent;
+            ((ListViewModelBase)DataContext).LoadFilterEvent += GridControlView_LoadFilterEvent;
             ((ListViewModelBase)DataContext).FilterFromGridSelection += GridControlView_FilterFromGridSelection;
 
             ((ListViewModelBase)DataContext).SaveGridLayoutEvent += GridControlView_SaveGridLayoutEvent;
@@ -209,7 +209,7 @@ namespace WBIS_2.Modules.Views
         private void GridControlView_LoadFilterEvent(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "RmsFilter|*.RmsFilter";
+            ofd.Filter = "Filter|*.Filter";
             if (ofd.ShowDialog().Value)
             {
                 using (StreamReader sr = new StreamReader(ofd.FileName))
@@ -222,7 +222,7 @@ namespace WBIS_2.Modules.Views
         private void GridControlView_SaveFilterEvent(object sender, EventArgs e)
         {
             SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Filter = "RmsFilter|*.RmsFilter";
+            sfd.Filter = "Filter|*.Filter";
             if (sfd.ShowDialog().Value)
             {
                 using (StreamWriter sw = new StreamWriter(sfd.FileName))

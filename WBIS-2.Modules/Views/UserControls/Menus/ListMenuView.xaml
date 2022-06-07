@@ -66,12 +66,24 @@
                 Content="Toggle map auto zoom" Glyph="{dx:DXImage SvgImages/Dashboards/GeoPointMaps.svg}"/>
 
             <dxb:BarSubItem Glyph="{dx:DXImage SvgImages/Dashboards/EditFilter.svg}" ToolTip="Filter Tools">
+                <dxb:BarButtonItem 
+                    ToolTip="Save Filter"
+                    Content="Save Filter"
+                    Command="{Binding SaveFilterCommand}"/>
+                <dxb:BarButtonItem 
+                    ToolTip="Load Filter"
+                    Content="Load Filter"
+                    Command="{Binding LoadFilterCommand}"/>
+
                 <dxb:BarButtonItem Content="Add Required Passes"
                                    Command="{Binding AddRequiredPassesCommand}"
                                    IsVisible="{Binding AddRequiredPassesAvailible}"/>
                 <dxb:BarButtonItem Content="Drop Selected Hex160s"
                                    Command="{Binding DropHexagonCommand}"
                                    IsVisible="{Binding AddRequiredPassesAvailible}"/>
+                <dxb:BarButtonItem Content="Watershed Report"
+                                   Command="{Binding WatershedReportCommand}"
+                                   IsVisible="{Binding WatershedReportAvailible}"/>
             </dxb:BarSubItem>
 
                 <!--<dxb:BarSubItem Glyph="{dx:DXImage SvgImages/Dashboards/EditFilter.svg}" ToolTip="Filter Tools">

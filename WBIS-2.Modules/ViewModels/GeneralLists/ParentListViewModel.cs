@@ -125,7 +125,7 @@ namespace WBIS_2.Modules.ViewModels
        
         public override void Records_GetQueryable(object sender, GetQueryableEventArgs e)
         {
-            e.QueryableSource = ParentType.Manager.GetQueryable(CurrentUser.Districts.ToArray(), typeof(District), Database, ViewDeleted, ViewRepository);
+            e.QueryableSource = ParentType.Manager.GetQueryable(CurrentUser.Districts.ToArray(), typeof(District), Database, showDelete: ViewDeleted, showRepository: ViewRepository);
 
             //if (ParentType is District)
             //    e.QueryableSource = Database.Set<District>()

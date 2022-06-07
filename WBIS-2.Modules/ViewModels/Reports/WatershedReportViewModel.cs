@@ -19,35 +19,21 @@ using System.IO.Compression;
 using System.Collections.ObjectModel;
 using Word = Microsoft.Office.Interop.Word;
 using System.Data;
+using WBIS_2.Modules.Tools;
+using Microsoft.EntityFrameworkCore;
+using DevExpress.Xpf.Editors.Helpers;
 
 namespace WBIS_2.Modules.ViewModels.Reports
 {
-    public class WatershedReportViewModel : WBISViewModelBase, IDocumentContent
+    public class WatershedReport : WBISViewModelBase
     {
-        public object Title => $"Watershed Report";      
-      
-        public WatershedReportViewModel()
-        {
-            SelectedItems = new ObservableCollection<Watershed>();
-        }
-
-        WordHelper WH = new WordHelper();
-
-        public ObservableCollection<Watershed> SelectedItems { get; set; }
-
-        public static WatershedReportViewModel Create()
-        {
-            return ViewModelSource.Create(() => new WatershedReportViewModel()
-            { Caption = "Watershed Report", 
-            });
-        }
-        public ICommand SaveCommand => new DelegateCommand(WriteReport);
-        public void WriteReport()
+     
+        public WatershedReport(Watershed[] watersheds)
         {
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Filter = "";
             sfd.OverwritePrompt = false;
-            sfd.FileName = $"DistrictExport {DateTime.Now.ToShortDateString().Replace("\\", "-").Replace("/", "-")}_{DateTime.Now.ToShortTimeString().Replace(":", "-").Replace("/", "-")}";
+            sfd.FileName = $"WatershedReport {DateTime.Now.ToShortDateString().Replace("\\", "-").Replace("/", "-")}_{DateTime.Now.ToShortTimeString().Replace(":", "-").Replace("/", "-")}";
         HERE:;
             if (!sfd.ShowDialog().Value) return;
             if (Directory.Exists(sfd.FileName) || File.Exists(sfd.FileName + ".zip"))
@@ -61,33 +47,60 @@ namespace WBIS_2.Modules.ViewModels.Reports
 
             Directory.CreateDirectory(sfd.FileName);
 
-            //var districts = SelectableDistricts.Where(_=>_.IsSelected).Select(_=>_.District).ToArray();
-            //foreach(var infoType in SelectableInfoTypes.Where(_=>_.Selected))
-            //{
-            //    IInformationType i = (IInformationType)Activator.CreateInstance(infoType.InfoType);
-            //    var records = i.Manager.GetQueryable(districts, typeof(District), Database, false, IncludeRepository, true);              
-            //    string fileStr = $@"{sfd.FileName}\{i.Manager.DisplayName.Replace(" ","")}.shp";
-            //    PostGisShapefileizer(i.GetType(),records,fileStr);
-            //}
+            var app = new Word.Application { Visible = false };
+            var doc = app.Documents.Add();
 
-            ZipFile.CreateFromDirectory(sfd.FileName, sfd.FileName + ".zip");            
+            object styleName = "Normal";
+            //object styleName = "No Spacing";
+            doc.Paragraphs.set_Style(ref styleName);
+
+
+            watersheds = Database.Watersheds.Where(_ => watersheds.Select(w => w.Guid).Contains(_.Guid)).ToArray();
+            //var geo = watersheds.Select(_ => _.Geometry);
+            var guids = watersheds.Select(_ => _.Guid);
+            Watershed[] adjacentWatersheds = new Watershed[0];// = Database.Watersheds.Where(_=> geo.Any(w=>w.Touches(_.Geometry)) && !guids.Contains(_.Guid)).ToArray();
+           foreach(Watershed water in watersheds)
+            {
+                guids = guids.Append(adjacentWatersheds.Select(_ => _.Guid));
+                var adj = Database.Watersheds.Where(_ => _.Geometry.Touches(water.Geometry) && !guids.Contains(_.Guid));
+                adjacentWatersheds = adjacentWatersheds.Append(adj).ToArray();
+            }
+            //Write into
+            WriteWatershedReportIntro(doc.Sections.Last.Range, watersheds.Select(_ => _.Guid).ToList(), adjacentWatersheds.Select(_=>_.Guid).ToList());
+                       
+            DateTime date = Database.CdfwVintages.Max(_ => _.date).Date;
+            WatershedReportCannedTextFields(doc.Sections.Last.Range, $"{date.Year}-{date.Month}");
+
+
+            watersheds = watersheds.Append(adjacentWatersheds).ToArray();
+
+
+            WatershedTable(doc.Sections.Last.Range, watersheds, sfd.FileName);
+            doc.Sections.Add();
+            doc.Sections.Last.PageSetup.Orientation = Word.WdOrientation.wdOrientLandscape;
+            WatershedCnddbTables(doc.Sections.Last.Range, watersheds, sfd.FileName);
+            doc.Sections.Add();
+            WatershedCdfwOwlTables(doc.Sections.Last.Range, watersheds, sfd.FileName);
+            doc.Sections.Add();
+            WatershedSpiTables(doc.Sections.Last.Range, watersheds, sfd.FileName);
+
+            WatershedReportFormatting(doc, $"{date.Year}-{date.Month}");
+
+            string filename = sfd.FileName + "\\WatershedReport " + DateTime.Now.ToString("yyyy-MM-dd") + ".docx";
+            doc.SaveAs(filename);
+            doc.Close(true);
+            app.Quit();
+
+            ZipFile.CreateFromDirectory(sfd.FileName, sfd.FileName + ".zip");
 
             Directory.Delete(sfd.FileName, true);
             w.Stop();
-            System.Windows.MessageBox.Show("The district export has finished");
+            System.Windows.MessageBox.Show("The watershed report has finished");
         }
 
+        WordHelper WH = new WordHelper();
 
-
-
-
-
-
-
-
-
-
-
+       
         private void WatershedReportFormatting(Word.Document doc, string cnddbDate)
         {
             object what = Microsoft.Office.Interop.Word.WdGoToItem.wdGoToPage;
@@ -311,7 +324,7 @@ namespace WBIS_2.Modules.ViewModels.Reports
         }
 
 
-        private void WatershedTable(Word.Range sectionRange, List<Guid> watersheds, List<Guid> adjacentWatersheds, string dirName)
+        private void WatershedTable(Word.Range sectionRange, Watershed[] watersheds, string dirName)
         {
             //AddPageSection(sectionRange);
             sectionRange.Paragraphs.Add();
@@ -337,14 +350,13 @@ namespace WBIS_2.Modules.ViewModels.Reports
             dt.Columns.Add("CPW #");
             dt.Columns.Add("Watershed Name");
             dt.Columns.Add("Hydro Unit");
-            dt.Columns.Add("Total Acres");
-            dt.Columns.Add("SPI%");
-            dt.Columns.Add("Public%");
+            dt.Columns.Add("Total Acres", typeof(double));
+            dt.Columns.Add("SPI%", typeof(double));
+            dt.Columns.Add("Public%", typeof(double));
             dt.Columns.Add("Impaired? 303(d) listed");
             dt.Columns.Add("Anadromous Watershed");
 
-            var wshds = Database.Watersheds.Where(_ => watersheds.Contains(_.Guid) || adjacentWatersheds.Contains(_.Guid));
-            foreach(var w in wshds)
+            foreach(var w in watersheds)
             {
                 DataRow row = dt.NewRow();
                 row["CPW #"] = w.WatershedID;
@@ -354,48 +366,43 @@ namespace WBIS_2.Modules.ViewModels.Reports
                 row["SPI%"] = (w.SPIAcres/w.WshdAcres) * 100;
                 row["Public%"] = ((w.WshdAcres - w.SPIAcres) / w.WshdAcres) * 100;
                 row["Impaired? 303(d) listed"] = w.D303;
-                if (w.ESU.Value) row["Anadromous Watershed"] = "Yes";
-                else if (!w.ESU.Value) row["Anadromous Watershed"] = "No";
-                row["Anadromous Watershed"] = w.WatershedID;
+                if (w.ESU != null)
+                {
+                    if (w.ESU.Value) row["Anadromous Watershed"] = "Yes";
+                    else if (!w.ESU.Value) row["Anadromous Watershed"] = "No";
+                }
                 dt.Rows.Add(row);
             }
 
-
-            using (SQLiteDataAdapter filler = new SQLiteDataAdapter("SELECT [WSHD_ID] as 'CPW #', [WSHD_NAME] as 'Watershed Name', [HYDROLOGIC] as 'Hydro Unit', [WSHD_ACRES] as 'Total Acres'," +
-                "(([SPI_ACRES]/[WSHD_ACRES])*100) as 'SPI%',((([WSHD_ACRES]-[SPI_ACRES])/[WSHD_ACRES])*100) as 'Public%'," +
-                "[D303] as 'Impaired? 303(d) listed',[ESU] as 'Anadromous Watershed' FROM [Watershed] " +
-                "WHERE [WSHD_ID] IN ('" + watershedIds + "','" + adjacentWatershedIds + "') ORDER BY [WSHD_ID]", SqlTools.SqlConn))
-            { filler.Fill(dt); }
-
-            foreach (DataRow r in dt.Rows)
-            {
-                if (r["Anadromous Watershed"].ToString().ToUpper() == "TRUE")
-                    r["Anadromous Watershed"] = "Yes";
-                else if (r["Anadromous Watershed"].ToString().ToUpper() == "FALSE")
-                    r["Anadromous Watershed"] = "No";
-            }
+            var tv = dt.AsDataView();
+            tv.Sort = "CPW # ASC";
+            dt = tv.ToTable();
 
             WordTableWriter(sectionRange, dt);
-
-            dt = new DataTable();
-            using (SQLiteDataAdapter filler = new SQLiteDataAdapter("SELECT [FID] FROM [Watershed] WHERE [WSHD_ID] IN ('" + watershedIds + "','" + adjacentWatershedIds + "')", SqlTools.SqlConn))
-            { filler.Fill(dt); }
-            string fileName = dirName + "\\Watershed.shp";
-            ExportSame(fileName, "Watershed", FeatureType.Polygon, dt);
+            new PostGisShapefileConverter(typeof(Watershed), watersheds.AsQueryable(), dirName + "\\Watershed.shp");
         }
 
-        private void WatershedCnddbTables(Word.Range sectionRange, List<Guid> watersheds, List<Guid> adjacentWatersheds, string dirName)
+
+
+
+    
+
+
+        private void WatershedCnddbTables(Word.Range sectionRange, Watershed[] watersheds, string dirName)
         {
             DataTable dt = new DataTable();
-            using (SQLiteDataAdapter filler = new SQLiteDataAdapter("SELECT w.[WSHD_NAME] as 'CPW Name',cnddb.[SNAME] as 'Scientific Name',cnddb.[CNAME] as 'Common Name'," +
-                "cnddb.[OCCNUMBER] as 'CNDDB Occurrence #',cnddb.[ELMDATE] as 'Date',cnddb.[EONDX] as 'Map ID (EONDX)'," +
-                "cnddb.[CALLIST] as 'State Status',cnddb.[FEDLIST] as 'Federal Status',cnddb.[GRANK] as 'NatureServe Ranking' " +
-                "FROM [CNDDBOccurrenceWatershedConnection] as 'conn'" +
-                "INNER JOIN [Watershed] as 'w' ON w.[WSHD_ID] = conn.[Connection] " +
-                "INNER JOIN [CNDDB Occurrence] as 'cnddb' ON cnddb.[EONDX] = conn.[ID] " +
-                "WHERE conn.[Connection] IN ('" + watershedIds + "','" + adjacentWatershedIds + "') " +
-                "ORDER BY conn.[Connection],cnddb.[SNAME]", SqlTools.SqlConn))
-            { filler.Fill(dt); }
+            dt.Columns.Add("WshdId");
+            dt.Columns.Add("CPW Name");
+            dt.Columns.Add("Scientific Name");
+            dt.Columns.Add("Common Name");
+            dt.Columns.Add("CNDDB Occurrence #");
+            dt.Columns.Add("Date");
+            dt.Columns.Add("Map ID (EONDX)");
+            dt.Columns.Add("State Status");
+            dt.Columns.Add("Federal Status");
+            dt.Columns.Add("NatureServe Ranking");
+
+
 
             string[] salmonOptions = new string[] {"ONCORHYNCHUS KISUTCH POP. 2",
 "ONCORHYNCHUS MYKISS IRIDEUS POP. 1",
@@ -409,14 +416,38 @@ namespace WBIS_2.Modules.ViewModels.Reports
 "ONCORHYNCHUS TSHAWYTSCHA POP. 7",
 };
             bool salmon = false;
-            foreach (DataRow r in dt.Rows)
+
+            var cnddbs = new CNDDBOccurrence().Manager.GetQueryable(watersheds, typeof(Watershed), Database, ForceInclude: new List<string>() { "Watersheds"},includeGeometry: true);
+            foreach (CNDDBOccurrence c in cnddbs)
             {
-                if (salmonOptions.Contains(r["Scientific Name"].ToString().ToUpper()))
+                foreach (var w in c.Watersheds)
                 {
-                    salmon = true;
-                    break;
+                    DataRow row = dt.NewRow();
+
+                    row["WshdId"] = w.WatershedID;
+                    row["CPW Name"] = w.WatershedName;
+                    row["Scientific Name"] = c.SNAME;
+                    row["Common Name"] = c.CNAME;
+                    row["CNDDB Occurrence #"] = c.OCCNUMBER;
+                    row["Date"] = c.ELMDATE;
+                    row["Map ID (EONDX)"] = c.EONDX;
+                    row["State Status"] = c.CALLIST;
+                    row["Federal Status"] = c.FEDLIST;
+                    row["NatureServe Ranking"] = c.GRANK;
+                    dt.Rows.Add(row);
+
+                    if (salmonOptions.Contains(row["Scientific Name"].ToString().ToUpper()))
+                    {
+                        salmon = true;
+                        break;
+                    }
                 }
             }
+
+            var tv = dt.AsDataView();
+            tv.Sort = "WshdId ASC, Scientific Name ASC";
+            dt = tv.ToTable();
+            dt.Columns.Remove("WshdId");
 
             sectionRange.Paragraphs.Last.Range.Font.Size = 12;
             sectionRange.Paragraphs.Last.Range.Font.Bold = 1;
@@ -437,38 +468,54 @@ namespace WBIS_2.Modules.ViewModels.Reports
             sectionRange.Paragraphs.Last.Range.Font.Bold = 0;
             sectionRange.Paragraphs.Last.Range.Font.Size = 10;
 
-            //WordTableWriterCnddb(sectionRange, dt);
             WordTableWriter(sectionRange, dt);
-
-            dt = new DataTable();
-            using (SQLiteDataAdapter filler = new SQLiteDataAdapter("SELECT [FID] FROM [CNDDB Occurrence] WHERE [EONDX] IN " +
-                "(SELECT [ID] FROM [CNDDBOccurrenceWatershedConnection] WHERE [Connection] IN ('" + watershedIds + "','" + adjacentWatershedIds + "'))", SqlTools.SqlConn))
-            { filler.Fill(dt); }
-            string fileName = dirName + "\\CNDDB Occurrences.shp";
-            ExportSame(fileName, "CNDDB Occurrence", FeatureType.Polygon, dt);
+            new PostGisShapefileConverter(typeof(CNDDBOccurrence), cnddbs, dirName + "\\CNDDB Occurrences.shp");
         }
 
-        private void WatershedCdfwOwlTables(Word.Range sectionRange, List<Guid> watersheds, List<Guid> adjacentWatersheds, string dirName)
+        private void WatershedCdfwOwlTables(Word.Range sectionRange, Watershed[] watersheds, string dirName)
         {
-            DataTable dt = new DataTable();
-            using (SQLiteDataAdapter filler = new SQLiteDataAdapter("SELECT w.[WSHD_NAME] as 'CPW Name',owl.[MASTEROWL] AS 'Masterowl'," +
-"owl.[TYPEOBS] AS 'Typeobs'," +
-"owl.[DATEOBS] AS 'Dateobs'," +
-"owl.[NUMADOBS] AS 'Numasobs'," +
-"owl.[AGESEX] AS 'Agesex'," +
-"owl.[PAIR] AS 'Pair'," +
-"owl.[NEST] AS 'Nest'," +
-"owl.[NUMYOUNG] AS 'Numyoung'," +
-"owl.[SUBSPECIES] AS 'Subspecies'," +
-"owl.[LATDD_N83] AS 'LatDD_N83'," +
-"owl.[LONDD_N83] AS 'LonDD_N83'" +
-                "FROM [CDFWSpottedOwlWatershedConnection] as 'conn'" +
-                "INNER JOIN [Watershed] as 'w' ON w.[WSHD_ID] = conn.[Connection] " +
-                "INNER JOIN [CDFW Spotted Owl] as 'owl' ON owl.[OBSID] = conn.[ID] " +
-                "WHERE conn.[Connection] IN ('" + watershedIds + "','" + adjacentWatershedIds + "') " +
-                "ORDER BY conn.[Connection]", SqlTools.SqlConn))
-            { filler.Fill(dt); }
+            var cdfwOwls = new CDFW_SpottedOwl().Manager.GetQueryable(watersheds, typeof(Watershed), Database, includeGeometry: true, ForceInclude: new List<string>() { "Watershed" });
 
+            DataTable dt = new DataTable();
+            dt.Columns.Add("WshdId");
+            dt.Columns.Add("CPW Name");
+            dt.Columns.Add("Masterowl");
+            dt.Columns.Add("Typeobs");
+            dt.Columns.Add("Dateobs");
+            dt.Columns.Add("Numasobs");
+            dt.Columns.Add("Agesex");
+            dt.Columns.Add("Pair");
+            dt.Columns.Add("Nest");
+            dt.Columns.Add("Numyoung");
+            dt.Columns.Add("Subspecies");
+            dt.Columns.Add("LatDD_N83", typeof(double));
+            dt.Columns.Add("LonDD_N83", typeof(double));
+
+            foreach(CDFW_SpottedOwl c in cdfwOwls)
+            {
+                DataRow row = dt.NewRow();
+
+                row["WshdId"] = c.Watershed.WatershedID;
+                row["CPW Name"] = c.Watershed.WatershedName;
+                row["Masterowl"] = c.MASTEROWL;
+                row["Typeobs"] = c.TYPEOBS;
+                row["Dateobs"] = c.DATEOBS;
+                row["Numasobs"] = c.NUMADOBS;
+                row["Agesex"] = c.AGESEX;
+                row["Pair"] = c.PAIR;
+                row["Nest"] = c.NEST;
+                row["Numyoung"] = c.NUMYOUNG;
+                row["Subspecies"] = c.SUBSPECIES;
+                row["LatDD_N83"] = c.LATDD_N83;
+                row["LonDD_N83"] = c.LONDD_N83;
+
+                dt.Rows.Add(row);
+            }
+
+            var tv = dt.AsDataView();
+            tv.Sort = "WshdId ASC";
+            dt = tv.ToTable();
+            dt.Columns.Remove("WshdId");
 
             sectionRange.Paragraphs.Last.Range.Font.Size = 12;
             sectionRange.Paragraphs.Last.Range.Font.Bold = 1;
@@ -479,16 +526,12 @@ namespace WBIS_2.Modules.ViewModels.Reports
 
             //WordTableWriterCnddb(sectionRange, dt);
             WordTableWriter(sectionRange, dt);
-
-            dt = new DataTable();
-            using (SQLiteDataAdapter filler = new SQLiteDataAdapter("SELECT [FID] FROM [CDFW Spotted Owl] WHERE [OBSID] IN " +
-                "(SELECT [ID] FROM [CDFWSpottedOwlWatershedConnection] WHERE [Connection] IN ('" + watershedIds + "','" + adjacentWatershedIds + "'))", SqlTools.SqlConn))
-            { filler.Fill(dt); }
-            string fileName = dirName + "\\CDFW Spotted Owl.shp";
-            ExportSame(fileName, "CDFW Spotted Owl", FeatureType.Polygon, dt);
+            new PostGisShapefileConverter(typeof(CDFW_SpottedOwl), cdfwOwls, dirName + "\\CDFW Spotted Owl.shp");
         }
 
-        private void WatershedSpiTables(Word.Range sectionRange, List<Guid> watersheds, List<Guid> adjacentWatersheds, string dirName)
+
+
+        private void WatershedSpiTables(Word.Range sectionRange, Watershed[] watersheds, string dirName)
         {
             sectionRange.Paragraphs.Last.Range.Font.Size = 12;
             sectionRange.Paragraphs.Last.Range.Font.Bold = 1;
@@ -501,7 +544,7 @@ namespace WBIS_2.Modules.ViewModels.Reports
             sectionRange.Paragraphs.Last.Range.Font.Bold = 0;
             sectionRange.Paragraphs.Last.Range.Font.Size = 10;
 
-            PlantTables(sectionRange, watersheds, adjacentWatersheds, watershedIds, adjacentWatershedIds, dirName);
+            PlantTables(sectionRange, watersheds, dirName);
 
 
             //AddPageSection(sectionRange);
@@ -512,56 +555,91 @@ namespace WBIS_2.Modules.ViewModels.Reports
             sectionRange.Paragraphs.Add();
 
 
-            NOGOTables(sectionRange, watershedIds, adjacentWatershedIds, dirName);
-            GGOWTables(sectionRange, watershedIds, adjacentWatershedIds, dirName);
-            SPOWTables(sectionRange, watershedIds, adjacentWatershedIds, dirName);
-            OtherWildlifeTables(sectionRange, watershedIds, adjacentWatershedIds, dirName);
+            NOGOTables(sectionRange, watersheds, dirName);
+            GGOWTables(sectionRange, watersheds, dirName);
+            SPOWTables(sectionRange, watersheds, dirName);
+            OtherWildlifeTables(sectionRange, watersheds, dirName);
         }
 
-        private void PlantTables(Word.Range sectionRange, List<Guid> watersheds, List<Guid> adjacentWatersheds, string dirName)
+
+
+        private void PlantTables(Word.Range sectionRange, Watershed[] watersheds, string dirName)
         {
+            watersheds = watersheds.OrderBy(_ => _.WatershedName).ToArray();
+
             DataTable dt = new DataTable();
-            SQLiteCommand cmd = new SQLiteCommand(SqlTools.SqlConn);
-            using (SQLiteDataAdapter filler = new SQLiteDataAdapter(cmd))
+            dt.Columns.Add("WshdId");
+            dt.Columns.Add("CPW Name");
+            dt.Columns.Add("Scientific Name");
+            dt.Columns.Add("Common Name");
+            dt.Columns.Add("California Rare Plant Rank");
+            dt.Columns.Add("State Status");
+            dt.Columns.Add("Federal Status");
+            dt.Columns.Add("NatureServe Ranking");
+
+            foreach(Watershed w in watersheds)
             {
-                foreach (string wId in watersheds.Union(adjacentWatersheds))
+                var sciNames = new List<string>();
+
+                var a = new SPIPlantPoint().Manager.GetQueryable(new object[] { w }, typeof(Watershed), Database, includeGeometry: true, ForceInclude: new List<string>() { "Watershed" });
+                foreach(SPIPlantPoint p in a)
+                {                    
+                    if (!sciNames.Contains(p.PlantSpecies.SciName))
+                        AddPlantSpecies(ref sciNames, ref dt, p.PlantSpecies, w);
+                }
+
+                a = new SPIPlantPolygon().Manager.GetQueryable(new object[] { w }, typeof(Watershed), Database, includeGeometry: true, ForceInclude: new List<string>() { "Watersheds" });
+                foreach (SPIPlantPolygon p in a)
                 {
-                    cmd.CommandText = "SELECT (SELECT [WSHD_NAME] FROM [Watershed] WHERE [WSHD_ID] = '" + wId + "' LIMIT 1) as 'CPW Name',ps.[SciName] as 'Scientific Name',ps.[ComName] as 'Common Name'," +
-                        "ps.[RPLANTRANK] as 'California Rare Plant Rank'," +
-                        "ps.[CALLIST] as 'State Status',ps.[FEDLIST] as 'Federal Status',ps.[GRANK] as 'NatureServe Ranking' " +
-                        "FROM [PlantSpecies] as 'ps'" +
-                        "WHERE ps.[SciName] IN (SELECT [SciName] FROM [PWwild Plant Occurrence] WHERE [ID] IN (SELECT [ID] FROM [PWwildPlantOccurrenceWatershedConnection] WHERE [Connection] = '" + wId + "')) OR " +
-                        "ps.[SciName] IN (SELECT [SciName] FROM [Plants of Interest] WHERE [ID] IN (SELECT [ID] FROM [SurveyElementsWatershedConnection] WHERE [Connection] = '" + wId + "')) OR " +
-                        "ps.[SciName] IN (SELECT [SciName] FROM [SPI Plant Polygon] WHERE [ID] IN (SELECT [ID] FROM [SPIPlantPolygonWatershedConnection] WHERE [Connection] = '" + wId + "'))" +
-                        "GROUP BY ps.[SciName]" +
-                        "ORDER BY ps.[SciName]";
-                    filler.Fill(dt);
+                    if (!sciNames.Contains(p.PlantSpecies.SciName))
+                        AddPlantSpecies(ref sciNames, ref dt, p.PlantSpecies, w);
+                }
+
+                a = new BotanicalElement().Manager.GetQueryable(new object[] { w }, typeof(Watershed), Database,
+                    ForceInclude: new List<string>() { "BotanicalPlantOfInterest.PlantSpecies", "Watershed" }, includeGeometry: true)
+                .Cast<BotanicalElement>().Where(_ => _.BotanicalPlantOfInterest != null && !_._delete && !_.Repository);
+                foreach (BotanicalElement p in a)
+                {
+                    if (!sciNames.Contains(p.BotanicalPlantOfInterest.PlantSpecies.SciName))
+                        AddPlantSpecies(ref sciNames, ref dt, p.BotanicalPlantOfInterest.PlantSpecies, w);
                 }
             }
 
+            var tv = dt.AsDataView();
+            tv.Sort = "WshdId ASC, Scientific Name ASC";
+            dt = tv.ToTable();
+            dt.Columns.Remove("WshdId");
+
             WordTableWriter(sectionRange, dt);
 
-            dt = new DataTable();
-            using (SQLiteDataAdapter filler = new SQLiteDataAdapter("SELECT [FID] FROM [PWwild Plant Occurrence] WHERE [ID] IN " +
-                "(SELECT [ID] FROM [PWwildPlantOccurrenceWatershedConnection] WHERE [Connection] IN ('" + watershedIds + "','" + adjacentWatershedIds + "'))", SqlTools.SqlConn))
-            { filler.Fill(dt); }
-            string fileName = dirName + "\\PWwild Plant Occurrence.shp";
-            ExportSame(fileName, "PWwild Plant Occurrence", FeatureType.Point, dt);
-            dt = new DataTable();
-            using (SQLiteDataAdapter filler = new SQLiteDataAdapter("SELECT [FID] FROM [SPI Plant Polygon] WHERE [ID] IN " +
-                "(SELECT [ID] FROM [SPIPlantPolygonWatershedConnection] WHERE [Connection] IN ('" + watershedIds + "','" + adjacentWatershedIds + "'))", SqlTools.SqlConn))
-            { filler.Fill(dt); }
-            fileName = dirName + "\\SPI Plant Polygon.shp";
-            ExportSame(fileName, "SPI Plant Polygon", FeatureType.Polygon, dt);
-            dt = new DataTable();
-            using (SQLiteDataAdapter filler = new SQLiteDataAdapter("SELECT [FID] FROM [Plants of Interest] WHERE [ID] IN " +
-                "(SELECT [ID] FROM [SurveyElementsWatershedConnection] WHERE [Connection] IN ('" + watershedIds + "','" + adjacentWatershedIds + "'))", SqlTools.SqlConn))
-            { filler.Fill(dt); }
-            fileName = dirName + "\\Plants of Interest.shp";
-            ExportSame(fileName, "Survey Elements", FeatureType.Polygon, dt);
+            var spiPoints = new SPIPlantPoint().Manager.GetQueryable(watersheds, typeof(Watershed), Database, includeGeometry: true, ForceInclude: new List<string>() { "Watershed" });
+            new PostGisShapefileConverter(typeof(SPIPlantPoint), spiPoints, dirName + "\\SPI Plant Point.shp");
+            var spiPolys = new SPIPlantPolygon().Manager.GetQueryable(watersheds, typeof(Watershed), Database, includeGeometry: true, ForceInclude: new List<string>() { "Watersheds" });
+            new PostGisShapefileConverter(typeof(SPIPlantPolygon), spiPolys, dirName + "\\SPI Plant Polygon.shp");
+            var elements = new BotanicalElement().Manager.GetQueryable(watersheds, typeof(Watershed), Database,
+                ForceInclude: new List<string>() { "BotanicalPlantOfInterest.PlantSpecies", "Watershed" }, includeGeometry: true)
+                .Cast<BotanicalElement>().Where(_=>_.BotanicalPlantOfInterest != null && !_._delete && !_.Repository);
+            new PostGisShapefileConverter(typeof(BotanicalElement), elements, dirName + "\\Plants of Interest.shp");
         }
 
-        private void NOGOTables(Word.Range sectionRange, List<Guid> watersheds, List<Guid> adjacentWatersheds, string dirName)
+        private void AddPlantSpecies(ref List<string> sciNames, ref DataTable dt, PlantSpecies plantSpecies, Watershed watershed)
+        {
+            var row = dt.NewRow();
+
+            row["WshdId"] = watershed.WatershedID;
+            row["CPW Name"] = watershed.WatershedName;
+            row["Scientific Name"] = plantSpecies.SciName;
+            row["Common Name"] = plantSpecies.ComName;
+            row["California Rare Plant Rank"] = plantSpecies.RPlantRank;
+            row["State Status"] = plantSpecies.CalList;
+            row["Federal Status"] = plantSpecies.FedList;
+            row["NatureServe Ranking"] = plantSpecies.GRank;
+
+            dt.Rows.Add(row);
+            sciNames.Add(plantSpecies.SciName);
+        }
+
+        private void NOGOTables(Word.Range sectionRange, Watershed[] watersheds, string dirName)
         {
             sectionRange.Paragraphs.Last.Range.Text = "Northern Goshawk (Accipter gentilis, listed by CPW Name)\t\t";
 
@@ -578,14 +656,42 @@ namespace WBIS_2.Modules.ViewModels.Reports
             sectionRange.Paragraphs.Last.Range.Font.Size = 10;
 
             DataTable dt = new DataTable();
-            using (SQLiteDataAdapter filler = new SQLiteDataAdapter("SELECT w.[WSHD_NAME] as 'CPW Name',[Territory] as 'Territory Name',[NestName] as 'NestName',[District ID] as 'District ID'," +
-                "[Year] as 'Year','' as 'Map ID',[Longitude] as 'LON (NAD27)'," +
-                "[Latitude] as 'LAT (NAD27)',[Territory Status] as 'Status',[Nest] as 'Nest' " +
-                "FROM [SPI_NOGO]" +
-                "INNER JOIN [Watershed] as 'w' ON w.[WSHD_ID] = [SPI_NOGO].[Watershed Number] " +
-                "WHERE [Watershed Number] IN ('" + watershedIds + "','" + adjacentWatershedIds + "') " +
-                "ORDER BY [Watershed Number],[District ID],[Year]", SqlTools.SqlConn))
-            { filler.Fill(dt); }
+            dt.Columns.Add("WshdId");
+            dt.Columns.Add("CPW Name");
+            dt.Columns.Add("Territory Name");
+            dt.Columns.Add("NestName");
+            dt.Columns.Add("District ID");
+            dt.Columns.Add("Year", typeof(int));
+            dt.Columns.Add("Map ID");
+            dt.Columns.Add("LON (NAD27)", typeof(double));
+            dt.Columns.Add("LAT (NAD27)", typeof(double));
+            dt.Columns.Add("Status");
+            dt.Columns.Add("Nest");
+
+            var owls = new SPI_NOGO().Manager.GetQueryable(watersheds, typeof(Watershed), Database, includeGeometry: true, ForceInclude: new List<string>() { "Watershed" });
+
+            foreach(SPI_NOGO owl in owls)
+            {
+                DataRow row = dt.NewRow();
+
+                row["WshdId"] = owl.Watershed.WatershedID;
+                row["CPW Name"] = owl.Watershed.WatershedName;
+                row["Territory Name"] = owl.Territory;
+                row["NestName"] = owl.NestName;
+                row["District ID"] = owl.Dist_ID;
+                row["Year"] = owl.Year;
+                row["LON (NAD27)"] = owl.Longitude;
+                row["LAT (NAD27)"] = owl.Latitude;
+                row["Status"] = owl.TerritoryStatus;
+                row["Nest"] = owl.Nest;
+
+                dt.Rows.Add(row);
+            }
+
+            var tv = dt.AsDataView();
+            tv.Sort = "WshdId ASC, District ID ASC, Year ASC";
+            dt = tv.ToTable();
+            dt.Columns.Remove("WshdId");
 
             string fileName = dirName + "\\SPI_NOGO.shp";
             dt = ExportNewShapes(dt, fileName);
@@ -623,7 +729,7 @@ namespace WBIS_2.Modules.ViewModels.Reports
             sectionRange.Paragraphs.Last.Range.InsertAfter("P=predated nest.");
             SetBoldPartial(sectionRange.Paragraphs.Last.Range, start, 1);
         }
-        private void SPOWTables(Word.Range sectionRange, List<Guid> watersheds, List<Guid> adjacentWatersheds, string dirName)
+        private void SPOWTables(Word.Range sectionRange, Watershed[] watersheds, string dirName)
         {
             sectionRange.Paragraphs.Add();
             sectionRange.Paragraphs.Last.Range.Font.Size = 12;
@@ -654,15 +760,44 @@ namespace WBIS_2.Modules.ViewModels.Reports
             sectionRange.Paragraphs.Last.Range.Font.Size = 10;
 
             DataTable dt = new DataTable();
-            using (SQLiteDataAdapter filler = new SQLiteDataAdapter("SELECT w.[WSHD_NAME] as 'CPW Name',[Subspecies_1] as 'Subspecies',[District ID] as 'District ID'" +
-                ",[CDFW ID] as 'CDFW ID',[Territory] as 'Territory',[Year] as 'Year'," +
-                "'' as 'Map ID',[Bird Status] as 'Site Status',[Longitude] as 'LON (NAD27)'," +
-                "[Latitude] as 'LAT (NAD27)', [HCP Status_2] as 'HCP Status' " +
-                "FROM [SPI_SPOW]" +
-                 "INNER JOIN [Watershed] as 'w' ON w.[WSHD_ID] = [SPI_SPOW].[Watershed Number] " +
-               "WHERE [Watershed Number] IN ('" + watershedIds + "','" + adjacentWatershedIds + "') " +
-                "ORDER BY [Watershed Number] ASC,[District ID] ASC,[Year] ASC", SqlTools.SqlConn))
-            { filler.Fill(dt); }
+            dt.Columns.Add("WshdId");
+            dt.Columns.Add("CPW Name");
+            dt.Columns.Add("Subspecies");
+            dt.Columns.Add("District ID");
+            dt.Columns.Add("CDFW ID");
+            dt.Columns.Add("Territory");
+            dt.Columns.Add("Year", typeof(int));
+            dt.Columns.Add("Map ID");
+            dt.Columns.Add("Site Status");
+            dt.Columns.Add("LON (NAD27)", typeof(double));
+            dt.Columns.Add("LAT (NAD27)", typeof(double));
+            dt.Columns.Add("HCP Status");
+
+            var owls = new SPI_SPOW().Manager.GetQueryable(watersheds, typeof(Watershed), Database, includeGeometry: true, ForceInclude: new List<string>() { "Watershed" });
+
+            foreach (SPI_SPOW owl in owls)
+            {
+                DataRow row = dt.NewRow();
+
+                row["WshdId"] = owl.Watershed.WatershedID;
+                row["CPW Name"] = owl.Watershed.WatershedName;
+                row["Subspecies"] = owl.SubSpecies1;
+                row["District ID"] = owl.Dist_ID;
+                row["CDFW ID"] = owl.CDFW_ID;
+                row["Territory"] = owl.Territory;
+                row["Year"] = owl.Year;
+                row["Site Status"] = owl.BirdStatus;
+                row["LON (NAD27)"] = owl.Longitude;
+                row["LAT (NAD27)"] = owl.Latitude;
+                row["HCP Status"] = owl.HCP_Status_2;
+
+                dt.Rows.Add(row);
+            }
+
+            var tv = dt.AsDataView();
+            tv.Sort = "WshdId ASC, District ID ASC, Year ASC";
+            dt = tv.ToTable();
+            dt.Columns.Remove("WshdId");
 
             string fileName = dirName + "\\SPI_SPOW.shp";
             dt = ExportNewShapes(dt, fileName);
@@ -737,7 +872,7 @@ namespace WBIS_2.Modules.ViewModels.Reports
             range.Document.Range(ref objStart, ref objEnd).Font.Italic = 1;
             range.Document.Range(ref objEnd, ref endText).Font.Italic = 0;
         }
-        private void GGOWTables(Word.Range sectionRange, List<Guid> watersheds, List<Guid> adjacentWatersheds, string dirName)
+        private void GGOWTables(Word.Range sectionRange, Watershed[] watersheds, string dirName)
         {
             sectionRange.Paragraphs.Add();
             sectionRange.Paragraphs.Last.Range.Font.Size = 12;
@@ -752,21 +887,44 @@ namespace WBIS_2.Modules.ViewModels.Reports
             sectionRange.Paragraphs.Last.Range.Font.Bold = 0;
             sectionRange.Paragraphs.Last.Range.Font.Size = 10;
 
+
             DataTable dt = new DataTable();
-            using (SQLiteDataAdapter filler = new SQLiteDataAdapter("SELECT w.[WSHD_NAME] as 'CPW Name',[SPI District] as 'District ID',[Territory] as 'Territory',[Year] as 'Year'," +
-                "'' as 'Map ID',[LONG] as 'LON (NAD27)'," +
-                "[LAT] as 'LAT (NAD27)', [Results] as 'Status' " +
-                "FROM [SPI_GGOW]" +
-                 "INNER JOIN [Watershed] as 'w' ON w.[WSHD_ID] = [SPI_GGOW].[WS Num] " +
-                "WHERE [WS Num] IN ('" + watershedIds + "','" + adjacentWatershedIds + "') " +
-                "ORDER BY [WS Num],[District ID],[Year]", SqlTools.SqlConn))
-            { filler.Fill(dt); }
+            dt.Columns.Add("WshdId");
+            dt.Columns.Add("CPW Name");
+            dt.Columns.Add("District ID");
+            dt.Columns.Add("Year", typeof(int));
+            dt.Columns.Add("Map ID");
+            dt.Columns.Add("LON (NAD27)", typeof(double));
+            dt.Columns.Add("LAT (NAD27)", typeof(double));
+            dt.Columns.Add("Status");
+
+            var owls = new SPI_GGOW().Manager.GetQueryable(watersheds, typeof(Watershed), Database, includeGeometry: true, ForceInclude: new List<string>() { "Watershed" });
+
+            foreach (SPI_GGOW owl in owls)
+            {
+                DataRow row = dt.NewRow();
+
+                row["WshdId"] = owl.Watershed.WatershedID;
+                row["CPW Name"] = owl.Watershed.WatershedName;
+                row["District ID"] = owl.District.DistrictName;
+                row["Year"] = owl.Year;
+                row["LON (NAD27)"] = owl.Longitude;
+                row["LAT (NAD27)"] = owl.Latitude;
+                row["Status"] = owl.Results;
+
+                dt.Rows.Add(row);
+            }
+
+            var tv = dt.AsDataView();
+            tv.Sort = "WshdId ASC, District ID ASC, Year ASC";
+            dt = tv.ToTable();
+            dt.Columns.Remove("WshdId");
 
             string fileName = dirName + "\\SPI_GGOW.shp";
             dt = ExportNewShapes(dt, fileName);
             WordTableWriter(sectionRange, dt);
         }
-        private void OtherWildlifeTables(Word.Range sectionRange, List<Guid> watersheds, List<Guid> adjacentWatersheds, string dirName)
+        private void OtherWildlifeTables(Word.Range sectionRange, Watershed[] watersheds, string dirName)
         {
             //            sectionRange.Paragraphs.Add();
             sectionRange.Paragraphs.Last.Range.Font.Size = 12;
@@ -776,15 +934,42 @@ namespace WBIS_2.Modules.ViewModels.Reports
             sectionRange.Paragraphs.Last.Range.Font.Bold = 0;
             sectionRange.Paragraphs.Last.Range.Font.Size = 10;
 
+
             DataTable dt = new DataTable();
-            using (SQLiteDataAdapter filler = new SQLiteDataAdapter("SELECT w.[WSHD_NAME] as 'CPW Name',[Wildlife Species] as 'Common Name',[Genus] as 'Genus',[Species] as 'Species',[Year] as 'Year'" +
-                ",[# Observed] as 'Quantity'," +
-                "[Longitude] as 'LON (NAD27)',[Latitude] as 'LAT (NAD27)', '' as 'Map ID', [IUCN rating] as 'NatureServe Ranking' " +
-                "FROM [SPI_Wildlife Sightings]" +
-                   "INNER JOIN [Watershed] as 'w' ON w.[WSHD_ID] = [SPI_Wildlife Sightings].[WS_CAL22] " +
-              "WHERE [WS_CAL22] IN ('" + watershedIds + "','" + adjacentWatershedIds + "') " +
-                "ORDER BY [WS_CAL22],[Year]", SqlTools.SqlConn))
-            { filler.Fill(dt); }
+            dt.Columns.Add("WshdId");
+            dt.Columns.Add("CPW Name");
+            dt.Columns.Add("Common Name");
+            dt.Columns.Add("Species");
+            dt.Columns.Add("Year", typeof(int));
+            dt.Columns.Add("Quantity", typeof(int));
+            dt.Columns.Add("LON (NAD27)", typeof(double));
+            dt.Columns.Add("LAT (NAD27)", typeof(double));
+            dt.Columns.Add("Map ID");
+            dt.Columns.Add("NatureServe Ranking");
+
+            var owls = new SPI_WildlifeSighting().Manager.GetQueryable(watersheds, typeof(Watershed), Database, includeGeometry: true, ForceInclude: new List<string>() { "Watershed" });
+
+            foreach (SPI_WildlifeSighting owl in owls)
+            {
+                DataRow row = dt.NewRow();
+
+                row["WshdId"] = owl.Watershed.WatershedID;
+                row["CPW Name"] = owl.Watershed.WatershedName;
+                row["Common Name"] = owl.WildlifeSpecies;
+                row["Species"] = owl.Species;
+                row["Year"] = owl.Year;
+                row["Quantity"] = owl.NumObserved;
+                row["LON (NAD27)"] = owl.Longitude;
+                row["LAT (NAD27)"] = owl.Latitude;
+                row["NatureServe Ranking"] = owl.IUCN_Rating;
+
+                dt.Rows.Add(row);
+            }
+
+            var tv = dt.AsDataView();
+            tv.Sort = "WshdId ASC, Year ASC";
+            dt = tv.ToTable();
+            dt.Columns.Remove("WshdId");
 
             string fileName = dirName + "\\SPI_Wildlife Sightings.shp";
             dt = ExportNewShapes(dt, fileName);
@@ -848,12 +1033,12 @@ namespace WBIS_2.Modules.ViewModels.Reports
                         else if (dt.Columns[c].ColumnName.Contains("Scientific"))
                         {
                             wordTbl.Cell(rowCount + 2, colCounter + 1).Range.Text = dt.Rows[i][c].ToString();
-                            WordCellItalicSpecies(wordTbl.Cell(rowCount + 2, c + 1), dt.Rows[i][c].ToString());
+                            WH.WordCellItalicSpecies(wordTbl.Cell(rowCount + 2, c + 1), dt.Rows[i][c].ToString());
                         }
                         else if ((dt.Columns[c].ColumnName == "Genus" || dt.Columns[c].ColumnName == "Species") && i > 0)
                         {
                             wordTbl.Cell(rowCount + 2, colCounter + 1).Range.Text = dt.Rows[i][c].ToString();
-                            WordCellItalicSpecies(wordTbl.Cell(rowCount + 2, c + 1), dt.Rows[i][c].ToString());
+                            WH.WordCellItalicSpecies(wordTbl.Cell(rowCount + 2, c + 1), dt.Rows[i][c].ToString());
                         }
                         else
                             wordTbl.Cell(rowCount + 2, colCounter + 1).Range.Text = dt.Rows[i][c].ToString();
@@ -925,12 +1110,12 @@ namespace WBIS_2.Modules.ViewModels.Reports
                     else if (dt.Columns[c].ColumnName.Contains("Scientific"))
                     {
                         wordTbl.Cell(i + 2, c + 1).Range.Text = dt.Rows[i][c].ToString();
-                        WordCellItalicSpecies(wordTbl.Cell(i + 2, c + 1), dt.Rows[i][c].ToString());
+                        WH.WordCellItalicSpecies(wordTbl.Cell(i + 2, c + 1), dt.Rows[i][c].ToString());
                     }
                     else if ((dt.Columns[c].ColumnName == "Genus" || dt.Columns[c].ColumnName == "Species") && i > 0)
                     {
                         wordTbl.Cell(i + 2, c + 1).Range.Text = dt.Rows[i][c].ToString();
-                        WordCellItalicSpecies(wordTbl.Cell(i + 2, c + 1), dt.Rows[i][c].ToString());
+                        WH.WordCellItalicSpecies(wordTbl.Cell(i + 2, c + 1), dt.Rows[i][c].ToString());
                     }
                     else if ((dt.Columns[c].ColumnName == "LAT (NAD27)" || dt.Columns[c].ColumnName == "LON (NAD27)"))
                     {
@@ -962,24 +1147,6 @@ namespace WBIS_2.Modules.ViewModels.Reports
             sectionRange.Paragraphs.Last.Range.Font.Size = 11;
         }
 
-        private void ExportSame(string newFileName, string layerName, FeatureType featureType, DataTable fids)
-        {
-            var initialLayer = UxMap.FindFeatureLayer(layerName);
-
-            Shapefile newFile = new PolygonShapefile(newFileName);
-            newFile.Projection = ProjectionInfo.FromEpsgCode(26710);
-            foreach (var c in initialLayer.DataSet.GetColumns())
-            {
-                newFile.DataTable.Columns.Add(c.Clone());
-            }
-            newFile.SaveAs(newFileName, true);
-
-            foreach (DataRow r in fids.Rows)
-            {
-                newFile.Features.Add(initialLayer.DataSet.Features[(int)r[0]]);
-            }
-            newFile.SaveAs(newFileName, true);
-        }
         private DataTable ExportNewShapes(DataTable dt, string fileName)
         {
             Shapefile newFile = new PointShapefile(fileName);
@@ -1011,13 +1178,13 @@ namespace WBIS_2.Modules.ViewModels.Reports
                 else
                 {
                     double[] StartXy = new double[] { (double)r[lonCol], (double)r[latCol] };
-                    Atlas.Projections.Reproject.ReprojectPoints(StartXy, new double[] { }, ProjectionInfo.FromEpsgCode(4267), UxMap.Map.Projection, 0, 1);
+                    Atlas.Projections.Reproject.ReprojectPoints(StartXy, new double[] { }, ProjectionInfo.FromEpsgCode(4267), ProjectionInfo.FromEpsgCode(26710), 0, 1);
                     //r["StartLon27"] = StartXy[0];// ((GeoAPI.Geometries.IPoint)gs[0]).X;
                     //r["StartLat27"] = StartXy[1];//((GeoAPI.Geometries.IPoint)gs[0]).Y;
 
                     r["Map ID"] = featCounter;
 
-                    var f = new Atlas.Data.Feature(new GeoAPI.Geometries.Coordinate(StartXy[0], StartXy[1]));
+                    var f = new Atlas.Data.Feature(new Coordinate(StartXy[0], StartXy[1]));
 
                     var newFeat = newFile.AddFeature(f.Geometry);
                     newFile.InitializeVertices();
@@ -1035,6 +1202,8 @@ namespace WBIS_2.Modules.ViewModels.Reports
             return dt;
         }
 
+
+
         public override void Tracker_ChangesSaved(object sender, IEnumerable<EntityEntry> e)
         {
         }
@@ -1048,122 +1217,5 @@ namespace WBIS_2.Modules.ViewModels.Reports
         }
     }
 
-    public class WordHelper
-    {
-        public int AddIntroDescriptiveText(string field, string values, Word.Document doc, int runningTab, bool first = false)
-        {
-            if (!first) doc.Paragraphs.Add();
-            doc.Paragraphs.Last.Range.Text = field + "  " + values;
-            object start = runningTab;
-            object filedEnd = runningTab + field.Length + 2;
-            object textEnd = runningTab + field.Length + 2 + values.Length;
 
-            doc.Range(ref start, ref filedEnd).Bold = 1;
-            doc.Range(ref filedEnd, ref textEnd).Bold = 0;
-            //doc.Range(ref start, ref textEnd).Cut();
-            //doc.Paragraphs.Last.Range.Paste();
-            //doc.Paragraphs.Add();
-            return (int)textEnd + 2;
-        }
-        public int AddIntroDescriptiveTextWithTabs(string field1, string values1, string field2, string values2, Word.Document doc, int runningTab, bool first = false)
-        {
-            //if (!first) doc.Paragraphs.Add();
-            doc.Paragraphs.Last.Range.Text = field1 + "  " + values1 + "\t\t" + field2 + "  " + values2;
-            object start = runningTab;
-            object filedEnd1 = runningTab + field1.Length + 2;
-            object textEnd1 = runningTab + field1.Length + 2 + values1.Length + 2;
-
-            object filedEnd2 = runningTab + field1.Length + 2 + values1.Length + 2 + field2.Length + 2;
-            object textEnd2 = runningTab + field1.Length + 2 + values1.Length + 2 + field2.Length + 2 + values2.Length;
-
-            doc.Range(ref start, ref filedEnd1).Bold = 1;
-            doc.Range(ref filedEnd1, ref textEnd1).Bold = 0;
-            doc.Range(ref textEnd1, ref filedEnd2).Bold = 1;
-            doc.Range(ref filedEnd2, ref textEnd2).Bold = 0;
-            //doc.Range(ref start, ref textEnd2).Cut();
-            //doc.Paragraphs.Last.Range.Paste();
-            doc.Paragraphs.Add();
-            return (int)textEnd2;
-        }
-
-        public void FillCell(Word.Cell c, string field, string txt, Word.Document doc)
-        {
-            doc.Paragraphs.First.Range.Text = field + "  " + txt;
-            object start = 0;
-            object filedEnd = field.Length + 2;
-            object textEnd = field.Length + 2 + txt.Length;
-
-            doc.Range(ref start, ref filedEnd).Bold = 1;
-            doc.Range(ref filedEnd, ref textEnd).Bold = 0;
-            doc.Range(ref start, ref textEnd).Cut();
-            c.Range.Paste();
-        }
-
-
-        public void FillCell(Word.Cell c, string field, string txt, Word.Range sectionRange)
-        {
-            sectionRange.Paragraphs.First.Range.Text = field + "  " + txt;
-            object start = 0;
-            object filedEnd = field.Length + 2;
-            object textEnd = field.Length + 2 + txt.Length;
-
-            sectionRange.Document.Range(ref start, ref filedEnd).Bold = 1;
-            sectionRange.Document.Range(ref filedEnd, ref textEnd).Bold = 0;
-            sectionRange.Document.Range(ref start, ref textEnd).Cut();
-            c.Range.Paste();
-        }
-        public void WriteTextField(Word.Range sectionRange, string field, string txt)
-        {
-            sectionRange.Paragraphs.Add();
-            sectionRange.Paragraphs.Add();
-            sectionRange.Paragraphs.Last.Format.TabHangingIndent(-1);
-
-            sectionRange.Paragraphs.Last.Range.Font.Bold = 1;
-            sectionRange.Paragraphs.Last.Range.Text = field + ":";
-            sectionRange.Paragraphs.Add();
-            sectionRange.Paragraphs.Last.Range.Font.Bold = 0;
-            sectionRange.Paragraphs.Last.Range.Text = txt;
-        }
-        public void WriteReferencesField(Word.Range sectionRange, string txt)
-        {
-            sectionRange.Paragraphs.Add();
-            sectionRange.Paragraphs.Last.Format.TabHangingIndent(-1);
-            sectionRange.Paragraphs.Last.Range.Font.Bold = 1;
-            sectionRange.Paragraphs.Last.Range.Text = "References:";
-
-            var refs = txt.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
-            for (int i = 0; i < refs.Count(); i++)
-            {
-                sectionRange.Paragraphs.Add();
-                if (i == 0) sectionRange.Paragraphs.Last.Format.TabHangingIndent(1);
-                else sectionRange.Paragraphs.Add();
-                sectionRange.Paragraphs.Last.Range.Font.Bold = 0;
-                sectionRange.Paragraphs.Last.Range.Text = refs[i];
-            }
-
-            //foreach (string re in refs)
-            //{
-            //    doc.Paragraphs.Add();
-            //    if (re == refs[0])doc.Paragraphs.Last.Format.TabHangingIndent(1);
-            //    doc.Paragraphs.Last.Range.Font.Bold = 0;
-            //    doc.Paragraphs.Last.Range.Text = re;
-            //}
-        }
-        public void WordCellItalicSpecies(Word.Cell cell, string species)
-        {
-            cell.Range.Italic = 1;
-            cell.Range.Text = species;
-
-            //Species with text such as var. or ssp. should have this text not be italicized
-            if (species.Contains("."))
-            {
-                string nuance = species.Split(new char[] { ' ' }).First(_ => _.Contains("."));
-
-                //Microsoft word indexes start at 1 not 0
-                int index = species.Split(new char[] { ' ' }).ToList().IndexOf(nuance) + 1;
-                var q = cell.Range.Paragraphs.First.Range;
-                q.Words[index].Italic = 0;
-            }
-        }
-    }
 }

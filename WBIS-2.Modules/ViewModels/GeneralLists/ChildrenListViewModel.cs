@@ -177,7 +177,7 @@ namespace WBIS_2.Modules.ViewModels
         {
             if (CurrentChild == null) return;
                       
-            e.QueryableSource = CurrentChild.Manager.GetQueryable(ParentQuery, ParentType.GetType(), Database, ViewDeleted, ViewRepository);
+            e.QueryableSource = CurrentChild.Manager.GetQueryable(ParentQuery, ParentType.GetType(), Database, showDelete: ViewDeleted, showRepository: ViewRepository);
         }
 
 

@@ -113,7 +113,7 @@ namespace WBIS_2.Modules.Views.UserControls
 
         private void FillSpiPoint()
         {
-            var records = ((IQueryable<SPIPlantPoint>)new SPIPlantPoint().Manager.GetQueryable(UseParentObjects.ToArray(), ParentType, Database, new List<string>() { "PlantSpecies.RegionalPlantLists" }));
+            var records = ((IQueryable<SPIPlantPoint>)new SPIPlantPoint().Manager.GetQueryable(UseParentObjects.ToArray(), ParentType, Database, ForceInclude: new List<string>() { "PlantSpecies.RegionalPlantLists" }));
             if (((Region)CbxRegions.SelectedItem).RegionName != "Master List")
                 records = records.Where(_ => _.PlantSpecies.RegionalPlantLists.Select(x=>x.Region).Contains((Region)CbxRegions.SelectedItem));
 
@@ -154,7 +154,7 @@ namespace WBIS_2.Modules.Views.UserControls
         {
             foreach (var p in UseParentObjects)
             {
-                var records = ((IQueryable<SPIPlantPolygon>)new SPIPlantPolygon().Manager.GetQueryable(new object[] { p }, ParentType, Database, new List<string>() { "PlantSpecies.RegionalPlantLists" }));
+                var records = ((IQueryable<SPIPlantPolygon>)new SPIPlantPolygon().Manager.GetQueryable(new object[] { p }, ParentType, Database, ForceInclude: new List<string>() { "PlantSpecies.RegionalPlantLists" }));
                 if (((Region)CbxRegions.SelectedItem).RegionName != "Master List")
                     records = records.Where(_ => _.PlantSpecies.RegionalPlantLists.Select(x => x.Region).Contains((Region)CbxRegions.SelectedItem));
 
@@ -194,7 +194,7 @@ namespace WBIS_2.Modules.Views.UserControls
         }
         private void FillPoI()
         {
-            var records = ((IQueryable<BotanicalElement>)new BotanicalElement().Manager.GetQueryable(UseParentObjects.ToArray(), ParentType, Database, new List<string>() { "BotanicalPlantOfInterest.PlantSpecies.RegionalPlantLists" }))
+            var records = ((IQueryable<BotanicalElement>)new BotanicalElement().Manager.GetQueryable(UseParentObjects.ToArray(), ParentType, Database, ForceInclude: new List<string>() { "BotanicalPlantOfInterest.PlantSpecies.RegionalPlantLists" }))
                 .Where(_=>_.BotanicalPlantOfInterest != null);
             if (((Region)CbxRegions.SelectedItem).RegionName != "Master List")
                 records = records.Where(_ => _.BotanicalPlantOfInterest.PlantSpecies.RegionalPlantLists.Select(x => x.Region).Contains((Region)CbxRegions.SelectedItem));
@@ -236,7 +236,7 @@ namespace WBIS_2.Modules.Views.UserControls
         {
             foreach (var p in UseParentObjects)
             {
-                var records = ((IQueryable<CNDDBOccurrence>)new CNDDBOccurrence().Manager.GetQueryable(new object[] { p }, ParentType, Database, new List<string>() { "PlantSpecies.RegionalPlantLists" }))
+                var records = ((IQueryable<CNDDBOccurrence>)new CNDDBOccurrence().Manager.GetQueryable(new object[] { p }, ParentType, Database, ForceInclude: new List<string>() { "PlantSpecies.RegionalPlantLists" }))
                     .Where(_=>_.PlantSpecies != null);
                 if (((Region)CbxRegions.SelectedItem).RegionName != "Master List")
                     records = records.Where(_ => _.PlantSpecies.RegionalPlantLists.Select(x => x.Region).Contains((Region)CbxRegions.SelectedItem));
@@ -277,7 +277,7 @@ namespace WBIS_2.Modules.Views.UserControls
         }
         private void FillCnddbQuad()
         {
-            var records = ((IQueryable<CNDDBQuadElement>)new CNDDBQuadElement().Manager.GetQueryable(UseParentObjects.ToArray(), ParentType, Database, new List<string>() { "PlantSpecies.RegionalPlantLists" }))
+            var records = ((IQueryable<CNDDBQuadElement>)new CNDDBQuadElement().Manager.GetQueryable(UseParentObjects.ToArray(), ParentType, Database, ForceInclude: new List<string>() { "PlantSpecies.RegionalPlantLists" }))
                 .Where(_=>_.PlantSpecies != null);
             if (((Region)CbxRegions.SelectedItem).RegionName != "Master List")
                 records = records.Where(_ => _.PlantSpecies.RegionalPlantLists.Select(x => x.Region).Contains((Region)CbxRegions.SelectedItem));

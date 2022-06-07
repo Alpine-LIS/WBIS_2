@@ -191,7 +191,8 @@ namespace WBIS_2.DataModel
                      
             return returnVal;
         }
-        private IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model, bool showDelete, bool showRepository, bool track, List<string> ForceInclude, bool includeGeometry = false)
+        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model, bool showDelete = false, bool showRepository = false, 
+            bool includeGeometry = false, bool track = false, List<string> ForceInclude = null)
         {
             IQueryable<InfoType> returnVal = (IQueryable<InfoType>)GetQueryable(model, track, ForceInclude, includeGeometry);
 
@@ -237,26 +238,26 @@ namespace WBIS_2.DataModel
             return queryProperty;
         }
 
-        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
-        {
-            return GetQueryable(Query, QueryType, model, true, true, false, null);
-        }
-        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model, bool showDelete, bool showRepository)
-        {
-            return GetQueryable(Query, QueryType, model, showDelete, showRepository, false, null);
-        }
-        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model, bool showDelete, bool showRepository, bool includeGeometry)
-        {
-            return GetQueryable(Query, QueryType, model, showDelete, showRepository, false, null, includeGeometry);
-        }
-        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model, List<string> ForceInclude)
-        {
-            return GetQueryable(Query, QueryType, model, true, true, false, ForceInclude);
-        }
-        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model, bool track)
-        {
-            return GetQueryable(Query, QueryType, model, true, true, track, null);
-        }
+        //public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model)
+        //{
+        //    return GetQueryable(Query, QueryType, model, true, true, false, null);
+        //}
+        //public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model, bool showDelete, bool showRepository)
+        //{
+        //    return GetQueryable(Query, QueryType, model, showDelete, showRepository, false, null);
+        //}
+        //public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model, bool showDelete, bool showRepository, bool includeGeometry)
+        //{
+        //    return GetQueryable(Query, QueryType, model, showDelete, showRepository, false, null, includeGeometry);
+        //}
+        //public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model, List<string> ForceInclude)
+        //{
+        //    return GetQueryable(Query, QueryType, model, true, true, false, ForceInclude);
+        //}
+        //public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model, bool track)
+        //{
+        //    return GetQueryable(Query, QueryType, model, true, true, track, null);
+        //}
 
         /// <summary>
         /// Auto includes may have further neccissary inclussion for display purposes
@@ -436,6 +437,6 @@ namespace WBIS_2.DataModel
             var entityType = model.Model.FindEntityType(type);
             var schema = entityType.GetSchema();
             return entityType.GetTableName().ToLower();
-        }
+        }       
     }
 }

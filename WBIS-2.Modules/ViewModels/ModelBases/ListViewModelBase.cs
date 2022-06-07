@@ -156,6 +156,9 @@ namespace WBIS_2.Modules.ViewModels
 
             AddRequiredPassesAvailible = ListManager.InformationType == typeof(Hex160);
             RaisePropertyChanged(nameof(AddRequiredPassesAvailible));
+
+            WatershedReportAvailible = ListManager.InformationType == typeof(Watershed);
+            RaisePropertyChanged(nameof(WatershedReportAvailible));
         }
 
 
@@ -563,6 +566,33 @@ namespace WBIS_2.Modules.ViewModels
             }
             DropHexagonsControl DropHexagonsControl = new DropHexagonsControl(SelectedItems.Cast<Hex160>().ToArray());
             CustomControlWindow window = new CustomControlWindow(DropHexagonsControl);
+        }
+
+
+        public bool WatershedReportAvailible { get; set; } = false;
+        public ICommand WatershedReportCommand => new DelegateCommand(WatershedReportClick);
+        private void WatershedReportClick()
+        {
+            if (SelectedItems.Count == 0)
+            {
+                MessageBox.Show("There must be records selected.");
+                return;
+            }
+            new Reports.WatershedReport(SelectedItems.Cast<Watershed>().ToArray());
+        }
+
+
+        public ICommand SaveFilterCommand => new DelegateCommand(SaveFilterClick);
+        public event EventHandler SaveFilterEvent;
+        public void SaveFilterClick()
+        {
+            SaveFilterEvent?.Invoke(new object(), new EventArgs());
+        }
+        public ICommand LoadFilterCommand => new DelegateCommand(LoadFilterClick);
+        public event EventHandler LoadFilterEvent;
+        public void LoadFilterClick()
+        {
+            LoadFilterEvent?.Invoke(new object(), new EventArgs());
         }
     }
 }

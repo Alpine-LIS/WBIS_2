@@ -167,9 +167,6 @@
     <Compile Update="Views\UserControls\Menus\DetailMenuView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\UserControls\Menus\HexMenuTools.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Update="Views\UserControls\SetRequiredPassesControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -316,10 +313,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\UserControls\Menus\DetailMenuView.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\UserControls\Menus\HexMenuTools.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

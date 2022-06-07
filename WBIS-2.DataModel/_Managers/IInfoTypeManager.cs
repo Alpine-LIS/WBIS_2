@@ -31,11 +31,13 @@ namespace WBIS_2.DataModel
         /// Return an IQueryable for the specified information type.
         /// </summary>
         public abstract IQueryable GetQueryable(WBIS2Model model, bool track = false, List<string> ForceInclude = null, bool includeGeometry = false);
-        public abstract IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model);
-        public abstract IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model, bool showDelete, bool showRepository, bool includeGeometry);
-        public abstract IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model, bool showDelete, bool showRepository);
-        public abstract IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model, bool track = false);
-        public abstract IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model, List<string> ForceInclude = null);
+       // public abstract IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model);
+        public abstract IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model, bool showDelete = false, bool showRepository = false, 
+            bool includeGeometry = false, bool track = false, List<string> ForceInclude = null);
+        //public abstract IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model, bool showDelete, bool showRepository, bool includeGeometry);
+        //public abstract IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model, bool showDelete, bool showRepository);
+        //public abstract IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model, bool track = false);
+        //public abstract IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model, List<string> ForceInclude = null);
         public abstract IQueryable GetQueryableFromChildren(object[] Query, Type QueryType, WBIS2Model model);
         /// <summary>
         /// Can the infromation type be set as active.
