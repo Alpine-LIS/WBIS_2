@@ -22,6 +22,7 @@ using System.Data;
 using WBIS_2.Modules.Tools;
 using Microsoft.EntityFrameworkCore;
 using DevExpress.Xpf.Editors.Helpers;
+using System.Diagnostics;
 
 namespace WBIS_2.Modules.ViewModels.Reports
 {
@@ -56,7 +57,8 @@ namespace WBIS_2.Modules.ViewModels.Reports
             WriteBotanySurveyReport(sfd.FileName, tHP_Area, botanicalScoping);
 
             w.Stop();
-            System.Windows.MessageBox.Show("The watershed report has finished");
+            if (MessageBox.Show("Would you like to open your report?", "", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                new Process { StartInfo = new ProcessStartInfo(sfd.FileName) { UseShellExecute = true } }.Start();
         }
 
         WordHelper WH = new WordHelper();
