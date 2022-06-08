@@ -99,7 +99,7 @@ namespace WBIS_2.Modules.Views
         {
             if (MapDataPasser.SelectionFromGrid) return;
             if (((ListViewModelBase)DataContext).ListManager == null) return;
-            if (((ListViewModelBase)DataContext).ListManager.TableName.ToLower() != MapDataPasser.ZoomLayerName.ToLower()) return;
+            if (((ListViewModelBase)DataContext).GetTableName().ToLower() != MapDataPasser.ZoomLayerName.ToLower()) return;
 
             try
                 {

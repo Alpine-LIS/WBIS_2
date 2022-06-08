@@ -1,4 +1,5 @@
-﻿using NetTopologySuite.Geometries;
+﻿using Alpine.EFTools.Attributes;
+using NetTopologySuite.Geometries;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

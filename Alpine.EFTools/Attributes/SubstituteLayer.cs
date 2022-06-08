@@ -5,7 +5,7 @@ using System.Text;
 using System.IO;
 using System.Linq;
 
-namespace WBIS_2.DataModel
+namespace Alpine.EFTools.Attributes
 {
     /// <summary>
     /// Soe information types have no geometry and defer to another layer.

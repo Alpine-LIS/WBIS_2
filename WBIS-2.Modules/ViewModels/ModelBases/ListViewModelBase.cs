@@ -142,7 +142,9 @@ namespace WBIS_2.Modules.ViewModels
             ImportView = Type.GetType("WBIS_2.Modules.Views.RecordImporters." + ListManager.DisplayName.Replace(" ", "") + "ImportView");
             ImportRecords = ImportView != null;
 
-            ActiveUnitMenuVisable = ListManager.CanSetActive;
+
+            bool IsActivable = ListManager.InformationType.GetInterfaces().Contains(typeof(IActiveUnit));
+            ActiveUnitMenuVisable = IsActivable;
             DeleteRestoreRecordsEnabled = ListManager.DeleteRestoreRecord;
 
             RaisePropertyChanged(nameof(ActiveUnitMenuVisable));
@@ -152,7 +154,7 @@ namespace WBIS_2.Modules.ViewModels
             RaisePropertyChanged(nameof(ShowDetailsEnabled));
             RaisePropertyChanged(nameof(ShowChildrenEnabled));
 
-            if (ListManager.CanSetActive && CurrentUser.AutoFilterActiveUnits) ViewActive();
+            if (IsActivable && CurrentUser.AutoFilterActiveUnits) ViewActive();
 
             AddRequiredPassesAvailible = ListManager.InformationType == typeof(Hex160);
             RaisePropertyChanged(nameof(AddRequiredPassesAvailible));
@@ -416,12 +418,15 @@ namespace WBIS_2.Modules.ViewModels
             //SaveGridLayoutEvent?.Invoke(new object(), new EventArgs());
         }
 
-
+        public string GetTableName()
+        {
+            return ListManager.GetTableName(Database);
+        }
         public string TableKeyField => "guid";
 
         public string LayerKeyField => "guid";
 
-        public string LayerName => ListManager.GetLayerName();
+        public string LayerName => ListManager.GetLayerName(Database);
 
         public void ZoomToLayer()
         {

@@ -5,7 +5,7 @@ using System.Text;
 using System.IO;
 using System.Linq;
 
-namespace WBIS_2.DataModel
+namespace Alpine.EFTools.Attributes
 {
     public class ListInfo : Attribute
     {

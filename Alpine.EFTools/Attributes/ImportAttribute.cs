@@ -5,7 +5,7 @@ using System.Text;
 using System.IO;
 using System.Linq;
 
-namespace WBIS_2.DataModel
+namespace Alpine.EFTools.Attributes
 {
     /// <summary>
     /// An attribute for properties for if they can be used for imports and if they're required.

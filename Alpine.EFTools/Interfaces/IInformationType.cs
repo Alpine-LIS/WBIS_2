@@ -1,20 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Alpine.EFTools.Managers;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace WBIS_2.DataModel
+namespace Alpine.EFTools.Interfaces
 {
-    [DisplayOrder(Index = int.MaxValue)]
+    //[DisplayOrder(Index = int.MaxValue)]
     public interface IInformationType
     {
         public Guid Guid { get; set; }
         public IInfoTypeManager Manager { get; }
     }
-
-    
-    public interface IWildlifeRecord
-    { }
-    public interface IBotanyRecord
-    { }
 }

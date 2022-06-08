@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Alpine.EFTools.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public interface IUserRecords : IInformationType
+    public interface IUserRecords : IInformationType, IDeleteRepository
     {
         /// <summary>
         /// The user who created the record

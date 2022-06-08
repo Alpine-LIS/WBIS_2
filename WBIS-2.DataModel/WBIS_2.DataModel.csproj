@@ -11,7 +11,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Atlas.Projections" Version="3.1.1" />
+	  <Using Include="System.ComponentModel" />
+	  <Using Include="System.ComponentModel.DataAnnotations" />
+	  <Using Include="System.ComponentModel.DataAnnotations.Schema" />
+	  <Using Include="Alpine.EFTools.Attributes" />
+	  <Using Include="Alpine.EFTools.Interfaces" />
+	  <Using Include="Alpine.EFTools.Managers" />
+	  <PackageReference Include="Atlas.Projections" Version="3.1.1" />
     <PackageReference Include="DevExpress.Mvvm" Version="21.2.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.5">
@@ -31,6 +37,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\THP\TimberHarvestPlanDesktop\Alpine.FlexForms\Alpine.FlexForms.csproj" />
+    <ProjectReference Include="..\Alpine.EFTools\Alpine.EFTools.csproj" />
   </ItemGroup>
 
 </Project>

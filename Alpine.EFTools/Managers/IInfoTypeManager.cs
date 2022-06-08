@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Alpine.EFTools.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace WBIS_2.DataModel
+namespace Alpine.EFTools.Managers
 {
     /// <summary>
     /// An information type manager contains and describes details about how an IInformationType interacts with the WBIS application.
@@ -16,7 +17,7 @@ namespace WBIS_2.DataModel
         /// A string value representing an information type.
         /// </summary>
         public string DisplayName { get; }
-        public string TableName { get; }
+        public string GetTableName(DbContext context);
         /// <summary>
         /// Information type options to be displayed as children of the current information type.
         /// </summary>
@@ -43,7 +44,7 @@ namespace WBIS_2.DataModel
         /// <summary>
         /// Can the infromation type be set as active.
         /// </summary>
-        public bool CanSetActive { get; }
+       // public bool CanSetActive { get; }
 
         /// <summary>
         /// Records can be added through an import routine.
@@ -73,8 +74,8 @@ namespace WBIS_2.DataModel
         /// </summary>
         //public bool DetailView { get; }
 
-        public SubstituteLayer SubstituteLayer { get; }
-        public abstract string GetLayerName();
-        public string GetSqlQuery(List<string> exlude);
+        public Alpine.EFTools.Attributes.SubstituteLayer SubstituteLayer { get; }
+        public abstract string GetLayerName(DbContext context);
+        public string GetSqlQuery(Dictionary<string,string> replace, DbContext context);
     }
 }

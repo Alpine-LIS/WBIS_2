@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Alpine.EFTools.Attributes;
+using Alpine.EFTools.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using System;
 using System.Collections;
@@ -8,20 +10,16 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace WBIS_2.DataModel
+namespace Alpine.EFTools.Managers
 {
     public class InformationTypeManager<InfoType> : IInfoTypeManager where InfoType : class
     {
         public string DisplayName => GetDisplayName();
-        public string TableName
+        public string GetTableName(DbContext context)
         {
-            get
-            {
-                WBIS2Model model = new WBIS2Model();
-                var entityType = model.Model.FindEntityType(InformationType);
-                var schema = entityType.GetSchema();
-                return entityType.GetTableName().ToLower();
-            }
+            var entityType = context.Model.FindEntityType(InformationType);
+            var schema = entityType.GetSchema();
+            return entityType.GetTableName().ToLower();
         }
 
         public Type InformationType => typeof(InfoType);
@@ -46,7 +44,6 @@ namespace WBIS_2.DataModel
         private IEnumerable<PropertyInfo> AutoIncludes => ListInfoProperties.Where(_ => ((ListInfo)_.GetCustomAttribute(typeof(ListInfo))).AutoInclude);
         public IEnumerable<PropertyInfo> DisplayFieldProperties => ListInfoProperties.Where(_ => ((ListInfo)_.GetCustomAttribute(typeof(ListInfo))).DisplayField);
         public IInformationType[] AvailibleChildren => GetAvailibleChildren();
-
         private IInformationType[] GetAvailibleChildren()
         {
             List<IInformationType> children = new List<IInformationType>();
@@ -57,7 +54,7 @@ namespace WBIS_2.DataModel
                 var runTimeType = item.PropertyType.GenericTypeArguments.Single();
                 var trueType = Type.GetType(runTimeType.FullName);
 
-                if ((trueType.GetInterfaces().Contains(typeof(IWildlifeRecord)) && CurrentUser.User.Wildlife) || (trueType.GetInterfaces().Contains(typeof(IBotanyRecord)) && CurrentUser.User.Botany))
+                //if ((trueType.GetInterfaces().Contains(typeof(IWildlifeRecord)) && CurrentUser.User.Wildlife) || (trueType.GetInterfaces().Contains(typeof(IBotanyRecord)) && CurrentUser.User.Botany))
                     children.Add((IInformationType)Activator.CreateInstance(trueType));
             }
             return children.OrderBy(_ => ((DisplayOrder)_.GetType().GetCustomAttribute(typeof(DisplayOrder))).Index).ToArray();
@@ -121,11 +118,11 @@ namespace WBIS_2.DataModel
 
 
 
-        public string GetSqlQuery(List<string> exlude)
+        public string GetSqlQuery(Dictionary<string, string> replace, DbContext context)
         {
             var query = "Select ";
             var entityType = typeof(InfoType);
-            using var context = new WBIS2Model();
+            //using var context = new WBIS2Model();
 
             if (context.Model.FindEntityType(typeof(InfoType)) is IEntityType et)
             {
@@ -145,20 +142,20 @@ namespace WBIS_2.DataModel
                     if (sub != null)
                         dbName = ((System.ComponentModel.DataAnnotations.Schema.ColumnAttribute)sub).Name;
 
-                    if (exlude.Contains(prop.Name) || exlude.Contains(dbName))
-                    {
-                        query += $"null as \"{dbName}\" ,";
-                        continue;
-                    }
-                    query += $"\"{dbName}\" ,";
+                    if (replace.Keys.Contains(prop.Name)) 
+                        query += $"{replace[prop.Name]} as \"{dbName}\" ,";
+                    else if (replace.Keys.Contains(dbName)) 
+                        query += $"{replace[dbName]} as \"{dbName}\" ,";
+                    else
+                        query += $"\"{dbName}\" ,";
                 }
                 query = query.Remove(query.Length - 1, 1);
 
-                Guid guid = CurrentUser.User.Guid;
-                if (CurrentUser.MobileUserActiveUnits)
-                    guid = CurrentUser.MobileUserGuid;
+                //Guid guid = CurrentUser.User.Guid;
+                //if (CurrentUser.MobileUserActiveUnits)
+                //    guid = CurrentUser.MobileUserGuid;
 
-                if (CanSetActive) query = query.Replace($"\"is_active\"", $"guid IN (SELECT unit_id FROM active_{et.GetSchemaQualifiedTableName()} WHERE application_user_id = '{guid}') as \"is_active\"");
+                //if (CanSetActive) query = query.Replace($"\"is_active\"", $"guid IN (SELECT unit_id FROM active_{et.GetSchemaQualifiedTableName()} WHERE application_user_id = '{guid}') as \"is_active\"");
 
                 query += $" from \"{et.GetSchemaQualifiedTableName()}\"";
             }
@@ -170,16 +167,16 @@ namespace WBIS_2.DataModel
         {
             IQueryable<InfoType> returnVal;
 
-            List<string> QueryExclude = new List<string>();
+            Dictionary<string, string> QueryExclude = new Dictionary<string, string>();
             if (!includeGeometry)
-                QueryExclude.Add("geometry");
+                QueryExclude.Add("geometry","null");
 
             if (track) 
                 returnVal= model.Set<InfoType>()
-                    .FromSqlRaw(GetSqlQuery(QueryExclude));
+                    .FromSqlRaw(GetSqlQuery(QueryExclude, model));
             else
                 returnVal = model.Set<InfoType>()
-                   .FromSqlRaw(GetSqlQuery(QueryExclude))
+                   .FromSqlRaw(GetSqlQuery(QueryExclude, model))
                    .AsNoTracking();
 
             foreach (var include in AutoIncludes)
@@ -203,7 +200,8 @@ namespace WBIS_2.DataModel
 
             var ShowOptions = (Expression<Func<InfoType, bool>>)ShowHideDeleteAndRepository(showDelete, showRepository);
 
-            if ((queryProperty == null && typeof(InfoType) != QueryType) || typeof(InfoType) == typeof(ApplicationUser))
+            if (queryProperty == null && typeof(InfoType) != QueryType)
+                //if ((queryProperty == null && typeof(InfoType) != QueryType) || typeof(InfoType) == typeof(ApplicationUser))
             {
                 if (ShowOptions == null)
                     return returnVal;
@@ -409,7 +407,8 @@ namespace WBIS_2.DataModel
         public bool AddRequiresParent => false;
         public bool DeleteRestoreRecord => typeof(InfoType).GetProperties().Any(_=>_.Name == "_delete");
         public bool RepositoryRecord => typeof(InfoType).GetProperties().Any(_ => _.Name == "Repository");
-        public bool CanSetActive => typeof(InfoType).GetInterfaces().Contains(typeof(IActiveUnit));
+        //public bool CanSetActive => typeof(InfoType).GetInterfaces().Contains(typeof(IActiveUnit));
+        //public bool CanSetActive => typeof(InfoType).GetInterfaces().Contains(typeof(IActiveUnit));
 
 
         public bool IsIInformationType(Type type)
@@ -417,7 +416,7 @@ namespace WBIS_2.DataModel
        
         
         public SubstituteLayer SubstituteLayer => (SubstituteLayer)typeof(InfoType).GetCustomAttributes(typeof(SubstituteLayer), true).FirstOrDefault();
-        public string GetLayerName()
+        public string GetLayerName(DbContext context)
         {
             Type type;
             if (SubstituteLayer == null)
@@ -433,8 +432,9 @@ namespace WBIS_2.DataModel
                 //name = p.Name;
             }
 
-            WBIS2Model model = new WBIS2Model();
-            var entityType = model.Model.FindEntityType(type);
+            //WBIS2Model model = new WBIS2Model();
+            //var entityType = model.Model.FindEntityType(type);
+            var entityType = context.Model.FindEntityType(type);
             var schema = entityType.GetSchema();
             return entityType.GetTableName().ToLower();
         }       
