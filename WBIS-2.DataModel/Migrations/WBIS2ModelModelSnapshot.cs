@@ -1957,7 +1957,7 @@ namespace WBIS_2.DataModel.Migrations
                     b.Property<DateTime>("date")
                         .HasColumnType("timestamp without time zone");
 
-                    b.ToTable("cdfw_vintages");
+                    b.ToTable("cdfw_vintages", (string)null);
                 });
 
             modelBuilder.Entity("WBIS_2.DataModel.CNDDBOccurrence", b =>
@@ -3141,7 +3141,7 @@ namespace WBIS_2.DataModel.Migrations
                         .HasColumnType("text")
                         .HasColumnName("text");
 
-                    b.ToTable("scoping_texts");
+                    b.ToTable("scoping_texts", (string)null);
                 });
 
             modelBuilder.Entity("WBIS_2.DataModel.SiteCalling", b =>

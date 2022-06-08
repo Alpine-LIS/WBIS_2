@@ -351,10 +351,10 @@ namespace WBIS_2.Modules.ViewModels.Reports
 
             string districts = string.Join(", ", botanicalScoping.Districts.Select(_ => _.DistrictName));
 
-            FillCell(introTbl.Cell(2, 2), "SPI Forester:", botanicalScoping.Forester, sectionRange);
-                    FillCell(introTbl.Cell(3, 1), "Date:", botanicalScoping.DateModified.ToShortDateString(), sectionRange);
-                    FillCell(introTbl.Cell(3, 2), "SPI District:", districts, sectionRange);
-                    FillCell(introTbl.Cell(2, 1), "THP Name:", botanicalScoping.THP_Area.THPName, sectionRange);
+            WH.FillCell(introTbl.Cell(2, 2), "SPI Forester:", botanicalScoping.Forester, sectionRange);
+            WH.FillCell(introTbl.Cell(3, 1), "Date:", botanicalScoping.DateModified.ToShortDateString(), sectionRange);
+            WH.FillCell(introTbl.Cell(3, 2), "SPI District:", districts, sectionRange);
+            WH.FillCell(introTbl.Cell(2, 1), "THP Name:", botanicalScoping.THP_Area.THPName, sectionRange);
             introTbl.LeftPadding = (float)-.02;
         }
 
@@ -365,20 +365,20 @@ namespace WBIS_2.Modules.ViewModels.Reports
         {
             if (postTables)
             {
-                WriteReferencesField(sectionRange, "California Department of Fish and Wildlife (CDFW).  2018.  Protocols for Surveying and Evaluating Impacts to Special Status Native Plant Populations and Sensitive Natural Communities." +
+                WH.WriteReferencesField(sectionRange, "California Department of Fish and Wildlife (CDFW).  2018.  Protocols for Surveying and Evaluating Impacts to Special Status Native Plant Populations and Sensitive Natural Communities." +
                     "  State of California, California Natural Resources Agency, Department of Fish and Wildlife.  March 20, 2018.  12 pp.");
             }
             else
             {
-                WriteTextField(sectionRange, "Summary", "<This will be the “Executive Summary,” add relevant summary information….. " +
+                WH.WriteTextField(sectionRange, "Summary", "<This will be the “Executive Summary,” add relevant summary information….. " +
                     "Surveys and habitat evaluations for all scoped species were completed on XXXXXX, 2020. XXX special-status species were observed. At the end add: " +
                     "Maps showing the survey routes, results, and other relevant information are included as Appendix A.  A list of all plant species observed during the surveys is included as Appendix B.>");
-                WriteTextField(sectionRange, "General Description", "<copy from Scoping Report; add relevant information obtained from survey efforts if needed>");
-                WriteTextField(sectionRange, "THP Elevation", "<copy from Scoping Report>");
-                WriteTextField(sectionRange, "Watershed Elevation", "<copy from Scoping Report>");
-                WriteTextField(sectionRange, "Ecological Unit", "<copy from Scoping Report>");
-                WriteTextField(sectionRange, "Geology & Soils", "<copy from Scoping Report>");
-                WriteTextField(sectionRange, "Methods", "<SPI conducted botanical surveys for the XXXXX THP following the guidelines described in CDFW (2018)." +
+                WH.WriteTextField(sectionRange, "General Description", "<copy from Scoping Report; add relevant information obtained from survey efforts if needed>");
+                WH.WriteTextField(sectionRange, "THP Elevation", "<copy from Scoping Report>");
+                WH.WriteTextField(sectionRange, "Watershed Elevation", "<copy from Scoping Report>");
+                WH.WriteTextField(sectionRange, "Ecological Unit", "<copy from Scoping Report>");
+                WH.WriteTextField(sectionRange, "Geology & Soils", "<copy from Scoping Report>");
+                WH.WriteTextField(sectionRange, "Methods", "<SPI conducted botanical surveys for the XXXXX THP following the guidelines described in CDFW (2018)." +
                     "  We performed intuitive-controlled pedestrian surveys of potential habitat for all scoped species within the THP Area." +
                     "  Surveys were conducted during appropriate flowering periods for the scoped species or when the species were otherwise identifiable." +
                     "  SPI collected a list of all plant taxa observed during the surveys, and all plant taxa were identified to the taxonomic level necessary to determine whether or not they are a special-status plant." +
@@ -387,7 +387,7 @@ namespace WBIS_2.Modules.ViewModels.Reports
                     "<Add a paragraph here describing any nuances (e.g., early season surveys planned for next year, all units except xxx, etc., as appropriate…>" +
                     "\n\n" +
                     "<This report summarizes the botanical survey results.  SPI will prepare and submit all special-status plant observations made during these surveys to the CNDDB.>");
-                WriteTextField(sectionRange, "Results", "<SPI prepared a Botanical Scoping Report for the xxxxx THP, dated xxxxx, which identified xxxxx known or potentially occurring special-status taxa in the THP area.  " +
+                WH.WriteTextField(sectionRange, "Results", "<SPI prepared a Botanical Scoping Report for the xxxxx THP, dated xxxxx, which identified xxxxx known or potentially occurring special-status taxa in the THP area.  " +
                     "We conducted intuitive controlled surveys for these species on (add dates…).  The surveys were conducted by SPI Botanists Ms. XXXX (add degree, add school; add yrs. of experience) and " +
                     "Mr. XXXX (add degree, add school; add yrs. of experience).  If we had help, include these additional sentences = The SPI Botanists were assisted by Mr. XXXX (add degree, add school; " +
                     "add yrs. of experience) and Ms. XXXX (add degree, add school; add yrs. of experience).  All survey work was overseen by SPI Botanists.  " +
@@ -402,52 +402,7 @@ namespace WBIS_2.Modules.ViewModels.Reports
 
 
 
-        private void FillCell(Word.Cell c, string field, string txt, Word.Range sectionRange)
-        {
-            sectionRange.Paragraphs.First.Range.Text = field + "  " + txt;
-            object start = 0;
-            object filedEnd = field.Length + 2;
-            object textEnd = field.Length + 2 + txt.Length;
-
-            sectionRange.Document.Range(ref start, ref filedEnd).Bold = 1;
-            sectionRange.Document.Range(ref filedEnd, ref textEnd).Bold = 0;
-            sectionRange.Document.Range(ref start, ref textEnd).Cut();
-            c.Range.Paste();
-        }
-        private void WriteTextField(Word.Range sectionRange, string field, string txt)
-        {
-            sectionRange.Paragraphs.Add();
-            sectionRange.Paragraphs.Add();
-            sectionRange.Paragraphs.Last.Format.TabHangingIndent(-1);
-
-            sectionRange.Paragraphs.Last.Range.Font.Bold = 1;
-            sectionRange.Paragraphs.Last.Range.Text = field + ":";
-            sectionRange.Paragraphs.Add();
-            sectionRange.Paragraphs.Last.Range.Font.Bold = 0;
-            sectionRange.Paragraphs.Last.Range.Text = txt;
-        }
-        private void WriteReferencesField(Word.Range sectionRange, string txt)
-        {
-            sectionRange.Paragraphs.Add();
-            sectionRange.Paragraphs.Last.Format.TabHangingIndent(-1);
-            sectionRange.Paragraphs.Last.Range.Font.Bold = 1;
-            sectionRange.Paragraphs.Last.Range.Text = "References:";
-
-            var refs = txt.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
-            for (int i = 0; i < refs.Count(); i++)
-            {
-                sectionRange.Paragraphs.Add();
-                if (i == 0) sectionRange.Paragraphs.Last.Format.TabHangingIndent(1);
-                else sectionRange.Paragraphs.Add();
-                sectionRange.Paragraphs.Last.Range.Font.Bold = 0;
-                sectionRange.Paragraphs.Last.Range.Text = refs[i];
-            }
-        }
-
-
-
-
-
+       
 
         private void BotanySurveyTable1(Word.Range sectionRange, THP_Area tHP_Area)
         {
@@ -455,7 +410,7 @@ namespace WBIS_2.Modules.ViewModels.Reports
             sectionRange.Paragraphs.Add();
             sectionRange.Paragraphs.Last.Range.Font.Underline = Word.WdUnderline.wdUnderlineNone;
             sectionRange.Paragraphs.Last.Range.Font.Bold = 1;
-            sectionRange.Paragraphs.Last.Range.Text = "Table 1. Summary of Botanical Survey Results for the " + thpArea + " THP:";
+            sectionRange.Paragraphs.Last.Range.Text = "Table 1. Summary of Botanical Survey Results for the " + tHP_Area.THPName + " THP:";
             sectionRange.Paragraphs.Add();
             sectionRange.Paragraphs.Add();
             sectionRange.Paragraphs.Last.Range.Font.Bold = 0;
@@ -463,22 +418,30 @@ namespace WBIS_2.Modules.ViewModels.Reports
 
             //Table 1 is all found species within a THP
 
-            var species = Database.BotanicalSurveyAreas
-                .Include(_=>_.THP_Area)
-                .Include(_=>_.BotanicalElement).ThenInclude(_=>_.BotanicalPlantOfInterest).ThenInclude(_=>_.PlantSpecies)
-                .Where(_=>_.THP_Area == tHP_Area)
-                .Select(_=>_.BotanicalElement)
-                .Where(_=>_.)
-                .Include(_=>_.BotanicalPlantsOfInterest).ThenInclude(_=>_.BotanicalElement).ThenInclude(_=>_.BotanicalSurveyArea).ThenInclude(_=>_.THP_Area)
-                .Where(_=>_.BotanicalPlantsOfInterest.ele)
+            var plantSpecies = Database.BotanicalPlantsOfInterest
+                .Include(_ => _.BotanicalElement).ThenInclude(_ => _.BotanicalSurveyArea).ThenInclude(_ => _.THP_Area)
+                .Where(_ => _.BotanicalElement.BotanicalSurveyArea.THP_Area.Guid == tHP_Area.Guid && _.SpeciesFound && !_.BotanicalElement._delete && !_.BotanicalElement.Repository)
+                .Select(_=>_.PlantSpecies).Distinct().OrderBy(_=>_.SciName);
 
             DataTable dt = new DataTable();
-            using (SQLiteDataAdapter filler = new SQLiteDataAdapter("SELECT [SciName] AS 'Species',[RPlantRank] AS 'CRPR',[FedList] AS 'Federal',[CalList] AS 'State'," +
-                "'<add locations>' AS 'Location','<add numbers, occurrences, etc., as appropriate>' AS 'Summary' FROM [PlantSpecies] WHERE [SciName] IN " +
-                "(SELECT [SciName] FROM [Plants of Interest] WHERE [ID] IN (SELECT [ID] FROM [SurveyElementsSurveyAreaConnection] WHERE [Connection] IN " +
-                "(SELECT [ID] FROM [Survey Area] WHERE UPPER([THP Area]) = '" + thpArea.ToUpper() + "')) AND [Species Found] = TRUE) GROUP BY [SciName] ORDER BY [SciName] ASC", SqlTools.SqlConn))
-            { filler.Fill(dt); }
+            dt.Columns.Add("Species");
+            dt.Columns.Add("CRPR");
+            dt.Columns.Add("Federal");
+            dt.Columns.Add("State");
+            dt.Columns.Add("Location");
+            dt.Columns.Add("Summary");
 
+            foreach(var species in plantSpecies)
+            {
+                DataRow r = dt.NewRow();
+                r["Species"] = species.SciName;
+                r["CRPR"] = species.RPlantRank;
+                r["Federal"] = species.FedList;
+                r["State"] = species.CalList;
+                r["Location"] = "<add locations>";
+                r["Summary"] = "<add numbers, occurrences, etc., as appropriate>";
+                dt.Rows.Add(r);
+            }
 
             object styleName = "Table Grid";
             var plantTbl = sectionRange.Tables.Add(sectionRange.Paragraphs.Last.Range, dt.Rows.Count + 1, 4);
@@ -524,27 +487,41 @@ namespace WBIS_2.Modules.ViewModels.Reports
             sectionRange.Paragraphs.Add();
             sectionRange.Paragraphs.Last.Range.Font.Underline = Word.WdUnderline.wdUnderlineNone;
             sectionRange.Paragraphs.Last.Range.Font.Bold = 1;
-            sectionRange.Paragraphs.Last.Range.Text = "Table 2. Summary of Botanical Survey Results for the " + thpArea + " THP by Plan Component:";
+            sectionRange.Paragraphs.Last.Range.Text = "Table 2. Summary of Botanical Survey Results for the " + tHP_Area.THPName + " THP by Plan Component:";
             sectionRange.Paragraphs.Add();
             sectionRange.Paragraphs.Add();
             sectionRange.Paragraphs.Last.Range.Font.Bold = 0;
             sectionRange.Paragraphs.Last.Range.Font.Size = 10;
 
             //Table 1 is all found species within a THP, split by area.
-
-            DataTable areaDt = new DataTable();
-            using (SQLiteDataAdapter filler = new SQLiteDataAdapter("SELECT DISTINCT[Area Name] FROM [Survey Area] WHERE UPPER([THP Area]) = '" + thpArea.ToUpper() + "' ORDER BY [Area Name] ASC", SqlTools.SqlConn))
-            { filler.Fill(areaDt); }
-
-
             DataTable dt = new DataTable();
-            foreach (DataRow area in areaDt.Rows)
+            dt.Columns.Add("Component");
+            dt.Columns.Add("CRPR");
+            dt.Columns.Add("Federal");
+            dt.Columns.Add("State");
+            dt.Columns.Add("Species");
+            dt.Columns.Add("Summary");
+
+            var areas = Database.BotanicalSurveyAreas
+                .Include(_ => _.THP_Area).Where(_ => _.THP_Area.Guid == tHP_Area.Guid).OrderBy(_=>_.AreaName).ToArray();
+            foreach(var area in areas)
             {
-                using (SQLiteDataAdapter filler = new SQLiteDataAdapter("SELECT '" + area[0] + "' AS 'Component',[RPlantRank] AS 'CRPR',[FedList] AS 'Federal',[CalList] AS 'State',[SciName] AS 'Species'" +
-                    ",'<add numbers, occurrences, etc., as appropriate>' AS 'Summary' FROM [PlantSpecies] WHERE [SciName] IN " +
-                    "(SELECT [SciName] FROM [Plants of Interest] WHERE [ID] IN (SELECT [ID] FROM [SurveyElementsSurveyAreaConnection] WHERE [Connection] IN " +
-                    "(SELECT [ID] FROM [Survey Area] WHERE UPPER([THP Area]) = '" + thpArea.ToUpper() + "' AND [Area Name] = '" + area[0] + "')) AND [Species Found] = TRUE) GROUP BY [SciName] ORDER BY [SciName] ASC", SqlTools.SqlConn))
-                { filler.Fill(dt); }
+                var plantSpecies = Database.BotanicalPlantsOfInterest
+               .Include(_ => _.BotanicalElement).ThenInclude(_ => _.BotanicalSurveyArea)
+               .Where(_ => _.BotanicalElement.BotanicalSurveyArea == area && _.SpeciesFound && !_.BotanicalElement._delete && !_.BotanicalElement.Repository)
+               .Select(_ => _.PlantSpecies).Distinct().OrderBy(_ => _.SciName);
+
+                foreach(var species in plantSpecies)
+                {
+                    DataRow r = dt.NewRow();
+                    r["Component"] = area.AreaName;
+                    r["CRPR"] = species.RPlantRank;
+                    r["Federal"] = species.FedList;
+                    r["State"] = species.CalList;
+                    r["Species"] = species.SciName;
+                    r["Summary"] = "<add numbers, occurrences, etc., as appropriate>";
+                    dt.Rows.Add(r);
+                }
             }
 
             object styleName = "Table Grid";
@@ -592,7 +569,7 @@ namespace WBIS_2.Modules.ViewModels.Reports
             sectionRange.Paragraphs.Add();
             sectionRange.Paragraphs.Last.Range.Font.Underline = Word.WdUnderline.wdUnderlineNone;
             sectionRange.Paragraphs.Last.Range.Font.Bold = 1;
-            sectionRange.Paragraphs.Last.Range.Text = "Table 3. Summary of Botanical Survey Results for the " + thpArea + " THP by Species:";
+            sectionRange.Paragraphs.Last.Range.Text = "Table 3. Summary of Botanical Survey Results for the " + tHP_Area.THPName + " THP by Species:";
             sectionRange.Paragraphs.Add();
             sectionRange.Paragraphs.Add();
             sectionRange.Paragraphs.Last.Range.Font.Bold = 0;
@@ -600,22 +577,70 @@ namespace WBIS_2.Modules.ViewModels.Reports
 
             //Table 1 and 3 from botanical scoping and if the species was found.
             DataTable dt = new DataTable();
-            using (SQLiteDataAdapter filler = new SQLiteDataAdapter("SELECT [Species],[HabDesc] AS 'Habitat Description',[RPlantRank] AS 'CRPR',[FedList] AS 'Federal',[CalList] AS 'State'," +
-                "(SELECT COUNT(*) > 0 FROM [Survey Elements] WHERE [Botanical Species].[Species] = [Survey Elements].[Record Type] " +
-                        "AND [ID] IN (SELECT [ID] FROM [SurveyElementsSurveyAreaConnection] WHERE [Connection] IN (SELECT [ID] FROM [Survey Area] WHERE UPPER([THP Area]) = '" + thpArea.ToUpper() + "'))) AS 'Species Found'," +
-                        "'' AS 'Habitat and Survey Results', '' AS 'References', '' AS 'Reference sites' " +
-                "FROM [Botanical Species]" +
-                " WHERE [Source ID] = '" + scopingId + "' AND (" +
-            //Scoping table 1
-                "(([RPlantRank] LIKE '4%' OR [RPlantRank] LIKE '3%' OR [RPlantRank]||[FedList]||[CalList] = '') AND [Exclude] = FALSE AND [ExcludeReport] = FALSE AND" +
-                //Species found
-                "(UPPER([Species]) IN (SELECT UPPER([Record Type]) FROM [Survey Elements] WHERE [Botanical Species].[Species] = [Survey Elements].[Record Type] " +
-                        "AND [ID] IN (SELECT [ID] FROM [SurveyElementsSurveyAreaConnection] WHERE [Connection] IN (SELECT [ID] FROM [Survey Area] WHERE UPPER([THP Area]) = '" + thpArea.ToUpper() + "'))))) OR " +
-                //Scoping table 2
-                "((([RPlantRank] LIKE '1%' OR [RPlantRank] LIKE '2%') OR (UPPER([FedList]) != 'NONE' OR UPPER([CalList]) != 'NONE')) AND ([RPlantRank]||[FedList]||[CalList] != '') AND [Exclude] = FALSE AND [ExcludeReport] = FALSE)" +
-                ") ORDER BY [Species] ASC", SqlTools.SqlConn))
-            { filler.Fill(dt); }
+            dt.Columns.Add("Species");
+            dt.Columns.Add("Habitat Description");
+            dt.Columns.Add("CRPR");
+            dt.Columns.Add("Federal");
+            dt.Columns.Add("State");
+            dt.Columns.Add("Species Found");
+            dt.Columns.Add("Habitat and Survey Results");
+            dt.Columns.Add("References");
+            dt.Columns.Add("Reference sites");
 
+
+
+
+
+         
+
+            var surveySpecies = Database.BotanicalPlantsOfInterest
+                .Include(_ => _.BotanicalElement).ThenInclude(_ => _.BotanicalSurveyArea).ThenInclude(_ => _.THP_Area)
+                .Include(_ => _.PlantSpecies)
+                .Where(_ => _.BotanicalElement.BotanicalSurveyArea.THP_Area.Guid == tHP_Area.Guid && !_.BotanicalElement._delete && !_.BotanicalElement.Repository)
+                .Select(_ => _.PlantSpecies).Select(_=>_.Guid).ToArray();
+
+
+            var scopingSpeces = Database.BotanicalScopingSpecies
+                .Include(_ => _.BotanicalScoping)
+                .Include(_ => _.PlantSpecies)
+                .Where(_ => _.BotanicalScoping.Guid == botanicalScoping.Guid && !_._delete && !_.Repository &&
+                (
+                    (
+                        (_.PlantSpecies.RPlantRank.StartsWith("4") || _.PlantSpecies.RPlantRank.StartsWith("3") || (_.PlantSpecies.RPlantRank + _.PlantSpecies.CalList + _.PlantSpecies.FedList != ""))
+                        && !_.Exclude && !_.ExcludeReport
+                        && (surveySpecies.Contains(_.PlantSpecies.Guid))
+                    )
+                    ||
+                    (((_.PlantSpecies.RPlantRank.StartsWith("1") || _.PlantSpecies.RPlantRank.StartsWith("2"))
+                        || (_.PlantSpecies.CalList.ToUpper() != "NONE" || _.PlantSpecies.FedList.ToUpper() != "NONE"))
+                        && (_.PlantSpecies.RPlantRank + _.PlantSpecies.CalList + _.PlantSpecies.FedList != "")
+                        && !_.Exclude && !_.ExcludeReport)
+                ));
+
+
+            //    && !_.ExcludeReport && !_.Exclude
+            //  && (_.PlantSpecies.RPlantRank.StartsWith("4") || _.PlantSpecies.RPlantRank.StartsWith("3") || (_.PlantSpecies.RPlantRank + _.PlantSpecies.CalList + _.PlantSpecies.FedList) == "")
+            //  && ((surveySpecies.Contains(_.PlantSpecies.Guid))
+            //  ||
+            //  (((_.PlantSpecies.RPlantRank.StartsWith("1") || _.PlantSpecies.RPlantRank.StartsWith("2")) || (_.PlantSpecies.CalList.ToUpper() != "NONE" || _.PlantSpecies.FedList.ToUpper() != "NONE"))
+            //&& ((_.PlantSpecies.RPlantRank + _.PlantSpecies.CalList + _.PlantSpecies.FedList) != ""))));
+            //  .OrderBy(_ => _.PlantSpecies.SciName).ToArray();
+
+            foreach (var species in scopingSpeces)
+            {
+                DataRow r = dt.NewRow();
+                r["Species"] = species.PlantSpecies.SciName;
+                r["Habitat Description"] = species.HabitatDescription;
+                r["CRPR"] = species.PlantSpecies.RPlantRank;
+                r["Federal"] = species.PlantSpecies.FedList;
+                r["State"] = species.PlantSpecies.CalList;
+                r["Species Found"] = surveySpecies.Contains(species.PlantSpecies.Guid);
+                r["Habitat and Survey Results"] = "";
+                r["References"] = "";
+                r["Reference sites"] = "";
+
+                dt.Rows.Add(r);
+            }
 
 
             object styleName = "Table Grid";
@@ -651,7 +676,7 @@ namespace WBIS_2.Modules.ViewModels.Reports
                 Table3RowValues(plantTbl.Rows[rowCounter], "CRPR/Federal/State", dt.Rows[i][2].ToString() + "/" + dt.Rows[i][3].ToString() + "/" + dt.Rows[i][4].ToString(), false);
                 rowCounter++;
 
-                if ((long)dt.Rows[i][5] == 0) Table3RowValues(plantTbl.Rows[rowCounter], "Species Found", "No", false);
+                if ((string)dt.Rows[i][5] != "True") Table3RowValues(plantTbl.Rows[rowCounter], "Species Found", "No", false);
                 else Table3RowValues(plantTbl.Rows[rowCounter], "Species Found", "Yes", false);
                 rowCounter++;
 
@@ -797,28 +822,38 @@ namespace WBIS_2.Modules.ViewModels.Reports
             //sectionRange.Paragraphs.Add();
             sectionRange.Paragraphs.Last.Range.Font.Underline = Word.WdUnderline.wdUnderlineNone;
             sectionRange.Paragraphs.Last.Range.Font.Bold = 1;
-            sectionRange.Paragraphs.Last.Range.Text = "Appendix B.  Plant species observed during botanical surveys for the " + thpArea + " THP (<add dates……>). ";
+            sectionRange.Paragraphs.Last.Range.Text = "Appendix B.  Plant species observed during botanical surveys for the " + tHP_Area.THPName + " THP (<add dates……>). ";
             sectionRange.Paragraphs.Add();
             sectionRange.Paragraphs.Add();
             sectionRange.Paragraphs.Last.Range.Font.Bold = 0;
             sectionRange.Paragraphs.Last.Range.Font.Size = 10;
 
             DataTable dt = new DataTable();
-            using (SQLiteDataAdapter filler = new SQLiteDataAdapter("SELECT [SciName],[ComName],[Family] FROM [Plants of Interest] WHERE [ID] IN " +
-                "(SELECT [ID] FROM [SurveyElementsSurveyAreaConnection] WHERE [Connection] IN (SELECT [ID] FROM [Survey Area] WHERE UPPER([THP Area]) = '" + thpArea.ToUpper() + "')) AND [Species Found] = TRUE GROUP BY [SciName]", SqlTools.SqlConn))
-            { filler.Fill(dt); }
+            dt.Columns.Add("SciName");
+            dt.Columns.Add("ComName");
+            dt.Columns.Add("Family");
 
-            using (SQLiteDataAdapter filler = new SQLiteDataAdapter("SELECT [SciName],[ComName],[Family] FROM [Plants List] WHERE [ID] IN " +
-                "(SELECT [ID] FROM [SurveyElementsSurveyAreaConnection] WHERE [Connection] IN (SELECT [ID] FROM [Survey Area] WHERE UPPER([THP Area]) = '" + thpArea.ToUpper() + "')) " +
-                "AND [SciName] NOT IN (SELECT [SciName] FROM [Plants of Interest] WHERE [ID] IN " +
-                    "(SELECT [ID] FROM [SurveyElementsSurveyAreaConnection] WHERE [Connection] IN (SELECT [ID] FROM [Survey Area] WHERE UPPER([THP Area]) = '" + thpArea.ToUpper() + "')) AND [Species Found] = TRUE)" +
-                " GROUP BY [SciName]", SqlTools.SqlConn))
-            { filler.Fill(dt); }
+            var plantSpecies = Database.BotanicalPlantsOfInterest
+              .Include(_ => _.BotanicalElement).ThenInclude(_ => _.BotanicalSurveyArea).ThenInclude(_ => _.THP_Area)
+              .Include(_=>_.PlantSpecies)
+              .Where(_ => _.BotanicalElement.BotanicalSurveyArea.THP_Area.Guid == tHP_Area.Guid && _.SpeciesFound && !_.BotanicalElement._delete && !_.BotanicalElement.Repository)
+              .Select(_ => _.PlantSpecies);
+            var plantSpecies2 = Database.BotanicalPlantsList
+              .Include(_ => _.BotanicalElement).ThenInclude(_ => _.BotanicalSurveyArea).ThenInclude(_ => _.THP_Area)
+              .Include(_ => _.PlantSpecies)
+              .Where(_ => _.BotanicalElement.BotanicalSurveyArea.THP_Area.Guid == tHP_Area.Guid && !_.BotanicalElement._delete && !_.BotanicalElement.Repository)
+              .Select(_ => _.PlantSpecies);
+            plantSpecies = plantSpecies.Append(plantSpecies2).AsQueryable();
+            plantSpecies = plantSpecies.Distinct().OrderBy(_ => _.SciName);
 
-
-            dt.DefaultView.Sort = "SciName ASC";
-            dt = dt.DefaultView.ToTable();
-
+            foreach(var species in plantSpecies)
+            {
+                DataRow r = dt.NewRow();
+                r["SciName"] = species.SciName;
+                r["ComName"] = species.ComName;
+                r["Family"] = species.Family;
+                dt.Rows.Add(r);
+            }
 
             object styleName = "Table Grid";
             var plantTbl = sectionRange.Tables.Add(sectionRange.Paragraphs.Last.Range, dt.Rows.Count + 1, 3);

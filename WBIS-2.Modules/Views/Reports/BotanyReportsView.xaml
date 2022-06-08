@@ -54,7 +54,7 @@
 
             <Label Content="THP Area:" Grid.Column="0" Grid.Row="0"/>
             <dxe:ComboBoxEdit SelectedItem="{Binding SelectedThp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                              ItemsSource="{Binding ThpAreas}" DisplayMember="THPName" Grid.Column="1" SelectedIndex="0"/>
+                              ItemsSource="{Binding ThpAreas}" DisplayMember="THPName" AutoComplete="True" Grid.Column="1" SelectedIndex="0"/>
 
             <Button Content="Botanical Scoping Report" Command="{Binding BotanicalScopingCommand}" Grid.Row="0" Grid.Column="2"/>
             <Button Content="Botanical Survey Report" Command="{Binding BotanicalSurveyCommand}" Grid.Row="1" Grid.Column="2"/>

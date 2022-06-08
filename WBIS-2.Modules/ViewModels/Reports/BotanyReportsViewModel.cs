@@ -25,19 +25,22 @@ namespace WBIS_2.Modules.ViewModels.Reports
     {
         public object Title => $"Botanical Reports";
       
-        public THP_Area[] ThpAreas=> Database.THP_Areas
-            .Include(_=>_.BotanicalScopings)
-            .Include(_=>_.BotanicalSurveyAreas)
-            .Include(_=>_.BotanicalSurveys).ToArray();
+        public THP_Area[] ThpAreas=> Database.THP_Areas.OrderBy(_=>_.THPName).ToArray();
         public THP_Area SelectedThp
         {
             get { return GetProperty(() => SelectedThp); }
             set
             {
                 SetProperty(() => SelectedThp, value);
-                ScopingCount = SelectedThp.BotanicalScopings.Where(_ => !_._delete && !_.Repository).Count().ToString();
-                AreaCount = SelectedThp.BotanicalSurveyAreas.Where(_ => !_._delete && !_.Repository).Count().ToString();
-                SurveyCount = SelectedThp.BotanicalSurveys.Where(_ => !_._delete && !_.Repository).Count().ToString();
+                ScopingCount = Database.BotanicalScopings
+                    .Include(_=>_.THP_Area)
+                    .Where(_ => _.THP_Area == SelectedThp && !_._delete && !_.Repository).Count().ToString();
+                AreaCount = Database.BotanicalSurveyAreas
+                    .Include(_ => _.THP_Area)
+                    .Where(_ => _.THP_Area == SelectedThp && !_._delete && !_.Repository).Count().ToString();
+                SurveyCount = Database.BotanicalSurveys
+                    .Include(_ => _.THP_Area)
+                    .Where(_ => _.THP_Area == SelectedThp && !_._delete && !_.Repository).Count().ToString();
 
                 RaisePropertyChanged(nameof(ScopingCount));
                 RaisePropertyChanged(nameof(AreaCount));
@@ -75,7 +78,12 @@ namespace WBIS_2.Modules.ViewModels.Reports
         public ICommand BotanicalSurveyCommand => new DelegateCommand(BotanicalSurveyClick);
         private void BotanicalSurveyClick()
         {
-
+            if (SelectedThp == null)
+            {
+                MessageBox.Show("There is no THP selected.");
+                return;
+            }
+            new BotanicalSurveyReport(SelectedThp);
         }
 
         public ICommand ThpBotanicalSurveyCommand => new DelegateCommand(ThpBotanicalSurveyClick);

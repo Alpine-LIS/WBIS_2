@@ -166,7 +166,7 @@ namespace WBIS_2.DataModel
         }
 
 
-        public IQueryable GetQueryable(WBIS2Model model, bool track = false, List<string> ForceInclude = null, bool includeGeometry = false)
+        public IQueryable GetQueryable(DbContext model, bool track = false, List<string> ForceInclude = null, bool includeGeometry = false)
         {
             IQueryable<InfoType> returnVal;
 
@@ -191,7 +191,7 @@ namespace WBIS_2.DataModel
                      
             return returnVal;
         }
-        public IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model, bool showDelete = false, bool showRepository = false, 
+        public IQueryable GetQueryable(object[] Query, Type QueryType, DbContext model, bool showDelete = false, bool showRepository = false, 
             bool includeGeometry = false, bool track = false, List<string> ForceInclude = null)
         {
             IQueryable<InfoType> returnVal = (IQueryable<InfoType>)GetQueryable(model, track, ForceInclude, includeGeometry);
@@ -365,7 +365,7 @@ namespace WBIS_2.DataModel
 
 
 
-        public IQueryable GetQueryableFromChildren(object[] Query, Type QueryType, WBIS2Model model)
+        public IQueryable GetQueryableFromChildren(object[] Query, Type QueryType, DbContext model)
         {
             IQueryable<InfoType> returnVal = (IQueryable<InfoType>)GetQueryable(model, true, null);
 

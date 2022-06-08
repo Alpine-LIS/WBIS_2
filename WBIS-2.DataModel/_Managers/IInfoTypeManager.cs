@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -30,15 +31,15 @@ namespace WBIS_2.DataModel
         /// <summary>
         /// Return an IQueryable for the specified information type.
         /// </summary>
-        public abstract IQueryable GetQueryable(WBIS2Model model, bool track = false, List<string> ForceInclude = null, bool includeGeometry = false);
+        public abstract IQueryable GetQueryable(DbContext model, bool track = false, List<string> ForceInclude = null, bool includeGeometry = false);
        // public abstract IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model);
-        public abstract IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model, bool showDelete = false, bool showRepository = false, 
+        public abstract IQueryable GetQueryable(object[] Query, Type QueryType, DbContext model, bool showDelete = false, bool showRepository = false, 
             bool includeGeometry = false, bool track = false, List<string> ForceInclude = null);
         //public abstract IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model, bool showDelete, bool showRepository, bool includeGeometry);
         //public abstract IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model, bool showDelete, bool showRepository);
         //public abstract IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model, bool track = false);
         //public abstract IQueryable GetQueryable(object[] Query, Type QueryType, WBIS2Model model, List<string> ForceInclude = null);
-        public abstract IQueryable GetQueryableFromChildren(object[] Query, Type QueryType, WBIS2Model model);
+        public abstract IQueryable GetQueryableFromChildren(object[] Query, Type QueryType, DbContext model);
         /// <summary>
         /// Can the infromation type be set as active.
         /// </summary>
