@@ -38,9 +38,6 @@
 	  <Using Include="Alpine.EFTools.Attributes" />
 	  <Using Include="Alpine.EFTools.Interfaces" />
 	  <Using Include="Alpine.EFTools.Managers" />
-	  <Using Include="System.ComponentModel" />
-	  <Using Include="System.ComponentModel.DataAnnotations" />
-	  <Using Include="System.ComponentModel.DataAnnotations.Schema" />
     <PackageReference Include="Atlas.Map" Version="3.1.1" />
     <PackageReference Include="Atlas3.Controls" Version="3.1.1" />
     <PackageReference Include="Atlas3.Manager" Version="3.1.1" />

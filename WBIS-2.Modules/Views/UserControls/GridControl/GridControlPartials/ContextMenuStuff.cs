@@ -42,7 +42,7 @@ namespace WBIS_2.Modules.Views
             ContextMenu contextMenu = new ContextMenu();
             if (((ListViewModelBase)DataContext).ListManager != null)
             {
-                if (((ListViewModelBase)DataContext).ListManager.CanSetActive)
+                if (((ListViewModelBase)DataContext).IsActivable)
                     ActiveUnitsMenuItems(ref contextMenu);
                 if (((ListViewModelBase)DataContext).ListManager.DeleteRestoreRecord)
                     DeleteUnitsMenuItems(ref contextMenu);

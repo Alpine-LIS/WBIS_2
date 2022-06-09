@@ -11,9 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-	  <Using Include="System.ComponentModel" />
-	  <Using Include="System.ComponentModel.DataAnnotations" />
-	  <Using Include="System.ComponentModel.DataAnnotations.Schema" />
 	  <Using Include="Alpine.EFTools.Attributes" />
 	  <Using Include="Alpine.EFTools.Interfaces" />
 	  <Using Include="Alpine.EFTools.Managers" />

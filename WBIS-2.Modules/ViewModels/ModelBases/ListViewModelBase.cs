@@ -143,7 +143,8 @@ namespace WBIS_2.Modules.ViewModels
             ImportRecords = ImportView != null;
 
 
-            bool IsActivable = ListManager.InformationType.GetInterfaces().Contains(typeof(IActiveUnit));
+            IsActivable = ListManager.InformationType.GetInterfaces().Contains(typeof(IActiveUnit));
+            RaisePropertyChanged(nameof(IsActivable));
             ActiveUnitMenuVisable = IsActivable;
             DeleteRestoreRecordsEnabled = ListManager.DeleteRestoreRecord;
 
@@ -164,7 +165,7 @@ namespace WBIS_2.Modules.ViewModels
         }
 
 
-
+        public bool IsActivable { get; set; }
         public event EventHandler ViewActiveEvent;
         public bool ActiveUnitMenuVisable { get; set; }
         public ICommand ViewActiveCommand { get; set; }
