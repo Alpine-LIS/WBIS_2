@@ -7,8 +7,8 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    [DisplayOrder(Index = 9)]
-    public class BotanicalSurveyArea : UserDataValidator, IUserRecords, INonPointParents, IActiveUnit, IBotanyRecord
+    [DisplayOrder(Index = 9), TypeGrouper(GroupName = "Botany")]
+    public class BotanicalSurveyArea : UserDataValidator, IUserRecords, INonPointParents, IActiveUnit
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
@@ -92,7 +92,7 @@ namespace WBIS_2.DataModel
         public ApplicationUser UserModified { get; set; }
 
 
-        [Column("is_active")]
+        [Column("is_active"), ActiveRecordQuery("active_botanical_survey_areas", "guid", "unit_id", "application_user_id", typeof(CurrentUser), "UsingGuid")]
         public bool IsActive { get; set; }
         [ListInfo(AutoInclude = true)]
         public ICollection<ApplicationUser> ActiveUsers { get; set; }

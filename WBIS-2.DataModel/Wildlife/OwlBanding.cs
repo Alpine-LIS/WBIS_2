@@ -7,8 +7,8 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    [DisplayOrder(Index = 22)]
-    public class OwlBanding : UserDataValidator, IUserRecords, IPointParents, IPointLayer, IWildlifeRecord
+    [DisplayOrder(Index = 22), TypeGrouper(GroupName = "Wildlife")]
+    public class OwlBanding : UserDataValidator, IUserRecords, IPointParents, IPointLayer
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }

@@ -221,7 +221,7 @@ namespace WBIS_2.Modules.ViewModels
             InfoTypes = new List<string>();
             InfoTypes.Add("Default View");
             InfoTypes.Add("District");
-            InfoTypes.AddRange(new InformationTypeManager<District>().AvailibleChildren.Select(_ => _.Manager.DisplayName));
+            InfoTypes.AddRange(new InformationTypeManager<District>().GetChildren(true,"").Select(_ => _.Manager.DisplayName));
             RaisePropertyChanged(nameof(InfoTypes));
         }
 

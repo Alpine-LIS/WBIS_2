@@ -7,8 +7,8 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    [DisplayOrder(Index = 14)]
-    public class SiteCalling : UserDataValidator, IUserRecords,  IPointParents, IPointLayer, IWildlifeRecord
+    [DisplayOrder(Index = 14), TypeGrouper(GroupName = "Wildlife")]
+    public class SiteCalling : UserDataValidator, IUserRecords,  IPointParents, IPointLayer
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }

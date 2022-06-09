@@ -7,8 +7,8 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    [DisplayOrder(Index = 12)]
-    public class SPIPlantPolygon: IInformationType, INonPointParents, IBotanyRecord
+    [DisplayOrder(Index = 12), TypeGrouper(GroupName = "Botany")]
+    public class SPIPlantPolygon: IInformationType, INonPointParents
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }

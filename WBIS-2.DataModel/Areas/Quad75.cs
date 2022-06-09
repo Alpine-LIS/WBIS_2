@@ -7,8 +7,8 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    [DisplayOrder(Index = 1)]
-    public class Quad75 : IInformationType, IWildlifeRecord, IBotanyRecord
+    [DisplayOrder(Index = 1), TypeGrouper(IgnoreGroups = true)]
+    public class Quad75 : IInformationType
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }

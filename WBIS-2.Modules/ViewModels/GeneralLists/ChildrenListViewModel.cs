@@ -34,7 +34,7 @@ namespace WBIS_2.Modules.ViewModels
             {
                 SetProperty(() => ParentType, value);
                 if (ParentType == null) return;
-                AvailibleChildren = ParentType.Manager.AvailibleChildren;
+                AvailibleChildren = ParentType.Manager.GetChildren(false, CurrentUser.TypeGroup);
                 if (AvailibleChildren.Length > 0)
                     CurrentChild = AvailibleChildren[0];
             }

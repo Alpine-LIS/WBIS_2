@@ -50,7 +50,7 @@ namespace WBIS_2.Modules.Tools
         private void FindDeletableChildren(IQueryable<object> records)
         {
             IInfoTypeManager manager = ((IInformationType)records.First()).Manager;
-            var children = manager.AvailibleChildren
+            var children = manager.GetChildren(true, "")
                     .Where(_ => _.Manager.InformationType.GetInterfaces().Contains(typeof(object)));
             foreach (var child in children)
             {

@@ -31,7 +31,7 @@ namespace WBIS_2.Modules.ViewModels.Reports
         {
             District dist = new District();
             SelectableInfoTypes = new List<InfoTypeChooser>();
-            foreach ( var childType in dist.Manager.AvailibleChildren)
+            foreach ( var childType in dist.Manager.GetChildren(true,""))
             {
                 if (childType.GetType().GetProperty("Geometry") == null) continue;
                 SelectableInfoTypes.Add(new InfoTypeChooser() { InfoType = childType.GetType() });

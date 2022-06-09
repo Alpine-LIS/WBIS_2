@@ -9,8 +9,8 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    [DisplayOrder(Index = 16)]
-    public class OtherWildlife : UserDataValidator, IInformationType, IWildlifeRecord
+    [DisplayOrder(Index = 16), TypeGrouper(GroupName = "Wildlife")]
+    public class OtherWildlife : UserDataValidator, IInformationType
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }

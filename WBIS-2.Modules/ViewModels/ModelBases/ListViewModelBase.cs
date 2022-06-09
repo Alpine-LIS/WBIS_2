@@ -122,9 +122,19 @@ namespace WBIS_2.Modules.ViewModels
             {
                 SetProperty(() => ListManager, value);
                 //if (ListManager == null) return;
+                FillChildren();
                 SetRecordOptions();
             }
         }
+
+        private void FillChildren()
+        {
+            AllChildren = ListManager.GetChildren(true, "");
+            AvailibleChildren = ListManager.GetChildren(false, CurrentUser.TypeGroup);
+        }
+        public IInformationType[] AllChildren { get; set; }
+        public IInformationType[] AvailibleChildren { get; set; }
+
 
         public string TableName => ListManager == null? "" : ListManager.DisplayName;
 
@@ -135,7 +145,7 @@ namespace WBIS_2.Modules.ViewModels
 
             DetailsViewModel = Type.GetType("WBIS_2.Modules.ViewModels." + ListManager.DisplayName.Replace(" ", "") + "ViewModel");
             ShowDetailsEnabled = DetailsViewModel != null;
-            ShowChildrenEnabled = ListManager.AvailibleChildren.Count() > 0;
+            ShowChildrenEnabled = AvailibleChildren.Count() > 0;
             if (DetailsViewModel != null)
                 AddSingleRecord = (bool)DetailsViewModel.GetProperty("AddSingle").GetValue(null);
 
@@ -209,7 +219,7 @@ namespace WBIS_2.Modules.ViewModels
         public void DeleteRecords()
         {
             if (SelectedItems.Count == 0) return;
-            var children = ListManager.AvailibleChildren
+            var children = AllChildren
                     .Where(_ => _.Manager.InformationType.GetInterfaces().Contains(typeof(IUserRecords)))
                     .Select(_ => _.Manager.DisplayName);
             if (children.Count() > 0)
@@ -253,7 +263,7 @@ namespace WBIS_2.Modules.ViewModels
         public void RepositoryStoreRecords()
         {
             if (SelectedItems.Count == 0) return;
-            var children = ListManager.AvailibleChildren
+            var children = AllChildren
                     .Where(_ => _.Manager.InformationType.GetInterfaces().Contains(typeof(IUserRecords)))
                     .Select(_ => _.Manager.DisplayName);
             if (children.Count() > 0)
@@ -317,7 +327,7 @@ namespace WBIS_2.Modules.ViewModels
                 return;
             }
 
-            if (ListManager.AvailibleChildren.Count() > 0)
+            if (AvailibleChildren.Count() > 0)
             {
                 IDocumentManagerService service = this.GetRequiredService<IDocumentManagerService>();
                 IDocument document = service.FindDocumentById(ListManager.DisplayName + " Children");

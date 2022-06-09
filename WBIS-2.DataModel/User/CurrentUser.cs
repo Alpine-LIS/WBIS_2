@@ -30,11 +30,16 @@ namespace WBIS_2.DataModel
                         CurrentUserChanged?.Invoke(new object(), new EventArgs());
                         GetVisableLayers();
                         AutoFilterActiveUnits = _User.AutoFilterActiveUnits;
+
+                        TypeGroup = "";
+                        if (User.Wildlife) TypeGroup += "Wildlife";
+                        if (User.Botany) TypeGroup += "Botany";
                     }
                 }
             }
         }
 
+        public static string TypeGroup { get; set; }
         public static bool AutoFilterActiveUnits { get; set; }
         public static string UserName { get; set; } = "Unknown";
         public static bool ReadOnly { get; set; }
@@ -110,6 +115,16 @@ namespace WBIS_2.DataModel
             MobileUserGuid = new WBIS2Model().ApplicationUsers.First(_ => _.UserName == MobileUserName && !_._delete && !_.PlaceHolder).Guid;
 
             CurrentUserChanged?.Invoke(new object(), new EventArgs());
+        }
+        public static Guid UsingGuid
+        {
+            get
+            {
+                Guid guid = CurrentUser.User.Guid;
+                if (CurrentUser.MobileUserActiveUnits)
+                    guid = CurrentUser.MobileUserGuid;
+                return guid;
+            }
         }
     }
 }

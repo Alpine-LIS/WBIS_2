@@ -7,7 +7,8 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class SPI_NOGO : IInformationType, IWildlifeRecord
+    [TypeGrouper(GroupName = "Wildlife")]
+    public class SPI_NOGO : IInformationType
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }

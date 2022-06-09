@@ -8,8 +8,8 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    [SubstituteLayer(typeof(Watershed)),DisplayOrder(Index = 8)]
-    public class BotanicalScoping : UserDataValidator, IUserRecords, IBotanyRecord
+    [SubstituteLayer(typeof(Watershed)),DisplayOrder(Index = 8), TypeGrouper(GroupName = "Botany")]
+    public class BotanicalScoping : UserDataValidator, IUserRecords
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }

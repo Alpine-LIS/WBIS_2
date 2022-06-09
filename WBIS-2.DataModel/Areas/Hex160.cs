@@ -8,8 +8,8 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    [DisplayOrder(Index = 3)]
-    public class Hex160 : IInformationType, IActiveUnit, IWildlifeRecord, IBotanyRecord
+    [DisplayOrder(Index = 3), TypeGrouper(IgnoreGroups = true)]
+    public class Hex160 : IInformationType, IActiveUnit
     {
         [Key,DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
         public Guid Guid { get; set; }
@@ -29,7 +29,8 @@ namespace WBIS_2.DataModel
         public DateTime? LatestActivity { get; set; }
 
 
-        [Column("is_active")]
+        //if (CanSetActive) query = query.Replace($"\"is_active\"", $"guid IN (SELECT unit_id FROM active_{et.GetSchemaQualifiedTableName()} WHERE application_user_id = '{guid}') as \"is_active\"");
+        [Column("is_active"), ActiveRecordQuery("active_hex160s", "guid", "unit_id", "application_user_id", typeof(CurrentUser), "UsingGuid")]
         public bool IsActive { get; set; }
         [ListInfo(AutoInclude = true)]
         public ICollection<ApplicationUser> ActiveUsers { get; set; }
