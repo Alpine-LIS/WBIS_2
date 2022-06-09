@@ -148,14 +148,15 @@ namespace WBIS_2.Modules.Views
 
             foreach(var displayField in ((ListViewModelBase)DataContext).ListManager.DisplayFields)
             {
-                GridColumn c = new GridColumn() { FieldName = $"{displayField.Value}", Header = displayField.Key };
-                if (c.FieldName == "UserModified.UserName") c.Header = "UpdateUser";
+                if (gc.Columns.Any(_ => _.FieldName == displayField.FullName)) continue;
+                GridColumn c = new GridColumn() { FieldName = $"{displayField.FullName }", Header = displayField.FieldName };
                 addColumns.Add(c,0);
             }
 
             foreach (var col in gc.Columns)
             {
-                if (col.FieldType.GetInterfaces().Contains(typeof(IInformationType)) || col.FieldType.Namespace.Contains("WBIS_2.DataModel") || col.FieldType.Namespace.Contains("Alpine.FlexForms"))
+                //if (col.FieldType.GetInterfaces().Contains(typeof(IInformationType)) || col.FieldType.Namespace.Contains("WBIS_2.DataModel") || col.FieldType.Namespace.Contains("Alpine.FlexForms"))
+                if (! col.FieldType.Namespace.StartsWith("System") || col.FieldType.Name.Contains("Collection"))
                 {
                     //IInformationType instance = (IInformationType)Activator.CreateInstance(col.FieldType);
                     //var colValues = instance.Manager.DisplayFields;

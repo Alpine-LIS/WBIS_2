@@ -38,7 +38,8 @@
 	  <Using Include="Alpine.EFTools.Attributes" />
 	  <Using Include="Alpine.EFTools.Interfaces" />
 	  <Using Include="Alpine.EFTools.Managers" />
-    <PackageReference Include="Atlas.Map" Version="3.1.1" />
+	  <Using Include="Alpine.EFTools.Tools" />
+	  <PackageReference Include="Atlas.Map" Version="3.1.1" />
     <PackageReference Include="Atlas3.Controls" Version="3.1.1" />
     <PackageReference Include="Atlas3.Manager" Version="3.1.1" />
     <PackageReference Include="Compat.Private.Serialization" Version="1.0.0" />

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <RootNamespace>WBIS_2.DataModel</RootNamespace>
     <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
@@ -14,7 +14,7 @@
 	  <Using Include="Alpine.EFTools.Attributes" />
 	  <Using Include="Alpine.EFTools.Interfaces" />
 	  <Using Include="Alpine.EFTools.Managers" />
-	  <PackageReference Include="Atlas.Projections" Version="3.1.1" />
+	  <Using Include="Alpine.EFTools.Tools" />
     <PackageReference Include="DevExpress.Mvvm" Version="21.2.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.5">
