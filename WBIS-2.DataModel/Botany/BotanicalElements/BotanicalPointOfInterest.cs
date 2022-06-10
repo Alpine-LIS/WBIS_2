@@ -9,13 +9,14 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class BotanicalPointOfInterest : UserDataValidator
+    public class BotanicalPointOfInterest : UserDataValidator, IInformationType
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid"), ForeignKey("BotanicalElement")]
         public Guid Guid { get; set; }
 
         //[Required, Column("botanical_element_id"), ForeignKey("BotanicalElement")]
         //public Guid BotanicalElementId { get; set; }
+        [ListInfo(SurrogateGeometry = true)]
         public BotanicalElement BotanicalElement { get; set; }
 
 
@@ -50,5 +51,10 @@ namespace WBIS_2.DataModel
         public DateTime DateTime { get; set; }
         [Column("comments")]
         public string Comments { get; set; }
+
+
+
+        [NotMapped, Column(Order = -1)]
+        public IInfoTypeManager Manager => new InformationTypeManager<BotanicalPointOfInterest>();
     }
 }

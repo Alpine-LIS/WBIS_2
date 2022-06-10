@@ -89,7 +89,12 @@ namespace WBIS_2.Modules.ViewModels.Reports
         public ICommand ThpBotanicalSurveyCommand => new DelegateCommand(ThpBotanicalSurveyClick);
         private void ThpBotanicalSurveyClick()
         {
-
+            if (SelectedThp == null)
+            {
+                MessageBox.Show("There is no THP selected.");
+                return;
+            }
+            new THPBotanicalSurveyReport(SelectedThp);
         }
 
 

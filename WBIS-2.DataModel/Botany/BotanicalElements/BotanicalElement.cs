@@ -28,12 +28,12 @@ namespace WBIS_2.DataModel
 
         [Column("botanical_survey_area_id")]
         public Guid? BotanicalSurveyAreaId { get; set; }
-        [ListInfo(ParentField = true)]
+        [ListInfo(ParentField = true, AutoInclude = true, DisplayField = true)]
         public BotanicalSurveyArea BotanicalSurveyArea { get; set; }
 
         [Column("botanical_survey_id")]
         public Guid? BotanicalSurveyId { get; set; }
-        [ListInfo(AutoInclude = true, ParentField = true)]
+        [ListInfo(AutoInclude = true, ParentField = true, DisplayField = true)]
         public BotanicalSurvey BotanicalSurvey { get; set; }
 
         //[Column("botanical_point_of_interest_id")]
@@ -72,11 +72,11 @@ namespace WBIS_2.DataModel
 
         [Column("user_id")]
         public Guid? UserId { get; set; }
-        [ListInfo(AutoInclude = true)]
+        [ListInfo(AutoInclude = true, DisplayField = true)]
         public ApplicationUser User { get; set; }
         [Column("user_modified_id")]
         public Guid? UserModifiedId { get; set; }
-        [ListInfo(AutoInclude = true)]
+        [ListInfo(AutoInclude = true, DisplayField = true)]
         public ApplicationUser UserModified { get; set; }
 
 
@@ -106,11 +106,11 @@ namespace WBIS_2.DataModel
 
         [Column("geometry", TypeName = "geometry(Point,26710)")]
         public Point Geometry { get; set; }
-        [Column("lat")]
+        [Column("lat"), ListInfo(DisplayField = true)]
         public double Lat { get; set; }
-        [Column("lon")]
+        [Column("lon"), ListInfo(DisplayField = true)]
         public double Lon { get; set; }
-        [Column("datum")]
+        [Column("datum"), ListInfo(DisplayField = true)]
         public string Datum { get; set; }
 
 
