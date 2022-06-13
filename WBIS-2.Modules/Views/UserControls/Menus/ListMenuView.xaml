@@ -87,6 +87,9 @@
                 <dxb:BarButtonItem Content="Botanical Survey Summary"
                                    Command="{Binding BotanicalSurveySummaryCommand}"
                                    IsVisible="{Binding BotanicalSurveySummaryAvailible}"/>
+                <dxb:BarButtonItem Content="Survey Report"
+                                   Command="{Binding SurveyReportCommand}"
+                                   IsVisible="{Binding SurveyReportAvailible}"/>
             </dxb:BarSubItem>
 
                 <!--<dxb:BarSubItem Glyph="{dx:DXImage SvgImages/Dashboards/EditFilter.svg}" ToolTip="Filter Tools">

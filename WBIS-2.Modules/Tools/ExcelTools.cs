@@ -95,6 +95,41 @@ namespace WBIS_2.Modules.Tools
             excel.Quit();
         }
 
+        public static void DatatableToSheet(Excel.Worksheet sheet, DataTable dt, bool BoldHeader, bool HeaderGrid, Excel.XlRgbColor headerColor, bool cellGrid)
+        {
+            object[,] printArray = new object[dt.Rows.Count + 1, dt.Columns.Count + 1];
+            for (int c = 0; c < dt.Columns.Count; c++)
+                printArray[0, c] = dt.Columns[c].ColumnName;
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                for (int c = 0; c < dt.Columns.Count; c++)
+                    if (dt.Rows[i][c] is DBNull)
+                        printArray[i + 1, c] = "";
+                    else
+                        printArray[i + 1, c] = dt.Rows[i][c].ToString();
+            }
+            sheet.get_Range("A1" + ":" + NumToLetter(dt.Columns.Count - 1) + (dt.Rows.Count + 1)).Value2 = printArray;
+
+            if (HeaderGrid)
+            {
+                sheet.get_Range("A1" + ":" + NumToLetter(dt.Columns.Count - 1) + 1).Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
+                sheet.get_Range("A1" + ":" + NumToLetter(dt.Columns.Count - 1) + 1).Borders.Weight = Excel.XlBorderWeight.xlThin;
+            }
+            if (BoldHeader)
+                sheet.get_Range("A1" + ":" + NumToLetter(dt.Columns.Count - 1) + 1).Font.Bold = true;
+            if (BoldHeader)
+                sheet.get_Range("A1" + ":" + NumToLetter(dt.Columns.Count - 1) + 1).Interior.Color = headerColor;
+
+            if (cellGrid)
+            {
+                sheet.get_Range("A1" + ":" + NumToLetter(dt.Columns.Count - 1) + (dt.Rows.Count + 1)).Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
+                sheet.get_Range("A1" + ":" + NumToLetter(dt.Columns.Count - 1) + (dt.Rows.Count + 1)).Borders.Weight = Excel.XlBorderWeight.xlThin;
+            }
+
+
+            sheet.Cells.EntireColumn.AutoFit();
+        }
+
         public static string NumToLetter(int i)
         {
             int dividend = i + 1;
@@ -122,7 +157,7 @@ namespace WBIS_2.Modules.Tools
             {
                 if (property.DataType == typeof(Guid) && property.FullName != "Guid") continue;
                 if (property.DataType.Namespace == "NetTopologySuite.Geometries") continue;
-                dt.Columns.Add(new DataColumn(property.ShapefileColumn, property.DataType));
+                dt.Columns.Add(new DataColumn(property.FieldName, property.DataType));
             }
 
             foreach (var record in records)
@@ -151,14 +186,14 @@ namespace WBIS_2.Modules.Tools
                             }
                         }
                         if (val != null)
-                            dataRow[col.ShapefileColumn] = val;
+                            dataRow[col.FieldName] = val;
                     }
                     else
                     {
                         var prop = i.GetProperty(col.FullName);
                         var val = prop.GetValue(record);
                         if (val != null)
-                            dataRow[col.ShapefileColumn] = val;
+                            dataRow[col.FieldName] = val;
                     }
                 }
                 dt.Rows.Add(dataRow);

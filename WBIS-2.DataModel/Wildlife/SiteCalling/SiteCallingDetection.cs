@@ -101,9 +101,11 @@ namespace WBIS_2.DataModel
 
         [Column("district_id")]
         public Guid? DistrictId { get; set; }
+        [ListInfo(AutoInclude = true)]
         public District District { get; set; }
         [Column("watershed_id")]
         public Guid? WatershedId { get; set; }
+        [ListInfo(AutoInclude = true)]
         public Watershed Watershed { get; set; }
         [Column("quad75_id")]
         public Guid? Quad75Id { get; set; }

@@ -175,6 +175,9 @@ namespace WBIS_2.Modules.ViewModels
 
             BotanicalSurveySummaryAvailible = ListManager.InformationType == typeof(BotanicalSurveyArea);
             RaisePropertyChanged(nameof(BotanicalSurveySummaryAvailible));
+
+            SurveyReportAvailible = ListManager.InformationType == typeof(Hex160);
+            RaisePropertyChanged(nameof(SurveyReportAvailible));
         }
 
 
@@ -612,6 +615,24 @@ namespace WBIS_2.Modules.ViewModels
             }
             new Reports.BotanicalSurveySummary(SelectedItems.Cast<BotanicalSurveyArea>().ToArray());
         }
+
+
+
+
+        public bool SurveyReportAvailible { get; set; } = false;
+        public ICommand SurveyReportCommand => new DelegateCommand(SurveyReportClick);
+        private void SurveyReportClick()
+        {
+            if (SelectedItems.Count == 0)
+            {
+                MessageBox.Show("There must be records selected.");
+                return;
+            }
+            new Reports.SiteCallingSurveyReport(SelectedItems.Cast<Hex160>().ToArray());
+        }
+
+
+
 
 
         public ICommand SaveFilterCommand => new DelegateCommand(SaveFilterClick);
