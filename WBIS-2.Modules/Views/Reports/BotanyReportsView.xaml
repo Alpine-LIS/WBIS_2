@@ -53,7 +53,7 @@
             </Grid.ColumnDefinitions>
 
             <Label Content="THP Area:" Grid.Column="0" Grid.Row="0"/>
-            <dxe:ComboBoxEdit SelectedItem="{Binding SelectedThp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            <dxe:ComboBoxEdit SelectedItem="{Binding SelectedThp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinWidth="150"
                               ItemsSource="{Binding ThpAreas}" DisplayMember="THPName" AutoComplete="True" Grid.Column="1" SelectedIndex="0"/>
 
             <Button Content="Botanical Scoping Report" Command="{Binding BotanicalScopingCommand}" Grid.Row="0" Grid.Column="2"/>

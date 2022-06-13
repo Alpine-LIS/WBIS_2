@@ -62,6 +62,9 @@ namespace WBIS_2.Modules.ViewModels.Reports
             wb.Close(true);
             excel.Quit();
 
+            ZipFile.CreateFromDirectory(sfd.FileName, sfd.FileName + ".zip");
+            Directory.Delete(sfd.FileName, true);
+
             w.Stop();
             System.Windows.MessageBox.Show("The THP survey report has finished");
         }
@@ -89,7 +92,7 @@ namespace WBIS_2.Modules.ViewModels.Reports
             SurveyDt.Columns.Add("Survey Type");
             SurveyDt.Columns.Add("Surveyor");
             SurveyDt.Columns.Add("Other Surveyors");
-            SurveyDt.Columns.Add("Start Time");
+            SurveyDt.Columns.Add("Start Time", typeof(DateTime));
             SurveyDt.Columns.Add("Time Spent");
 
             var surveys = Database.BotanicalSurveys
@@ -108,7 +111,7 @@ namespace WBIS_2.Modules.ViewModels.Reports
                 r["Time Spent"] = $"{survey.TimeSpent.Hours}:{survey.TimeSpent.Minutes}";
                 SurveyDt.Rows.Add(r);
             }
-            WriteBotanyThpReportTable(SurveyDt, sheet, 2, true);
+            ExcelTools.WriteBotanyThpReportTable(SurveyDt, sheet, 2, true);
 
 
             DataTable dt = new DataTable();
@@ -136,7 +139,7 @@ namespace WBIS_2.Modules.ViewModels.Reports
                 r["Family"] = plant.Family;
                 dt.Rows.Add(r);
             }
-            WriteBotanyThpReportTable(dt, sheet, SurveyDt.Rows.Count + 4, false);
+            ExcelTools.WriteBotanyThpReportTable(dt, sheet, SurveyDt.Rows.Count + 4, false);
 
             sheet.Rows.RowHeight = 15;
             sheet.Columns.AutoFit();
@@ -155,8 +158,8 @@ namespace WBIS_2.Modules.ViewModels.Reports
             IInfoTypeManager manager = new InformationTypeManager<BotanicalSurveyArea>();
             var records = manager.GetQueryable(new object[] {tHP_Area}, typeof(THP_Area), Database, includeGeometry: true, showDelete: false, showRepository: false);
 
-            DataTable dt = EntityToDatatable(manager, records);
-            WriteBotanyTable(dt, sheet);
+            DataTable dt = ExcelTools.EntityToDatatable(manager, records);
+            ExcelTools.WriteBotanyTable(dt, sheet);
         }
         private void ExportBotanicalSurvey(THP_Area tHP_Area, string path)
         {
@@ -173,6 +176,7 @@ namespace WBIS_2.Modules.ViewModels.Reports
             var records = Database.BotanicalPlantsOfInterest
                 .Include(_=>_.PlantSpecies)
                 .Include(_=>_.BotanicalElement).ThenInclude(_=>_.BotanicalSurveyArea).ThenInclude(_=>_.THP_Area)
+                .Include(_=>_.BotanicalElement).ThenInclude(_=>_.BotanicalSurvey).ThenInclude(_=>_.THP_Area)
                 .Include(_ => _.BotanicalElement).ThenInclude(_ => _.User)
                 .Include(_=>_.AssociatedPlants).ThenInclude(_=>_.PlantSpecies)
                 .Where (_=> !_.BotanicalElement._delete && !_.BotanicalElement.Repository && _.BotanicalElement.BotanicalSurveyArea.THP_Area.Guid == tHP_Area.Guid)
@@ -193,16 +197,16 @@ namespace WBIS_2.Modules.ViewModels.Reports
             dt.Columns.Add("Existing NDDB");
             dt.Columns.Add("Occ#");
             dt.Columns.Add("Surveyor");
-            dt.Columns.Add("DateTime");
-            dt.Columns.Add("Lat");
-            dt.Columns.Add("Lon");
+            dt.Columns.Add("DateTime", typeof(DateTime));
+            dt.Columns.Add("Lat", typeof(double));
+            dt.Columns.Add("Lon", typeof(double));
             dt.Columns.Add("Datum");
-            dt.Columns.Add("Radius");
+            dt.Columns.Add("Radius", typeof(double));
             dt.Columns.Add("Site Quality");
             dt.Columns.Add("Land Use");
-            dt.Columns.Add("Vegetative");
-            dt.Columns.Add("Flowering");
-            dt.Columns.Add("Fruiting");
+            dt.Columns.Add("Vegetative", typeof(double));
+            dt.Columns.Add("Flowering", typeof(double));
+            dt.Columns.Add("Fruiting", typeof(double));
             dt.Columns.Add("Disturbances");
             dt.Columns.Add("Threats");
             dt.Columns.Add("Habitat Description");
@@ -244,163 +248,12 @@ namespace WBIS_2.Modules.ViewModels.Reports
                 dt.Rows.Add(r);
             }
 
-            WriteBotanyTable(dt, sheet);
-            new PostGisShapefileConverter(typeof(BotanicalPlantOfInterest), records, path + "\\Botanical Survey.shp");
+            ExcelTools.WriteBotanyTable(dt, sheet);
+            new PostGisShapefileConverter(typeof(BotanicalPlantOfInterest), records, path + "\\Plants of Interest.shp");
         }
 
 
 
-
-
-        public DataTable EntityToDatatable(IInfoTypeManager manager, IQueryable records)
-        {
-            Type i = manager.InformationType;
-            DataTable dt = new DataTable();
-            var propertyColumns = manager.DisplayFields;
-            foreach (var property in propertyColumns)
-            {
-                if (property.DataType.BaseType == typeof(Geometry)) continue;
-                dt.Columns.Add(new DataColumn(property.ShapefileColumn, property.DataType));
-            }
-
-            foreach (var record in records)
-            {
-                DataRow dataRow = dt.NewRow();  
-                foreach (var col in propertyColumns)
-                {
-                    if (col.FullName.Contains("."))
-                    {
-                        PropertyInfo prop = null;
-                        object val = null;
-                        var parts = col.FullName.Split('.');
-                        foreach (var part in parts)
-                        {
-                            if (prop == null)
-                            {
-                                prop = i.GetProperty(part);
-                                val = prop.GetValue(record);
-                            }
-                            else
-                            {
-                                prop = prop.PropertyType.GetProperty(part);
-                                if (val != null)
-                                    val = prop.GetValue(val);
-                            }
-                        }
-                        if (val != null)
-                            dataRow[col.ShapefileColumn] = val;
-                    }
-                    else
-                    {
-                        var prop = i.GetProperty(col.FullName);
-                        var val = prop.GetValue(record);
-                        if (val != null) 
-                            dataRow[col.ShapefileColumn] = val;
-                    }
-                }
-                dt.Rows.Add(dataRow);
-            }
-            return dt;
-        }
-
-
-
-        private void WriteBotanyThpReportTable(DataTable dt, Excel.Worksheet sheet, int startRow, bool survey)
-        {
-            object[,] printArray = new object[dt.Rows.Count + 1, dt.Columns.Count];
-            for (int c = 0; c < dt.Columns.Count; c++)
-            {
-                printArray[0, c] = dt.Columns[c].ColumnName;
-            }
-            for (int i = 0; i < dt.Rows.Count; i++)
-            {
-                for (int c = 0; c < dt.Columns.Count; c++)
-                {
-                    if (dt.Rows[i][c] is DBNull)
-                    {
-                        printArray[i + 1, c] = "";
-                        continue;
-                    }
-
-                    if (dt.Columns[c].ColumnName == "Lat" || dt.Columns[c].ColumnName == "Lon")
-                    {
-                        printArray[i + 1, c] = ((double)dt.Rows[i][c]).ToString("N5");
-                    }
-                    else if (dt.Columns[c].ColumnName == "TimeSpent")
-                    {
-                        printArray[i + 1, c] = ((double)dt.Rows[i][c]).ToString("N2") + "h";
-                    }
-                    else if (dt.Columns[c].ColumnName.Contains("Time"))
-                    {
-                        if (survey) printArray[i + 1, c] = ((DateTime)dt.Rows[i][c]).ToShortDateString();
-                        else printArray[i + 1, c] = ((DateTime)dt.Rows[i][c]).ToShortDateString() + " " + ((DateTime)dt.Rows[i][c]).ToShortTimeString();
-                    }
-                    else if (dt.Columns[c].DataType == typeof(double))
-                    {
-                        printArray[i + 1, c] = ((double)dt.Rows[i][c]).ToString("N2");
-                    }
-                    else
-                    {
-                        printArray[i + 1, c] = dt.Rows[i][c].ToString();
-                    }
-                }
-            }
-
-            sheet.Rows.RowHeight = 15;
-            sheet.get_Range("A" + startRow + ":" + ExcelTools.NumToLetter(dt.Columns.Count - 1) + (dt.Rows.Count + startRow)).Value2 = printArray;
-            sheet.get_Range("A" + startRow + ":" + ExcelTools.NumToLetter(dt.Columns.Count - 1) + (dt.Rows.Count + startRow)).Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
-            sheet.get_Range("A" + startRow + ":" + ExcelTools.NumToLetter(dt.Columns.Count - 1) + (dt.Rows.Count + startRow)).Borders.Weight = Excel.XlBorderWeight.xlThin;
-            sheet.get_Range("A" + startRow + ":" + ExcelTools.NumToLetter(dt.Columns.Count - 1) + startRow).Interior.Color = Excel.XlRgbColor.rgbYellow;
-            sheet.Columns.AutoFit();
-        }
-
-        private void WriteBotanyTable(DataTable dt, Excel.Worksheet sheet)
-        {
-            object[,] printArray = new object[dt.Rows.Count + 1, dt.Columns.Count];
-            for (int c = 0; c < dt.Columns.Count; c++)
-            {
-                printArray[0, c] = dt.Columns[c].ColumnName;
-            }
-            for (int i = 0; i < dt.Rows.Count; i++)
-            {
-                for (int c = 0; c < dt.Columns.Count; c++)
-                {
-                    if (dt.Rows[i][c] is DBNull)
-                    {
-                        printArray[i + 1, c] = "";
-                        continue;
-                    }
-
-                    if (dt.Columns[c].ColumnName == "Lat" || dt.Columns[c].ColumnName == "Lon")
-                    {
-                        printArray[i + 1, c] = ((double)dt.Rows[i][c]).ToString("N5");
-                    }
-                    else if (dt.Columns[c].ColumnName == "TimeSpent")
-                    {
-                        printArray[i + 1, c] = ((double)dt.Rows[i][c]).ToString("N2") + "h";
-                    }
-                    else if (dt.Columns[c].ColumnName.Contains("Time"))
-                    {
-                        printArray[i + 1, c] = ((DateTime)dt.Rows[i][c]).ToShortDateString() + " " + ((DateTime)dt.Rows[i][c]).ToShortTimeString();
-                    }
-                    else if (dt.Columns[c].DataType == typeof(double))
-                    {
-                        printArray[i + 1, c] = ((double)dt.Rows[i][c]).ToString("N2");
-                    }
-                    else
-                    {
-                        printArray[i + 1, c] = dt.Rows[i][c].ToString();
-                    }
-                }
-            }
-
-            sheet.Rows.RowHeight = 15;
-            sheet.get_Range("A1:" + ExcelTools.NumToLetter(dt.Columns.Count - 1) + (dt.Rows.Count + 1)).Value2 = printArray;
-            sheet.get_Range("A1:" + ExcelTools.NumToLetter(dt.Columns.Count - 1) + (dt.Rows.Count + 1)).Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
-            sheet.get_Range("A2:" + ExcelTools.NumToLetter(dt.Columns.Count - 1) + (dt.Rows.Count + 1)).Borders.Weight = Excel.XlBorderWeight.xlThin;
-            sheet.get_Range("A1:" + ExcelTools.NumToLetter(dt.Columns.Count - 1) + 1).Interior.Color = Excel.XlRgbColor.rgbYellow;
-            sheet.Columns.AutoFit();
-        }
 
         public override void Tracker_ChangesSaved(object sender, IEnumerable<EntityEntry> e)
         {

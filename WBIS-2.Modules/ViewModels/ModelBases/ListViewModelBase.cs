@@ -172,6 +172,9 @@ namespace WBIS_2.Modules.ViewModels
 
             WatershedReportAvailible = ListManager.InformationType == typeof(Watershed);
             RaisePropertyChanged(nameof(WatershedReportAvailible));
+
+            BotanicalSurveySummaryAvailible = ListManager.InformationType == typeof(BotanicalSurveyArea);
+            RaisePropertyChanged(nameof(BotanicalSurveySummaryAvailible));
         }
 
 
@@ -595,6 +598,19 @@ namespace WBIS_2.Modules.ViewModels
                 return;
             }
             new Reports.WatershedReport(SelectedItems.Cast<Watershed>().ToArray());
+        }
+
+
+        public bool BotanicalSurveySummaryAvailible { get; set; } = false;
+        public ICommand BotanicalSurveySummaryCommand => new DelegateCommand(BotanicalSurveySummaryClick);
+        private void BotanicalSurveySummaryClick()
+        {
+            if (SelectedItems.Count == 0)
+            {
+                MessageBox.Show("There must be records selected.");
+                return;
+            }
+            new Reports.BotanicalSurveySummary(SelectedItems.Cast<BotanicalSurveyArea>().ToArray());
         }
 
 
