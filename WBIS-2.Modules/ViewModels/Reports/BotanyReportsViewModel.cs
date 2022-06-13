@@ -34,20 +34,24 @@ namespace WBIS_2.Modules.ViewModels.Reports
                 SetProperty(() => SelectedThp, value);
                 ScopingCount = Database.BotanicalScopings
                     .Include(_=>_.THP_Area)
-                    .Where(_ => _.THP_Area == SelectedThp && !_._delete && !_.Repository).Count().ToString();
+                    .Where(_ => _.THP_Area == SelectedThp && !_._delete && !_.Repository).Count().ToString("N0");
                 AreaCount = Database.BotanicalSurveyAreas
                     .Include(_ => _.THP_Area)
-                    .Where(_ => _.THP_Area == SelectedThp && !_._delete && !_.Repository).Count().ToString();
+                    .Where(_ => _.THP_Area == SelectedThp && !_._delete && !_.Repository).Count().ToString("N0");
                 SurveyCount = Database.BotanicalSurveys
                     .Include(_ => _.THP_Area)
-                    .Where(_ => _.THP_Area == SelectedThp && !_._delete && !_.Repository).Count().ToString();
+                    .Where(_ => _.THP_Area == SelectedThp && !_._delete && !_.Repository).Count().ToString("N0");
 
                 RaisePropertyChanged(nameof(ScopingCount));
                 RaisePropertyChanged(nameof(AreaCount));
                 RaisePropertyChanged(nameof(SurveyCount));
+
+                ReportsAvailible = ScopingCount != "0";
+                RaisePropertyChanged(nameof(ReportsAvailible));
             }
         }
 
+        public bool ReportsAvailible { get; set; } = false;
         public string ScopingCount { get; set; }
         public string AreaCount { get; set; }
         public string SurveyCount { get; set; }

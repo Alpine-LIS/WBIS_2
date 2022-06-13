@@ -56,9 +56,9 @@
             <dxe:ComboBoxEdit SelectedItem="{Binding SelectedThp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinWidth="150"
                               ItemsSource="{Binding ThpAreas}" DisplayMember="THPName" AutoComplete="True" Grid.Column="1" SelectedIndex="0"/>
 
-            <Button Content="Botanical Scoping Report" Command="{Binding BotanicalScopingCommand}" Grid.Row="0" Grid.Column="2"/>
-            <Button Content="Botanical Survey Report" Command="{Binding BotanicalSurveyCommand}" Grid.Row="1" Grid.Column="2"/>
-            <Button Content="THP Botanical Survey Report" Command="{Binding ThpBotanicalSurveyCommand}" Grid.Row="2" Grid.Column="2"/>
+            <Button Content="Botanical Scoping Report" Command="{Binding BotanicalScopingCommand}" Grid.Row="0" Grid.Column="2" IsEnabled="{Binding ReportsAvailible}"/>
+            <Button Content="Botanical Survey Report" Command="{Binding BotanicalSurveyCommand}" Grid.Row="1" Grid.Column="2" IsEnabled="{Binding ReportsAvailible}"/>
+            <Button Content="THP Botanical Survey Report" Command="{Binding ThpBotanicalSurveyCommand}" Grid.Row="2" Grid.Column="2" IsEnabled="{Binding ReportsAvailible}"/>
         </Grid>
 
     </Grid>

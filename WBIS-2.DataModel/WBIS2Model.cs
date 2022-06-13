@@ -116,6 +116,7 @@ namespace WBIS_2.DataModel
             modelBuilder.Entity<ApplicationGroup>().ToTable("application_groups");
             modelBuilder.Entity<ApplicationUser>().ToTable("application_users");
             modelBuilder.Entity<Hex160>().ToTable("hex160s");
+            modelBuilder.Entity<Hex500>().ToTable("hex500s");
             modelBuilder.Entity<Hex160RequiredPass>().ToTable("hex160_required_passes");
             modelBuilder.Entity<OtherWildlife>().ToTable("other_wildlife_records");
             modelBuilder.Entity<OwlBanding>().ToTable("owl_bandings");
@@ -427,6 +428,7 @@ namespace WBIS_2.DataModel
         public DbSet<ApplicationGroup> ApplicationGroups { get; set; }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<Hex160> Hex160s { get; set; }
+        public DbSet<Hex500> Hex500s { get; set; }
         public DbSet<Hex160RequiredPass> Hex160RequiredPasses { get; set; }
         public DbSet<OtherWildlife> OtherWildlifeRecords { get; set; }
         public DbSet<OwlBanding> OwlBandings { get; set; }

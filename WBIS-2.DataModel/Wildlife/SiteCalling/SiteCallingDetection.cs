@@ -113,6 +113,11 @@ namespace WBIS_2.DataModel
         [ListInfo(AutoInclude = true)]
         public Hex160 Hex160 { get; set; }
 
+        [Column("hex500_id")]
+        public Guid? Hex500Id { get; set; }
+        [ListInfo(AutoInclude = true)]
+        public Hex500 Hex500 { get; set; }
+
 
         [NotMapped, Display(Order = -1)]
         public IInfoTypeManager Manager { get { return new InformationTypeManager<SiteCallingDetection>(); } }
