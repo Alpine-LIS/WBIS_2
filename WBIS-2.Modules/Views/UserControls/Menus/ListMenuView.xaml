@@ -89,7 +89,10 @@
                                    IsVisible="{Binding BotanicalSurveySummaryAvailible}"/>
                 <dxb:BarButtonItem Content="Survey Report"
                                    Command="{Binding SurveyReportCommand}"
-                                   IsVisible="{Binding SurveyReportAvailible}"/>
+                                   IsVisible="{Binding Hex160ReportsAvailible}"/>
+                <dxb:BarButtonItem Content="Survey Report"
+                                   Command="{Binding CoverageReportCommand}"
+                                   IsVisible="{Binding Hex160ReportsAvailible}"/>
             </dxb:BarSubItem>
 
                 <!--<dxb:BarSubItem Glyph="{dx:DXImage SvgImages/Dashboards/EditFilter.svg}" ToolTip="Filter Tools">

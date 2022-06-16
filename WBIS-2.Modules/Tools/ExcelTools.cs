@@ -95,35 +95,48 @@ namespace WBIS_2.Modules.Tools
             excel.Quit();
         }
 
-        public static void DatatableToSheet(Excel.Worksheet sheet, DataTable dt, bool BoldHeader, bool HeaderGrid, Excel.XlRgbColor headerColor, bool cellGrid)
+        public static void DatatableToSheet(Excel.Worksheet sheet, DataTable dt, bool BoldHeader, bool HeaderGrid, Excel.XlRgbColor headerColor, bool cellGrid, int startColInt = 0)
         {
-            object[,] printArray = new object[dt.Rows.Count + 1, dt.Columns.Count + 1];
-            for (int c = 0; c < dt.Columns.Count; c++)
-                printArray[0, c] = dt.Columns[c].ColumnName;
-            for (int i = 0; i < dt.Rows.Count; i++)
+            string startCol = NumToLetter(startColInt);
+            string EndCol = NumToLetter(dt.Columns.Count - 1 + startColInt);
+
+            if (dt.Rows.Count > 0)
             {
+                object[,] printArray = new object[dt.Rows.Count + 1, dt.Columns.Count + 1];
                 for (int c = 0; c < dt.Columns.Count; c++)
-                    if (dt.Rows[i][c] is DBNull)
-                        printArray[i + 1, c] = "";
-                    else
-                        printArray[i + 1, c] = dt.Rows[i][c].ToString();
+                    printArray[0, c] = dt.Columns[c].ColumnName;
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    for (int c = 0; c < dt.Columns.Count; c++)
+                        if (dt.Rows[i][c] is DBNull)
+                            printArray[i + 1, c] = "";
+                        else
+                            printArray[i + 1, c] = dt.Rows[i][c].ToString();
+                }
+                sheet.get_Range($"{startCol}1:{EndCol}{(dt.Rows.Count + 1)}").Value2 = printArray;
             }
-            sheet.get_Range("A1" + ":" + NumToLetter(dt.Columns.Count - 1) + (dt.Rows.Count + 1)).Value2 = printArray;
+            else
+            {
+                object[,] printArray = new object[2, dt.Columns.Count + 1];
+                for (int c = 0; c < dt.Columns.Count; c++)
+                    printArray[0, c] = dt.Columns[c].ColumnName;
+                printArray[1, 0] = "The Filter used to write this report contains no data.";
+            }
 
             if (HeaderGrid)
             {
-                sheet.get_Range("A1" + ":" + NumToLetter(dt.Columns.Count - 1) + 1).Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
-                sheet.get_Range("A1" + ":" + NumToLetter(dt.Columns.Count - 1) + 1).Borders.Weight = Excel.XlBorderWeight.xlThin;
+                sheet.get_Range($"{startCol}1:{EndCol}1").Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
+                sheet.get_Range($"{startCol}1:{EndCol}1").Borders.Weight = Excel.XlBorderWeight.xlThin;
             }
             if (BoldHeader)
-                sheet.get_Range("A1" + ":" + NumToLetter(dt.Columns.Count - 1) + 1).Font.Bold = true;
-            if (BoldHeader)
-                sheet.get_Range("A1" + ":" + NumToLetter(dt.Columns.Count - 1) + 1).Interior.Color = headerColor;
+                sheet.get_Range($"{startCol}1:{EndCol}1").Font.Bold = true;
+            
+            sheet.get_Range($"{startCol}1:{EndCol}1").Interior.Color = headerColor;
 
             if (cellGrid)
             {
-                sheet.get_Range("A1" + ":" + NumToLetter(dt.Columns.Count - 1) + (dt.Rows.Count + 1)).Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
-                sheet.get_Range("A1" + ":" + NumToLetter(dt.Columns.Count - 1) + (dt.Rows.Count + 1)).Borders.Weight = Excel.XlBorderWeight.xlThin;
+                sheet.get_Range($"{startCol}1:{EndCol}{(dt.Rows.Count + 1)}").Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
+                sheet.get_Range($"{startCol}1:{EndCol}{(dt.Rows.Count + 1)}").Borders.Weight = Excel.XlBorderWeight.xlThin;
             }
 
 
