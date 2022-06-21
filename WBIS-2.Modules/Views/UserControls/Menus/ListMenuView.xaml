@@ -81,6 +81,8 @@
                 <dxb:BarButtonItem Content="Drop Selected Hex160s"
                                    Command="{Binding DropHexagonCommand}"
                                    IsVisible="{Binding AddRequiredPassesAvailible}"/>
+                <dxb:BarButtonItem Content="Parent Report"
+                                   Command="{Binding ParentReportCommand}"/>
                 <dxb:BarButtonItem Content="Watershed Report"
                                    Command="{Binding WatershedReportCommand}"
                                    IsVisible="{Binding WatershedReportAvailible}"/>

@@ -604,6 +604,23 @@ namespace WBIS_2.Modules.ViewModels
         }
 
 
+
+
+
+        public ICommand ParentReportCommand => new DelegateCommand(ParentReportClick);
+        private void ParentReportClick()
+        {
+            if (SelectedItems.Count == 0)
+            {
+                MessageBox.Show("There must be records selected.");
+                return;
+            }
+            new Reports.ParentReport(SelectedItems.ToArray(), ListManager);
+        }
+
+
+
+
         public bool BotanicalSurveySummaryAvailible { get; set; } = false;
         public ICommand BotanicalSurveySummaryCommand => new DelegateCommand(BotanicalSurveySummaryClick);
         private void BotanicalSurveySummaryClick()
