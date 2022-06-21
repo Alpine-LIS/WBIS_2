@@ -90,7 +90,7 @@
                 <dxb:BarButtonItem Content="Survey Report"
                                    Command="{Binding SurveyReportCommand}"
                                    IsVisible="{Binding Hex160ReportsAvailible}"/>
-                <dxb:BarButtonItem Content="Survey Report"
+                <dxb:BarButtonItem Content="Coverage Report"
                                    Command="{Binding CoverageReportCommand}"
                                    IsVisible="{Binding Hex160ReportsAvailible}"/>
             </dxb:BarSubItem>

@@ -66,7 +66,8 @@ namespace WBIS_2.Modules.ViewModels.Reports
             Directory.Delete(sfd.FileName, true);
 
             w.Stop();
-            System.Windows.MessageBox.Show("The THP survey report has finished");
+            if (MessageBox.Show("Would you like to open your report?", "", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                new Process { StartInfo = new ProcessStartInfo(sfd.FileName) { UseShellExecute = true } }.Start();
         }
              
         private void ExportThpBotanicalSurvey(Excel.Workbook wb, THP_Area tHP_Area)

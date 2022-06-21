@@ -33,7 +33,7 @@ namespace WBIS_2.Modules.ViewModels.Reports
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Filter = "XLSX|*.xlsx";
             sfd.OverwritePrompt = false;
-            sfd.FileName = $"Survey Report {DateTime.Now.ToShortDateString().Replace("\\", "-").Replace("/", "-")}_{DateTime.Now.ToShortTimeString().Replace(":", "-").Replace("/", "-")}";
+            sfd.FileName = $"Coverage Report {DateTime.Now.ToShortDateString().Replace("\\", "-").Replace("/", "-")}_{DateTime.Now.ToShortTimeString().Replace(":", "-").Replace("/", "-")}";
         HERE:;
             if (!sfd.ShowDialog().Value) return;
             if (File.Exists(sfd.FileName))
@@ -41,8 +41,6 @@ namespace WBIS_2.Modules.ViewModels.Reports
                 MessageBox.Show("The selected name is already in use");
                 goto HERE;
             }
-
-            bool includeShapes = MessageBox.Show("Include shapefiles?", "", MessageBoxButton.YesNo) == MessageBoxResult.Yes;
 
             WaitWindowHandler w = new WaitWindowHandler();
             w.Start();
@@ -57,7 +55,8 @@ namespace WBIS_2.Modules.ViewModels.Reports
 
             foreach(string recordType in recordTypes)
             {
-                ExportSiteCallingDetection(wb, queryRecords, recordType);
+                if (new string[] { "Follow-Up", "Calling" }.Contains(recordType))
+                    ExportSiteCallingDetection(wb, queryRecords, recordType);
                 ExportSiteCalling(wb, queryRecords, recordType);
             }
            
@@ -71,7 +70,8 @@ namespace WBIS_2.Modules.ViewModels.Reports
             excel.Quit();
 
             w.Stop();
-            System.Windows.MessageBox.Show("The survey report has finished");
+            if (MessageBox.Show("Would you like to open your report?", "", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                new Process { StartInfo = new ProcessStartInfo(sfd.FileName) { UseShellExecute = true } }.Start();
         }
              
 
@@ -79,7 +79,7 @@ namespace WBIS_2.Modules.ViewModels.Reports
         private void WriteCoverage(Excel.Workbook wb, Hex160[] queryRecords)
         {
             Excel.Worksheet sheet = wb.Sheets.Add();
-            sheet.Name = "Hex160";
+            sheet.Name = "Coverage";
 
             WriteCoverageCounts(sheet, queryRecords.Select(_=>_.Guid).ToArray());
             WriteCoverageActivities(sheet, queryRecords);
@@ -267,7 +267,7 @@ namespace WBIS_2.Modules.ViewModels.Reports
             var requiredPasses = Database.Hex160RequiredPasses
                 .Include(_ => _.BirdSpecies)
                 .Include(_ => _.Hex160)
-                .Where(_ => queryRecords.Contains(_.Hex160.Guid) && !_._delete && !_.Repository);
+                .Where(_ => queryRecords.Contains(_.Hex160.Guid) && !_._delete && !_.Repository).ToArray();
 
             var birds = requiredPasses.Select(_=>_.BirdSpecies).Distinct();
 
@@ -288,7 +288,7 @@ namespace WBIS_2.Modules.ViewModels.Reports
                 r["Required"] = requiredPasses.First(_=>_.BirdSpecies == birdSpecies).RequiredPasses;
 
                 double noPass = requiredPasses.Where(_ => _.BirdSpecies == birdSpecies && _.CurrentPasses == 0).Count();
-                double fewer = requiredPasses.Where(_ => _.BirdSpecies == birdSpecies && _.RequiredPasses > _.CurrentPasses).Count();
+                double fewer = requiredPasses.Where(_ => _.BirdSpecies == birdSpecies && _.RequiredPasses > _.CurrentPasses && _.CurrentPasses > 0).Count();
                 double match = requiredPasses.Where(_ => _.BirdSpecies == birdSpecies && _.RequiredPasses == _.CurrentPasses).Count();
                 double greater = requiredPasses.Where(_ => _.BirdSpecies == birdSpecies && _.RequiredPasses < _.CurrentPasses).Count();
                 double total = requiredPasses.Where(_ => _.BirdSpecies == birdSpecies).Count();
@@ -390,225 +390,7 @@ namespace WBIS_2.Modules.ViewModels.Reports
         }
 
 
-        private void BuildHierarchy(Excel.Workbook wb, IQueryable records)
-        {
-            Excel.Worksheet sheet = wb.Sheets.Add();
-            sheet.Name = "Botanical Efforts";
-            int currentRow = 0;
-
-            foreach(BotanicalSurveyArea area in records)
-            {
-                DataTable areaDt = SurveyAreaHierarchyRows(area);
-                if (currentRow == 0) currentRow = WriteBotanyTableHierarchy(ColumnsToItemArray(areaDt.Columns), areaDt.Columns, sheet, true, Excel.XlRgbColor.rgbWhite, 0, currentRow);
-                currentRow = WriteBotanyTableHierarchy(areaDt.Rows[0].ItemArray, areaDt.Columns, sheet, false, Excel.XlRgbColor.rgbYellow, 0, currentRow);
-
-                bool surveyAdded = false;
-                foreach(BotanicalSurvey survey in area.BotanicalSurvey)
-                {
-                    DataTable surveyDt = SurveyHierarchyRows(survey);
-                    if (!surveyAdded)
-                    {
-                        currentRow = WriteBotanyTableHierarchy(ColumnsToItemArray(surveyDt.Columns), surveyDt.Columns, sheet, true, Excel.XlRgbColor.rgbWhite, 1, currentRow);
-                        surveyAdded = true;
-                    }
-                    currentRow = WriteBotanyTableHierarchy(surveyDt.Rows[0].ItemArray, surveyDt.Columns, sheet, false, Excel.XlRgbColor.rgbLightGreen, 1, currentRow);
-
-                    var plantsOfInterest = survey.BotanicalElement.Where(_ => _.BotanicalPlantOfInterest != null).Select(_=>_.BotanicalPlantOfInterest);
-                    var plantsOfInterestDt = PlantOfInterestHierarchyRows(plantsOfInterest.AsQueryable());
-                    var pointsOfInterest = survey.BotanicalElement.Where(_ => _.BotanicalPointOfInterest != null).Select(_ => _.BotanicalPointOfInterest);
-                    var pointsOfInterestDt = PointOfInterestHierarchyRows(pointsOfInterest.AsQueryable());
-                    var plantsList = survey.BotanicalElement.Where(_ => _.BotanicalPlantList != null).Select(_ => _.BotanicalPlantList);
-                    var plantsListDt = PlantListHierarchyRows(plantsList.AsQueryable());
-
-                    currentRow = WriteBotanyTableHierarchy(plantsOfInterestDt, sheet, Excel.XlRgbColor.rgbLightBlue, 2, currentRow);
-                    currentRow = WriteBotanyTableHierarchy(pointsOfInterestDt, sheet, Excel.XlRgbColor.rgbLightSalmon, 2, currentRow);
-                    currentRow = WriteBotanyTableHierarchy(plantsListDt, sheet, Excel.XlRgbColor.rgbLightGray, 2, currentRow);
-                }
-            }
-
-            sheet.Rows.RowHeight = 15;
-            sheet.Columns.AutoFit();
-        }
-
-        private DataTable SurveyAreaHierarchyRows(BotanicalSurveyArea record)
-        {
-            DataTable dt = new DataTable();
-            dt.Columns.Add("THP Area");
-            dt.Columns.Add("Area Name");
-            dt.Columns.Add("Survey Type");
-            dt.Columns.Add("Aspect");
-            dt.Columns.Add("Slope");
-            dt.Columns.Add("Canopy");
-            dt.Columns.Add("Rock Outcrops");
-            dt.Columns.Add("Boulders");
-            dt.Columns.Add("Substrate");
-            dt.Columns.Add("Understory Vegetation");
-            dt.Columns.Add("General Habitat");
-            dt.Columns.Add("Talus/Scree");
-            dt.Columns.Add("Lava Cap");
-            dt.Columns.Add("Spring/Seep");
-            dt.Columns.Add("Pond");
-
-
-            DataRow r = dt.NewRow();
-                r["Area Name"] = record.AreaName;
-                r["THP Area"] = record.THP_Area.THPName;
-            r["Survey Type"] = record.SurveyType;
-            r["Aspect"] = record.Aspect;
-            r["Slope"] = record.Slope;
-            r["Canopy"] = record.Canopy;
-            r["Rock Outcrops"] = record.RockOutcrops;
-            r["Boulders"] = record.Boulders;
-            r["Substrate"] = record.Substrate;
-            r["Understory Vegetation"] = record.UnderstoryVegetation;
-            r["General Habitat"] = record.GeneralHabitat;
-            r["Talus/Scree"] = record.TalusScree;
-            r["Lava Cap"] = record.LavaCap;
-            r["Spring/Seep"] = record.SpringSeep;
-            r["Pond"] = record.Pond;
-            dt.Rows.Add(r);
-            return dt;
-        }
-        private DataTable SurveyHierarchyRows(BotanicalSurvey record)
-        {
-            DataTable dt = new DataTable();
-            dt.Columns.Add("Survey Type");
-            dt.Columns.Add("Surveyor");
-            dt.Columns.Add("Other Surveyors");
-            dt.Columns.Add("Start Time", typeof(DateTime));
-            dt.Columns.Add("End Time", typeof(DateTime));
-            dt.Columns.Add("Time Spent");
-
-            DataRow r = dt.NewRow();
-            r["Survey Type"] = record.SurveyType;
-            r["Surveyor"] = record.User.UserName;
-            r["Other Surveyors"] = record.OtherSurveyors;
-            r["Start Time"] = record.StartTime;
-            r["End Time"] = record.EndTime;
-            r["Time Spent"] = $"{record.TimeSpent.Hours}:{record.TimeSpent.Minutes}";
-            dt.Rows.Add(r);
-            return dt;
-        }
-        private DataTable PlantOfInterestHierarchyRows(IQueryable records)
-        {
-            DataTable dt = new DataTable();
-            dt.Columns.Add("SciName");
-            dt.Columns.Add("ComName");
-            dt.Columns.Add("Family");
-            dt.Columns.Add("Tentative Identification");
-            dt.Columns.Add("Species Found");
-            dt.Columns.Add("Species Found Txt");
-            dt.Columns.Add("Subsequent Visit");
-            dt.Columns.Add("Num Individuals");
-            dt.Columns.Add("Num Individuals Max");
-            dt.Columns.Add("Existing NDDB");
-            dt.Columns.Add("Occ#");
-            dt.Columns.Add("Surveyor");
-            dt.Columns.Add("DateTime", typeof(DateTime));
-            dt.Columns.Add("Lat", typeof(double));
-            dt.Columns.Add("Lon", typeof(double));
-            dt.Columns.Add("Datum");
-            dt.Columns.Add("Radius", typeof(double));
-            dt.Columns.Add("Site Quality");
-            dt.Columns.Add("Land Use");
-            dt.Columns.Add("Vegetative", typeof(double));
-            dt.Columns.Add("Flowering", typeof(double));
-            dt.Columns.Add("Fruiting", typeof(double));
-
-            foreach (BotanicalPlantOfInterest record in records)
-            {
-                DataRow r = dt.NewRow();
-                r["SciName"] = record.PlantSpecies.SciName;
-                r["ComName"] = record.PlantSpecies.ComName;
-                r["Family"] = record.PlantSpecies.Family;
-                r["Tentative Identification"] = record.TentativeIdentification;
-                r["Species Found"] = record.SpeciesFound;
-                r["Species Found Txt"] = record.SpeciesFoundText;
-                r["Subsequent Visit"] = record.SubsequentVisit;
-                r["Num Individuals"] = record.NumInd;
-                r["Num Individuals Max"] = record.NumIndMax;
-                r["Existing NDDB"] = record.ExistingCNDDB;
-                r["Occ#"] = record.OccNum;
-                r["Surveyor"] = record.BotanicalElement.User.UserName;
-                r["DateTime"] = record.DateTime;
-                r["Lat"] = record.BotanicalElement.Lat;
-                r["Lon"] = record.BotanicalElement.Lon;
-                r["Datum"] = record.BotanicalElement.Datum;
-                r["Radius"] = record.Radius;
-                r["Site Quality"] = record.SiteQuality;
-                r["Land Use"] = record.LandUse;
-                r["Vegetative"] = record.Vegetative;
-                r["Flowering"] = record.Flowering;
-                r["Fruiting"] = record.Fruiting;
-                dt.Rows.Add(r);
-            }
-            return dt;
-        }
-        private DataTable PointOfInterestHierarchyRows(IQueryable records)
-        {
-            DataTable dt = new DataTable();
-            dt.Columns.Add("Record Type");
-            dt.Columns.Add("Surveyor");
-            dt.Columns.Add("DateTime", typeof(DateTime));
-            dt.Columns.Add("Lat", typeof(double));
-            dt.Columns.Add("Lon", typeof(double));
-            dt.Columns.Add("Datum");
-            dt.Columns.Add("Radius", typeof(double));
-            dt.Columns.Add("Rechecks Needed");
-            dt.Columns.Add("Recheck");
-            dt.Columns.Add("Stream");
-            dt.Columns.Add("Herbaceous Vegetation");
-            dt.Columns.Add("Inundated");
-            dt.Columns.Add("Woody Vegetation");
-            dt.Columns.Add("Isolated");
-            dt.Columns.Add("Littoral Zone");
-            dt.Columns.Add("Stream Substrate");
-            dt.Columns.Add("Stream Gradient");
-
-
-            foreach (BotanicalPointOfInterest record in records)
-            {
-                DataRow r = dt.NewRow();
-                r["Record Type"] = record.RecordType;
-                r["Surveyor"] = record.BotanicalElement.User.UserName;
-                r["DateTime"] = record.DateTime;
-                r["Lat"] = record.BotanicalElement.Lat;
-                r["Lon"] = record.BotanicalElement.Lon;
-                r["Datum"] = record.BotanicalElement.Datum;
-                r["Radius"] = record.Radius;
-                r["Rechecks Needed"] = record.RechecksNeeded;
-                r["Recheck"] = record.Recheck;
-                r["Stream"] = record.Instream;
-                r["Herbaceous Vegetation"] = record.HerbaceousVegetation;
-                r["Inundated"] = record.Inundated;
-                r["Woody Vegetation"] = record.WoodyVegetation;
-                r["Isolated"] = record.Isolated;
-                r["Littoral Zone"] = record.LittoralZone;
-                r["Stream Substrate"] = record.Substrate;
-                r["Stream Gradient"] = record.Gradient;
-                dt.Rows.Add(r);
-            }
-            return dt;
-        }
-        private DataTable PlantListHierarchyRows(IQueryable records)
-        {
-            DataTable dt = new DataTable();
-            dt.Columns.Add("SciName");
-            dt.Columns.Add("ComName");
-            dt.Columns.Add("Family");
-            dt.Columns.Add("DateTime", typeof(DateTime));
-
-            foreach (BotanicalPlantList record in records)
-            {
-                DataRow r = dt.NewRow();
-                r["SciName"] = record.PlantSpecies.SciName;
-                r["ComName"] = record.PlantSpecies.ComName;
-                r["Family"] = record.PlantSpecies.Family;
-                r["DateTime"] = record.DateTime;
-                dt.Rows.Add(r);
-            }
-            return dt;
-        }
+      
 
 
         private object[] ColumnsToItemArray(DataColumnCollection columns)
