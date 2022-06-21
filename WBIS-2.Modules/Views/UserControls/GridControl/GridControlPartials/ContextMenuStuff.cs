@@ -48,6 +48,10 @@ namespace WBIS_2.Modules.Views
                     DeleteUnitsMenuItems(ref contextMenu);
                 if (((ListViewModelBase)DataContext).ListManager.RepositoryRecord)
                     RepositoryUnitsMenuItems(ref contextMenu);
+                if (((ListViewModelBase)DataContext).ListManager.InformationType == typeof(Hex160))
+                    Hex160MenuItems(ref contextMenu);
+                if (((ListViewModelBase)DataContext).ListManager.InformationType == typeof(SiteCalling))
+                    SiteCallingMenuItems(ref contextMenu);
             }
             MyGrid.ContextMenu = contextMenu;
         }
@@ -120,6 +124,40 @@ namespace WBIS_2.Modules.Views
         private void RepositoryRecords_Click(object sender, RoutedEventArgs e)
         {
             ((ListViewModelBase)DataContext).RepositoryStoreRecords();
+        }
+
+
+        private void Hex160MenuItems(ref ContextMenu contextMenu)
+        {
+            MenuItem AddRequiredPasses = new MenuItem() { Header = "Add Required Passes" };
+            AddRequiredPasses.Click += AddRequiredPasses_Click; ;
+            contextMenu.Items.Add(AddRequiredPasses);
+            MenuItem DropHexagons = new MenuItem() { Header = "Drop Selected Hex160s" };
+            DropHexagons.Click += DropHexagon_Click; ;
+            contextMenu.Items.Add(DropHexagons);
+        }
+
+        private void DropHexagon_Click(object sender, RoutedEventArgs e)
+        {
+            ((ListViewModelBase)DataContext).DropHexagonClick();
+        }
+
+        private void AddRequiredPasses_Click(object sender, RoutedEventArgs e)
+        {
+            ((ListViewModelBase)DataContext).AddRequiredPassesClick();
+        }
+
+
+        private void SiteCallingMenuItems(ref ContextMenu contextMenu)
+        {
+            MenuItem AddRequiredPasses = new MenuItem() { Header = "Set PZ Pass Count" };
+            AddRequiredPasses.Click += SetPzPass_Click; ;
+            contextMenu.Items.Add(AddRequiredPasses);
+        }
+
+        private void SetPzPass_Click(object sender, RoutedEventArgs e)
+        {
+            ((ListViewModelBase)DataContext).SetPzPassClick();
         }
     }
 }

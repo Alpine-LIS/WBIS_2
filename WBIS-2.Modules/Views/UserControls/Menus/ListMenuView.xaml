@@ -75,6 +75,9 @@
                     Content="Load Filter"
                     Command="{Binding LoadFilterCommand}"/>
 
+                <dxb:BarButtonItem Content="Set PZ Pass Count"
+                                   Command="{Binding SetPzPassCommand}"
+                                   IsVisible="{Binding SetPzPassAvailible}"/>
                 <dxb:BarButtonItem Content="Add Required Passes"
                                    Command="{Binding AddRequiredPassesCommand}"
                                    IsVisible="{Binding AddRequiredPassesAvailible}"/>

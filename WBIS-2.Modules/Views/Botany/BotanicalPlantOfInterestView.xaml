@@ -186,7 +186,13 @@
         </Grid>
 
             <dx:DXTabControl Grid.Row="3">
-            <dx:DXTabItem Header="Associated Plants">
+            <dx:DXTabItem Header="Children">
+                <views:ChildrenListView/>
+            </dx:DXTabItem>
+            <dx:DXTabItem Header="Photos">
+                <views:PicturesView/>
+            </dx:DXTabItem>
+            <!--<dx:DXTabItem Header="Associated Plants">
                 <dxg:GridControl Grid.Row="4" MinHeight="200"
             MaxHeight="1920"
             AutoGenerateColumns="None"
@@ -214,7 +220,7 @@
             </dx:DXTabItem>
                 <dx:DXTabItem Header="Photos">
                     <views:PicturesView/>
-                </dx:DXTabItem>
+                </dx:DXTabItem>-->
             </dx:DXTabControl>
         
         

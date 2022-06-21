@@ -73,6 +73,7 @@ namespace WBIS_2.DataModel
         public string Comments { get; set; }
 
 
+        [ListInfo(ChildField = true)]
         public ICollection<BotanicalPlantList> AssociatedPlants { get; set; }
 
         [NotMapped, Column(Order = -1)]

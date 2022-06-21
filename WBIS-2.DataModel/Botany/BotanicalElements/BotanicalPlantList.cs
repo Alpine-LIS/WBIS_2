@@ -9,9 +9,10 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    public class BotanicalPlantList : UserDataValidator
+  [DisplayOrder, TypeGrouper(GroupName = "Botany")]
+    public class BotanicalPlantList : UserDataValidator, IInformationType
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid"), ForeignKey("BotanicalElement")]
+         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid"), ForeignKey("BotanicalElement")]
         public Guid Guid { get; set; }
 
         //[Required, Column("botanical_element_id"),ForeignKey("BotanicalElement")]
@@ -26,11 +27,16 @@ namespace WBIS_2.DataModel
 
         [Column("plant_species_id")]
         public Guid PlantSpeciesId { get; set; }
+        [ListInfo(AutoInclude = true)]
         public PlantSpecies PlantSpecies { get; set; }
 
         [Required, Column("date_time")]
         public DateTime DateTime { get; set; }
         [Column("comments")]
         public string Comments { get; set; }
+
+
+        [NotMapped, Column(Order = -1)]
+        public IInfoTypeManager Manager => new InformationTypeManager<BotanicalPlantList>();
     }
 }

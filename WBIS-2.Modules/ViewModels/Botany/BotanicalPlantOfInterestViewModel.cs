@@ -27,7 +27,7 @@ using System.Diagnostics;
 
 namespace WBIS_2.Modules.ViewModels
 {
-    public class BotanicalPlantOfInterestViewModel : DetailViewModelBase, IDocumentContent, IDetailView, IPictures
+    public class BotanicalPlantOfInterestViewModel : DetailAndChildrenViewModelBase, IDocumentContent, IDetailView, IPictures
     {
         public static bool AddSingle => false;
         public BotanicalElement element
@@ -67,8 +67,10 @@ namespace WBIS_2.Modules.ViewModels
                 .First(_ => _.Guid == guid);
            
                 plantOfInterest = element.BotanicalPlantOfInterest;
+            ParentType = plantOfInterest;
+            RaisePropertyChanged(nameof(ParentType));
 
-                SetDateValues();
+            SetDateValues();
                 User = element.User.UserName;
                 RefreshDataSource();
 
@@ -125,13 +127,12 @@ namespace WBIS_2.Modules.ViewModels
             Records.Refresh();
             RaisePropertyChanged(nameof(Records));
         }
-        public void Records_GetQueryable(object sender, GetQueryableEventArgs e)
+        public override void Records_GetQueryable(object sender, GetQueryableEventArgs e)
         {
-            e.QueryableSource = Database.BotanicalPlantsList
-                .Include(_ => _.PlantSpecies)
-                .Include(_ => _.BotanicalPlantOfInterest)
-                .Where(_ => _.BotanicalPlantOfInterest != null)
-                .Where(_ => _.BotanicalPlantOfInterest.Guid == plantOfInterest.Guid);
+            if (CurrentChild == null) return;
+            if (ParentType == null) return;
+
+            e.QueryableSource = CurrentChild.Manager.GetQueryable(new object[] { plantOfInterest }, ParentType.GetType(), Database, showDelete: ViewDeleted, showRepository: ViewRepository);
 
             FillPictures();
         }
@@ -401,10 +402,6 @@ namespace WBIS_2.Modules.ViewModels
             {
                 RefreshDataSource();
             }
-        }
-
-        public void OnDestroy()
-        {
         }
 
         public ImageView SelectedImage

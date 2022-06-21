@@ -566,9 +566,28 @@ namespace WBIS_2.Modules.ViewModels
         }
 
 
+
+
+        public bool SetPzPassAvailible { get; set; } = false;
+        public ICommand SetPzPassCommand => new DelegateCommand(SetPzPassClick);
+        public void SetPzPassClick()
+        {
+            if (SelectedItems.Count == 0)
+            {
+                MessageBox.Show("There must be records selected.");
+                return;
+            }
+            SetPzPassControl setPzPassControl = new SetPzPassControl(SelectedItems.Cast<SiteCalling>().ToArray());
+            CustomControlWindow window = new CustomControlWindow(setPzPassControl);
+        }
+
+
+
+
+
         public bool AddRequiredPassesAvailible { get; set; } = false;
         public ICommand AddRequiredPassesCommand => new DelegateCommand(AddRequiredPassesClick);
-        private void AddRequiredPassesClick()
+        public void AddRequiredPassesClick()
         {
             if (SelectedItems.Count == 0)
             {
@@ -579,7 +598,7 @@ namespace WBIS_2.Modules.ViewModels
             CustomControlWindow window = new CustomControlWindow(SetRequiredPassesControl);
         }
         public ICommand DropHexagonCommand => new DelegateCommand(DropHexagonClick);
-        private void DropHexagonClick()
+        public void DropHexagonClick()
         {
             if (SelectedItems.Count == 0)
             {
