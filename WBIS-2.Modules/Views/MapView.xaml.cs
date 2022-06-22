@@ -9,6 +9,13 @@ using WBIS_2.DataModel;
 using Atlas3.Controls.ViewModels;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Reflection;
+using Atlas.Data;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore;
 
 namespace WBIS_2.Modules.Views
 {
@@ -51,6 +58,64 @@ namespace WBIS_2.Modules.Views
 
             DataContextChanged += MapView_DataContextChanged;
             (DataContext as MapViewModel).InformationTypesChanged(new object(), new EventArgs());
+            LayerSettings();
+        }
+
+
+
+        private void LayerSettings()
+        {
+            WBIS2Model model = new WBIS2Model();
+            foreach(var l in MapControl.UxMap.Layers)
+            {
+                var layer = MapControl.GetLayer(l.LegendText);
+                if (layer == null) continue;
+                var et = model.Model.GetEntityTypes().FirstOrDefault(_ => _.GetTableName() == l.LegendText.ToLower()); //model.Model.FindEntityType(l.LegendText.ToLower());
+                if (et != null)
+                {
+                    Type t = et.ClrType;
+                    var ge = t.GetCustomAttribute(typeof(GeometryEdits));
+                    if (ge != null)
+                    {
+                        if (!((GeometryEdits)ge).Locked)
+                        {
+                            layer.UseNotCommon = true;
+                            ((PGFeatureSet)layer.DataSet).ExternalAppLayer = true;
+                            ((PGFeatureSet)layer.DataSet).ExternalAppLayerSaving += MapView_ExternalAppLayerSaving;
+                            continue;
+                        }
+                    }
+                }
+                layer.Locked = true;
+            }
+        }
+        private void MapView_ExternalAppLayerSaving(object sender, EventArgs e)
+        {
+            var list = (List<IFeature>)sender;
+            WBIS2Model model = new WBIS2Model();
+            IEntityType et = model.Model.GetEntityTypes().FirstOrDefault(_ => _.GetTableName() == MapControl.ActiveLayer.LegendText.ToLower());
+            string keyProp = GetKeyColumn(et);
+
+            var updateProp = et.ClrType.GetProperties().FirstOrDefault(_ => _.Name == "UserModified");
+            if (updateProp == null) return;
+
+            ApplicationUser user = model.ApplicationUsers.First(_=>_.Guid == CurrentUser.User.Guid);
+
+            foreach (IFeature f in list)
+            {                
+                var record = model.Find(et.ClrType, f.DataRow[keyProp]);
+                updateProp.SetValue(record, user);
+            }
+            model.SaveChanges();
+        }
+
+        private string GetKeyColumn(IEntityType et)
+        {
+            var keyProp = et.ClrType.GetProperties().First(_ => _.GetCustomAttributes().FirstOrDefault(_ => _.GetType() == typeof(KeyAttribute)) != null);
+            var colAtt = keyProp.GetCustomAttributes().FirstOrDefault(_ => _.GetType() == typeof(ColumnAttribute));
+            if (colAtt != null)
+                return ((ColumnAttribute)colAtt).Name;
+            else return keyProp.Name;
         }
 
 

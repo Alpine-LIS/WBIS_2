@@ -7,7 +7,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    [DisplayOrder(Index = 18), TypeGrouper(GroupName = "Wildlife")]
+    [DisplayOrder(Index = 18), TypeGrouper(GroupName = "Wildlife"), GeometryEdits(Locked = false)]
     public class ProtectionZone : UserDataValidator, IUserRecords
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]

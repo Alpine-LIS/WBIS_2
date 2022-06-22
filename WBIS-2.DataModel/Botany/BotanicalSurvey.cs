@@ -7,7 +7,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    [DisplayOrder(Index = 10), TypeGrouper(GroupName = "Botany")]
+    [DisplayOrder(Index = 10), TypeGrouper(GroupName = "Botany"), GeometryEdits(Locked = false)]
     public class BotanicalSurvey : UserDataValidator, IUserRecords, INonPointParents
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]

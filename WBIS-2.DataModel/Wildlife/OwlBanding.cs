@@ -7,7 +7,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
-    [DisplayOrder(Index = 22), TypeGrouper(GroupName = "Wildlife")]
+    [DisplayOrder(Index = 22), TypeGrouper(GroupName = "Wildlife"), GeometryEdits(Locked = false)]
     public class OwlBanding : UserDataValidator, IUserRecords, IPointParents, IPointLayer
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
