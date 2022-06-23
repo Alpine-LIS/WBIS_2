@@ -136,7 +136,7 @@ namespace WBIS_2.Modules.ViewModels
         public IInformationType[] AvailibleChildren { get; set; }
 
 
-        public string TableName => ListManager == null? "" : ListManager.DisplayName;
+        public string TableName => ListManager == null? "" : ListManager.GetTableName(Database);
 
 
         private void SetRecordOptions()
@@ -431,9 +431,24 @@ namespace WBIS_2.Modules.ViewModels
         public event EventHandler SaveGridLayoutEvent;
         public void SaveGridLayout()
         {
-            //if (DontSaveLayout || Tracker.ChangesSaving) return;
-            //SaveGridLayoutEvent?.Invoke(new object(), new EventArgs());
+            if (DontSaveLayout || Tracker.ChangesSaving) return;
+            SaveGridLayoutEvent?.Invoke(new object(), new EventArgs());
         }
+        public bool RestoreGridColumnDefaultVisable { get; set; }
+        public ICommand RestoreGridColumnDefaultCommand => new DelegateCommand(DoRestoreGridColumnDefault);
+        bool DontSaveLayout = false;
+        public void DoRestoreGridColumnDefault()
+        {
+            DontSaveLayout = true;
+            string path = @$"{AppDomain.CurrentDomain.BaseDirectory}\GridLayouts";
+            if (File.Exists($@"{ path}\{ TableName}.xml")) File.Delete($@"{ path}\{ TableName}.xml");
+            RefreshDataSource();
+            DontSaveLayout = false;
+        }
+
+
+
+
 
         public string GetTableName()
         {
@@ -692,6 +707,43 @@ namespace WBIS_2.Modules.ViewModels
         public void LoadFilterClick()
         {
             LoadFilterEvent?.Invoke(new object(), new EventArgs());
+        }
+    }
+
+
+    public class ColumnVisClass : BindableBase
+    {
+        public ListViewModelBase ListViewModelBase { get; set; }
+        public ColumnVisClass(ListViewModelBase wBISViewModelBase) => ListViewModelBase = wBISViewModelBase;
+        private bool _IsVisable;
+        public bool IsVisable
+        {
+            get => _IsVisable;
+            set
+            {
+                if (_IsVisable != value)
+                {
+                    _IsVisable = value;
+                    SaveGridLayout();//RMSViewModelBase.SaveGridLayout();
+                }
+            }
+        }
+        private int _VisableIndex;
+        public int VisableIndex
+        {
+            get => _VisableIndex;
+            set
+            {
+                if (_VisableIndex != value)
+                {
+                    _VisableIndex = value;
+                    SaveGridLayout();// RMSViewModelBase.SaveGridLayout();
+                }
+            }
+        }
+        private void SaveGridLayout()
+        {
+            ListViewModelBase.SaveGridLayout();
         }
     }
 }

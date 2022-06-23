@@ -65,7 +65,7 @@
                 IsVisible="{Binding IsIMapNavigationList}"
                 Content="Toggle map auto zoom" Glyph="{dx:DXImage SvgImages/Dashboards/GeoPointMaps.svg}"/>
 
-            <dxb:BarSubItem Glyph="{dx:DXImage SvgImages/Dashboards/EditFilter.svg}" ToolTip="Filter Tools">
+            <dxb:BarSubItem Glyph="{dx:DXImage SvgImages/XAF/Action_Printing_PageSetup.svg}" ToolTip="Tools">
                 <dxb:BarButtonItem 
                     ToolTip="Save Filter"
                     Content="Save Filter"
@@ -74,6 +74,7 @@
                     ToolTip="Load Filter"
                     Content="Load Filter"
                     Command="{Binding LoadFilterCommand}"/>
+                <dxb:BarButtonItem Content="Restore Grid Column Defaults" IsVisible="{Binding RestoreGridColumnDefaultVisable}" Command="{Binding RestoreGridColumnDefaultCommand}"/>
 
                 <dxb:BarButtonItem Content="Set PZ Pass Count"
                                    Command="{Binding SetPzPassCommand}"
@@ -100,20 +101,7 @@
                                    IsVisible="{Binding Hex160ReportsAvailible}"/>
             </dxb:BarSubItem>
 
-                <!--<dxb:BarSubItem Glyph="{dx:DXImage SvgImages/Dashboards/EditFilter.svg}" ToolTip="Filter Tools">
-                <dxb:BarButtonItem 
-                    ToolTip="Save Filter"
-                    Content="Save Filter"
-                    Command="{Binding SaveFilterCommand}"/>
-                <dxb:BarButtonItem 
-                    ToolTip="Load Filter"
-                    Content="Load Filter"
-                    Command="{Binding LoadFilterCommand}"/>
-            </dxb:BarSubItem>-->
-
-
-
-            <!--<local:HexMenuTools IsVisible="{Binding IsHex160List, UpdateSourceTrigger =PropertyChanged}"/>-->
+         
 
 
             <dxb:BarSubItem ToolTip="Active Units" IsVisible="{Binding ActiveUnitMenuVisable}" Glyph="{dx:DXImage SvgImages/Dashboards/ImportMap.svg}">

@@ -241,40 +241,6 @@ namespace WBIS_2.Modules.ViewModels
     }
 
 
-    public class ColumnVisClass : BindableBase
-    {
-        public WBISViewModelBase WBISViewModelBase { get; set; }
-        public ColumnVisClass(WBISViewModelBase wBISViewModelBase) => WBISViewModelBase = wBISViewModelBase;
-        private bool _IsVisable;
-        public bool IsVisable
-        {
-            get => _IsVisable;
-            set
-            {
-                if (_IsVisable != value)
-                {
-                    _IsVisable = value;
-                    SaveGridLayout();//RMSViewModelBase.SaveGridLayout();
-                }
-            }
-        }
-        private int _VisableIndex;
-        public int VisableIndex
-        {
-            get => _VisableIndex;
-            set
-            {
-                if (_VisableIndex != value)
-                {
-                    _VisableIndex = value;
-                    SaveGridLayout();// RMSViewModelBase.SaveGridLayout();
-                }
-            }
-        }
-        private void SaveGridLayout()
-        {
-            //WBISViewModelBase.SaveGridLayout();
-        }
-    }
+   
 }
 

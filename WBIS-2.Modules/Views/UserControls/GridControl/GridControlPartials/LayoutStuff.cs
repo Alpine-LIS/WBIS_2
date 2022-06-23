@@ -107,7 +107,7 @@ namespace WBIS_2.Modules.Views
 
             foreach (var c in MyGrid.Columns)
             {
-                ColumnVisClass columnVisClass = new ColumnVisClass((WBISViewModelBase)DataContext);
+                ColumnVisClass columnVisClass = new ColumnVisClass((ListViewModelBase)DataContext);
                 columnVisClass.IsVisable = c.Visible;
                 c.SetBinding(GridColumn.VisibleProperty, new Binding() { Path = new PropertyPath("IsVisable"), Source = columnVisClass, Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged });
                 c.SetBinding(GridColumn.VisibleIndexProperty, new Binding() { Path = new PropertyPath("VisableIndex"), Source = columnVisClass, Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged });

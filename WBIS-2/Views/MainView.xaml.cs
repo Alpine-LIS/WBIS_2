@@ -16,6 +16,7 @@ using DevExpress.Xpf.Core;
 using System.IO;
 using DevExpress.Xpf.Bars;
 using System.Windows.Media;
+using System.Xml;
 
 namespace WBIS_2.Views
 {
@@ -162,17 +163,17 @@ namespace WBIS_2.Views
 
         private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            //XmlDocument doc = new XmlDocument();
-            //System.IO.File.Delete(AppDomain.CurrentDomain.BaseDirectory + "\\RMS3Layout.xml");
-            //DockLayoutManager.SaveLayoutToXml(AppDomain.CurrentDomain.BaseDirectory + "\\RMS3Layout.xml");
+            XmlDocument doc = new XmlDocument();
+            System.IO.File.Delete(AppDomain.CurrentDomain.BaseDirectory + "\\Layout.xml");
+            DockLayoutManager.SaveLayoutToXml(AppDomain.CurrentDomain.BaseDirectory + "\\Layout.xml");
         }
         private void DockLayoutManager_Loaded(object sender, RoutedEventArgs e)
         {
-            //if (System.IO.File.Exists(AppDomain.CurrentDomain.BaseDirectory + "\\RMS3Layout.xml"))
-            //{
-            //    DockLayoutManager.RestoreLayoutFromXml(AppDomain.CurrentDomain.BaseDirectory + "\\RMS3Layout.xml");
+            if (System.IO.File.Exists(AppDomain.CurrentDomain.BaseDirectory + "\\Layout.xml"))
+            {
+                DockLayoutManager.RestoreLayoutFromXml(AppDomain.CurrentDomain.BaseDirectory + "\\Layout.xml");
 
-            //}
+            }
         }
 
         private void BarButtonItem_ItemClick(object sender, DevExpress.Xpf.Bars.ItemClickEventArgs e)

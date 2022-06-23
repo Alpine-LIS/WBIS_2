@@ -78,10 +78,10 @@ namespace WBIS_2
             Manager.Register(Regions.NavigationSupport, new Module(AppModules.ModuleBirdSpeciesList, () => new NavigationItem("Bird Species List")));
             Manager.Register(Regions.NavigationSupport, new Module(AppModules.ModulePlantSpeciesList, () => new NavigationItem("Plant Species List")));
 
-            Manager.Register(Regions.NavigationBotany, new Module(AppModules.ModuleBotanicalScoping, () => new NavigationItem("Botanical Scopings")));
-            Manager.Register(Regions.NavigationBotany, new Module(AppModules.ModuleBotanicalSurveyArea, () => new NavigationItem("Botanical Survey Areas")));
-            Manager.Register(Regions.NavigationBotany, new Module(AppModules.ModuleBotanicalSurvey, () => new NavigationItem("Botanical Surveys")));
-            Manager.Register(Regions.NavigationBotany, new Module(AppModules.ModuleBotanicalSurveyElement, () => new NavigationItem("Botanical Survey Elements")));
+            Manager.Register(Regions.NavigationBotany, new Module(AppModules.ModuleBotanicalScoping, () => new NavigationItem("Scopings")));
+            Manager.Register(Regions.NavigationBotany, new Module(AppModules.ModuleBotanicalSurveyArea, () => new NavigationItem("Survey Areas")));
+            Manager.Register(Regions.NavigationBotany, new Module(AppModules.ModuleBotanicalSurvey, () => new NavigationItem("Surveys")));
+            Manager.Register(Regions.NavigationBotany, new Module(AppModules.ModuleBotanicalSurveyElement, () => new NavigationItem("Survey Elements")));
 
 
             Manager.Register(Regions.NavigationWildlife, new Module(AppModules.ModuleHex160RequiredPasses, () => new NavigationItem("Hex160 Required Passes")));
