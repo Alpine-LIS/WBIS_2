@@ -51,9 +51,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\AlpineResources\Apline.EFTools\Apline.EFTools\Apline.EFTools\Apline.EFTools.csproj" />
-    <ProjectReference Include="..\..\..\AlpineResources\TimberHarvestPlanDesktop\Alpine.FlexForms.Controls\Alpine.FlexForms.Controls.csproj" />
-    <ProjectReference Include="..\..\..\AlpineResources\TimberHarvestPlanDesktop\Alpine.FlexForms\Alpine.FlexForms.csproj" />
+    <ProjectReference Include="..\..\..\Alpine\Apline.EFTools\Apline.EFTools\Apline.EFTools\Apline.EFTools.csproj" />
+    <ProjectReference Include="..\..\..\Alpine\TimberHarvestPlanDesktop\Alpine.FlexForms.Controls\Alpine.FlexForms.Controls.csproj" />
+    <ProjectReference Include="..\..\..\Alpine\TimberHarvestPlanDesktop\Alpine.FlexForms\Alpine.FlexForms.csproj" />
     <ProjectReference Include="..\WBIS-2.DataModel\WBIS_2.DataModel.csproj" />
     <ProjectReference Include="..\WBIS_2.Common\WBIS_2.Common.csproj" />
   </ItemGroup>

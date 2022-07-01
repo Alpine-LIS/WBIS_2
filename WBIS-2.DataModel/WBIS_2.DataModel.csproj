@@ -34,8 +34,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\AlpineResources\Apline.EFTools\Apline.EFTools\Apline.EFTools\Apline.EFTools.csproj" />
-    <ProjectReference Include="..\..\..\AlpineResources\TimberHarvestPlanDesktop\Alpine.FlexForms\Alpine.FlexForms.csproj" />
+    <ProjectReference Include="..\..\..\Alpine\Apline.EFTools\Apline.EFTools\Apline.EFTools\Apline.EFTools.csproj" />
+    <ProjectReference Include="..\..\..\Alpine\TimberHarvestPlanDesktop\Alpine.FlexForms\Alpine.FlexForms.csproj" />
   </ItemGroup>
 
 </Project>
