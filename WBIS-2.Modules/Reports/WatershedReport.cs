@@ -55,18 +55,18 @@ namespace WBIS_2.Modules.ViewModels.Reports
             doc.Paragraphs.set_Style(ref styleName);
 
 
-            watersheds = Database.Watersheds.Where(_ => watersheds.Select(w => w.Guid).Contains(_.Guid)).ToArray();
+            watersheds = Database.Watersheds.Where(_ => watersheds.Select(w => w.Id).Contains(_.Id)).ToArray();
             //var geo = watersheds.Select(_ => _.Geometry);
-            var guids = watersheds.Select(_ => _.Guid);
+            var guids = watersheds.Select(_ => _.Id);
             Watershed[] adjacentWatersheds = new Watershed[0];// = Database.Watersheds.Where(_=> geo.Any(w=>w.Touches(_.Geometry)) && !guids.Contains(_.Guid)).ToArray();
            foreach(Watershed water in watersheds)
             {
-                guids = guids.Append(adjacentWatersheds.Select(_ => _.Guid));
-                var adj = Database.Watersheds.Where(_ => _.Geometry.Touches(water.Geometry) && !guids.Contains(_.Guid));
+                guids = guids.Append(adjacentWatersheds.Select(_ => _.Id));
+                var adj = Database.Watersheds.Where(_ => _.Geometry.Touches(water.Geometry) && !guids.Contains(_.Id));
                 adjacentWatersheds = adjacentWatersheds.Append(adj).ToArray();
             }
             //Write into
-            WriteWatershedReportIntro(doc.Sections.Last.Range, watersheds.Select(_ => _.Guid).ToList(), adjacentWatersheds.Select(_=>_.Guid).ToList());
+            WriteWatershedReportIntro(doc.Sections.Last.Range, watersheds.Select(_ => _.Id).ToList(), adjacentWatersheds.Select(_=>_.Id).ToList());
                        
             DateTime date = Database.CdfwVintages.Max(_ => _.date).Date;
             WatershedReportCannedTextFields(doc.Sections.Last.Range, $"{date.Year}-{date.Month}");
@@ -221,8 +221,8 @@ namespace WBIS_2.Modules.ViewModels.Reports
             //string adjacentWatershedIds = string.Join(", ", adjacentWatersheds);
 
 
-            string wshdStr = String.Join(", ", Database.Watersheds.Where(_ => watersheds.Contains(_.Guid)).Select(_ => _.WatershedName + "(" + _.WatershedID + ")"));
-            string wshdAdjStr = String.Join(", ", Database.Watersheds.Where(_ => adjacentWatersheds.Contains(_.Guid)).Select(_ => _.WatershedName + "(" + _.WatershedID + ")"));
+            string wshdStr = String.Join(", ", Database.Watersheds.Where(_ => watersheds.Contains(_.Id)).Select(_ => _.WatershedName + "(" + _.WatershedID + ")"));
+            string wshdAdjStr = String.Join(", ", Database.Watersheds.Where(_ => adjacentWatersheds.Contains(_.Id)).Select(_ => _.WatershedName + "(" + _.WatershedID + ")"));
             int runningTab = 0;
             runningTab = WH.AddIntroDescriptiveText("THP Watershed(s):", wshdStr, sectionRange.Document, runningTab);
             runningTab = WH.AddIntroDescriptiveText("Adjacent Watershed(s):", wshdAdjStr, sectionRange.Document, runningTab);

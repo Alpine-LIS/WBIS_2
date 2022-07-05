@@ -64,7 +64,7 @@ namespace WBIS_2.Modules.ViewModels
                 .Include(_=>_.AmphibianPointOfInterest).ThenInclude(_=>_.OtherWildlife)
                 .Include(_=>_.User)
                 .Include(_=>_.Pictures)
-                .First(_ => _.Guid == guid);
+                .First(_ => _.Id == guid);
            
                 pointOfInterest = element.AmphibianPointOfInterest;
 

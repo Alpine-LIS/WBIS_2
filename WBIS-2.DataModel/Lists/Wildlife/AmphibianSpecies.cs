@@ -8,8 +8,8 @@ namespace WBIS_2.DataModel
 {
     public class AmphibianSpecies : UserDataValidator, IInformationType, IPlaceHolder
     {
-        [Key,Column("guid")]
-        public Guid Guid { get; set; }
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]
+        public Guid Id { get; set; }
         [Column("species_name"), ListInfo(DisplayField = true)]
         public string SpeciesName{ get; set; }
         [Column("species_code"), ListInfo(DisplayField = true)]

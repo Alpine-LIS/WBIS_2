@@ -52,7 +52,7 @@ namespace WBIS_2.Modules.ViewModels
         public CNDDBOccurrenceViewModel(Guid guid)
         {
             Occurrence = Database.CNDDBOccurrences
-                   .FirstOrDefault(_ => _.Guid == guid);
+                   .FirstOrDefault(_ => _.Id == guid);
         }
        
 

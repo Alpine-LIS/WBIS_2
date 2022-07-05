@@ -18,7 +18,7 @@ namespace WBIS_2.Modules.Views
 
         public void AddReplaceSelection(int rowHandle, bool ShouldRemove, string unitCol)
         {
-            var test = GridControlEx.GetCellValue(rowHandle, "Guid");
+            var test = GridControlEx.GetCellValue(rowHandle, "Id");
             if (test is DevExpress.Data.NotLoadedObject) return;
             if (!Selection.ContainsKey((Guid)test))
             {
@@ -42,7 +42,7 @@ namespace WBIS_2.Modules.Views
         public void ClearSelection()
         {
             foreach (Guid guid in Selection.Keys)
-                RowsToRefresh.Add(GridControlEx.FindRowByValue("Guid", guid));
+                RowsToRefresh.Add(GridControlEx.FindRowByValue("Id", guid));
             Selection.Clear();
             RefreshRows();
         }

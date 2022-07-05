@@ -9,9 +9,9 @@ namespace WBIS_2.DataModel
     [DisplayOrder(Index = 13), TypeGrouper(GroupName = "Botany"), GeometryEdits(Locked = false)]
     public class SPIPlantPoint: IInformationType, IPointParents
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
-        public Guid Guid { get; set; }
-       
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]
+        public Guid Id { get; set; }
+
         [Required, Column("plant_species_id")]
         public Guid PlantSpeciesId { get; set; }   
         [ListInfo(AutoInclude = true)]

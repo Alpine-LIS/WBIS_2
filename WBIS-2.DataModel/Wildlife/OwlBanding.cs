@@ -10,9 +10,9 @@ namespace WBIS_2.DataModel
     [DisplayOrder(Index = 22), TypeGrouper(GroupName = "Wildlife"), GeometryEdits(Locked = false)]
     public class OwlBanding : UserDataValidator, IUserRecords, IPointParents, IPointLayer
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
-        public Guid Guid { get; set; }
-               
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]
+        public Guid Id { get; set; }
+
 
         [Column("bands")]
         public string Bands { get; set; }

@@ -70,7 +70,7 @@ namespace WBIS_2.DataModel
 
             VisibleLayers = database.UserMapLayers
                 .Include(_ => _.ApplicationUser)
-                .Where(_ => _.ApplicationUser.Guid == User.Guid && CurrentUser.CurrentInfoTypes.Contains(_.InformationType))
+                .Where(_ => _.ApplicationUser.Id == User.Id && CurrentUser.CurrentInfoTypes.Contains(_.InformationType))
                 .Select(_ => MapDataPasser.CleanLayerStr(_.VisibleLayer))
                 .Distinct().ToList();
 
@@ -83,7 +83,7 @@ namespace WBIS_2.DataModel
             if (VisibleLayers.Count() == 0)
                 VisibleLayers = database.UserMapLayers
                     .Include(_ => _.ApplicationUser)
-                    .Where(_ => _.ApplicationUser.Guid == User.Guid && _.InformationType == "Default View")
+                    .Where(_ => _.ApplicationUser.Id == User.Id && _.InformationType == "Default View")
                     .Select(_ => MapDataPasser.CleanLayerStr(_.VisibleLayer))
                     .Distinct().ToList();
             if (VisibleLayers.Count() == 0)
@@ -112,7 +112,7 @@ namespace WBIS_2.DataModel
         public static void ViewActiveUnitsAsMobileUser(string MobileUserName)
         {
             MobileUserActiveUnits = true;
-            MobileUserGuid = new WBIS2Model().ApplicationUsers.First(_ => _.UserName == MobileUserName && !_._delete && !_.PlaceHolder).Guid;
+            MobileUserGuid = new WBIS2Model().ApplicationUsers.First(_ => _.UserName == MobileUserName).Id;
 
             CurrentUserChanged?.Invoke(new object(), new EventArgs());
         }
@@ -120,7 +120,7 @@ namespace WBIS_2.DataModel
         {
             get
             {
-                Guid guid = CurrentUser.User.Guid;
+                Guid guid = CurrentUser.User.Id;
                 if (CurrentUser.MobileUserActiveUnits)
                     guid = CurrentUser.MobileUserGuid;
                 return guid;

@@ -159,7 +159,7 @@ namespace WBIS_2.Modules
                 if (((DevExpress.Xpf.Grid.EditGridCellData)control.DataContext).Row == null) return true;
                 if (((DevExpress.Xpf.Grid.EditGridCellData)control.DataContext).Row.GetType().Name == "NotLoadedObject") return true;
 
-                Guid rowId = ((WBIS_2.DataModel.IUserRecords)((DevExpress.Xpf.Grid.EditGridCellData)control.DataContext).Row).Guid;
+                Guid rowId = ((WBIS_2.DataModel.IUserRecords)((DevExpress.Xpf.Grid.EditGridCellData)control.DataContext).Row).Id;
                 string filedName = ((DevExpress.Xpf.Grid.EditGridCellData)control.DataContext).Column.FieldName;
 
                 if (!OriginalValues.ContainsKey(rowId)) OriginalValues.Add(rowId, new Dictionary<string, object>());

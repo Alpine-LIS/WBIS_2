@@ -132,7 +132,7 @@ namespace WBIS_2.Modules.Tools
                     var thpStr = ((BotanicalScoping)record).THP_Area.THPName.ToUpper().Trim();
                     var thp = Database.THP_Areas.FirstOrDefault(_ => _.THPName.ToUpper().Trim() == thpStr);
                     if (Database.BotanicalScopings
-                    .Include(_ => _.THP_Area).Any(_ => _.THP_Area == thp && _.Guid != ((BotanicalScoping)record).Guid && !_._delete))
+                    .Include(_ => _.THP_Area).Any(_ => _.THP_Area == thp && _.Id != ((BotanicalScoping)record).Id && !_._delete))
                         return $"Records could not be restored. A botanical scoping with the thp {((BotanicalScoping)record).THP_Area.THPName} already exists.";
                 }
                 property.SetValue(record, false);

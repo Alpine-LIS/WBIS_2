@@ -52,7 +52,7 @@ namespace WBIS_2.Modules.ViewModels
         public CDFW_SpottedOwlViewModel(Guid guid)
         {
             SpottedOwl = Database.CDFW_SpottedOwls
-                   .FirstOrDefault(_ => _.Guid == guid);
+                   .FirstOrDefault(_ => _.Id == guid);
         }
        
 

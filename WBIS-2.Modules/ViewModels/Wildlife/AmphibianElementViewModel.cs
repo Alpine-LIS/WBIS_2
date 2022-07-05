@@ -50,7 +50,7 @@ namespace WBIS_2.Modules.ViewModels
         public AmphibianElementViewModel(Guid guid)
         {
             RecordId = guid;
-            if (Database.AmphibianLocationsFound.Any(_ => _.Guid == guid))
+            if (Database.AmphibianLocationsFound.Any(_ => _.Id == guid))
             {
                 ViewName = typeof(AmphibianLocationFoundView).Name;
                 ViewModel = typeof(AmphibianLocationFoundViewModel);

@@ -11,8 +11,8 @@ namespace WBIS_2.DataModel
     [DisplayOrder(Index = 3), TypeGrouper(IgnoreGroups = true)]
     public class Hex160 : IInformationType, IActiveUnit
     {
-        [Key,DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
-        public Guid Guid { get; set; }
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]
+        public Guid Id { get; set; }
         [Required, Column("hex160_id"), ListInfo(DisplayField = true)]
         public string Hex160ID { get; set; }
         [Column("calling_responses")]
@@ -30,7 +30,7 @@ namespace WBIS_2.DataModel
 
 
         //if (CanSetActive) query = query.Replace($"\"is_active\"", $"guid IN (SELECT unit_id FROM active_{et.GetSchemaQualifiedTableName()} WHERE application_user_id = '{guid}') as \"is_active\"");
-        [Column("is_active"), ActiveRecordQuery("active_hex160s", "guid", "unit_id", "application_user_id", typeof(CurrentUser), "UsingGuid")]
+        [Column("is_active"), ActiveRecordQuery("active_hex160s", "id", "unit_id", "application_user_id", typeof(CurrentUser), "UsingGuid")]
         public bool IsActive { get; set; }
         [ListInfo(AutoInclude = true)]
         public ICollection<ApplicationUser> ActiveUsers { get; set; }

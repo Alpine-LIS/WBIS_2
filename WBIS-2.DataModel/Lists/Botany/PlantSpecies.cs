@@ -8,9 +8,9 @@ namespace WBIS_2.DataModel
 {
     public class PlantSpecies : UserDataValidator, IInformationType, IPlaceHolder
     {
-        [Key,Column("guid")]
-        public Guid Guid { get; set; }
-       
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]
+        public Guid Id { get; set; }
+
         [Column("sci_name"), ImportAttribute(Required = true), ListInfo(DisplayField = true)]
         public string SciName { get; set; }
         [Column("com_name"), ImportAttribute(Required = false), ListInfo(DisplayField = true)]

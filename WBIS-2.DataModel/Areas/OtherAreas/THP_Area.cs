@@ -10,8 +10,8 @@ namespace WBIS_2.DataModel
     [DisplayOrder(Index = 4), TypeGrouper(IgnoreGroups = true)]
     public class THP_Area : IInformationType
     {
-        [Key,DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
-        public Guid Guid { get; set; }
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]
+        public Guid Id { get; set; }
         [Required, Column("thp_name"), ListInfo(DisplayField = true), ImportAttribute(Required = true)]
         public string THPName { get; set; }
 

@@ -124,12 +124,12 @@ namespace WBIS_2.Modules.ViewModels
                 return;
             }
             IDocumentManagerService service = this.GetRequiredService<IDocumentManagerService>();
-            IDocument document = service.FindDocumentById(CurrentRecord.Guid);
+            IDocument document = service.FindDocumentById(CurrentRecord.Id);
             if (document == null)
             {
-                DataFormDetailsViewModel dataFormDetailsViewModel = DataFormDetailsViewModel.Create(CurrentRecord.Guid, Template.Id, Guid.Empty);
-                document = service.CreateDocument("DataFormDetailsView", dataFormDetailsViewModel, CurrentRecord.Guid, this);
-                document.Id = CurrentRecord.Guid;
+                DataFormDetailsViewModel dataFormDetailsViewModel = DataFormDetailsViewModel.Create(CurrentRecord.Id, Template.Id, Guid.Empty);
+                document = service.CreateDocument("DataFormDetailsView", dataFormDetailsViewModel, CurrentRecord.Id, this);
+                document.Id = CurrentRecord.Id;
             }
             document.Show();
         }

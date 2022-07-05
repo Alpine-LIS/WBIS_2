@@ -10,8 +10,8 @@ namespace WBIS_2.DataModel
     [DisplayOrder(Index = 20), TypeGrouper(GroupName = "Wildlife"), GeometryEdits(Locked = false)]
     public class AmphibianSurvey : UserDataValidator, IUserRecords, INonPointParents
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
-        public Guid Guid { get; set; }
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]
+        public Guid Id { get; set; }
 
 
 

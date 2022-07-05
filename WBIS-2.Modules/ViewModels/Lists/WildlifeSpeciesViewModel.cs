@@ -47,7 +47,7 @@ namespace WBIS_2.Modules.ViewModels
         public WildlifeSpeciesViewModel(Guid guid)
         {
             CurrentSpecies = Database.WildlifeSpecies
-                .FirstOrDefault(_ => _.Guid == guid);
+                .FirstOrDefault(_ => _.Id == guid);
 
             if (CurrentSpecies != null)
             {
@@ -56,7 +56,7 @@ namespace WBIS_2.Modules.ViewModels
             else
             {
                 CurrentSpecies = new WildlifeSpecies();
-                CurrentSpecies.Guid = guid;
+                CurrentSpecies.Id = guid;
             }
         }
 
@@ -80,7 +80,7 @@ namespace WBIS_2.Modules.ViewModels
                 return;
             }
 
-            if (Database.WildlifeSpecies.Any(_ => _.AlphaCode.ToUpper().Trim() == AlphaCode.ToUpper().Trim() && _.Guid != CurrentSpecies.Guid))
+            if (Database.WildlifeSpecies.Any(_ => _.AlphaCode.ToUpper().Trim() == AlphaCode.ToUpper().Trim() && _.Id != CurrentSpecies.Id))
             {
                 MessageBox.Show("A species with this name already exists.");
                 return;

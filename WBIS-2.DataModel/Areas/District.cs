@@ -10,8 +10,8 @@ namespace WBIS_2.DataModel
     [DisplayOrder(Index = 0), TypeGrouper(IgnoreGroups = true)]
     public class District : IInformationType
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
-        public Guid Guid { get; set; }
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]
+        public Guid Id { get; set; }
         [Required, Column("district_name"), ListInfo(DisplayField = true)]
         public string DistrictName { get; set; }
         [Required, Column("management_area"), ListInfo(DisplayField = true)]

@@ -64,7 +64,7 @@ namespace WBIS_2.Modules.ViewModels
                 .Include(_=>_.BotanicalPlantOfInterest).ThenInclude(_=>_.PlantSpecies)
                 .Include(_=>_.User)
                 .Include(_=>_.Pictures)
-                .First(_ => _.Guid == guid);
+                .First(_ => _.Id == guid);
            
                 plantOfInterest = element.BotanicalPlantOfInterest;
             ParentType = plantOfInterest;
@@ -74,7 +74,7 @@ namespace WBIS_2.Modules.ViewModels
                 User = element.User.UserName;
                 RefreshDataSource();
 
-                PlantSpecies = Database.PlantSpecies.Where(_ => !_.PlaceHolder || _.Guid == plantOfInterest.PlantSpecies.Guid).ToArray();
+                PlantSpecies = Database.PlantSpecies.Where(_ => !_.PlaceHolder || _.Id == plantOfInterest.PlantSpecies.Id).ToArray();
             SciNames = PlantSpecies.Select(_ => _.ComName).Distinct().OrderBy(_ => _).ToArray();
             ComNames = PlantSpecies.Select(_ => _.ComName).Distinct().OrderBy(_ => _).ToArray();
             Families = PlantSpecies.Select(_ => _.Family).Distinct().OrderBy(_ => _).ToArray();
@@ -103,7 +103,7 @@ namespace WBIS_2.Modules.ViewModels
 
             if (plantOfInterest.PlantSpecies == null)
                 PlantSpecies = Database.PlantSpecies.Where(_ => !_.PlaceHolder).ToArray();
-            else PlantSpecies = Database.PlantSpecies.Where(_ => !_.PlaceHolder || _.Guid == plantOfInterest.PlantSpecies.Guid).ToArray();
+            else PlantSpecies = Database.PlantSpecies.Where(_ => !_.PlaceHolder || _.Id == plantOfInterest.PlantSpecies.Id).ToArray();
 
             SciNames = PlantSpecies.Select(_ => _.ComName).Distinct().OrderBy(_ => _).ToArray();
             ComNames = PlantSpecies.Select(_ => _.ComName).Distinct().OrderBy(_ => _).ToArray();
@@ -121,7 +121,7 @@ namespace WBIS_2.Modules.ViewModels
             Records = new EntityInstantFeedbackSource
             {
                 AreSourceRowsThreadSafe = true,
-                KeyExpression = $"Guid",
+                KeyExpression = $"Id",
             };
             Records.GetQueryable += Records_GetQueryable;
             Records.Refresh();
@@ -179,17 +179,17 @@ namespace WBIS_2.Modules.ViewModels
             {
                 if (User != element.User.UserName)
                 {
-                    element.User = Database.ApplicationUsers.First(_ => (_.Botany && !_._delete && !_.PlaceHolder) && _.UserName == User);
+                    element.User = Database.ApplicationUsers.First(_ => (_.Botany ) && _.UserName == User);
                 }
             }
             else
             {
-                element.User = Database.ApplicationUsers.First(_ => (_.Botany && !_._delete && !_.PlaceHolder) && _.UserName == User);
+                element.User = Database.ApplicationUsers.First(_ => (_.Botany ) && _.UserName == User);
             }
 
             GetDateValues();
 
-            if (Database.BotanicalElements.All(_ => _.Guid == element.Guid))
+            if (Database.BotanicalElements.All(_ => _.Id == element.Id))
             {
                 Database.BotanicalElements.Update(element);
                 Database.BotanicalPlantsOfInterest.Update(plantOfInterest);
@@ -197,11 +197,11 @@ namespace WBIS_2.Modules.ViewModels
             else
             {
                 if (element.BotanicalScoping != null)
-                    element.BotanicalScoping = Database.BotanicalScopings.First(_ => _.Guid == element.BotanicalScoping.Guid);
+                    element.BotanicalScoping = Database.BotanicalScopings.First(_ => _.Id == element.BotanicalScoping.Id);
                 if (element.BotanicalSurveyArea != null)
-                    element.BotanicalSurveyArea = Database.BotanicalSurveyAreas.First(_ => _.Guid == element.BotanicalSurveyArea.Guid);
+                    element.BotanicalSurveyArea = Database.BotanicalSurveyAreas.First(_ => _.Id == element.BotanicalSurveyArea.Id);
                 if (element.BotanicalSurvey != null)
-                    element.BotanicalSurvey = Database.BotanicalSurveys.First(_ => _.Guid == element.BotanicalSurvey.Guid);
+                    element.BotanicalSurvey = Database.BotanicalSurveys.First(_ => _.Id == element.BotanicalSurvey.Id);
 
                 Database.BotanicalElements.Add(element);
                 Database.BotanicalPlantsOfInterest.Add(plantOfInterest);
@@ -229,7 +229,7 @@ namespace WBIS_2.Modules.ViewModels
 
         public string[] SiteQualities => Database.DropdownOptions.Where(_ => _.Entity == DbHelp.GetDbString(typeof(BotanicalPlantOfInterest)) && _.Property == "site_quality").Select(_ => _.SelectionText).ToArray();
         public string[] LandUses => Database.DropdownOptions.Where(_ => _.Entity == DbHelp.GetDbString(typeof(BotanicalPlantOfInterest)) && _.Property == "land_use").Select(_ => _.SelectionText).ToArray();
-        public string[] Users => Database.ApplicationUsers.Where(_ => (_.Botany && !_._delete && !_.PlaceHolder) || _.UserName == User ).Select(_ => _.UserName).OrderBy(_=>_).ToArray();
+        public string[] Users => Database.ApplicationUsers.Where(_ => (_.Botany) || _.UserName == User ).Select(_ => _.UserName).OrderBy(_=>_).ToArray();
         [Required]
         public string User { get; set; }
 

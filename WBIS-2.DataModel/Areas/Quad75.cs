@@ -10,8 +10,8 @@ namespace WBIS_2.DataModel
     [DisplayOrder(Index = 1), TypeGrouper(IgnoreGroups = true)]
     public class Quad75 : IInformationType
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
-        public Guid Guid { get; set; }
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]
+        public Guid Id { get; set; }
         [Required, Column("quad_code"), ListInfo(DisplayField = true)]
         public string QuadCode { get; set; }
         [Required, Column("isgs_code")]

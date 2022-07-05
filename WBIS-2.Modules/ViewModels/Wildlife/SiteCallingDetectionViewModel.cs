@@ -54,7 +54,7 @@ namespace WBIS_2.Modules.ViewModels
             Detection = Database.SiteCallingDetections
                 .Include(_ => _.User)
                 .Include(_ => _.SpeciesFound)
-                .First(_ => _.Guid == guid);
+                .First(_ => _.Id == guid);
 
             SpeciesSites = Database.ProtectionZones
               .Where(_ => (_.Geometry.IsWithinDistance(Detection.Geometry, 3218.69) && !_._delete && !_.Repository)).Select(_=>_.PZ_ID).ToArray();

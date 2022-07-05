@@ -52,7 +52,7 @@ namespace WBIS_2.Modules.ViewModels
         public CNDDBQuadElementViewModel(Guid guid)
         {
             Element = Database.CNDDBQuadElements
-                   .FirstOrDefault(_ => _.Guid == guid);
+                   .FirstOrDefault(_ => _.Id == guid);
         }
        
 

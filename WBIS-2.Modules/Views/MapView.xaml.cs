@@ -103,7 +103,7 @@ namespace WBIS_2.Modules.Views
             if (et.ClrType == typeof(SiteCalling))
                 UpdateUserLocation = MessageBox.Show("Would you like to set the user detections for this site calling record to the new location?", "", MessageBoxButton.YesNo) == MessageBoxResult.Yes;
 
-            ApplicationUser user = model.ApplicationUsers.First(_=>_.Guid == CurrentUser.User.Guid);
+            ApplicationUser user = model.ApplicationUsers.First(_=>_.Id == CurrentUser.User.Id);
 
             foreach (IFeature f in list)
             {              
@@ -115,7 +115,7 @@ namespace WBIS_2.Modules.Views
                     var detections = model.SiteCallingDetections
                         .Include(_ => _.SiteCalling)
                         .Include(_ => _.UserLocation)
-                        .Where(_ => _.SiteCalling.Guid == (Guid)f.DataRow[keyProp]).ToArray();
+                        .Where(_ => _.SiteCalling.Id == (Guid)f.DataRow[keyProp]).ToArray();
                     foreach(var detection in detections)
                     {
                         detection.UserLocation.Geometry = (NetTopologySuite.Geometries.Point)f.Geometry.Copy();

@@ -496,7 +496,7 @@ namespace WBIS_2.DataModel
             else
             {
                 Tracker.ChangesSaving = true;
-                ApplicationUser user = ApplicationUsers.FirstOrDefault(_ => _.Guid == CurrentUser.User.Guid);
+                ApplicationUser user = ApplicationUsers.FirstOrDefault(_ => _.Id == CurrentUser.User.Id);
                 GenerateFlexUserRecord(user);
 
                 var entries = ChangeTracker.Entries();
@@ -520,13 +520,13 @@ namespace WBIS_2.DataModel
             //List<RecordChange> changes = new List<RecordChange>();
             foreach (Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry e in entries.Where(_ => _.State != EntityState.Unchanged))
             {
-                var guidProp = e.CurrentValues.Properties.FirstOrDefault(_ => _.Name == "Guid");
+                var guidProp = e.CurrentValues.Properties.FirstOrDefault(_ => _.Name == "Id");
                 //var userProp = e.CurrentValues.Properties.FirstOrDefault(_ => _.Name == "User");
                 //var modifiedProp = e.CurrentValues.Properties.FirstOrDefault(_ => _.Name == "UserModified");
 
                 if (guidProp == null) continue;
 
-                Guid entityId = (Guid)e.CurrentValues["Guid"];//.GetValue<Guid>("Guid");
+                Guid entityId = (Guid)e.CurrentValues["Id"];//.GetValue<Guid>("Guid");
 
                 if (e.State == EntityState.Added)
                 {

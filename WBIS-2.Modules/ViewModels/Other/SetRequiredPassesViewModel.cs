@@ -37,7 +37,7 @@ namespace WBIS_2.Modules.ViewModels
             {
                 var hex160 = Database.Hex160s
                     .Include(_=>_.Districts)
-                    .First(_=>_.Guid == h.Guid);
+                    .First(_=>_.Id == h.Id);
                 var rp = Database.Hex160RequiredPasses
                            .Include(_ => _.Hex160)
                            .Include(_ => _.BirdSpecies)

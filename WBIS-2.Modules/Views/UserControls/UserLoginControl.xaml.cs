@@ -40,7 +40,7 @@ namespace WBIS_2.Modules.Views
                 //.Include(_=>_.ActiveRegens)
                 //.Include(_ => _.ActiveFuelbreaks)
                 .Include(_ => _.ApplicationGroup)
-                .Where(_ => _.ApplicationGroup.DesktopAccess && !_._delete &&  !_.PlaceHolder).OrderBy(_ => _.UserName);
+                .Where(_ => _.ApplicationGroup.DesktopAccess).OrderBy(_ => _.UserName).ToList();
             }
             catch (Exception ex)
             {
@@ -102,30 +102,30 @@ namespace WBIS_2.Modules.Views
 
         private void LogIn_Click(object sender, RoutedEventArgs e)
         {
-            if (((ApplicationUser)CbxUsers.SelectedItem).PasswordSHA == null)
-            {
-                SetPassword();
-                return;
-            }
+            //if (((ApplicationUser)CbxUsers.SelectedItem).PasswordSHA == null)
+            //{
+            //    SetPassword();
+            //    return;
+            //}
 
-            string Accurate = PasswordTools.HashPassword(TbxPassword.Text + "#com.alpinelis.rmsdataapp#");
-            if (RememberedPassword != "" && TbxPassword.Text == "RemeberedPassword")
-            {
-                if (RememberedPassword != ((ApplicationUser)CbxUsers.SelectedItem).PasswordSHA)
-                {
-                    MessageBox.Show("The password is wrong.");
-                    return;
-                }
-                Accurate = RememberedPassword;
-            }
-            else
-            {
-                if (Accurate != ((ApplicationUser)CbxUsers.SelectedItem).PasswordSHA)
-                {
-                    MessageBox.Show("The password is wrong.");
-                    return;
-                }
-            }
+            //string Accurate = PasswordTools.HashPassword(TbxPassword.Text + "#com.alpinelis.rmsdataapp#");
+            //if (RememberedPassword != "" && TbxPassword.Text == "RemeberedPassword")
+            //{
+            //    if (RememberedPassword != ((ApplicationUser)CbxUsers.SelectedItem).PasswordSHA)
+            //    {
+            //        MessageBox.Show("The password is wrong.");
+            //        return;
+            //    }
+            //    Accurate = RememberedPassword;
+            //}
+            //else
+            //{
+            //    if (Accurate != ((ApplicationUser)CbxUsers.SelectedItem).PasswordSHA)
+            //    {
+            //        MessageBox.Show("The password is wrong.");
+            //        return;
+            //    }
+            //}
 
 
             Window window = Window.GetWindow(this);
@@ -139,7 +139,7 @@ namespace WBIS_2.Modules.Views
             {
                 using (StreamWriter sw = new StreamWriter($"{AppDomain.CurrentDomain.BaseDirectory}\\user.txt"))
                 {
-                    sw.WriteLine("{" + ReturnApplicationUser.UserName + "}{" + Accurate + "}");
+                    sw.WriteLine("{" + ReturnApplicationUser.UserName + "}{}");
                 }
             }
 
@@ -176,13 +176,13 @@ namespace WBIS_2.Modules.Views
       
         private void SetPassword()
         {
-            SetUserPasswordControl setUserPasswordControl = new SetUserPasswordControl((ApplicationUser)CbxUsers.SelectedItem);
-            CustomControlWindow userWindow = new CustomControlWindow(setUserPasswordControl,true);
+            //SetUserPasswordControl setUserPasswordControl = new SetUserPasswordControl((ApplicationUser)CbxUsers.SelectedItem);
+            //CustomControlWindow userWindow = new CustomControlWindow(setUserPasswordControl,true);
 
-            if (userWindow.DialogResult)
-            {
-                ((ApplicationUser)CbxUsers.SelectedItem).PasswordSHA = setUserPasswordControl.ReturnPassword;
-            }
+            //if (userWindow.DialogResult)
+            //{
+            //    ((ApplicationUser)CbxUsers.SelectedItem).PasswordSHA = setUserPasswordControl.ReturnPassword;
+            //}
         }
 
         public bool SkipMapLoad { get; set; } = false;

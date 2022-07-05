@@ -39,7 +39,7 @@ namespace WBIS_2.Modules.ViewModels.Reports
             SelectableDistricts = new List<DistrictBoolClass>();
             foreach(var d in Database.Districts)
             {
-                SelectableDistricts.Add(new DistrictBoolClass() { District = d, IsSelected = CurrentUser.Districts.Select(_=>_.Guid).Contains(d.Guid) });
+                SelectableDistricts.Add(new DistrictBoolClass() { District = d, IsSelected = CurrentUser.Districts.Select(_=>_.Id).Contains(d.Id) });
             }
         }
 

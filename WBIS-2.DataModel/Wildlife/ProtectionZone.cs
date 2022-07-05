@@ -10,8 +10,8 @@ namespace WBIS_2.DataModel
     [DisplayOrder(Index = 18), TypeGrouper(GroupName = "Wildlife"), GeometryEdits(Locked = false)]
     public class ProtectionZone : UserDataValidator, IUserRecords
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
-        public Guid Guid { get; set; }
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]
+        public Guid Id { get; set; }
         [Column("date_added")]
         public DateTime DateAdded { get; set; }
         [Column("date_modified")]

@@ -9,8 +9,8 @@ namespace WBIS_2.DataModel
     [DisplayOrder(Index = 7), TypeGrouper(IgnoreGroups = true)]
     public class CDFW_SpottedOwl : IInformationType,  IPointParents
     {
-        [Key, Column("guid")]
-        public Guid Guid { get; set; }
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]
+        public Guid Id { get; set; }
 
         [Column("sname")]
         public string SNAME { get; set; }

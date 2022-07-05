@@ -87,7 +87,7 @@ namespace WBIS_2.Modules.Views.UserControls
                         RPlantRank = record.RPlantRank,
                         CalList = record.CalList,
                         FedList = record.FedList,
-                        guid = record.Guid
+                        guid = record.Id
                     };
 
                     SpeciesSelections.Add(s);
@@ -119,7 +119,7 @@ namespace WBIS_2.Modules.Views.UserControls
 
             foreach (var record in records)
             {
-                var s = SpeciesSelections.FirstOrDefault(_=>_.guid == record.PlantSpecies.Guid);
+                var s = SpeciesSelections.FirstOrDefault(_=>_.guid == record.PlantSpecies.Id);
                 if (s != null)
                     s.SpiPoint = true;
                 else
@@ -131,7 +131,7 @@ namespace WBIS_2.Modules.Views.UserControls
                         RPlantRank = record.PlantSpecies.RPlantRank,
                         CalList = record.PlantSpecies.CalList,
                         FedList = record.PlantSpecies.FedList,
-                        guid = record.PlantSpecies.Guid,
+                        guid = record.PlantSpecies.Id,
                         SpiPoint = true
                     };
 
@@ -160,7 +160,7 @@ namespace WBIS_2.Modules.Views.UserControls
 
                 foreach (var record in records)
                 {
-                    var s = SpeciesSelections.FirstOrDefault(_ => _.guid == record.PlantSpecies.Guid);
+                    var s = SpeciesSelections.FirstOrDefault(_ => _.guid == record.PlantSpecies.Id);
                     if (s != null)
                         s.SpiPoly = true;
                     else
@@ -172,7 +172,7 @@ namespace WBIS_2.Modules.Views.UserControls
                             RPlantRank = record.PlantSpecies.RPlantRank,
                             CalList = record.PlantSpecies.CalList,
                             FedList = record.PlantSpecies.FedList,
-                            guid = record.PlantSpecies.Guid,
+                            guid = record.PlantSpecies.Id,
                             SpiPoly = true
                         };
 
@@ -201,7 +201,7 @@ namespace WBIS_2.Modules.Views.UserControls
 
             foreach (var record in records)
             {
-                var s = SpeciesSelections.FirstOrDefault(_ => _.guid == record.BotanicalPlantOfInterest.PlantSpecies.Guid);
+                var s = SpeciesSelections.FirstOrDefault(_ => _.guid == record.BotanicalPlantOfInterest.PlantSpecies.Id);
                 if (s != null)
                     s.PoI = true;
                 else
@@ -213,7 +213,7 @@ namespace WBIS_2.Modules.Views.UserControls
                         RPlantRank = record.BotanicalPlantOfInterest.PlantSpecies.RPlantRank,
                         CalList = record.BotanicalPlantOfInterest.PlantSpecies.CalList,
                         FedList = record.BotanicalPlantOfInterest.PlantSpecies.FedList,
-                        guid = record.BotanicalPlantOfInterest.PlantSpecies.Guid,
+                        guid = record.BotanicalPlantOfInterest.PlantSpecies.Id,
                         PoI = true
                     };
 
@@ -243,7 +243,7 @@ namespace WBIS_2.Modules.Views.UserControls
 
                 foreach (var record in records)
                 {
-                    var s = SpeciesSelections.FirstOrDefault(_ => _.guid == record.PlantSpecies.Guid);
+                    var s = SpeciesSelections.FirstOrDefault(_ => _.guid == record.PlantSpecies.Id);
                     if (s != null)
                         s.CnddbOcc = true;
                     else
@@ -255,7 +255,7 @@ namespace WBIS_2.Modules.Views.UserControls
                             RPlantRank = record.PlantSpecies.RPlantRank,
                             CalList = record.PlantSpecies.CalList,
                             FedList = record.PlantSpecies.FedList,
-                            guid = record.PlantSpecies.Guid,
+                            guid = record.PlantSpecies.Id,
                             CnddbOcc = true
                         };
 
@@ -284,7 +284,7 @@ namespace WBIS_2.Modules.Views.UserControls
 
             foreach (var record in records)
             {
-                var s = SpeciesSelections.FirstOrDefault(_ => _.guid == record.PlantSpecies.Guid);
+                var s = SpeciesSelections.FirstOrDefault(_ => _.guid == record.PlantSpecies.Id);
                 if (s != null)
                     s.CnddbQuad = true;
                 else
@@ -296,7 +296,7 @@ namespace WBIS_2.Modules.Views.UserControls
                         RPlantRank = record.PlantSpecies.RPlantRank,
                         CalList = record.PlantSpecies.CalList,
                         FedList = record.PlantSpecies.FedList,
-                        guid = record.PlantSpecies.Guid,
+                        guid = record.PlantSpecies.Id,
                         CnddbQuad = true
                     };
                      

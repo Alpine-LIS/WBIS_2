@@ -64,11 +64,11 @@ namespace WBIS_2.Modules.ViewModels
                 .Include(_=>_.BotanicalPlantList).ThenInclude(_=>_.PlantSpecies)
                 .Include(_=>_.User)
                 .Include(_=>_.Pictures)
-                .First(_ => _.Guid == guid);
+                .First(_ => _.Id == guid);
 
             plantList = element.BotanicalPlantList;
 
-                PlantSpecies = Database.PlantSpecies.Where(_ => !_.PlaceHolder || _.Guid == plantList.PlantSpecies.Guid).ToArray();
+                PlantSpecies = Database.PlantSpecies.Where(_ => !_.PlaceHolder || _.Id == plantList.PlantSpecies.Id).ToArray();
             SciNames = PlantSpecies.Select(_ => _.ComName).Distinct().OrderBy(_ => _).ToArray();
             ComNames = PlantSpecies.Select(_ => _.ComName).Distinct().OrderBy(_ => _).ToArray();
             Families = PlantSpecies.Select(_ => _.Family).Distinct().OrderBy(_ => _).ToArray();

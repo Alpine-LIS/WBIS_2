@@ -126,13 +126,13 @@ namespace WBIS_2.Modules.Views
             }
             else
             {
-                MyGrid.TotalSummary.Add(new GridSummaryItem() { SummaryType = DevExpress.Data.SummaryItemType.Count, FieldName = "Guid", DisplayFormat = "Records: {0:n0}", Alignment = GridSummaryItemAlignment.Right });
-                MyGrid.GroupSummary.Add(new GridSummaryItem() { SummaryType = DevExpress.Data.SummaryItemType.Count, FieldName = "Guid", DisplayFormat = "Records: {0:n0}" });
+                MyGrid.TotalSummary.Add(new GridSummaryItem() { SummaryType = DevExpress.Data.SummaryItemType.Count, FieldName = "Id", DisplayFormat = "Records: {0:n0}", Alignment = GridSummaryItemAlignment.Right });
+                MyGrid.GroupSummary.Add(new GridSummaryItem() { SummaryType = DevExpress.Data.SummaryItemType.Count, FieldName = "Id", DisplayFormat = "Records: {0:n0}" });
 
                 Dictionary<string, int> ActivityColumns = new Dictionary<string, int>();
                 foreach (var c in MyGrid.Columns)
                 {
-                    if (c.FieldName.ToUpper().Contains("GUID")) c.Visible = false;
+                    if (c.FieldName.ToUpper() == "ID") c.Visible = false;
                     //c.ColumnFilterMode = ColumnFilterMode.DisplayText;// = DevExpress.Utils.DefaultBoolean.True;
                     c.AllowIncrementalSearch = true;
                 }

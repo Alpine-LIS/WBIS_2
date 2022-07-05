@@ -11,8 +11,8 @@ namespace WBIS_2.DataModel
 {
     public class DeviceInfo: IPointLayer
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
-        public Guid Guid { get; set; }
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]
+        public Guid Id { get; set; }
 
         [Column("site_calling_id"),ForeignKey("SiteCalling")]
         public Guid? SiteCallingId { get; set; }

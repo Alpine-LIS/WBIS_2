@@ -17,6 +17,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alpine.FlexForms", "..\..\A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alpine.FlexForms.Controls", "..\..\Alpine\TimberHarvestPlanDesktop\Alpine.FlexForms.Controls\Alpine.FlexForms.Controls.csproj", "{28A0D131-79EC-4CD4-8C6E-12B3605F5D81}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alpine.EntityFrameworkCore", "..\..\Alpine\Alpine\Alpine.EntityFrameworkCore\Alpine.EntityFrameworkCore.csproj", "{8436F61A-BB8D-42D2-8F0D-48A2ED3717B1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alpine.EntityFrameworkCore.Views", "..\..\Alpine\Alpine\Alpine.EntityFrameworkCore.Views\Alpine.EntityFrameworkCore.Views.csproj", "{A800F451-BF1F-416A-96A1-34BA5D08D547}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +85,22 @@ Global
 		{28A0D131-79EC-4CD4-8C6E-12B3605F5D81}.Release|Any CPU.Build.0 = Release|Any CPU
 		{28A0D131-79EC-4CD4-8C6E-12B3605F5D81}.Release|x64.ActiveCfg = Release|Any CPU
 		{28A0D131-79EC-4CD4-8C6E-12B3605F5D81}.Release|x64.Build.0 = Release|Any CPU
+		{8436F61A-BB8D-42D2-8F0D-48A2ED3717B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8436F61A-BB8D-42D2-8F0D-48A2ED3717B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8436F61A-BB8D-42D2-8F0D-48A2ED3717B1}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8436F61A-BB8D-42D2-8F0D-48A2ED3717B1}.Debug|x64.Build.0 = Debug|Any CPU
+		{8436F61A-BB8D-42D2-8F0D-48A2ED3717B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8436F61A-BB8D-42D2-8F0D-48A2ED3717B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8436F61A-BB8D-42D2-8F0D-48A2ED3717B1}.Release|x64.ActiveCfg = Release|Any CPU
+		{8436F61A-BB8D-42D2-8F0D-48A2ED3717B1}.Release|x64.Build.0 = Release|Any CPU
+		{A800F451-BF1F-416A-96A1-34BA5D08D547}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A800F451-BF1F-416A-96A1-34BA5D08D547}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A800F451-BF1F-416A-96A1-34BA5D08D547}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A800F451-BF1F-416A-96A1-34BA5D08D547}.Debug|x64.Build.0 = Debug|Any CPU
+		{A800F451-BF1F-416A-96A1-34BA5D08D547}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A800F451-BF1F-416A-96A1-34BA5D08D547}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A800F451-BF1F-416A-96A1-34BA5D08D547}.Release|x64.ActiveCfg = Release|Any CPU
+		{A800F451-BF1F-416A-96A1-34BA5D08D547}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

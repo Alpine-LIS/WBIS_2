@@ -24,6 +24,6 @@ namespace WBIS_2.DataModel
         /// Acts as a way to store historic data and keep it out of the way.
         /// </summary>
         public bool Repository { get; set; }
-        public Guid Guid { get; set; }
+        public Guid Id { get; set; }
     }
 }

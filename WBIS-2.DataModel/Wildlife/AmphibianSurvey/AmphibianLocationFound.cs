@@ -11,8 +11,8 @@ namespace WBIS_2.DataModel
 {
     public class AmphibianLocationFound : UserDataValidator, IInformationType
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid"), ForeignKey("AmphibianElement")]
-        public Guid Guid { get; set; }
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id"), ForeignKey("AmphibianElement")]
+        public Guid Id { get; set; }
 
         //[Required, Column("amphibian_element_id"), ForeignKey("AmphibianElement")]
         //public Guid AmphibianElementId { get; set; }

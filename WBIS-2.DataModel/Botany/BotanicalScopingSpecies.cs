@@ -11,8 +11,8 @@ namespace WBIS_2.DataModel
 {
     public class BotanicalScopingSpecies : UserDataValidator, IUserRecords
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
-        public Guid Guid { get; set; }
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]
+        public Guid Id { get; set; }
 
         [Column("botanical_scoping_id")]
         public Guid BotanicalScopingId { get; set; }

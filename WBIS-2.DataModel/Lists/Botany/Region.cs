@@ -8,8 +8,8 @@ namespace WBIS_2.DataModel
 {
     public class Region
     {
-        [Key, Column("guid")]
-        public Guid Guid { get; set; }
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]
+        public Guid Id { get; set; }
 
 
         [Column("region_name")]

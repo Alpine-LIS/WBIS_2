@@ -285,11 +285,11 @@ namespace WBIS_2.Modules.ViewModels
             MapControl.UxMap.ActiveLayer.DataSet.Features.FeatureAdded -= FeatureAdded;
             var g = e.Feature.Geometry.Copy();
                      
-            if (e.Feature.ParentFeatureSet.DataTable.Columns.Contains("GUID"))
+            if (e.Feature.ParentFeatureSet.DataTable.Columns.Contains("ID"))
             {
-                e.Feature.ParentFeatureSet.DataTable.Columns.Remove("GUID");
-                e.Feature.ParentFeatureSet.DataTable.Columns.Add("guid", typeof(Guid));
-                e.Feature.DataRow["guid"] = GuidDrawing;// Guid.NewGuid();
+                e.Feature.ParentFeatureSet.DataTable.Columns.Remove("ID");
+                e.Feature.ParentFeatureSet.DataTable.Columns.Add("id", typeof(Guid));
+                e.Feature.DataRow["id"] = GuidDrawing;// Guid.NewGuid();
             }
 
             MapDataPasser.ActivityDrawn(g);
@@ -312,7 +312,7 @@ namespace WBIS_2.Modules.ViewModels
                 PGFeatureSet pGFeatureSet = (PGFeatureSet)layer.DataSet;
                 //MapControl.UxMap.ActiveLayer.DataSet = new PGFeatureSet(pGFeatureSet.Server, pGFeatureSet.Table, "Geometry", "Guid");
                 //MapControl.UxMap.ActiveLayer.Selection.Configure();
-                layer.DataSet = new PGFeatureSet(pGFeatureSet.Server, pGFeatureSet.Table, "geometry", "guid");
+                layer.DataSet = new PGFeatureSet(pGFeatureSet.Server, pGFeatureSet.Table, "geometry", "id");
                 layer.Selection.Configure();
                 layer.AssignFastDrawnStates();
             }
@@ -347,14 +347,14 @@ namespace WBIS_2.Modules.ViewModels
                 var schema = entityType.GetSchema();
                 parent = entityType.GetTableName().ToLower();
 
-                joinParent = $" INNER JOIN {parent} ON {layerStr.ToLower()}.guid = {parent}.guid";
+                joinParent = $" INNER JOIN {parent} ON {layerStr.ToLower()}.id = {parent}.id";
             }
                       
             string boolQuery = BuildBoolQuerry(layerStr, parent, parentType, trueType);
 
-            string query = $"SELECT {layerStr.ToLower()}.guid{boolQuery} from {layerStr.ToLower()} {joinParent} " +
+            string query = $"SELECT {layerStr.ToLower()}.id{boolQuery} from {layerStr.ToLower()} {joinParent} " +
                 $"WHERE {layerStr.ToLower()}.geometry IS NOT NULL" +
-                $" ORDER BY {layerStr.ToLower()}.guid";
+                $" ORDER BY {layerStr.ToLower()}.id";
 
             DataTable dt = new DataTable();
             using (NpgsqlDataAdapter filler = new NpgsqlDataAdapter(query, WBIS2Model.GetRDSConnectionString()))
@@ -378,7 +378,7 @@ namespace WBIS_2.Modules.ViewModels
                 else
                     layer.SetVisible(i, true);
                                 
-                if ((Guid)dt.Rows[i][0] != (Guid)layer.DataSet.DataTable.Rows[i]["guid"])
+                if ((Guid)dt.Rows[i][0] != (Guid)layer.DataSet.DataTable.Rows[i]["id"])
                     misteap = true;
             }
             if (misteap)
@@ -411,14 +411,14 @@ namespace WBIS_2.Modules.ViewModels
                 if (trueType.GetProperty("District") != null)
                     districts = $" {layerStr.ToLower()}.district_id IN ({DistrictGuids})";
                 else if (trueType.GetProperty("Districts") != null)
-                    districts = $" {layerStr.ToLower()}.guid IN (SELECT {DbHelp.GetDbString(trueType)}_id FROM {layerStr.ToLower()}_districts WHERE district_id IN ({DistrictGuids}))";
+                    districts = $" {layerStr.ToLower()}.id IN (SELECT {DbHelp.GetDbString(trueType)}_id FROM {layerStr.ToLower()}_districts WHERE district_id IN ({DistrictGuids}))";
             }
             else
             {
                 if (parentType.GetProperty("District") != null)
                     districts = $" {parent}.district_id IN ({DistrictGuids})";
                 else if (trueType.GetProperty("Districts") != null)
-                    districts = $" {layerStr.ToLower()}.guid IN (SELECT {DbHelp.GetDbString(parentType)}_id FROM {parent}_districts WHERE district_id IN ({DistrictGuids}))";
+                    districts = $" {layerStr.ToLower()}.id IN (SELECT {DbHelp.GetDbString(parentType)}_id FROM {parent}_districts WHERE district_id IN ({DistrictGuids}))";
             }
             return districts;
         }
@@ -461,7 +461,7 @@ namespace WBIS_2.Modules.ViewModels
 
 
        
-        string DistrictGuids = $"'{string.Join("','", CurrentUser.Districts.Select(_ => _.Guid))}'";
+        string DistrictGuids = $"'{string.Join("','", CurrentUser.Districts.Select(_ => _.Id))}'";
         public void InformationTypesChanged(object sender, EventArgs e)
         {
             MapDataPasser.HiddenFeatures = new Dictionary<string, List<Guid>>();

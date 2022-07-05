@@ -10,8 +10,8 @@ namespace WBIS_2.DataModel
 {
     public class Picture
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
-        public Guid Guid { get; set; }
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]
+        public Guid Id { get; set; }
         [Column("date_time")]
         public DateTime DateTime { get; set; }
         [Column("image_data")]

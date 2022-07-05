@@ -10,8 +10,8 @@ namespace WBIS_2.DataModel
     [DisplayOrder(Index = 2), TypeGrouper(IgnoreGroups = true)]
     public class Watershed : IInformationType
     {
-        [Key,DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
-        public Guid Guid { get; set; }
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]
+        public Guid Id { get; set; }
         [Required, Column("watershed_name"), ListInfo(DisplayField = true)]
         public string WatershedName { get; set; }
         [Required, Column("watershed_id"), ListInfo(DisplayField = true)]

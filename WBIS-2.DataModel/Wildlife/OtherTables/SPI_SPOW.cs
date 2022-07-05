@@ -10,8 +10,8 @@ namespace WBIS_2.DataModel
     [TypeGrouper(GroupName = "Wildlife")]
     public class SPI_SPOW : IInformationType
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
-        public Guid Guid { get; set; }
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]
+        public Guid Id { get; set; }
 
 
 

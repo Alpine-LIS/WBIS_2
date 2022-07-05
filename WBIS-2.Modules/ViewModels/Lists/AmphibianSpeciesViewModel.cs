@@ -47,7 +47,7 @@ namespace WBIS_2.Modules.ViewModels
         public AmphibianSpeciesViewModel(Guid guid)
         {
             CurrentSpecies = Database.AmphibianSpecies
-                .FirstOrDefault(_=>_.Guid == guid);
+                .FirstOrDefault(_=>_.Id == guid);
 
             if (CurrentSpecies != null)
             {
@@ -56,7 +56,7 @@ namespace WBIS_2.Modules.ViewModels
             else
             {
                 CurrentSpecies = new AmphibianSpecies() ;
-                CurrentSpecies.Guid = guid;
+                CurrentSpecies.Id = guid;
             }
         }
               
@@ -80,7 +80,7 @@ namespace WBIS_2.Modules.ViewModels
                 return;
             }
 
-            if (Database.AmphibianSpecies.Any(_=>_.SpeciesName.ToUpper().Trim() == SpeciesName.ToUpper().Trim() && _.Guid != CurrentSpecies.Guid))
+            if (Database.AmphibianSpecies.Any(_=>_.SpeciesName.ToUpper().Trim() == SpeciesName.ToUpper().Trim() && _.Id != CurrentSpecies.Id))
             {
                 MessageBox.Show("A species with this name already exists.");
                 return;

@@ -422,7 +422,7 @@ namespace WBIS_2.Modules.ViewModels.Reports
 
             var plantSpecies = Database.BotanicalPlantsOfInterest
                 .Include(_ => _.BotanicalElement).ThenInclude(_ => _.BotanicalSurveyArea).ThenInclude(_ => _.THP_Area)
-                .Where(_ => _.BotanicalElement.BotanicalSurveyArea.THP_Area.Guid == tHP_Area.Guid && _.SpeciesFound && !_.BotanicalElement._delete && !_.BotanicalElement.Repository)
+                .Where(_ => _.BotanicalElement.BotanicalSurveyArea.THP_Area.Id == tHP_Area.Id && _.SpeciesFound && !_.BotanicalElement._delete && !_.BotanicalElement.Repository)
                 .Select(_=>_.PlantSpecies).Distinct().OrderBy(_=>_.SciName);
 
             DataTable dt = new DataTable();
@@ -505,7 +505,7 @@ namespace WBIS_2.Modules.ViewModels.Reports
             dt.Columns.Add("Summary");
 
             var areas = Database.BotanicalSurveyAreas
-                .Include(_ => _.THP_Area).Where(_ => _.THP_Area.Guid == tHP_Area.Guid).OrderBy(_=>_.AreaName).ToArray();
+                .Include(_ => _.THP_Area).Where(_ => _.THP_Area.Id == tHP_Area.Id).OrderBy(_=>_.AreaName).ToArray();
             foreach(var area in areas)
             {
                 var plantSpecies = Database.BotanicalPlantsOfInterest
@@ -598,19 +598,19 @@ namespace WBIS_2.Modules.ViewModels.Reports
             var surveySpecies = Database.BotanicalPlantsOfInterest
                 .Include(_ => _.BotanicalElement).ThenInclude(_ => _.BotanicalSurveyArea).ThenInclude(_ => _.THP_Area)
                 .Include(_ => _.PlantSpecies)
-                .Where(_ => _.BotanicalElement.BotanicalSurveyArea.THP_Area.Guid == tHP_Area.Guid && !_.BotanicalElement._delete && !_.BotanicalElement.Repository)
-                .Select(_ => _.PlantSpecies).Select(_=>_.Guid).ToArray();
+                .Where(_ => _.BotanicalElement.BotanicalSurveyArea.THP_Area.Id == tHP_Area.Id && !_.BotanicalElement._delete && !_.BotanicalElement.Repository)
+                .Select(_ => _.PlantSpecies).Select(_=>_.Id).ToArray();
 
 
             var scopingSpeces = Database.BotanicalScopingSpecies
                 .Include(_ => _.BotanicalScoping)
                 .Include(_ => _.PlantSpecies)
-                .Where(_ => _.BotanicalScoping.Guid == botanicalScoping.Guid && !_._delete && !_.Repository &&
+                .Where(_ => _.BotanicalScoping.Id == botanicalScoping.Id && !_._delete && !_.Repository &&
                 (
                     (
                         (_.PlantSpecies.RPlantRank.StartsWith("4") || _.PlantSpecies.RPlantRank.StartsWith("3") || (_.PlantSpecies.RPlantRank + _.PlantSpecies.CalList + _.PlantSpecies.FedList != ""))
                         && !_.Exclude && !_.ExcludeReport
-                        && (surveySpecies.Contains(_.PlantSpecies.Guid))
+                        && (surveySpecies.Contains(_.PlantSpecies.Id))
                     )
                     ||
                     (((_.PlantSpecies.RPlantRank.StartsWith("1") || _.PlantSpecies.RPlantRank.StartsWith("2"))
@@ -636,7 +636,7 @@ namespace WBIS_2.Modules.ViewModels.Reports
                 r["CRPR"] = species.PlantSpecies.RPlantRank;
                 r["Federal"] = species.PlantSpecies.FedList;
                 r["State"] = species.PlantSpecies.CalList;
-                r["Species Found"] = surveySpecies.Contains(species.PlantSpecies.Guid);
+                r["Species Found"] = surveySpecies.Contains(species.PlantSpecies.Id);
                 r["Habitat and Survey Results"] = "";
                 r["References"] = "";
                 r["Reference sites"] = "";
@@ -838,12 +838,12 @@ namespace WBIS_2.Modules.ViewModels.Reports
             var plantSpecies = Database.BotanicalPlantsOfInterest
               .Include(_ => _.BotanicalElement).ThenInclude(_ => _.BotanicalSurveyArea).ThenInclude(_ => _.THP_Area)
               .Include(_=>_.PlantSpecies)
-              .Where(_ => _.BotanicalElement.BotanicalSurveyArea.THP_Area.Guid == tHP_Area.Guid && _.SpeciesFound && !_.BotanicalElement._delete && !_.BotanicalElement.Repository)
+              .Where(_ => _.BotanicalElement.BotanicalSurveyArea.THP_Area.Id == tHP_Area.Id && _.SpeciesFound && !_.BotanicalElement._delete && !_.BotanicalElement.Repository)
               .Select(_ => _.PlantSpecies);
             var plantSpecies2 = Database.BotanicalPlantsList
               .Include(_ => _.BotanicalElement).ThenInclude(_ => _.BotanicalSurveyArea).ThenInclude(_ => _.THP_Area)
               .Include(_ => _.PlantSpecies)
-              .Where(_ => _.BotanicalElement.BotanicalSurveyArea.THP_Area.Guid == tHP_Area.Guid && !_.BotanicalElement._delete && !_.BotanicalElement.Repository)
+              .Where(_ => _.BotanicalElement.BotanicalSurveyArea.THP_Area.Id == tHP_Area.Id && !_.BotanicalElement._delete && !_.BotanicalElement.Repository)
               .Select(_ => _.PlantSpecies);
             plantSpecies = plantSpecies.Append(plantSpecies2).AsQueryable();
             plantSpecies = plantSpecies.Distinct().OrderBy(_ => _.SciName);

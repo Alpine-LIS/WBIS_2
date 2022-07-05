@@ -71,7 +71,7 @@ namespace WBIS_2.Modules.ViewModels
                 || CheckSpecies.ExcludeText != CurrentSpecies.ExcludeText
                 || CheckSpecies.ExcludeReport != CurrentSpecies.ExcludeReport)
             {
-                ChangedSpecies.Add(CurrentSpecies.Guid);
+                ChangedSpecies.Add(CurrentSpecies.Id);
                 Changed = true;
             }
         }
@@ -183,7 +183,7 @@ namespace WBIS_2.Modules.ViewModels
                    .Include(_ => _.Watersheds)
                    .Include(_ => _.Districts)
                    .Include(_ => _.Quad75s)
-                   .FirstOrDefault(_ => _.Guid == guid);
+                   .FirstOrDefault(_ => _.Id == guid);
 
             if (Scoping != null)
             {
@@ -201,7 +201,7 @@ namespace WBIS_2.Modules.ViewModels
             else
             {
                 Scoping = new BotanicalScoping();
-                Scoping.Guid = guid;
+                Scoping.Id = guid;
                 Scoping.Region = Regions.First(_=>_.RegionName == "Master List");
                 SpeciesList = new BotanicalScopingSpecies[0];
                 WatershedList = new Watershed[0];
@@ -264,7 +264,7 @@ namespace WBIS_2.Modules.ViewModels
 
             if (Database.BotanicalScopings
                     .Include(_ => _.THP_Area).Any(_ => _.THP_Area == DbHelp.ThpExistance(Database, ThpName)
-                    && _.Guid != Scoping.Guid && !_._delete))
+                    && _.Id != Scoping.Id && !_._delete))
             {
                 MessageBox.Show($"There is already a scoping for the thp {ThpName}.");
                 return;
@@ -275,7 +275,7 @@ namespace WBIS_2.Modules.ViewModels
 
             Database.BotanicalScopingSpecies.RemoveRange(
                 Database.BotanicalScopingSpecies.Include(_ => _.BotanicalScoping)
-                .Where(_ => _.BotanicalScoping.Guid == Scoping.Guid));
+                .Where(_ => _.BotanicalScoping.Id == Scoping.Id));
 
             Scoping.BotanicalScopingSpecies = new List<BotanicalScopingSpecies>();
             Scoping.Watersheds = new List<Watershed>();
@@ -286,7 +286,7 @@ namespace WBIS_2.Modules.ViewModels
             {
                 BotanicalScopingSpecies botanicalScopingSpecies = new BotanicalScopingSpecies()
                 {
-                    PlantSpecies = Database.PlantSpecies.First(_=>_.Guid == bs.PlantSpecies.Guid),
+                    PlantSpecies = Database.PlantSpecies.First(_=>_.Id == bs.PlantSpecies.Id),
                     Exclude = false,
                     ExcludeReport = false,
                     HabitatDescription = bs.HabitatDescription,
@@ -302,7 +302,7 @@ namespace WBIS_2.Modules.ViewModels
             Scoping.Watersheds = Database.Watersheds
                 .Include(_ => _.Districts)
                 .Include(_ => _.Quad75s)
-                .Where(_ => WatershedList.Select(z => z.Guid).Contains(_.Guid)).ToList();
+                .Where(_ => WatershedList.Select(z => z.Id).Contains(_.Id)).ToList();
 
             foreach(var water in Scoping.Watersheds)
             {
@@ -361,7 +361,7 @@ namespace WBIS_2.Modules.ViewModels
             List<IFeature> features = (List<IFeature>)sender;
             WatershedList = Database.Watersheds
                 .Include(_ => _.Districts)
-                .Where(_=>features.Select(x=>x.DataRow["guid"]).Cast<Guid>().Contains(_.Guid))
+                .Where(_=>features.Select(x=>x.DataRow["guid"]).Cast<Guid>().Contains(_.Id))
                 .AsNoTracking().ToArray();
             RaisePropertyChanged(nameof(WatershedList));
             this.Changed = true;
@@ -371,14 +371,14 @@ namespace WBIS_2.Modules.ViewModels
         public ICommand WatershedListSelectionCommand { get; set; }
         private void WatershedListSelection()
         {
-            var selectWatershedsControl = new Views.UserControls.SelectWatershedsControl(WatershedList.Select(_=>_.Guid).ToArray());
+            var selectWatershedsControl = new Views.UserControls.SelectWatershedsControl(WatershedList.Select(_=>_.Id).ToArray());
             CustomControlWindow window = new CustomControlWindow(selectWatershedsControl);
             if (window.DialogResult)
             {
                 Guid[] newGuids = selectWatershedsControl.WatershedSelections.Where(_=>_.Select).Select(_=>_.guid).ToArray();
                 WatershedList = Database.Watersheds
                     .Include(_=>_.Districts)
-                    .Where(_ => newGuids.Contains(_.Guid))
+                    .Where(_ => newGuids.Contains(_.Id))
                     .AsNoTracking().ToArray();
                 RaisePropertyChanged(nameof(WatershedList));
                 this.Changed = true;
@@ -440,13 +440,13 @@ namespace WBIS_2.Modules.ViewModels
             Views.UserControls.SelectBotanicalSpeciesControl selectBotanicalSpeciesControl;
             if (MapDataPasser.ZoomLayerName.ToUpper().Contains("WATERSHED"))
             {
-                var list = Database.Watersheds.Where(_ => features.Select(x => x.DataRow["guid"]).Cast<Guid>().Contains(_.Guid))
+                var list = Database.Watersheds.Where(_ => features.Select(x => x.DataRow["guid"]).Cast<Guid>().Contains(_.Id))
                     .AsNoTracking().ToList<object>();
                 selectBotanicalSpeciesControl = new Views.UserControls.SelectBotanicalSpeciesControl(list, typeof(Watershed), "Master List");
             }
             else
             {
-                var list = Database.Quad75s.Where(_ => features.Select(x => x.DataRow["guid"]).Cast<Guid>().Contains(_.Guid))
+                var list = Database.Quad75s.Where(_ => features.Select(x => x.DataRow["guid"]).Cast<Guid>().Contains(_.Id))
                     .AsNoTracking().ToList<object>();
                 selectBotanicalSpeciesControl = new Views.UserControls.SelectBotanicalSpeciesControl(list, typeof(Quad75), "Master List");
             }
@@ -475,11 +475,11 @@ namespace WBIS_2.Modules.ViewModels
             bool spiDesc = MessageBox.Show("Botanical scoping plant species use the CNDDB habitat description by default. Would you like the use the SPI habitat description?", "", MessageBoxButton.YesNo) == MessageBoxResult.Yes;
 
                 Guid[] newGuids = selectBotanicalSpeciesControl.SpeciesSelections.Where(_ => _.Select).Select(_ => _.guid).ToArray();
-            var species = Database.PlantSpecies.Where(_ => newGuids.Contains(_.Guid)).AsNoTracking().ToArray();
+            var species = Database.PlantSpecies.Where(_ => newGuids.Contains(_.Id)).AsNoTracking().ToArray();
             List<BotanicalScopingSpecies> botanicalScopingSpecies = new List<BotanicalScopingSpecies>();
             foreach (var s in species)
             {
-                if (!SpeciesList.Any(_ => _.PlantSpecies.Guid == s.Guid) || replace)
+                if (!SpeciesList.Any(_ => _.PlantSpecies.Id == s.Id) || replace)
                 {
                     var b = new BotanicalScopingSpecies()
                     {

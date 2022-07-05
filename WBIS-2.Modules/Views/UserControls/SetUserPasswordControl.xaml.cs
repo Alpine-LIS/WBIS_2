@@ -48,9 +48,9 @@ namespace WBIS_2.Modules.Views
 
             string Accurate = PasswordTools.HashPassword(TbxPassword.Text + "#com.alpinelis.rmsdataapp#");
 
-            var user = WBIS2Model.ApplicationUsers.First(_=>_.Guid == ReturnApplicationUser.Guid);
-            user.PasswordSHA = Accurate;// PasswordTools.HashPassword(NewPassword + "#com.alpinelis.rmsdataapp#");
-            user.PasswordTimestamp = DateTime.Now;
+            var user = WBIS2Model.ApplicationUsers.First(_=>_.Id == ReturnApplicationUser.Id);
+            //user.PasswordSHA = Accurate;// PasswordTools.HashPassword(NewPassword + "#com.alpinelis.rmsdataapp#");
+            //user.PasswordTimestamp = DateTime.Now;
             WBIS2Model.ApplicationUsers.Update(user);
             WBIS2Model.SaveChanges();
             ReturnPassword = Accurate;

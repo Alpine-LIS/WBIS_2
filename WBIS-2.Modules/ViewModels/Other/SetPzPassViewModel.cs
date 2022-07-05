@@ -29,7 +29,7 @@ namespace WBIS_2.Modules.ViewModels
             foreach(var s in SiteCallings)
             {
                 var site = Database.SiteCallings
-                    .First(_=>_.Guid == s.Guid);
+                    .First(_=>_.Id == s.Id);
                 site.PZPassNumber = PassNumber;
             }
             Database.SaveChanges();

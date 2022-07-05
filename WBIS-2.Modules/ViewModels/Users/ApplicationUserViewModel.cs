@@ -84,7 +84,7 @@ namespace WBIS_2.Modules.ViewModels
             User = Database.ApplicationUsers
                 .Include(_ => _.ApplicationGroup).ThenInclude(r => r.ApplicationUsers)
                 .Include(_ => _.Districts)
-                .FirstOrDefault(_ => _.Guid == guid);
+                .FirstOrDefault(_ => _.Id == guid);
             if (User == null) User = new ApplicationUser()
             {
                 Districts = new List<District>()
@@ -130,8 +130,8 @@ namespace WBIS_2.Modules.ViewModels
                 {
                     MessageBox.Show("The passwords must match");
                 }
-                User.PasswordSHA = PasswordTools.HashPassword(NewPassword + "#com.alpinelis.rmsdataapp#");
-                User.PasswordTimestamp = DateTime.Now;
+               // User.PasswordSHA = PasswordTools.HashPassword(NewPassword + "#com.alpinelis.rmsdataapp#");
+                //User.PasswordTimestamp = DateTime.Now;
             }
 
             if (DistrictList.Count(_ => _.IsSelected) == 0)
@@ -243,7 +243,7 @@ namespace WBIS_2.Modules.ViewModels
             {
                 var layers = Database.UserMapLayers
                 .Include(_ => _.ApplicationUser)
-                .Where(_ => _.ApplicationUser.Guid == User.Guid && type == _.InformationType)
+                .Where(_ => _.ApplicationUser.Id == User.Id && type == _.InformationType)
                 .Select(_ => MapDataPasser.CleanLayerStr(_.VisibleLayer))
                 .Distinct().ToList();
 
@@ -256,7 +256,7 @@ namespace WBIS_2.Modules.ViewModels
                 if (layers.Count() == 0)
                     layers = Database.UserMapLayers
                         .Include(_ => _.ApplicationUser)
-                        .Where(_ => _.ApplicationUser.Guid == User.Guid && _.InformationType == "Default View")
+                        .Where(_ => _.ApplicationUser.Id == User.Id && _.InformationType == "Default View")
                         .Select(_ => MapDataPasser.CleanLayerStr(_.VisibleLayer))
                         .Distinct().ToList();
                 if (layers.Count() == 0)

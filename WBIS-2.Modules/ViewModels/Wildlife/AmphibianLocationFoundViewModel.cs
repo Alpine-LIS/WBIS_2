@@ -64,7 +64,7 @@ namespace WBIS_2.Modules.ViewModels
                 .Include(_=>_.AmphibianLocationFound).ThenInclude(_=>_.AmphibianSpecies)
                 .Include(_=>_.User)
                 .Include(_=>_.Pictures)
-                .First(_ => _.Guid == guid);
+                .First(_ => _.Id == guid);
 
             locationFound = element.AmphibianLocationFound;
 

@@ -51,7 +51,7 @@ namespace WBIS_2.Modules.ViewModels
                 .Include(_ => _.FloweringTimelines)
                 .Include(_ => _.RegionalPlantLists).ThenInclude(_=>_.Region)
                 .Include(_ => _.PlantProtectionSummaries).ThenInclude(_=>_.District)
-                .FirstOrDefault(_=>_.Guid == guid);
+                .FirstOrDefault(_=>_.Id == guid);
 
             if (CurrentSpecies != null)
             {
@@ -65,7 +65,7 @@ namespace WBIS_2.Modules.ViewModels
                 RegionalPlantLists = new List<RegionalPlantList>(),
                 PlantProtectionSummaries = new List<PlantProtectionSummary>()
                 };
-                CurrentSpecies.Guid = guid;
+                CurrentSpecies.Id = guid;
                 FillProtectionSummariesEmpty();
             }
             FillRegions();
@@ -128,7 +128,7 @@ namespace WBIS_2.Modules.ViewModels
                 RegionSelections = RegionSelections.Append(new RegionSelection()
                 {
                     Region = region,
-                    Select = CurrentSpecies.RegionalPlantLists.Select(_=>_.Region.Guid).Contains(region.Guid)
+                    Select = CurrentSpecies.RegionalPlantLists.Select(_=>_.Region.Id).Contains(region.Id)
                 }).ToArray();
             }
             RaisePropertyChanged(nameof(RegionSelections));
@@ -166,7 +166,7 @@ namespace WBIS_2.Modules.ViewModels
                 return;
             }
 
-            if (Database.PlantSpecies.Any(_=>_.SciName.ToUpper().Trim() == SciName.ToUpper().Trim() && _.Guid != CurrentSpecies.Guid))
+            if (Database.PlantSpecies.Any(_=>_.SciName.ToUpper().Trim() == SciName.ToUpper().Trim() && _.Id != CurrentSpecies.Id))
             {
                 MessageBox.Show("A species with this name already exists.");
                 return;
@@ -181,9 +181,9 @@ namespace WBIS_2.Modules.ViewModels
                 Database.PlantSpecies.Add(CurrentSpecies);
             else Database.PlantSpecies.Update(CurrentSpecies);
 
-            Database.FloweringTimelines.RemoveRange(Database.FloweringTimelines.Include(_=>_.PlantSpecies).Where(_=>_.PlantSpecies.Guid == CurrentSpecies.Guid));
-            Database.PlantProtectionSummaries.RemoveRange(Database.PlantProtectionSummaries.Include(_ => _.PlantSpecies).Where(_ => _.PlantSpecies.Guid == CurrentSpecies.Guid));
-            Database.RegionalPlantLists.RemoveRange(Database.RegionalPlantLists.Include(_ => _.PlantSpecies).Where(_ => _.PlantSpecies.Guid == CurrentSpecies.Guid));
+            Database.FloweringTimelines.RemoveRange(Database.FloweringTimelines.Include(_=>_.PlantSpecies).Where(_=>_.PlantSpecies.Id == CurrentSpecies.Id));
+            Database.PlantProtectionSummaries.RemoveRange(Database.PlantProtectionSummaries.Include(_ => _.PlantSpecies).Where(_ => _.PlantSpecies.Id == CurrentSpecies.Id));
+            Database.RegionalPlantLists.RemoveRange(Database.RegionalPlantLists.Include(_ => _.PlantSpecies).Where(_ => _.PlantSpecies.Id == CurrentSpecies.Id));
 
             Database.FloweringTimelines.Add(new FloweringTimeline()
             {

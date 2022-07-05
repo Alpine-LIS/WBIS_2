@@ -10,8 +10,8 @@ namespace WBIS_2.DataModel
     [DisplayOrder(Index = 17), TypeGrouper(GroupName = "Wildlife")]
     public class Hex160RequiredPass : UserDataValidator, IUserRecords
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
-        public Guid Guid { get; set; } 
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]
+        public Guid Id { get; set; }
         [Column("required_passes")]
         public int RequiredPasses { get; set; }
         [Column("current_passes")]

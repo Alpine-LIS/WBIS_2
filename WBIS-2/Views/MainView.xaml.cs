@@ -137,7 +137,7 @@ namespace WBIS_2.Views
                            //.Include(_ => _.ActiveRegens)
                            //.Include(_ => _.ActiveFuelbreaks)
                            .Include(_ => _.ApplicationGroup)
-                           .First(_ => _.Guid == selectedUser.Guid);
+                           .First(_ => _.Id == selectedUser.Id);
             }
             else
             {
@@ -258,7 +258,7 @@ namespace WBIS_2.Views
 
 
             var MobileUsers = new WBIS2Model().ApplicationUsers.Include(_ => _.ApplicationGroup)
-                .Where(_ => _.ApplicationGroup.GroupName == "Mobile User" && !_._delete && !_.PlaceHolder
+                .Where(_ => _.ApplicationGroup.GroupName == "Mobile User" 
                 && ((_.Wildlife && CurrentUser.User.Wildlife) || (_.Botany && CurrentUser.User.Botany)))
                 .Select(_ => _.UserName).OrderBy(_ => _);
             foreach (var MobileUser in MobileUsers)

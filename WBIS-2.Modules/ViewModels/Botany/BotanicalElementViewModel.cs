@@ -50,12 +50,12 @@ namespace WBIS_2.Modules.ViewModels
         public BotanicalElementViewModel(Guid guid)
         {
             RecordId = guid;
-            if (Database.BotanicalPlantsOfInterest.Any(_ => _.Guid == guid))
+            if (Database.BotanicalPlantsOfInterest.Any(_ => _.Id == guid))
             {
                 ViewName = typeof(BotanicalPlantOfInterestView).Name;
                 ViewModel = typeof(BotanicalPlantOfInterestViewModel);
             }
-            else if (Database.BotanicalPointsOfInterest.Any(_ => _.Guid == guid))
+            else if (Database.BotanicalPointsOfInterest.Any(_ => _.Id == guid))
             {
                 ViewName = typeof(BotanicalPointOfInterestView).Name;
                 ViewModel = typeof(BotanicalPointOfInterestViewModel);

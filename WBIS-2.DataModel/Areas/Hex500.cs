@@ -10,8 +10,8 @@ namespace WBIS_2.DataModel
 {
     public class Hex500 : IInformationType
     {
-        [Key,DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
-        public Guid Guid { get; set; }
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]
+        public Guid Id { get; set; }
         [Required, Column("hex500_id"), ListInfo(DisplayField = true)]
         public string Hex500ID { get; set; }
 

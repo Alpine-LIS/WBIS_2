@@ -35,8 +35,8 @@ namespace WBIS_2.Modules.Views.UserControls
                     WatershedID = watershed.WatershedID,
                     WatershedName = watershed.WatershedName,
                     Hydrologic = watershed.Hydrologic,
-                    Select = currentSelection.Contains(watershed.Guid),
-                    guid = watershed.Guid
+                    Select = currentSelection.Contains(watershed.Id),
+                    guid = watershed.Id
                 });
             GridControl.ItemsSource = WatershedSelections;
         }
@@ -62,11 +62,11 @@ namespace WBIS_2.Modules.Views.UserControls
         {
             if (GridControl.SelectedItem == null) return;
 
-            var geo = Database.Watersheds.First(_ => _.Guid == ((WatershedSelection)GridControl.SelectedItem).guid).Geometry;
+            var geo = Database.Watersheds.First(_ => _.Id == ((WatershedSelection)GridControl.SelectedItem).guid).Geometry;
             var watersheds = Database.Watersheds.Where(_ => _.Geometry.Touches(geo)).AsNoTracking();
             foreach (var watershed in watersheds)
             {
-                var w = WatershedSelections.FirstOrDefault(_ => _.guid == watershed.Guid);
+                var w = WatershedSelections.FirstOrDefault(_ => _.guid == watershed.Id);
                 if (w != null)
                     w.SetSelect(true);
             }

@@ -10,8 +10,8 @@ namespace WBIS_2.DataModel
     [DisplayOrder(Index = 10), TypeGrouper(GroupName = "Botany"), GeometryEdits(Locked = false)]
     public class BotanicalSurvey : UserDataValidator, IUserRecords, INonPointParents
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
-        public Guid Guid { get; set; }
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]
+        public Guid Id { get; set; }
 
 
         [Column("survey_type")]

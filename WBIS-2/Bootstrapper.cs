@@ -106,7 +106,7 @@ namespace WBIS_2
 
 
             Manager.Register(Regions.Documents, new Module(AppModules.ModuleUser,
-               () => ApplicationUserViewModel.Create(CurrentUser.User.Guid), typeof(ApplicationUserView)));
+               () => ApplicationUserViewModel.Create(CurrentUser.User.Id), typeof(ApplicationUserView)));
             Manager.Register(Regions.Documents, new Module(AppModules.ModuleAdminUser,
                () => ParentListViewModel.Create(new ApplicationUser()), typeof(ParentListView)));
 

@@ -51,7 +51,7 @@ namespace WBIS_2.Modules.ViewModels.Reports
             var misValue = System.Reflection.Missing.Value;
             var wb = excel.Workbooks.Add(misValue);
 
-            ExportOtherWildlifeDetection(wb, queryRecords.Select(_=>_.Guid).ToArray(), sfd.FileName);
+            ExportOtherWildlifeDetection(wb, queryRecords.Select(_=>_.Id).ToArray(), sfd.FileName);
             ExportSiteCallingDetection(wb, queryRecords, sfd.FileName, includeShapes);
             ExportSiteCalling(wb, queryRecords, sfd.FileName, includeShapes);
             ExportHex160(wb, queryRecords, sfd.FileName);
@@ -118,7 +118,7 @@ namespace WBIS_2.Modules.ViewModels.Reports
                 .Include(_ => _.SiteCalling).ThenInclude(_ => _.Hex160)
                 .Include(_ => _.SiteCalling).ThenInclude(_ => _.District)
                 .Include(_ => _.SiteCalling).ThenInclude(_ => _.Watershed)
-                .Where(_ => !_._delete && !_.SiteCalling._delete && !_.SiteCalling.Repository && queryRecords.Contains(_.SiteCalling.Hex160.Guid));
+                .Where(_ => !_._delete && !_.SiteCalling._delete && !_.SiteCalling.Repository && queryRecords.Contains(_.SiteCalling.Hex160.Id));
 
             DataTable dt = new DataTable();
             dt.Columns.Add("SpCode");
@@ -411,7 +411,7 @@ namespace WBIS_2.Modules.ViewModels.Reports
                 .Include(_=>_.BotanicalElement).ThenInclude(_=>_.BotanicalSurvey).ThenInclude(_=>_.THP_Area)
                 .Include(_ => _.BotanicalElement).ThenInclude(_ => _.User)
                 .Include(_=>_.AssociatedPlants).ThenInclude(_=>_.PlantSpecies)
-                .Where (_=> !_.BotanicalElement._delete && !_.BotanicalElement.Repository && areaRecords.Contains(_.BotanicalElement.BotanicalSurveyArea.Guid))
+                .Where (_=> !_.BotanicalElement._delete && !_.BotanicalElement.Repository && areaRecords.Contains(_.BotanicalElement.BotanicalSurveyArea.Id))
                 .OrderBy(_=>_.DateTime);
 
             DataTable dt = new DataTable();
@@ -492,7 +492,7 @@ namespace WBIS_2.Modules.ViewModels.Reports
                 .Include(_ => _.BotanicalElement).ThenInclude(_ => _.BotanicalSurveyArea).ThenInclude(_ => _.THP_Area)
                 .Include(_ => _.BotanicalElement).ThenInclude(_ => _.BotanicalSurvey).ThenInclude(_ => _.THP_Area)
                 .Include(_ => _.BotanicalElement).ThenInclude(_ => _.User)
-                .Where(_ => !_.BotanicalElement._delete && !_.BotanicalElement.Repository && areaRecords.Contains(_.BotanicalElement.BotanicalSurveyArea.Guid))
+                .Where(_ => !_.BotanicalElement._delete && !_.BotanicalElement.Repository && areaRecords.Contains(_.BotanicalElement.BotanicalSurveyArea.Id))
                 .OrderBy(_ => _.DateTime);
 
             DataTable dt = new DataTable();
@@ -557,7 +557,7 @@ namespace WBIS_2.Modules.ViewModels.Reports
                 .Include(_ => _.BotanicalElement).ThenInclude(_ => _.BotanicalSurveyArea).ThenInclude(_ => _.THP_Area)
                 .Include(_ => _.BotanicalElement).ThenInclude(_ => _.BotanicalSurvey).ThenInclude(_ => _.THP_Area)
                 .Include(_ => _.BotanicalElement).ThenInclude(_ => _.User)
-                .Where(_ => !_.BotanicalElement._delete && !_.BotanicalElement.Repository && areaRecords.Contains(_.BotanicalElement.BotanicalSurveyArea.Guid))
+                .Where(_ => !_.BotanicalElement._delete && !_.BotanicalElement.Repository && areaRecords.Contains(_.BotanicalElement.BotanicalSurveyArea.Id))
                 .OrderBy(_ => _.DateTime);
 
             DataTable dt = new DataTable();

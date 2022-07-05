@@ -64,7 +64,7 @@ namespace WBIS_2.Modules.ViewModels
                 .Include(_=>_.BotanicalPointOfInterest)
                 .Include(_=>_.User)
                 .Include(_=>_.Pictures)
-                .First(_ => _.Guid == guid);
+                .First(_ => _.Id == guid);
            
                 pointOfInterest = element.BotanicalPointOfInterest;
 
@@ -254,13 +254,13 @@ namespace WBIS_2.Modules.ViewModels
                  .Include(_ => _.BotanicalSurveyArea)
                  .Include(_ => _.BotanicalSurvey)
                  .AsNoTracking()
-                .First(_ => _.Guid == element.Guid);
-                be.Guid = Guid.NewGuid();
+                .First(_ => _.Id == element.Id);
+                be.Id = Guid.NewGuid();
             be.Pictures = new List<Picture>();
             be.RecordType = "Plants of Interest";
             be.BotanicalPlantOfInterest = new BotanicalPlantOfInterest()
             {
-                Guid = be.Guid,
+                Id = be.Id,
                 DateTime = pointOfInterest.DateTime,
                 Radius = pointOfInterest.Radius,
                 SpeciesFound = true
@@ -269,8 +269,8 @@ namespace WBIS_2.Modules.ViewModels
             IDocumentManagerService service = this.GetRequiredService<IDocumentManagerService>();
 
             var viewModel = BotanicalPlantOfInterestViewModel.CreateNew(be, element.User.UserName);
-                IDocument document = service.CreateDocument("BotanicalPlantOfInterestView", viewModel, be.Guid, this);
-                document.Id = be.Guid;
+                IDocument document = service.CreateDocument("BotanicalPlantOfInterestView", viewModel, be.Id, this);
+                document.Id = be.Id;
         }
     }
 }

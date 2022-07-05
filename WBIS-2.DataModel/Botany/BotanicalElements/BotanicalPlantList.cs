@@ -12,8 +12,8 @@ namespace WBIS_2.DataModel
   [DisplayOrder, TypeGrouper(GroupName = "Botany")]
     public class BotanicalPlantList : UserDataValidator, IInformationType
     {
-         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid"), ForeignKey("BotanicalElement")]
-        public Guid Guid { get; set; }
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id"), ForeignKey("BotanicalElement")]
+        public Guid Id { get; set; }
 
         //[Required, Column("botanical_element_id"),ForeignKey("BotanicalElement")]
         //public Guid BotanicalElementId { get; set; }

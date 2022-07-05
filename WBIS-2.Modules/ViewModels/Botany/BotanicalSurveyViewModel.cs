@@ -88,7 +88,7 @@ namespace WBIS_2.Modules.ViewModels
                    .Include(_ => _.Watersheds)
                    .Include(_ => _.District)
                    .Include(_ => _.Quad75s)
-                   .FirstOrDefault(_ => _.Guid == guid);
+                   .FirstOrDefault(_ => _.Id == guid);
 
             if (Survey != null)
             {
@@ -100,7 +100,7 @@ namespace WBIS_2.Modules.ViewModels
             else
             {
                 Survey = new BotanicalSurvey();
-                Survey.Guid = guid;
+                Survey.Id = guid;
             }
 
             ParentType = Survey;
@@ -232,7 +232,7 @@ namespace WBIS_2.Modules.ViewModels
         {
             var pictureData = Database.Pictures
                 .Include(_ => _.BotanicalElement).ThenInclude(_ => _.BotanicalSurvey)
-                .Where(_ => _.BotanicalElement.BotanicalSurvey.Guid == Survey.Guid);
+                .Where(_ => _.BotanicalElement.BotanicalSurvey.Id == Survey.Id);
 
             Pictures = new ObservableCollection<ImageView>();
             foreach (var p in pictureData)

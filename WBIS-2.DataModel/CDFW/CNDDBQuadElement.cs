@@ -10,8 +10,8 @@ namespace WBIS_2.DataModel
     [DisplayOrder(Index = 6), TypeGrouper(IgnoreGroups = true)]
     public class CNDDBQuadElement : IInformationType
     {
-        [Key, Column("guid")]
-        public Guid Guid { get; set; }
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]
+        public Guid Id { get; set; }
 
         [Column("elm_type")]
         public string ElmType { get; set; }

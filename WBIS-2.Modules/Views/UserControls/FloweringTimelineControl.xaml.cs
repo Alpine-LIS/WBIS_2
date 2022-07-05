@@ -103,7 +103,7 @@ namespace WBIS_2.Modules.Views.UserControls
                 int activeFrom = -1;
                 int activeTo = -1;
 
-                var timeline = model.FloweringTimelines.FirstOrDefault(_ => _.PlantSpecies.Guid == bs.PlantSpecies.Guid);
+                var timeline = model.FloweringTimelines.FirstOrDefault(_ => _.PlantSpecies.Id == bs.PlantSpecies.Id);
                 if (timeline != null)
                 {
                     activeFrom = GetMonthInt(timeline.ActiveFrom);

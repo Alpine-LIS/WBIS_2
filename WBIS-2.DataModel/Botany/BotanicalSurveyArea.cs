@@ -10,8 +10,8 @@ namespace WBIS_2.DataModel
     [DisplayOrder(Index = 9), TypeGrouper(GroupName = "Botany"), GeometryEdits(Locked = false)]
     public class BotanicalSurveyArea : UserDataValidator, IUserRecords, INonPointParents, IActiveUnit
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
-        public Guid Guid { get; set; }
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]
+        public Guid Id { get; set; }
 
 
 
@@ -92,7 +92,7 @@ namespace WBIS_2.DataModel
         public ApplicationUser UserModified { get; set; }
 
 
-        [Column("is_active"), ActiveRecordQuery("active_botanical_survey_areas", "guid", "unit_id", "application_user_id", typeof(CurrentUser), "UsingGuid")]
+        [Column("is_active"), ActiveRecordQuery("active_botanical_survey_areas", "id", "unit_id", "application_user_id", typeof(CurrentUser), "UsingGuid")]
         public bool IsActive { get; set; }
         [ListInfo(AutoInclude = true)]
         public ICollection<ApplicationUser> ActiveUsers { get; set; }

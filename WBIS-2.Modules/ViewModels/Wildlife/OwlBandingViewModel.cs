@@ -55,7 +55,7 @@ namespace WBIS_2.Modules.ViewModels
                 .Include(_ => _.User)
                 .Include(_ => _.BirdSpecies)
                 .Include(_=>_.ProtectionZone)
-                .First(_ => _.Guid == guid);
+                .First(_ => _.Id == guid);
 
             SpeciesSites = Database.ProtectionZones
               .Where(_ => (_.Geometry.IsWithinDistance(Banding.Geometry, 3218.69) && !_._delete && !_.Repository) || _ == Banding.ProtectionZone).ToArray();
@@ -217,7 +217,7 @@ namespace WBIS_2.Modules.ViewModels
         {
             var pictureData = Database.Pictures
                 .Include(_ => _.OwlBanding)
-                .Where(_ => _.OwlBanding.Guid == Banding.Guid);
+                .Where(_ => _.OwlBanding.Id == Banding.Id);
 
             Pictures = new ObservableCollection<ImageView>();
             foreach (var p in pictureData)

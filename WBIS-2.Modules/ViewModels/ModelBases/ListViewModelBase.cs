@@ -66,7 +66,7 @@ namespace WBIS_2.Modules.ViewModels
             Records = new EntityInstantFeedbackSource
             {
                 AreSourceRowsThreadSafe = true,
-                KeyExpression = $"Guid",
+                KeyExpression =  $"Id",
             };
             Records.GetQueryable += Records_GetQueryable;
             Records.Refresh();
@@ -370,17 +370,17 @@ namespace WBIS_2.Modules.ViewModels
             }
 
             IDocumentManagerService service = this.GetRequiredService<IDocumentManagerService>();
-            IDocument document = service.FindDocumentById(CurrentRecord.Guid);
+            IDocument document = service.FindDocumentById(CurrentRecord.Id);
             if (document == null)
             {
-                var viewModel = DetailsViewModel.GetMethod("Create").Invoke(new object(), new object[] { CurrentRecord.Guid });
+                var viewModel = DetailsViewModel.GetMethod("Create").Invoke(new object(), new object[] { CurrentRecord.Id });
                 if (viewModel is BotanicalElementViewModel vm)
-                    document = service.CreateDocument(vm.ViewName, vm.ViewModel.GetMethod("Create").Invoke(new object(), new object[] { CurrentRecord.Guid }), CurrentRecord.Guid, this);
+                    document = service.CreateDocument(vm.ViewName, vm.ViewModel.GetMethod("Create").Invoke(new object(), new object[] { CurrentRecord.Id }), CurrentRecord.Id, this);
                 else if (viewModel is AmphibianElementViewModel vm2)
-                    document = service.CreateDocument(vm2.ViewName, vm2.ViewModel.GetMethod("Create").Invoke(new object(), new object[] { CurrentRecord.Guid }), CurrentRecord.Guid, this);
+                    document = service.CreateDocument(vm2.ViewName, vm2.ViewModel.GetMethod("Create").Invoke(new object(), new object[] { CurrentRecord.Id }), CurrentRecord.Id, this);
                 else
-                    document = service.CreateDocument(ListManager.DisplayName.Replace(" ", "") + "View", viewModel, CurrentRecord.Guid, this);
-                document.Id = CurrentRecord.Guid;
+                    document = service.CreateDocument(ListManager.DisplayName.Replace(" ", "") + "View", viewModel, CurrentRecord.Id, this);
+                document.Id = CurrentRecord.Id;
             }
             document.Show();
         }
@@ -464,7 +464,7 @@ namespace WBIS_2.Modules.ViewModels
         {
             List<Guid> guids = new List<Guid>();
             if (ListManager.SubstituteLayer == null)
-                guids = SelectedItems.Select(_ => _.Guid).ToList();
+                guids = SelectedItems.Select(_ => _.Id).ToList();
             else
             {
                 var prop = ListManager.InformationType.GetProperties()
@@ -481,11 +481,11 @@ namespace WBIS_2.Modules.ViewModels
                 {
                     var t = prop.GetValue(item);
                     if (t.GetType().GetInterfaces().Contains(typeof(IInformationType)))
-                        guids.Add(((IInformationType)t).Guid);
+                        guids.Add(((IInformationType)t).Id);
                     else
                     {                        
                         foreach (IInformationType i in Enumerable.ToArray<IInformationType>((IEnumerable<IInformationType>)t))
-                            guids.Add(i.Guid);
+                            guids.Add(i.Id);
                     }
                 }
             }
@@ -494,7 +494,7 @@ namespace WBIS_2.Modules.ViewModels
 
         public void ZoomToFeature(IInformationType ZoomObject)
         {
-            MapDataPasser.ZoomToFeature(LayerName, LayerKeyField, ZoomObject.Guid);
+            MapDataPasser.ZoomToFeature(LayerName, LayerKeyField, ZoomObject.Id);
         }
 
         public void MapShowAFS(Dictionary<Guid, Guid> selection)
@@ -509,7 +509,7 @@ namespace WBIS_2.Modules.ViewModels
             var entityType = model.Model.FindEntityType(ListManager.InformationType);
             string tableName  = $"active_{entityType.GetTableName()}";
 
-            Guid queryGuid = CurrentUser.User.Guid;
+            Guid queryGuid = CurrentUser.User.Id;
             if (CurrentUser.MobileUserActiveUnits)
                 queryGuid = CurrentUser.MobileUserGuid;
 
@@ -529,7 +529,7 @@ namespace WBIS_2.Modules.ViewModels
                         foreach (IInformationType item in SelectedItems)
                         {
                             cmd.CommandText = $"DELETE FROM \"{tableName}\" WHERE \"application_user_id\" = '{queryGuid}' " +
-                                $"AND \"unit_id\" = '{item.Guid}'";
+                                $"AND \"unit_id\" = '{item.Id}'";
                             cmd.ExecuteNonQuery();
                         }
                     }
@@ -546,7 +546,7 @@ namespace WBIS_2.Modules.ViewModels
             var entityType = model.Model.FindEntityType(ListManager.InformationType);
             string tableName = $"active_{entityType.GetTableName()}";
 
-            Guid queryGuid = CurrentUser.User.Guid;
+            Guid queryGuid = CurrentUser.User.Id;
             if (CurrentUser.MobileUserActiveUnits)
                 queryGuid = CurrentUser.MobileUserGuid;
 
@@ -570,7 +570,7 @@ namespace WBIS_2.Modules.ViewModels
                     {
                         writer.StartRow();
                         writer.Write(queryGuid);
-                        writer.Write(item.Guid);
+                        writer.Write(item.Id);
                     }
                     writer.Complete();
                     writer.Close();

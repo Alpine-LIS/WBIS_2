@@ -53,11 +53,11 @@ namespace WBIS_2.Modules.ViewModels.Reports
 
             //Write excel sheets
 
-            ExportPlantsList(wb, queryRecords.Select(_ => _.Guid).ToArray(), sfd.FileName);
-            ExportPointsOfInterest(wb, queryRecords.Select(_ => _.Guid).ToArray(), sfd.FileName, includeShapes);
-            ExportPlantsOfInterest(wb, queryRecords.Select(_ => _.Guid).ToArray(), sfd.FileName, includeShapes);
+            ExportPlantsList(wb, queryRecords.Select(_ => _.Id).ToArray(), sfd.FileName);
+            ExportPointsOfInterest(wb, queryRecords.Select(_ => _.Id).ToArray(), sfd.FileName, includeShapes);
+            ExportPlantsOfInterest(wb, queryRecords.Select(_ => _.Id).ToArray(), sfd.FileName, includeShapes);
             ExportSurvey(wb, queryRecords, sfd.FileName, includeShapes);
-            ExportSurveyArea(wb, queryRecords.Select(_ => _.Guid).ToArray(), sfd.FileName, includeShapes);
+            ExportSurveyArea(wb, queryRecords.Select(_ => _.Id).ToArray(), sfd.FileName, includeShapes);
 
 
             wb.Sheets["Sheet1"].Delete();
@@ -90,7 +90,7 @@ namespace WBIS_2.Modules.ViewModels.Reports
                 .Include(_ => _.BotanicalSurvey).ThenInclude(_ => _.BotanicalElement).ThenInclude(_ => _.BotanicalPlantOfInterest).ThenInclude(_ => _.PlantSpecies)
                 .Include(_ => _.BotanicalSurvey).ThenInclude(_ => _.BotanicalElement).ThenInclude(_ => _.BotanicalPointOfInterest)
                 .Include(_ => _.BotanicalSurvey).ThenInclude(_ => _.BotanicalElement).ThenInclude(_ => _.BotanicalPlantList).ThenInclude(_ => _.PlantSpecies)
-                .Where(_ => areaRecords.Contains(_.Guid))
+                .Where(_ => areaRecords.Contains(_.Id))
                 .OrderBy(_=>_.THP_Area.THPName).ThenBy(_=>_.AreaName);
 
             DataTable dt = ExcelTools.EntityToDatatable(new InformationTypeManager<BotanicalSurveyArea>(), records);
@@ -353,7 +353,7 @@ namespace WBIS_2.Modules.ViewModels.Reports
                 .Include(_=>_.BotanicalElement).ThenInclude(_=>_.BotanicalSurvey).ThenInclude(_=>_.THP_Area)
                 .Include(_ => _.BotanicalElement).ThenInclude(_ => _.User)
                 .Include(_=>_.AssociatedPlants).ThenInclude(_=>_.PlantSpecies)
-                .Where (_=> !_.BotanicalElement._delete && !_.BotanicalElement.Repository && areaRecords.Contains(_.BotanicalElement.BotanicalSurveyArea.Guid))
+                .Where (_=> !_.BotanicalElement._delete && !_.BotanicalElement.Repository && areaRecords.Contains(_.BotanicalElement.BotanicalSurveyArea.Id))
                 .OrderBy(_=>_.DateTime);
 
             DataTable dt = new DataTable();
@@ -434,7 +434,7 @@ namespace WBIS_2.Modules.ViewModels.Reports
                 .Include(_ => _.BotanicalElement).ThenInclude(_ => _.BotanicalSurveyArea).ThenInclude(_ => _.THP_Area)
                 .Include(_ => _.BotanicalElement).ThenInclude(_ => _.BotanicalSurvey).ThenInclude(_ => _.THP_Area)
                 .Include(_ => _.BotanicalElement).ThenInclude(_ => _.User)
-                .Where(_ => !_.BotanicalElement._delete && !_.BotanicalElement.Repository && areaRecords.Contains(_.BotanicalElement.BotanicalSurveyArea.Guid))
+                .Where(_ => !_.BotanicalElement._delete && !_.BotanicalElement.Repository && areaRecords.Contains(_.BotanicalElement.BotanicalSurveyArea.Id))
                 .OrderBy(_ => _.DateTime);
 
             DataTable dt = new DataTable();
@@ -499,7 +499,7 @@ namespace WBIS_2.Modules.ViewModels.Reports
                 .Include(_ => _.BotanicalElement).ThenInclude(_ => _.BotanicalSurveyArea).ThenInclude(_ => _.THP_Area)
                 .Include(_ => _.BotanicalElement).ThenInclude(_ => _.BotanicalSurvey).ThenInclude(_ => _.THP_Area)
                 .Include(_ => _.BotanicalElement).ThenInclude(_ => _.User)
-                .Where(_ => !_.BotanicalElement._delete && !_.BotanicalElement.Repository && areaRecords.Contains(_.BotanicalElement.BotanicalSurveyArea.Guid))
+                .Where(_ => !_.BotanicalElement._delete && !_.BotanicalElement.Repository && areaRecords.Contains(_.BotanicalElement.BotanicalSurveyArea.Id))
                 .OrderBy(_ => _.DateTime);
 
             DataTable dt = new DataTable();

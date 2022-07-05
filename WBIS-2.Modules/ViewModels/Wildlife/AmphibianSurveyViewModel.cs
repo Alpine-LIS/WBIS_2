@@ -52,7 +52,7 @@ namespace WBIS_2.Modules.ViewModels
         {
             Survey = Database.AmphibianSurveys
                 .Include(_ => _.User)
-                .First(_ => _.Guid == guid);
+                .First(_ => _.Id == guid);
             ParentType = Survey;
             RaisePropertyChanged(nameof(ParentType));  
             
@@ -161,7 +161,7 @@ namespace WBIS_2.Modules.ViewModels
         {
             var pictureData = Database.Pictures
                 .Include(_ => _.AmphibianElement).ThenInclude(_=>_.AmphibianSurvey)
-                .Where(_ => _.AmphibianElement.AmphibianSurvey.Guid == Survey.Guid);
+                .Where(_ => _.AmphibianElement.AmphibianSurvey.Id == Survey.Id);
 
             Pictures = new ObservableCollection<ImageView>();
             foreach (var p in pictureData)

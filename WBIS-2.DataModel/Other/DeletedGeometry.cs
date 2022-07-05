@@ -11,8 +11,8 @@ namespace WBIS_2.DataModel
 {
     public class DeletedGeometry
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
-        public Guid Guid { get; set; }
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]
+        public Guid Id { get; set; }
         [Required,Column("object_guid")]
         public Guid ObjectGuid { get; set; }
         [Column("poly_geometry", TypeName = "geometry(Polygon,26710)")]

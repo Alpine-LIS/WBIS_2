@@ -11,8 +11,8 @@ namespace WBIS_2.DataModel
 {
     public class DistrictExtendedGeometry
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid"), ForeignKey("District")]
-        public Guid Guid { get; set; }
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id"), ForeignKey("District")]
+        public Guid Id { get; set; }
 
 
         //[Required, Column("district_id"),ForeignKey("District")]

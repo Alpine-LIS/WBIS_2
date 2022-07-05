@@ -55,7 +55,7 @@ namespace WBIS_2.Modules.ViewModels
                 .Include(_ => _.SurveySpecies)
                 .Include(_ => _.Hex160)
                 .Include(_ => _.ProtectionZone)
-                .First(_ => _.Guid == guid);
+                .First(_ => _.Id == guid);
             ParentType = Calling;
             RaisePropertyChanged(nameof(ParentType));  
             
@@ -199,7 +199,7 @@ namespace WBIS_2.Modules.ViewModels
                 var conn = new Npgsql.NpgsqlConnection(WBIS2Model.GetRDSConnectionString());
                 conn.Open();
                 string a = $"SELECT RISE_SET_TIME(ST_Y(ST_Transform(geometry, 4267)), ST_X(ST_Transform(geometry, 4267)), FALSE, '{start}') at time zone 'America/Los_Angeles' + (INTERVAL '1 day')" +
-                    $"FROM site_callings WHERE guid = '{Calling.Guid}' limit 1";
+                    $"FROM site_callings WHERE guid = '{Calling.Id}' limit 1";
                 var cmd = new Npgsql.NpgsqlCommand(a, conn);
                 var test = cmd.ExecuteScalar();
                 if (!(test is DBNull))
@@ -226,39 +226,12 @@ namespace WBIS_2.Modules.ViewModels
 
 
 
-        //public EntityInstantFeedbackSource OtherWildlifeRecords { get; set; }
-        //internal virtual void RefreshOtherWildlifeRecords()
-        //{
-        //    OtherWildlifeRecords = new EntityInstantFeedbackSource
-        //    {
-        //        AreSourceRowsThreadSafe = true,
-        //        KeyExpression = $"Guid",
-        //    };
-        //    OtherWildlifeRecords.GetQueryable += RecordsOtherWildlifeRecords;
-        //    OtherWildlifeRecords.Refresh();
-        //    RaisePropertyChanged(nameof(OtherWildlifeRecords));
-        //}
-        //public void RecordsOtherWildlifeRecords(object sender, GetQueryableEventArgs e)
-        //{
-        //    e.QueryableSource = Database.OtherWildlifeRecords
-        //        .Include(_ => _.SiteCalling)
-        //        .Where(_ => _.SiteCalling == Calling);
-        //    //e.QueryableSource = Database.SiteCallings
-        //    //    .Include(_ => _.OtherWildlifeRecords)
-        //    //    .Where(_ => _.Guid == Calling.Guid)
-        //    //    .Select(_=>_.OtherWildlifeRecords);
-        //}
-
-
-
-
-
         public ObservableCollection<ImageView> Pictures { get; set; }
         public void FillPictures()
         {
             var pictureData = Database.Pictures
                 .Include(_ => _.SiteCalling)
-                .Where(_ => _.SiteCalling.Guid == Calling.Guid);
+                .Where(_ => _.SiteCalling.Id == Calling.Id);
 
             Pictures = new ObservableCollection<ImageView>();
             foreach (var p in pictureData)

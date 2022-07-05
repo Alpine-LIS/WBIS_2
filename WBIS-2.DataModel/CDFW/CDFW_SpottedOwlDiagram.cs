@@ -9,9 +9,9 @@ namespace WBIS_2.DataModel
 {
     public class CDFW_SpottedOwlDiagram
     {
-        [Key, Column("guid")]
-        public Guid Guid { get; set; }
-       
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]
+        public Guid Id { get; set; }
+
         [Column("geometry", TypeName = "geometry(LineString,26710)")]
         public LineString Geometry { get; set; }
         [Column("district_id")]

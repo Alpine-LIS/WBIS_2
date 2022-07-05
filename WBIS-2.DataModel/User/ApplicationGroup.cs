@@ -7,8 +7,8 @@ namespace WBIS_2.DataModel
 {
     public class ApplicationGroup
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid")]
-        public Guid Guid { get; set; }
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]
+        public Guid Id { get; set; }
         [Required,Column("group_name")]
         public string GroupName { get; set; }
         [Required,Column("admin_privileges")]

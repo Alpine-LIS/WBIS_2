@@ -81,7 +81,7 @@ namespace WBIS_2.Modules.ViewModels.Reports
 
             var hours = Database.BotanicalSurveys
                 .Include(_=>_.THP_Area)
-                .Where(_=>!_._delete && !_.Repository && _.THP_Area.Guid == tHP_Area.Guid).Sum(_=>(double)_.TimeSpent.Hours + ((double)_.TimeSpent.Minutes/60d));
+                .Where(_=>!_._delete && !_.Repository && _.THP_Area.Id == tHP_Area.Id).Sum(_=>(double)_.TimeSpent.Hours + ((double)_.TimeSpent.Minutes/60d));
                       
             if (hours is DBNull) hours = 0d;
             sheet.get_Range("D1:D1").Value2 = ((double)hours).ToString("N2");
@@ -100,7 +100,7 @@ namespace WBIS_2.Modules.ViewModels.Reports
                 .Include(_ => _.BotanicalSurveyArea)
                 .Include(_ => _.User)
                 .Include(_ => _.THP_Area)
-                .Where(_ => !_._delete && !_.Repository && _.THP_Area.Guid == tHP_Area.Guid);
+                .Where(_ => !_._delete && !_.Repository && _.THP_Area.Id == tHP_Area.Id);
             foreach(BotanicalSurvey survey in surveys)
             {
                 DataRow r = SurveyDt.NewRow();
@@ -123,12 +123,12 @@ namespace WBIS_2.Modules.ViewModels.Reports
             var plants1 = Database.BotanicalPlantsOfInterest
                  .Include(_ => _.PlantSpecies)
                  .Include(_ => _.BotanicalElement).ThenInclude(_ => _.BotanicalSurveyArea).ThenInclude(_ => _.THP_Area)
-                 .Where(_ => !_.BotanicalElement._delete && !_.BotanicalElement.Repository && _.BotanicalElement.BotanicalSurveyArea.THP_Area.Guid == tHP_Area.Guid)
+                 .Where(_ => !_.BotanicalElement._delete && !_.BotanicalElement.Repository && _.BotanicalElement.BotanicalSurveyArea.THP_Area.Id == tHP_Area.Id)
                  .Select(_ => _.PlantSpecies);
             var plants2 = Database.BotanicalPlantsList
                  .Include(_ => _.PlantSpecies)
                  .Include(_ => _.BotanicalElement).ThenInclude(_ => _.BotanicalSurveyArea).ThenInclude(_ => _.THP_Area)
-                 .Where(_ => !_.BotanicalElement._delete && !_.BotanicalElement.Repository && _.BotanicalElement.BotanicalSurveyArea.THP_Area.Guid == tHP_Area.Guid)
+                 .Where(_ => !_.BotanicalElement._delete && !_.BotanicalElement.Repository && _.BotanicalElement.BotanicalSurveyArea.THP_Area.Id == tHP_Area.Id)
                  .Select(_ => _.PlantSpecies);
             var plants = plants1.Append(plants2).Distinct().OrderBy(_ => _.SciName);
 
@@ -180,7 +180,7 @@ namespace WBIS_2.Modules.ViewModels.Reports
                 .Include(_=>_.BotanicalElement).ThenInclude(_=>_.BotanicalSurvey).ThenInclude(_=>_.THP_Area)
                 .Include(_ => _.BotanicalElement).ThenInclude(_ => _.User)
                 .Include(_=>_.AssociatedPlants).ThenInclude(_=>_.PlantSpecies)
-                .Where (_=> !_.BotanicalElement._delete && !_.BotanicalElement.Repository && _.BotanicalElement.BotanicalSurveyArea.THP_Area.Guid == tHP_Area.Guid)
+                .Where (_=> !_.BotanicalElement._delete && !_.BotanicalElement.Repository && _.BotanicalElement.BotanicalSurveyArea.THP_Area.Id == tHP_Area.Id)
                 .OrderBy(_=>_.PlantSpecies.SciName);
 
             DataTable dt = new DataTable();

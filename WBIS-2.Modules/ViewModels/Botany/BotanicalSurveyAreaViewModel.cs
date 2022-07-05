@@ -87,7 +87,7 @@ namespace WBIS_2.Modules.ViewModels
                    .Include(_ => _.Watersheds)
                    .Include(_ => _.District)
                    .Include(_ => _.Quad75s)
-                   .FirstOrDefault(_ => _.Guid == guid);
+                   .FirstOrDefault(_ => _.Id == guid);
 
             if (SurveyArea != null)
             {           
@@ -97,7 +97,7 @@ namespace WBIS_2.Modules.ViewModels
             else
             {
                 SurveyArea = new BotanicalSurveyArea();
-                SurveyArea.Guid = guid;
+                SurveyArea.Id = guid;
             }
 
             if (ThpName == null)
@@ -278,7 +278,7 @@ namespace WBIS_2.Modules.ViewModels
         {
             var pictureData = Database.Pictures
                 .Include(_ => _.BotanicalElement).ThenInclude(_ => _.BotanicalSurveyArea)
-                .Where(_ => _.BotanicalElement.BotanicalSurveyArea.Guid == SurveyArea.Guid);
+                .Where(_ => _.BotanicalElement.BotanicalSurveyArea.Id == SurveyArea.Id);
 
             Pictures = new ObservableCollection<ImageView>();
             foreach (var p in pictureData)

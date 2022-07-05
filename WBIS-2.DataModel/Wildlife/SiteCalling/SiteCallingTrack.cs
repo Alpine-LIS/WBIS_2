@@ -12,8 +12,8 @@ namespace WBIS_2.DataModel
     [SubElement(typeof(SiteCalling)), GeometryEdits(Locked = false)]
     public class SiteCallingTrack
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("guid"), ForeignKey("SiteCalling")]
-        public Guid Guid { get; set; }
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id"), ForeignKey("SiteCalling")]
+        public Guid Id { get; set; }
 
         //[Required, Column("site_calling_id"), ForeignKey("SiteCalling")]
         //public Guid SiteCallingId { get; set; }
