@@ -361,7 +361,7 @@ namespace WBIS_2.Modules.ViewModels
             List<IFeature> features = (List<IFeature>)sender;
             WatershedList = Database.Watersheds
                 .Include(_ => _.Districts)
-                .Where(_=>features.Select(x=>x.DataRow["guid"]).Cast<Guid>().Contains(_.Id))
+                .Where(_=>features.Select(x=>x.DataRow[Record.Manager.KeyField(Database)]).Cast<Guid>().Contains(_.Id))
                 .AsNoTracking().ToArray();
             RaisePropertyChanged(nameof(WatershedList));
             this.Changed = true;
@@ -440,13 +440,13 @@ namespace WBIS_2.Modules.ViewModels
             Views.UserControls.SelectBotanicalSpeciesControl selectBotanicalSpeciesControl;
             if (MapDataPasser.ZoomLayerName.ToUpper().Contains("WATERSHED"))
             {
-                var list = Database.Watersheds.Where(_ => features.Select(x => x.DataRow["guid"]).Cast<Guid>().Contains(_.Id))
+                var list = Database.Watersheds.Where(_ => features.Select(x => x.DataRow[Record.Manager.KeyField(Database)]).Cast<Guid>().Contains(_.Id))
                     .AsNoTracking().ToList<object>();
                 selectBotanicalSpeciesControl = new Views.UserControls.SelectBotanicalSpeciesControl(list, typeof(Watershed), "Master List");
             }
             else
             {
-                var list = Database.Quad75s.Where(_ => features.Select(x => x.DataRow["guid"]).Cast<Guid>().Contains(_.Id))
+                var list = Database.Quad75s.Where(_ => features.Select(x => x.DataRow[Record.Manager.KeyField(Database)]).Cast<Guid>().Contains(_.Id))
                     .AsNoTracking().ToList<object>();
                 selectBotanicalSpeciesControl = new Views.UserControls.SelectBotanicalSpeciesControl(list, typeof(Quad75), "Master List");
             }

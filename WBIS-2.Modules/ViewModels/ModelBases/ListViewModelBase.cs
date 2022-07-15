@@ -454,9 +454,8 @@ namespace WBIS_2.Modules.ViewModels
         {
             return ListManager.GetTableName(Database);
         }
-        public string TableKeyField => "guid";
 
-        public string LayerKeyField => "guid";
+        public string LayerKeyField => ListManager.KeyField(Database);
 
         public string LayerName => ListManager.GetLayerName(Database);
 

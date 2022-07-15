@@ -44,6 +44,8 @@ namespace WBIS_2.DataModel
         public string Datum { get; set; }
         [Required, Column("start_time"), ImportAttribute(Required = true)]
         public DateTime StartTime { get; set; }
+      
+
         [Required, Column("end_time"), ImportAttribute]
         public DateTime EndTime { get; set; }
         [Column("sunset_time")]

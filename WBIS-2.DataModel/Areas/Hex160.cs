@@ -11,34 +11,28 @@ namespace WBIS_2.DataModel
     [DisplayOrder(Index = 3), TypeGrouper(IgnoreGroups = true)]
     public class Hex160 : IInformationType, IActiveUnit
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]//, Column("id")]
         public Guid Id { get; set; }
         [Required, Column("hex160_id"), ListInfo(DisplayField = true)]
         public string Hex160ID { get; set; }
-        [Column("calling_responses")]
         public int CallingResponses { get; set; }
-        [Column("follow_ups")]
         public int FollowUps { get; set; }
-        [Column("skips")]
         public int Skips { get; set; }
-        [Column("drops")]
         public int Drops { get; set; }
-        [Column("recent_activity")]
         public string RecentActivity { get; set; }
-        [Column("latest_activity")]
         public DateTime? LatestActivity { get; set; }
 
 
         //if (CanSetActive) query = query.Replace($"\"is_active\"", $"guid IN (SELECT unit_id FROM active_{et.GetSchemaQualifiedTableName()} WHERE application_user_id = '{guid}') as \"is_active\"");
-        [Column("is_active"), ActiveRecordQuery("active_hex160s", "id", "unit_id", "application_user_id", typeof(CurrentUser), "UsingGuid")]
+        [ ActiveRecordQuery("active_hex160s", "id", "unit_id", "application_user_id", typeof(CurrentUser), "UsingGuid")]
         public bool IsActive { get; set; }
         [ListInfo(AutoInclude = true)]
         public ICollection<ApplicationUser> ActiveUsers { get; set; }
 
-        [Column("geometry", TypeName = "geometry(Polygon,26710)")]
+        [Column(TypeName = "geometry(Polygon,26710)")]
         public Polygon Geometry { get; set; }
 
-        [Column("current_protection_zone_id"), ForeignKey("ProtectionZone")]
+        [ForeignKey("ProtectionZone")]
         public Guid? CurrentProtectionZoneID { get; set; }
         [ListInfo(AutoInclude = true)]
         public ProtectionZone CurrentProtectionZone { get; set; }
