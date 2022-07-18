@@ -15,11 +15,6 @@ namespace WBIS_2.DataModel
         [Required,Column("user_name"), ImportAttribute(Required = true), ListInfo(DisplayField = true)]
         public string UserName { get; set; }
 
-        [Column("date_added")]
-        public DateTime DateAdded { get; set; }
-        [Column("date_modified")]
-        public DateTime DateModified { get; set; }
-
         [Required, Column("application_group_id")]
        public Guid ApplicationGroupId { get; set; }
         public ApplicationGroup ApplicationGroup { get; set; }
@@ -31,6 +26,13 @@ namespace WBIS_2.DataModel
 
         [Column("auto_filter_active_units")]
         public bool AutoFilterActiveUnits { get; set; } = false;
+
+
+        public string Login { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public bool IsApplicationAdministrator { get; set; } = false;
+
 
         //public ICollection<ApplicationUser> Contractors { get; set; }
         public ICollection<District> Districts { get; set; }
@@ -106,11 +108,6 @@ namespace WBIS_2.DataModel
 
 
         [NotMapped, Display(Order = -1)]
-        public IInfoTypeManager Manager => new InformationTypeManager<ApplicationUser>();
-
-        public string Login { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public bool IsApplicationAdministrator { get; set; } = false;
+        public IInfoTypeManager Manager => new InformationTypeManager<ApplicationUser>();      
     }
 }
