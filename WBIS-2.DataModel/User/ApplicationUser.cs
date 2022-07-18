@@ -107,11 +107,9 @@ namespace WBIS_2.DataModel
         [NotMapped, Display(Order = -1)]
         public IInfoTypeManager Manager => new InformationTypeManager<ApplicationUser>();
 
-        public int Oid {get;set;}
         public string Login { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public bool RequirePasswordChange { get; set; } = false;
         public bool IsApplicationAdministrator { get; set; } = false;
     }
 }
