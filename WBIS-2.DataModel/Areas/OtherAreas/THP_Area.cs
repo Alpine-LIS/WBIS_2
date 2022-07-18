@@ -7,6 +7,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
+    [Table("thp_areas")]
     [DisplayOrder(Index = 4), TypeGrouper(IgnoreGroups = true)]
     public class THP_Area : IInformationType
     {

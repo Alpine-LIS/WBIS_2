@@ -9,6 +9,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
+    [Table("user_locations")]
     public class UserLocation: IPointLayer
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id"), ForeignKey("SiteCallingDetection")]

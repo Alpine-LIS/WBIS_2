@@ -6,6 +6,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
+    [Table("spi_plant_points")]
     [DisplayOrder(Index = 13), TypeGrouper(GroupName = "Botany"), GeometryEdits(Locked = false)]
     public class SPIPlantPoint: IInformationType, IPointParents
     {

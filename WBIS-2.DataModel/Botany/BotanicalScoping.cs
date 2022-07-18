@@ -8,6 +8,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
+    [Table("botanical_scopings")]
     [SubstituteLayer(typeof(Watershed)),DisplayOrder(Index = 8), TypeGrouper(GroupName = "Botany")]
     public class BotanicalScoping : UserDataValidator, IUserRecords
     {

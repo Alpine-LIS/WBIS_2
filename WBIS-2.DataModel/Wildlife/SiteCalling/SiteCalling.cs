@@ -7,6 +7,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
+    [Table("site_callings")]
     [DisplayOrder(Index = 14), TypeGrouper(GroupName = "Wildlife"), GeometryEdits(Locked = false)]
     public class SiteCalling : UserDataValidator, IUserRecords,  IPointParents, IPointLayer
     {

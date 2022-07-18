@@ -8,6 +8,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
+    [Table("hex160s")]
     [DisplayOrder(Index = 3), TypeGrouper(IgnoreGroups = true)]
     public class Hex160 : IInformationType, IActiveUnit
     {

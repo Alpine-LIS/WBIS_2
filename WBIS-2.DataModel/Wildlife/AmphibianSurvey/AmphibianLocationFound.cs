@@ -9,6 +9,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
+    [Table("amphibian_locations_found")]
     public class AmphibianLocationFound : UserDataValidator, IInformationType
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id"), ForeignKey("AmphibianElement")]

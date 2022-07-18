@@ -6,6 +6,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
+    [Table("permanent_call_stations")]
     [DisplayOrder(Index = 19), TypeGrouper(GroupName = "Wildlife"), GeometryEdits(Locked = false)]
     public class PermanentCallStation : UserDataValidator, IUserRecords
     {

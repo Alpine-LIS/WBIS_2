@@ -9,6 +9,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
+    [Table("user_map_layers")]
     public class UserMapLayer
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]

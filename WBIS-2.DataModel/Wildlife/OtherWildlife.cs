@@ -9,6 +9,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
+    [Table("other_wildlife_records")]
     [DisplayOrder(Index = 16), TypeGrouper(GroupName = "Wildlife")]
     public class OtherWildlife : UserDataValidator, IInformationType
     {

@@ -13,67 +13,6 @@ namespace WBIS_2.DataModel
 {
     public class WBIS2Model : DbContext
     {
-        public static string GetSqlQuery<T>(List<string> exlude)
-        {
-            var query = "Select ";
-            var entityType = typeof(T);
-            using var context = new WBIS2Model();
-
-            if (context.Model.FindEntityType(typeof(T)) is IEntityType et)
-            {
-                var properties = et.GetProperties();
-                //TODO:
-                /* 
-                var navs = et.GetIndexes();
-                var other = et.GetNavigations();
-                var fc = et.GetReferencingForeignKeys();
-                */
-                foreach (var prop in properties)
-                {
-                    if (exlude.Contains(prop.Name))
-                    {
-                        query += $"null as \"{prop.Name}\" ,";
-                        continue;
-                    }
-                    query += $"\"{prop.Name}\" ,";
-                }
-                query = query.Remove(query.Length - 1, 1);
-
-                query += $" from \"{et.GetSchemaQualifiedTableName()}\"";
-            }
-            return query;
-        }
-        public static string GetSqlQuery<T>(Type ExcludeType)
-        {
-            var query = "Select ";
-            var entityType = typeof(T);
-            using var context = new WBIS2Model();
-
-            if (context.Model.FindEntityType(typeof(T)) is IEntityType et)
-            {
-                var properties = et.GetProperties();
-                //TODO:
-                /* 
-                var navs = et.GetIndexes();
-                var other = et.GetNavigations();
-                var fc = et.GetReferencingForeignKeys();
-                */
-                foreach (var prop in properties)
-                {
-                    if (prop.ClrType.BaseType == ExcludeType || prop.ClrType == ExcludeType)
-                    {
-                        query += $"null as \"{prop.Name}\" ,";
-                        continue;
-                    }
-                    query += $"\"{prop.Name}\" ,";
-                }
-                query = query.Remove(query.Length - 1, 1);
-
-                query += $" from \"{et.GetSchemaQualifiedTableName()}\"";
-            }
-            return query;
-        }
-
         public static string GetRDSConnectionString()
         {
             var hostname = "alpine-database-1.cz1ugaicrz33.us-west-1.rds.amazonaws.com";
@@ -92,88 +31,14 @@ namespace WBIS_2.DataModel
                 //.LogTo(message => Debug.WriteLine(message))
                 .EnableDetailedErrors();
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-            optionsBuilder.UseSnakeCaseNamingConvention();
+            //optionsBuilder.UseSnakeCaseNamingConvention();
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasPostgresExtension("postgis");
             
-            TableNames(modelBuilder);
             ManyToManyRelations(modelBuilder);
         }
-
-        private void TableNames(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<District>().ToTable("districts");
-            modelBuilder.Entity<DistrictExtendedGeometry>().ToTable("district_extended_geometries");
-            modelBuilder.Entity<Quad75>().ToTable("quad75s");
-            modelBuilder.Entity<Watershed>().ToTable("watersheds");
-            modelBuilder.Entity<CDFW_SpottedOwl>().ToTable("cdfw_spotted_owls");
-            modelBuilder.Entity<CDFW_SpottedOwlDiagram>().ToTable("cdfw_spotted_owl_diagrams");
-            modelBuilder.Entity<CNDDBOccurrence>().ToTable("cnddb_occurrences");
-            modelBuilder.Entity<CNDDBQuadElement>().ToTable("cnddb_quad_elements");
-            modelBuilder.Entity<BirdSpecies>().ToTable("bird_species");
-            modelBuilder.Entity<WildlifeSpecies>().ToTable("wildlife_species");
-            modelBuilder.Entity<ApplicationGroup>().ToTable("application_groups");
-            modelBuilder.Entity<ApplicationUser>().ToTable("application_users");
-            modelBuilder.Entity<Hex160>().ToTable("hex160s");
-            modelBuilder.Entity<Hex500>().ToTable("hex500s");
-            modelBuilder.Entity<Hex160RequiredPass>().ToTable("hex160_required_passes");
-            modelBuilder.Entity<OtherWildlife>().ToTable("other_wildlife_records");
-            modelBuilder.Entity<OwlBanding>().ToTable("owl_bandings");
-            modelBuilder.Entity<SiteCalling>().ToTable("site_callings");
-            modelBuilder.Entity<ProtectionZone>().ToTable("protection_zones");
-            modelBuilder.Entity<PermanentCallStation>().ToTable("permanent_call_stations");
-            modelBuilder.Entity<DeletedGeometry>().ToTable("deleted_geometries");
-            modelBuilder.Entity<SiteCallingDetection>().ToTable("site_calling_detections");
-            modelBuilder.Entity<DeviceInfo>().ToTable("device_infos");
-            modelBuilder.Entity<SiteCallingTrack>().ToTable("site_calling_tracks");
-            modelBuilder.Entity<UserLocation>().ToTable("user_locations");
-
-            modelBuilder.Entity<AmphibianSpecies>().ToTable("amphibian_species");
-            modelBuilder.Entity<AmphibianSurvey>().ToTable("amphibian_surveys");
-            modelBuilder.Entity<AmphibianElement>().ToTable("amphibian_elements");
-            modelBuilder.Entity<AmphibianLocationFound>().ToTable("amphibian_locations_found");
-            modelBuilder.Entity<AmphibianPointOfInterest>().ToTable("amphibian_points_of_interest");
-
-            modelBuilder.Entity<SPIPlantPolygon>().ToTable("spi_plant_polygons");
-            modelBuilder.Entity<SPIPlantPoint>().ToTable("spi_plant_points");
-            modelBuilder.Entity<FloweringTimeline>().ToTable("flowering_timelines");
-            modelBuilder.Entity<PlantProtectionSummary>().ToTable("plant_protection_summaries");
-            modelBuilder.Entity<PlantSpecies>().ToTable("plant_species");
-            modelBuilder.Entity<Region>().ToTable("regions");
-            modelBuilder.Entity<RegionalPlantList>().ToTable("regional_plant_lists");
-
-            modelBuilder.Entity<THP_Area>().ToTable("thp_areas");
-            modelBuilder.Entity<BotanicalElement>().ToTable("botanical_elements");
-            modelBuilder.Entity<BotanicalPlantOfInterest>().ToTable("botanical_plants_of_interest");
-            modelBuilder.Entity<BotanicalPointOfInterest>().ToTable("botanical_points_of_interest");
-            modelBuilder.Entity<BotanicalPlantList>().ToTable("botanical_plants_list");
-            modelBuilder.Entity<BotanicalSurvey>().ToTable("botanical_surveys");
-            modelBuilder.Entity<BotanicalSurveyArea>().ToTable("botanical_survey_areas");
-            modelBuilder.Entity<BotanicalScoping>().ToTable("botanical_scopings");
-            modelBuilder.Entity<BotanicalScopingSpecies>().ToTable("botanical_scoping_species");
-            modelBuilder.Entity<Picture>().ToTable("pictures");
-
-            //modelBuilder.Entity<ForestCarnivoreCameraStation>().ToTable("forest_carnivore_camera_stations");
-            //modelBuilder.Entity<CarnivoreOccurrence>().ToTable("carnivore_occurrences");
-            //modelBuilder.Entity<RanchPhotoPoint>().ToTable("ranch_photo_points");
-            //modelBuilder.Entity<DOMonitoring>().ToTable("do_monitorings");
-            //modelBuilder.Entity<BDOWSighting>().ToTable("bdow_sightings");
-
-
-            modelBuilder.Entity<UserMapLayer>().ToTable("user_map_layers");
-            modelBuilder.Entity<DropdownOption>().ToTable("dropdown_options");
-            modelBuilder.Entity<TableModified>().ToTable("tables_modified");
-            modelBuilder.Entity<UserFlexRecord>().ToTable("user_flex_records");
-
-
-
-            modelBuilder.Entity<SPI_GGOW>().ToTable("spi_ggows");
-            modelBuilder.Entity<SPI_SPOW>().ToTable("spi_spows");
-            modelBuilder.Entity<SPI_NOGO>().ToTable("spi_nogos");
-            modelBuilder.Entity<SPI_WildlifeSighting>().ToTable("spi_wildlife_sightings");
-    }
     private void ManyToManyRelations(ModelBuilder modelBuilder)
         {
             ManyToManyUsers(modelBuilder);

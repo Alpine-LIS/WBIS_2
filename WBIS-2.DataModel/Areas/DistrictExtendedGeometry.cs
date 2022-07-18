@@ -9,6 +9,7 @@ using System.Linq.Expressions;
 
 namespace WBIS_2.DataModel
 {
+    [Table("district_extended_geometries")]
     public class DistrictExtendedGeometry
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id"), ForeignKey("District")]

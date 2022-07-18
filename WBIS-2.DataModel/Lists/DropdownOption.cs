@@ -7,6 +7,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
+    [Table("dropdown_options")]
     [Keyless]
     public class DropdownOption
     {

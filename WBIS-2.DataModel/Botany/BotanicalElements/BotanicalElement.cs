@@ -7,6 +7,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
+    [Table("botanical_elements")]
     [DisplayOrder(Index = 11), TypeGrouper(GroupName = "Botany"), GeometryEdits(Locked = false)]
     public class BotanicalElement : UserDataValidator, IUserRecords, IPointParents, IPointLayer
     {

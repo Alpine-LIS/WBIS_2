@@ -7,6 +7,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
+    [Table("spi_spows")]
     [TypeGrouper(GroupName = "Wildlife")]
     public class SPI_SPOW : IInformationType
     {

@@ -7,6 +7,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
+    [Table("amphibian_surveys")]
     [DisplayOrder(Index = 20), TypeGrouper(GroupName = "Wildlife"), GeometryEdits(Locked = false)]
     public class AmphibianSurvey : UserDataValidator, IUserRecords, INonPointParents
     {

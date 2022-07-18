@@ -9,6 +9,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
+    [Table("botanical_plants_of_interest")]
     public class BotanicalPlantOfInterest : UserDataValidator, IInformationType
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id"), ForeignKey("BotanicalElement")]

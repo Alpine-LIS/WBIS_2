@@ -6,6 +6,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
+    [Table("plant_species")]
     public class PlantSpecies : UserDataValidator, IInformationType, IPlaceHolder
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]

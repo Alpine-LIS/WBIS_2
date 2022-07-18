@@ -6,6 +6,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
+    [Table("plant_protection_summaries")]
     public class PlantProtectionSummary
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]

@@ -7,6 +7,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
+    [Table("application_users")]
     public class ApplicationUser: IInformationType, IApplicationUser
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]

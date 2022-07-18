@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WBIS_2.DataModel;
 
+[Table("user_flex_records")]
 public class UserFlexRecord : IUserRecords
 {
     [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]

@@ -7,6 +7,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
+    [Table("quad75s")]
     [DisplayOrder(Index = 1), TypeGrouper(IgnoreGroups = true)]
     public class Quad75 : IInformationType
     {

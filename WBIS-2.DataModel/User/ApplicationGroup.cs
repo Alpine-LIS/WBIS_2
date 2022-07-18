@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WBIS_2.DataModel
 {
+    [Table("application_groups")]
     public class ApplicationGroup
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]

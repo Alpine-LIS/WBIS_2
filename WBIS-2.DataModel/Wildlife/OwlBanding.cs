@@ -7,6 +7,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
+    [Table("owl_bandings")]
     [DisplayOrder(Index = 22), TypeGrouper(GroupName = "Wildlife"), GeometryEdits(Locked = false)]
     public class OwlBanding : UserDataValidator, IUserRecords, IPointParents, IPointLayer
     {

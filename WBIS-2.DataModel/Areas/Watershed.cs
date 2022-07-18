@@ -7,6 +7,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
+    [Table("watersheds")]
     [DisplayOrder(Index = 2), TypeGrouper(IgnoreGroups = true)]
     public class Watershed : IInformationType
     {

@@ -7,6 +7,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
+    [Table("hex160_required_passes")]
     [DisplayOrder(Index = 17), TypeGrouper(GroupName = "Wildlife")]
     public class Hex160RequiredPass : UserDataValidator, IUserRecords
     {

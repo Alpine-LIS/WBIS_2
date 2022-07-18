@@ -9,6 +9,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
+    [Table("site_calling_tracks")]
     [SubElement(typeof(SiteCalling)), GeometryEdits(Locked = false)]
     public class SiteCallingTrack
     {

@@ -7,6 +7,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
+    [Table("cdfw_spotted_owl_diagrams")]
     public class CDFW_SpottedOwlDiagram
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]

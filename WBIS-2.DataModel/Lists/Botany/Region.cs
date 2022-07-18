@@ -6,6 +6,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
+    [Table("regions")]
     public class Region
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]

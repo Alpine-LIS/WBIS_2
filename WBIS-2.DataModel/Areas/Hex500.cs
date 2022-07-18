@@ -8,6 +8,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
+    [Table("hex500s")]
     public class Hex500 : IInformationType
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]

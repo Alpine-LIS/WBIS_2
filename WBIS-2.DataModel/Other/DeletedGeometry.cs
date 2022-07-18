@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace WBIS_2.DataModel
 {
+    [Table("deleted_geometries")]
     public class DeletedGeometry
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]

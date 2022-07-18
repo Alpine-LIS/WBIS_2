@@ -6,6 +6,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
+    [Table("flowering_timelines")]
     public class FloweringTimeline
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]

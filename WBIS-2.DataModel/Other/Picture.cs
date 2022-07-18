@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace WBIS_2.DataModel
 {
+    [Table("pictures")]
     public class Picture
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]

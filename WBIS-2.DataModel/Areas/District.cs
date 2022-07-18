@@ -7,6 +7,7 @@ using System.Text;
 
 namespace WBIS_2.DataModel
 {
+    [Table("districts")]
     [DisplayOrder(Index = 0), TypeGrouper(IgnoreGroups = true)]
     public class District : IInformationType
     {

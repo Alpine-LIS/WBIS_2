@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace WBIS_2.DataModel
 {
+    [Table("tables_modified")]
     [Keyless]
     public class TableModified
     {
