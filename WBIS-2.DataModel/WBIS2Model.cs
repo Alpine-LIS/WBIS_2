@@ -31,7 +31,7 @@ namespace WBIS_2.DataModel
                 //.LogTo(message => Debug.WriteLine(message))
                 .EnableDetailedErrors();
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-            //optionsBuilder.UseSnakeCaseNamingConvention();
+            optionsBuilder.UseSnakeCaseNamingConvention();
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
