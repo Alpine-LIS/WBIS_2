@@ -155,6 +155,7 @@ namespace WBIS_2.Modules.Views
             var shapesFolder = Path.Combine(appFolder, "MapData");
             var projectFile = Path.Combine(shapesFolder, $"WBIS2.geo3");// "RMS.geo3");
             Atlas3.Manager.AtlasManager.Instance.SaveProject();
+            LayersTree.SaveLayoutToXML();
         }
 
         private void MapView_Loaded(object sender, RoutedEventArgs e)
