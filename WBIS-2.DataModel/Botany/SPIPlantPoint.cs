@@ -7,7 +7,7 @@ using System.Text;
 namespace WBIS_2.DataModel
 {
     [Table("spi_plant_points")]
-    [DisplayOrder(Index = 13), TypeGrouper(GroupName = "Botany"), GeometryEdits(Locked = false)]
+    [DisplayOrder(Index = 13), TypeGrouper(GroupName = "Botany"), GeometryEdits(Locked = false), ReportableTable]
     public class SPIPlantPoint: IInformationType, IPointParents
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]

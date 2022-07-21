@@ -8,7 +8,7 @@ using System.Text;
 namespace WBIS_2.DataModel
 {
     [Table("botanical_survey_areas")]
-    [DisplayOrder(Index = 9), TypeGrouper(GroupName = "Botany"), GeometryEdits(Locked = false)]
+    [DisplayOrder(Index = 9), TypeGrouper(GroupName = "Botany"), GeometryEdits(Locked = false), ReportableTable]
     public class BotanicalSurveyArea : UserDataValidator, IUserRecords, INonPointParents, IActiveUnit
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]

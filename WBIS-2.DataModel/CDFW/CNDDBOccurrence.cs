@@ -8,7 +8,7 @@ using System.Text;
 namespace WBIS_2.DataModel
 {
     [Table("cnddb_occurrences")]
-    [DisplayOrder(Index = 5), TypeGrouper(IgnoreGroups = true)]
+    [DisplayOrder(Index = 5), TypeGrouper(IgnoreGroups = true), ReportableTable]
     public class CNDDBOccurrence : IInformationType
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]

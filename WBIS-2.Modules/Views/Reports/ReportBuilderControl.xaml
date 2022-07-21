@@ -1,0 +1,106 @@
+﻿<UserControl x:Class="WBIS_2.Modules.Views.Reports.ReportBuilderControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WBIS_2.Modules.Views.Reports" 
+                 xmlns:dxpg="http://schemas.devexpress.com/winfx/2008/xaml/pivotgrid" 
+    xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars" 
+    xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+             xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core" 
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             Loaded="UserControl_Loaded"
+     xmlns:viewmodels="clr-namespace:WBIS_2.Modules.ViewModels.Reports" 
+            d:DataContext="{d:DesignInstance Type={x:Type viewmodels:ReportBuilderViewModel}}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="AUTO"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <dxe:ComboBoxEdit SelectedItem="{Binding CurrentDataOption}" ItemsSource="{Binding DataOptions}"
+                             DisplayMember="Manager.DisplayName" Margin="0"/>
+
+            <dxb:ToolBarControl Grid.Column="1">
+                <dxb:BarButtonItem 
+                    ToolTip="Save Report"
+                    Command="{Binding SaveReport}"
+                    Glyph="{dx:DXImage SvgImages/XAF/Action_LocalizationExport.svg}"/>
+                <dxb:BarButtonItem 
+                    ToolTip="Load Report"
+                    Command="{Binding LoadReport}"
+                    Glyph="{dx:DXImage SvgImages/Dashboards/ImageLoad.svg}"/>
+                <dxb:BarButtonItem 
+                    ToolTip="Export Report"
+                    Command="{Binding ExportReport}"
+                    Glyph="{dx:DXImage SvgImages/XAF/Action_Export_ToXLSX.svg}"/>
+                <dxb:BarCheckItem Glyph="{dx:DXImage SvgImages/RichEdit/TrackingChanges_ShowMarkup.svg}"
+                ToolTip="View Deleted" 
+                IsChecked="{Binding ViewDeleted, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <dxb:BarCheckItem Glyph="{dx:DXImage SvgImages/Spreadsheet/ShowAllSubtotalsAtBottomPivotTable.svg}"
+                ToolTip="View Repository" 
+                IsChecked="{Binding ViewRepository, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </dxb:ToolBarControl>
+        </Grid>
+
+        <!--<Button Height="22" Content="Save" Grid.Row="1" Click="Button_Click"/>
+        <Button Height="22" Content="Load" Grid.Row="2" Click="Button_Click1"/>-->
+
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="AUTO"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <dxpg:PivotFieldListControl Grid.Column="0" Name="FilterFiledsControl"
+                                             Owner="{Binding ElementName=ReportPivotGrid}" Area="FilterArea" Orientation="Vertical"/>
+
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="AUTO"/>
+                    <RowDefinition Height="AUTO"/>
+                    <RowDefinition Height="AUTO"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="AUTO"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Content="Column Fields:" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" FontWeight="Bold"/>
+                <dxpg:PivotFieldListControl Grid.Column="1" Grid.Row="0" Name="FilterColumnsControl" ShowBorder="True"
+                                             Owner="{Binding ElementName=ReportPivotGrid}" Area="ColumnArea" Orientation="Horizontal"/>
+                <Label Content="Row Fields:" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center" FontWeight="Bold"/>
+                <dxpg:PivotFieldListControl Grid.Column="1" Grid.Row="1" Name="FilterRowsControl" ShowBorder="True"
+                                             Owner="{Binding ElementName=ReportPivotGrid}" Area="RowArea" Orientation="Horizontal"/>
+                <Label Content="Data Fields:" Grid.Column="0" Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Center" FontWeight="Bold"/>
+                <dxpg:PivotFieldListControl Grid.Column="1" Grid.Row="2" Name="FilterDataControl" ShowBorder="True"
+                                             Owner="{Binding ElementName=ReportPivotGrid}" Area="DataArea" Orientation="Horizontal"/>
+
+                <dxpg:PivotGridControl Grid.Row="3" Grid.ColumnSpan="2"
+                    DataSource="{Binding Records}"
+                    x:Name="ReportPivotGrid"
+                     dxpg:PivotSerializationOptions.AddNewFields="True"
+                     dxpg:PivotSerializationOptions.RemoveOldFields="True"
+                     ShowFilterPanelMode="ShowAlways"
+                                       ShowFilterHeaders="False"
+                                       ShowRowHeaders="False"
+                                       ShowColumnHeaders="False"
+                                       ShowDataHeaders="False"
+                                       ShowColumnGrandTotals="True"
+                                       ShowRowGrandTotals="True"
+                                       ShowGrandTotalsForSingleValues="True"
+                                       RowTotalsLocation="Tree"
+                                       AllowResizing="True"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

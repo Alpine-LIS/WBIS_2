@@ -10,7 +10,7 @@ using System.Text;
 namespace WBIS_2.DataModel
 {
     [Table("other_wildlife_records")]
-    [DisplayOrder(Index = 16), TypeGrouper(GroupName = "Wildlife")]
+    [DisplayOrder(Index = 16), TypeGrouper(GroupName = "Wildlife"), ReportableTable]
     public class OtherWildlife : UserDataValidator, IInformationType
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]

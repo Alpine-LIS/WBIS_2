@@ -12,7 +12,7 @@ namespace WBIS_2.DataModel
     [Table("amphibian_points_of_interest")]
     public class AmphibianPointOfInterest : UserDataValidator, IInformationType
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id"), ForeignKey("AmphibianElement")]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id"), ForeignKey("AmphibianElement"), ReportableTable]
         public Guid Id { get; set; }
 
         //[Required, Column("amphibian_element_id"),ForeignKey("AmphibianElement")]

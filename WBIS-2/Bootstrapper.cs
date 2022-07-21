@@ -17,6 +17,7 @@ using WBIS_2.Modules.ViewModels;
 using WBIS_2.Modules;
 using Alpine.FlexForms.Controls;
 using WBIS_2.Modules.ViewModels.Reports;
+using WBIS_2.Modules.Views.Reports;
 
 namespace WBIS_2
 {
@@ -102,6 +103,7 @@ namespace WBIS_2
 
             Manager.Register(Regions.NavigationReports, new Module(AppModules.ModuleDistrictReport, () => new NavigationItem("District Report")));
             Manager.Register(Regions.NavigationReports, new Module(AppModules.ModuleBotanicalReports, () => new NavigationItem("Botanical Reports")));
+            Manager.Register(Regions.NavigationReports, new Module(AppModules.ModuleReportBuilder, () => new NavigationItem("Report Builder")));
 
 
 
@@ -176,6 +178,8 @@ namespace WBIS_2
               () => DistrictReportViewModel.Create(), typeof(DistrictReportView)));
             Manager.Register(Regions.Documents, new Module(AppModules.ModuleBotanicalReports,
               () => BotanyReportsViewModel.Create(), typeof(BotanyReportsView)));
+            Manager.Register(Regions.Documents, new Module(AppModules.ModuleReportBuilder,
+              () => ReportBuilderViewModel.Create(), typeof(ReportBuilderControl)));
         }
 
 
@@ -252,7 +256,7 @@ namespace WBIS_2
 
             Manager.Inject(Regions.NavigationReports, AppModules.ModuleDistrictReport);
             Manager.Inject(Regions.NavigationReports, AppModules.ModuleBotanicalReports);
-
+            Manager.Inject(Regions.NavigationReports, AppModules.ModuleReportBuilder);
         }
 
         protected virtual void ConfigureNavigation()

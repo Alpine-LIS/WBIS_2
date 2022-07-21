@@ -8,7 +8,7 @@ using System.Text;
 namespace WBIS_2.DataModel
 {
     [Table("cnddb_quad_elements")]
-    [DisplayOrder(Index = 6), TypeGrouper(IgnoreGroups = true)]
+    [DisplayOrder(Index = 6), TypeGrouper(IgnoreGroups = true), ReportableTable]
     public class CNDDBQuadElement : IInformationType
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]

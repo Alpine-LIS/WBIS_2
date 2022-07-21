@@ -7,7 +7,7 @@ using System.Text;
 namespace WBIS_2.DataModel
 {
     [Table("cdfw_spotted_owls")]
-    [DisplayOrder(Index = 7), TypeGrouper(IgnoreGroups = true)]
+    [DisplayOrder(Index = 7), TypeGrouper(IgnoreGroups = true), ReportableTable]
     public class CDFW_SpottedOwl : IInformationType,  IPointParents
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]

@@ -9,7 +9,7 @@ using System.Text;
 namespace WBIS_2.DataModel
 {
     [Table("hex160s")]
-    [DisplayOrder(Index = 3), TypeGrouper(IgnoreGroups = true)]
+    [DisplayOrder(Index = 3), TypeGrouper(IgnoreGroups = true), ReportableTable]
     public class Hex160 : IInformationType, IActiveUnit
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]//, Column("id")]

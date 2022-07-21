@@ -54,5 +54,6 @@ namespace WBIS_2.Common
 
         public static string ModuleDistrictReport => "DistrictReport";
         public static string ModuleBotanicalReports => "BotanicalReports";
+        public static string ModuleReportBuilder => "ReportBuilder";
     }
 }

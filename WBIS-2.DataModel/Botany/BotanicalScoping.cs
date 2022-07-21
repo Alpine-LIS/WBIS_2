@@ -9,7 +9,7 @@ using System.Text;
 namespace WBIS_2.DataModel
 {
     [Table("botanical_scopings")]
-    [SubstituteLayer(typeof(Watershed)),DisplayOrder(Index = 8), TypeGrouper(GroupName = "Botany")]
+    [SubstituteLayer(typeof(Watershed)),DisplayOrder(Index = 8), TypeGrouper(GroupName = "Botany"), ReportableTable]
     public class BotanicalScoping : UserDataValidator, IUserRecords
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]

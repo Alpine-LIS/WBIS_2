@@ -8,7 +8,7 @@ using System.Text;
 namespace WBIS_2.DataModel
 {
     [Table("hex160_required_passes")]
-    [DisplayOrder(Index = 17), TypeGrouper(GroupName = "Wildlife")]
+    [DisplayOrder(Index = 17), TypeGrouper(GroupName = "Wildlife"), ReportableTable]
     public class Hex160RequiredPass : UserDataValidator, IUserRecords
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]
