@@ -23,14 +23,14 @@ namespace WBIS_2.Modules.Tools
             foreach(string hexId in alteredHex160s)
             {
                 var hex = Database.Hex160s.Include(_=>_.ProtectionZones).First(_=>_.Hex160ID == hexId);
-                if (hex.ProtectionZones.Count ==0)
+                if (hex.ProtectionZones.Count(_=>!_._delete) ==0)
                     hex.CurrentProtectionZone = null;
-                else if (hex.ProtectionZones.Count == 1)
+                else if (hex.ProtectionZones.Count(_ => !_._delete) == 1)
                     hex.CurrentProtectionZone = hex.ProtectionZones.First();
                 else
                 {
-                    double dist = hex.ProtectionZones.Min(_ => _.Geometry.Distance(hex.Geometry));
-                    hex.CurrentProtectionZone = hex.ProtectionZones.First(_ => _.Geometry.Distance(hex.Geometry) == dist);
+                    double dist = hex.ProtectionZones.Where(_ => !_._delete).Min(_ => _.Geometry.Distance(hex.Geometry));
+                    hex.CurrentProtectionZone = hex.ProtectionZones.Where(_ => !_._delete).First(_ => _.Geometry.Distance(hex.Geometry) == dist);
                 }
             }
             Database.SaveChanges();

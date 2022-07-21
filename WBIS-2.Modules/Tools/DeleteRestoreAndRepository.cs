@@ -13,7 +13,7 @@ namespace WBIS_2.Modules.Tools
     public class DeleteRestoreAndRepository
     {
         WBIS2Model Database = new WBIS2Model();
-        IQueryable<object> TrackedRecords { get; set; }
+        List<IInformationType> TrackedRecords { get; set; }
         
         /// <summary>
         /// sets if repository or _delete is being modified.
@@ -22,7 +22,7 @@ namespace WBIS_2.Modules.Tools
         public DeleteRestoreAndRepository(IInformationType[] _UnTrackedRecords, string _propName)
         {
             IInfoTypeManager m= _UnTrackedRecords[0].Manager;
-            TrackedRecords = (IQueryable<object>)m.GetQueryable(_UnTrackedRecords, m.InformationType, Database, track: true);
+            TrackedRecords = ((IQueryable<IInformationType>)m.GetQueryable(_UnTrackedRecords, m.InformationType, Database, track: true, showDelete: true, showRepository: true)).ToList();
             property = m.InformationType.GetProperty(_propName);
         }
         
@@ -41,20 +41,21 @@ namespace WBIS_2.Modules.Tools
             {
                 var hexs = Database.Hex160s
                .Include(_ => _.ProtectionZones)
-               .Where(_ => _.ProtectionZones.Any(x => x.DateModified >= dateTime)).Select(_ => _.Hex160ID).ToArray();
+               .Where(_ => _.ProtectionZones.Any(x => TrackedRecords.Select(t=>t.Id).Contains(x.Id))).Select(_ => _.Hex160ID).ToArray();
+//               .Where(_ => _.ProtectionZones.Any(x => x.DateModified >= dateTime)).Select(_ => _.Hex160ID).ToArray();
                 new Hex160_PZs(hexs);
             }
 
             w.Stop();
         }
-        private void FindDeletableChildren(IQueryable<object> records)
+        private void FindDeletableChildren(List<IInformationType> records)
         {
             IInfoTypeManager manager = ((IInformationType)records.First()).Manager;
             var children = manager.GetChildren(true, "")
                     .Where(_ => _.Manager.InformationType.GetInterfaces().Contains(typeof(object)));
             foreach (var child in children)
             {
-                var childrenRecords = (IQueryable<object>)child.Manager.GetQueryable(records.ToArray(), manager.InformationType, Database, track: true);
+                var childrenRecords = ((IQueryable<IInformationType>)child.Manager.GetQueryable(records.ToArray(), manager.InformationType, Database, track: true)).ToList();
                 if (childrenRecords.Count() > 0)
                 {
                     FindDeletableChildren(childrenRecords);
@@ -64,7 +65,7 @@ namespace WBIS_2.Modules.Tools
 
             //.ChangeTracker.Clear();
         }
-        private void DeleteRecords(IQueryable<object> records)
+        private void DeleteRecords(List<IInformationType> records)
         {
             foreach (var record in records)
                 property.SetValue(record, true);
@@ -100,7 +101,8 @@ namespace WBIS_2.Modules.Tools
             {
                 var hexs = Database.Hex160s
                .Include(_ => _.ProtectionZones)
-               .Where(_ => _.ProtectionZones.Any(x => x.DateModified >= dateTime)).Select(_ => _.Hex160ID).ToArray();
+                              .Where(_ => _.ProtectionZones.Any(x => TrackedRecords.Select(t => t.Id).Contains(x.Id))).Select(_ => _.Hex160ID).ToArray();
+//.Where(_ => _.ProtectionZones.Any(x => x.DateModified >= dateTime)).Select(_ => _.Hex160ID).ToArray();
                 new Hex160_PZs(hexs);
             }
 
@@ -113,7 +115,7 @@ namespace WBIS_2.Modules.Tools
                     .Where(_ => _.Manager.InformationType.GetInterfaces().Contains(typeof(object))).ToArray();
             foreach (var parent in parents)
             {
-                var parentRecords = ((IQueryable<object>)parent.Manager.GetQueryableFromChildren(records.ToArray(), manager.InformationType, Database)).ToArray();
+                var parentRecords = ((IQueryable<IInformationType>)parent.Manager.GetQueryableFromChildren(records.ToArray(), manager.InformationType, Database)).ToArray();
                 if (parentRecords.Count() > 0)
                 {
                     FindRestorableParents(parentRecords);
