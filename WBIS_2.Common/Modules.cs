@@ -48,6 +48,16 @@ namespace WBIS_2.Common
         public static string ModuleAmphibianElements { get { return "AmphibianElements"; } }
 
 
+        public static string ModuleSpiGGOW { get { return "SpiGGOW"; } }
+        public static string ModuleSpiNOGO { get { return "SpiNOGO"; } }
+        public static string ModuleSpiSPOW { get { return "SpiSPOW"; } }
+        public static string ModuleSpiWildlifeSighting { get { return "SpiWildlifeSighting"; } }
+        public static string ModuleSpiPlantPoint { get { return "SpiPlantPoint"; } }
+        public static string ModuleSpiPlantPoly { get { return "SpiPlantPoly"; } }
+
+
+
+
         public static string ModuleAdditionalSurveyTemplates { get { return "AdditionalSurveyTemplates"; } }
         public static string ModuleAdditionalSurveys { get { return "AdditionalSurveys"; } }
 

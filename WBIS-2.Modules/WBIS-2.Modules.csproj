@@ -74,6 +74,9 @@
     <Compile Update="Views\Botany\BotanicalPlantListView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\RecordImporters\SPIGGROWImportView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\UserControls\SetPzPassControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -186,6 +189,10 @@
 
   <ItemGroup>
     <Page Update="Views\Botany\BotanicalPlantListView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\RecordImporters\SPIGGROWImportView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

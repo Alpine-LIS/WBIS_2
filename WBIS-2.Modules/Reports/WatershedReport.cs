@@ -581,14 +581,14 @@ namespace WBIS_2.Modules.ViewModels.Reports
             {
                 var sciNames = new List<string>();
 
-                var a = new SPIPlantPoint().Manager.GetQueryable(new object[] { w }, typeof(Watershed), Database, includeGeometry: true, ForceInclude: new List<string>() { "Watershed" });
+                var a = new SPIPlantPoint().Manager.GetQueryable(new object[] { w }, typeof(Watershed), Database, includeGeometry: true, ForceInclude: new List<string>() { "Watershed" }, showDelete: false);
                 foreach(SPIPlantPoint p in a)
                 {                    
                     if (!sciNames.Contains(p.PlantSpecies.SciName))
                         AddPlantSpecies(ref sciNames, ref dt, p.PlantSpecies, w);
                 }
 
-                a = new SPIPlantPolygon().Manager.GetQueryable(new object[] { w }, typeof(Watershed), Database, includeGeometry: true, ForceInclude: new List<string>() { "Watersheds" });
+                a = new SPIPlantPolygon().Manager.GetQueryable(new object[] { w }, typeof(Watershed), Database, includeGeometry: true, ForceInclude: new List<string>() { "Watersheds" }, showDelete: false);
                 foreach (SPIPlantPolygon p in a)
                 {
                     if (!sciNames.Contains(p.PlantSpecies.SciName))
@@ -612,9 +612,9 @@ namespace WBIS_2.Modules.ViewModels.Reports
 
             WordTableWriter(sectionRange, dt);
 
-            var spiPoints = new SPIPlantPoint().Manager.GetQueryable(watersheds, typeof(Watershed), Database, includeGeometry: true, ForceInclude: new List<string>() { "Watershed" });
+            var spiPoints = new SPIPlantPoint().Manager.GetQueryable(watersheds, typeof(Watershed), Database, includeGeometry: true, ForceInclude: new List<string>() { "Watershed" }, showDelete: false);
             new PostGisShapefileConverter(typeof(SPIPlantPoint), spiPoints, dirName + "\\SPI Plant Point.shp");
-            var spiPolys = new SPIPlantPolygon().Manager.GetQueryable(watersheds, typeof(Watershed), Database, includeGeometry: true, ForceInclude: new List<string>() { "Watersheds" });
+            var spiPolys = new SPIPlantPolygon().Manager.GetQueryable(watersheds, typeof(Watershed), Database, includeGeometry: true, ForceInclude: new List<string>() { "Watersheds" }, showDelete: false);
             new PostGisShapefileConverter(typeof(SPIPlantPolygon), spiPolys, dirName + "\\SPI Plant Polygon.shp");
             var elements = new BotanicalElement().Manager.GetQueryable(watersheds, typeof(Watershed), Database,
                 ForceInclude: new List<string>() { "BotanicalPlantOfInterest.PlantSpecies", "Watershed" }, includeGeometry: true)
@@ -668,7 +668,7 @@ namespace WBIS_2.Modules.ViewModels.Reports
             dt.Columns.Add("Status");
             dt.Columns.Add("Nest");
 
-            var owls = new SPI_NOGO().Manager.GetQueryable(watersheds, typeof(Watershed), Database, includeGeometry: true, ForceInclude: new List<string>() { "Watershed" });
+            var owls = new SPI_NOGO().Manager.GetQueryable(watersheds, typeof(Watershed), Database, includeGeometry: true, ForceInclude: new List<string>() { "Watershed" }, showDelete: false);
 
             foreach(SPI_NOGO owl in owls)
             {
@@ -773,7 +773,7 @@ namespace WBIS_2.Modules.ViewModels.Reports
             dt.Columns.Add("LAT (NAD27)", typeof(double));
             dt.Columns.Add("HCP Status");
 
-            var owls = new SPI_SPOW().Manager.GetQueryable(watersheds, typeof(Watershed), Database, includeGeometry: true, ForceInclude: new List<string>() { "Watershed" });
+            var owls = new SPI_SPOW().Manager.GetQueryable(watersheds, typeof(Watershed), Database, includeGeometry: true, ForceInclude: new List<string>() { "Watershed" }, showDelete: false);
 
             foreach (SPI_SPOW owl in owls)
             {
@@ -898,7 +898,7 @@ namespace WBIS_2.Modules.ViewModels.Reports
             dt.Columns.Add("LAT (NAD27)", typeof(double));
             dt.Columns.Add("Status");
 
-            var owls = new SPI_GGOW().Manager.GetQueryable(watersheds, typeof(Watershed), Database, includeGeometry: true, ForceInclude: new List<string>() { "Watershed" });
+            var owls = new SPI_GGOW().Manager.GetQueryable(watersheds, typeof(Watershed), Database, includeGeometry: true, ForceInclude: new List<string>() { "Watershed" }, showDelete: false);
 
             foreach (SPI_GGOW owl in owls)
             {
@@ -947,7 +947,7 @@ namespace WBIS_2.Modules.ViewModels.Reports
             dt.Columns.Add("Map ID");
             dt.Columns.Add("NatureServe Ranking");
 
-            var owls = new SPI_WildlifeSighting().Manager.GetQueryable(watersheds, typeof(Watershed), Database, includeGeometry: true, ForceInclude: new List<string>() { "Watershed" });
+            var owls = new SPI_WildlifeSighting().Manager.GetQueryable(watersheds, typeof(Watershed), Database, includeGeometry: true, ForceInclude: new List<string>() { "Watershed" }, showDelete: false);
 
             foreach (SPI_WildlifeSighting owl in owls)
             {

@@ -42,6 +42,7 @@ namespace WBIS_2.DataModel
         public Guid? Hex160Id { get; set; }
         public Hex160 Hex160 { get; set; }
 
+        public bool _delete { get; set; }
 
         [NotMapped, Display(Order = -1)]
         public IInfoTypeManager Manager => new InformationTypeManager<SPIPlantPoint>();

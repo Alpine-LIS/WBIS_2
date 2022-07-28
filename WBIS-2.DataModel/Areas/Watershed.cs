@@ -137,9 +137,13 @@ namespace WBIS_2.DataModel
         //public ICollection<BDOWSighting> BDOWSightings { get; set; }
 
 
+        [ListInfo(ChildField = true)]
         public ICollection<SPI_GGOW> SPI_GGOWs { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<SPI_SPOW> SPI_SPOWs { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<SPI_NOGO> SPI_NOGOs { get; set; }
+        [ListInfo(ChildField = true)]
         public ICollection<SPI_WildlifeSighting> SPI_WildlifeSightings { get; set; }
 
 

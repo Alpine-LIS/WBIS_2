@@ -17,7 +17,7 @@ namespace WBIS_2.Common
         public static string NavigationWildlife { get { return "NavigationWildlife"; } }
         public static string NavigationBotany { get { return "NavigationBotany"; } }
         public static string NavigationSupport { get { return "NavigationSupport"; } }
-        //public static string NavigationOption { get { return "NavigationOption"; } }
+        public static string NavigationSpiRecords { get { return "NavigationSpiRecords"; } }
         public static string NavigationReports { get { return "NavigationReports"; } }
         public static string NavigationAdditionalSurveys { get { return "NavigationAdditionalSurveys"; } }
     }

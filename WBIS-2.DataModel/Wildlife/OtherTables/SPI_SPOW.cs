@@ -121,6 +121,7 @@ namespace WBIS_2.DataModel
         public Watershed Watershed { get; set; }
 
 
+        public bool _delete { get; set; }
 
         [NotMapped, Display(Order = -1)]
         public IInfoTypeManager Manager => new InformationTypeManager<SPI_SPOW>();

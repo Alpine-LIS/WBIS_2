@@ -85,6 +85,7 @@ namespace WBIS_2.DataModel
         public Guid? WatershedId { get; set; }
         public Watershed Watershed { get; set; }
 
+        public bool _delete { get; set; }
 
 
         [NotMapped, Display(Order = -1)]

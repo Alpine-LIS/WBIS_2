@@ -77,9 +77,9 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
         /// </summary>
         public bool CheckSave()
         {
-            if (ImportShapefile == null)
+            if (ImportDataTable == null)
             {
-                MessageBox.Show("There must be a shapefile selected.");
+                MessageBox.Show("There must be a file selected.");
                 return false;
             }
 
@@ -152,14 +152,28 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
             set
             {
                 SetProperty(() => ImportShapefile, value);
+                if (ImportShapefile == null) ImportDataTable = null;
+                else ImportDataTable = ImportShapefile.DataTable;
+            }
+        }
+        public DataTable ImportDataTable
+        {
+            get
+            {
+                return GetProperty(() => ImportDataTable);
+            }
+            set
+            {
+                SetProperty(() => ImportDataTable, value);
                 BuildAttributeTable();
             }
         }
+
         private void BuildAttributeTable()
         {
             PropertyCrosswalk = new List<PropertyCrosswalk>();
             List<string> attributes = new List<string>();
-            if (ImportShapefile != null)
+            if (ImportDataTable != null)
             {
                 foreach (DataColumn col in ImportShapefile.DataTable.Columns)
                 {
@@ -230,7 +244,7 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
         }
         public bool CheckAvailibleOptions(string[] options, string propertyName, string attributeName)
         {
-            foreach (DataRow r in ImportShapefile.DataTable.Rows)
+            foreach (DataRow r in ImportDataTable.Rows)
             {
                 if (r[attributeName] is DBNull) return false;
                 if (!options.Select(_ => _.ToUpperInvariant()).Contains(r[attributeName].ToString().ToUpper())) return false;
@@ -265,9 +279,9 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
         public ICommand SaveSetupCommand { get; set; }
         public void SaveSetupClick()
         {
-            if (ImportShapefile == null)
+            if (ImportDataTable == null)
             {
-                MessageBox.Show("No shapefile has been selected.");
+                MessageBox.Show("No file has been selected.");
                 return;
             }
 
@@ -289,9 +303,9 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
         public ICommand LoadSetupCommand { get; set; }
         public void LoadSetupClick()
         {
-            if (ImportShapefile == null)
+            if (ImportDataTable == null)
             {
-                MessageBox.Show("No shapefile has been selected.");
+                MessageBox.Show("No file has been selected.");
                 return;
             }
 

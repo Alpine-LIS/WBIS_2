@@ -113,7 +113,7 @@ namespace WBIS_2.Modules.Views.UserControls
 
         private void FillSpiPoint()
         {
-            var records = ((IQueryable<SPIPlantPoint>)new SPIPlantPoint().Manager.GetQueryable(UseParentObjects.ToArray(), ParentType, Database, ForceInclude: new List<string>() { "PlantSpecies.RegionalPlantLists" }));
+            var records = ((IQueryable<SPIPlantPoint>)new SPIPlantPoint().Manager.GetQueryable(UseParentObjects.ToArray(), ParentType, Database, ForceInclude: new List<string>() { "PlantSpecies.RegionalPlantLists" }, showDelete: false));
             if (((Region)CbxRegions.SelectedItem).RegionName != "Master List")
                 records = records.Where(_ => _.PlantSpecies.RegionalPlantLists.Select(x=>x.Region).Contains((Region)CbxRegions.SelectedItem));
 
@@ -154,7 +154,7 @@ namespace WBIS_2.Modules.Views.UserControls
         {
             foreach (var p in UseParentObjects)
             {
-                var records = ((IQueryable<SPIPlantPolygon>)new SPIPlantPolygon().Manager.GetQueryable(new object[] { p }, ParentType, Database, ForceInclude: new List<string>() { "PlantSpecies.RegionalPlantLists" }));
+                var records = ((IQueryable<SPIPlantPolygon>)new SPIPlantPolygon().Manager.GetQueryable(new object[] { p }, ParentType, Database, ForceInclude: new List<string>() { "PlantSpecies.RegionalPlantLists" }, showDelete: false));
                 if (((Region)CbxRegions.SelectedItem).RegionName != "Master List")
                     records = records.Where(_ => _.PlantSpecies.RegionalPlantLists.Select(x => x.Region).Contains((Region)CbxRegions.SelectedItem));
 

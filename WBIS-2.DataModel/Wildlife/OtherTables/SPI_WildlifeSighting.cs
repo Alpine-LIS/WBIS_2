@@ -43,7 +43,8 @@ namespace WBIS_2.DataModel
         [Column("watershed_id")]
         public Guid? WatershedId { get; set; }
         public Watershed Watershed { get; set; }
-        
+
+        public bool _delete { get; set; }
 
 
         [NotMapped, Display(Order = -1)]

@@ -84,6 +84,7 @@ namespace WBIS_2.DataModel
         public ICollection<Quad75> Quad75s { get; set; }
         public ICollection<Hex160> Hex160s { get; set; }
 
+        public bool _delete { get; set; }
 
         [NotMapped, Display(Order = -1)]
         public IInfoTypeManager Manager => new InformationTypeManager<SPIPlantPolygon>();

@@ -96,6 +96,13 @@
                                 </Style>
                             </dxa:AccordionItem.ItemContainerStyle>
                         </dxa:AccordionItem>
+                        <dxa:AccordionItem Header="SPI Records" dxmvvm:UIRegion.Region="{x:Static common:Regions.NavigationSpiRecords}" IsExpanded="False">
+                            <dxa:AccordionItem.ItemContainerStyle>
+                                <Style TargetType="dxa:AccordionItem">
+                                    <Setter Property="Header" Value="{Binding Caption}"/>
+                                </Style>
+                            </dxa:AccordionItem.ItemContainerStyle>
+                        </dxa:AccordionItem>
                         <dxa:AccordionItem Header="Support" dxmvvm:UIRegion.Region="{x:Static common:Regions.NavigationSupport}" IsExpanded="False">
                             <dxa:AccordionItem.ItemContainerStyle>
                                 <Style TargetType="dxa:AccordionItem">
