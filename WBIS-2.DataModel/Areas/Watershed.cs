@@ -15,7 +15,7 @@ namespace WBIS_2.DataModel
         public Guid Id { get; set; }
         [Required, Column("watershed_name"), ListInfo(DisplayField = true)]
         public string WatershedName { get; set; }
-        [Required, Column("watershed_id"), ListInfo(DisplayField = true)]
+        [Required, Column("watershed_id"), ListInfo(DisplayField = true), Import]
         public string WatershedID { get; set; }
 
         [Column("mouth_trs")]

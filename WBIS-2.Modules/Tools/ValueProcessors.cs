@@ -62,5 +62,17 @@ namespace WBIS_2.Modules.Tools
             if (val == null) return "";
             return val.ToString();
         }
+
+        public static string BuildWshdtring(string waterNum)
+        {
+            var vals = waterNum.Split('.');
+            while (vals[0].Length < 4)
+                vals[0] = "0" + vals[0];
+            if (vals.Length == 1)
+                vals = vals.Append("000000").ToArray();
+            while (vals[1].Length < 6)
+                vals[1] = vals[1] + "0";
+            return vals[0] + "." + vals[1];
+        }
     }
 }

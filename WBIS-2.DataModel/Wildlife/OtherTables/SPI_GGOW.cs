@@ -16,59 +16,59 @@ namespace WBIS_2.DataModel
 
 
 
-        [Column("spi_id")]
+        [Column("spi_id"), Import]
         public string SPI_ID { get; set; }
-        [Column("nest_name")]
+        [Column("nest_name"), Import]
         public string NestName { get; set; }
-        [Column("territory")]
+        [Column("territory"), Import]
         public string Territory { get; set; }
-        [Column("monitoring_group")]
+        [Column("monitoring_group"), Import]
         public string MonitoringGroup { get; set; }
-        [Column("habitat_area")]
+        [Column("habitat_area"), Import]
         public string HabitatArea{ get; set; }
-        [Column("unique_id")]
+        [Column("unique_id"), Import]
         public int UniqueID { get; set; }
-        [Column("year")]
+        [Column("year"), Import]
         public int Year { get; set; }
-        [Column("twn")]
+        [Column("twn"), Import]
         public string Twn { get; set; }
-        [Column("rge")]
+        [Column("rge"), Import]
         public string Rge { get; set; }
-        [Column("sec")]
+        [Column("sec"), Import]
         public string Sec { get; set; }
-        [Column("quarter")]
+        [Column("quarter"), Import]
         public string Quarter { get; set; }
-        [Column("sixteenth")]
+        [Column("sixteenth"), Import]
         public string Sixteenth { get; set; }
-        [Column("utm_zone")]
+        [Column("utm_zone"), Import]
         public string UTM_ZONE{ get; set; }
-        [Column("utm_e")]
+        [Column("utm_e"), Import]
         public string UTM_E{ get; set; }
-        [Column("utm_n")]
+        [Column("utm_n"), Import]
         public string UTM_N{ get; set; }
-        [Column("longitude")]
+        [Column("longitude"), Import]
         public double Longitude { get; set; }
-        [Column("latitude")]
+        [Column("latitude"), Import]
         public double Latitude { get; set; }
-        [Column("results")]
+        [Column("results"), Import]
         public string Results { get; set; }
-        [Column("pair")]
+        [Column("pair"), Import]
         public string Pair { get; set; }
-        [Column("num_nestlings")]
+        [Column("num_nestlings"), Import]
         public int NumNestlings { get; set; }
-        [Column("num_fledglings")]
+        [Column("num_fledglings"), Import]
         public int NumFledglings { get; set; }
-        [Column("nest")]
+        [Column("nest"), Import]
         public string Nest { get; set; }
-        [Column("surveyors")]
+        [Column("surveyors"), Import]
         public string Surveyors { get; set; }
-        [Column("year_measured")]
+        [Column("year_measured"), Import]
         public int YearMeasured { get; set; }
-        [Column("year_used")]
+        [Column("year_used"), Import]
         public int YearUsed { get; set; }
-        [Column("gid_mapped")]
+        [Column("gid_mapped"), Import]
         public string GISMapped { get; set; }
-        [Column("notes")]
+        [Column("notes"), Import]
         public string Notes { get; set; }
 
 
@@ -82,10 +82,11 @@ namespace WBIS_2.DataModel
 
         [Column("district_id")]
         public Guid? DistrictId { get; set; }
-        [ListInfo(AutoInclude = true)]
+        [ListInfo(AutoInclude = true), Import]
         public District District { get; set; }
         [Column("watershed_id")]
         public Guid? WatershedId { get; set; }
+        [Import]
         public Watershed Watershed { get; set; }
 
         public bool _delete { get; set; }

@@ -70,7 +70,18 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
 
         public ICommand SaveCommand { get; set; }
         public abstract void SaveClick();
-        public abstract object BuildAttributes(object unit, DataRow dataRow);
+        public virtual void BuildAttributes<t>(ref t record, DataRow dataRow) where t : class
+        {
+            var attributes = PropertyCrosswalk.Where(_ => _.PropertyType != null);
+            attributes = attributes.Where(_ => !_.PropertyType.PropertyName.Contains("."));
+
+            foreach (var attribute in attributes)
+            {
+                var prop = typeof(SPI_GGOW).GetProperty(attribute.PropertyType.PropertyName);
+                var val = ValueProcessors.GetParseValue(dataRow[attribute.Attribute], prop.PropertyType);
+                prop.SetValue(record, val);
+            }
+        }
 
         /// <summary>
         /// Perfom chacks to see if records can be imported.
@@ -97,6 +108,14 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
                 if (MessageBox.Show($"The selected shapefile will update {updateCount.ToString("N0")} features. Do you wish to continue?", "", MessageBoxButton.YesNo) == MessageBoxResult.No)
                     return false;
             }
+
+            if (!CheckTpes())
+            {
+                if (MessageBox.Show("Not all attribute types match." +
+                    "\nThe system will attempt to parse data to the correct type but can not garentee the accuracy of the transition. Would you like to continue? ", "", MessageBoxButton.YesNo) == MessageBoxResult.No)
+                    return false;
+            }
+
 
             var issues = RecordTypeSaveCheck();
             if (issues.Count > 0)
@@ -175,7 +194,7 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
             List<string> attributes = new List<string>();
             if (ImportDataTable != null)
             {
-                foreach (DataColumn col in ImportShapefile.DataTable.Columns)
+                foreach (DataColumn col in ImportDataTable.Columns)
                 {
                     var xWalk = new RecordImporters.PropertyCrosswalk()
                     {
@@ -256,22 +275,37 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
         /// Check that the data types between the selected atributes and properties are the same.
         /// The type should be the information type
         /// </summary>
-        public List<string> CheckTpes(Type type)
+        //public List<string> CheckTpes(Type type)
+        //{
+        //    List<string> issues = new List<string>();
+        //    var choosenAttributes = PropertyCrosswalk.Where(_ => _.PropertyType != null).ToList();
+        //    foreach (var xWalk in choosenAttributes)
+        //    {
+        //        var p = type.GetProperty(xWalk.PropertyType.PropertyName);
+
+        //        if (xWalk.PropertyType.TypeName != "'String'")
+        //        {
+        //            if (!xWalk.PropertyType.TypeName.Contains(xWalk.DataType))
+        //                issues.Add($"'{xWalk.Attribute}' has a data type of '{xWalk.DataType}' and '{xWalk.PropertyType.PropertyName}' must be {xWalk.PropertyType.TypeName}.");
+        //        }
+        //    }
+        //    return issues;
+        //}
+
+        public bool CheckTpes()
         {
             List<string> issues = new List<string>();
             var choosenAttributes = PropertyCrosswalk.Where(_ => _.PropertyType != null).ToList();
             foreach (var xWalk in choosenAttributes)
             {
-                var p = type.GetProperty(xWalk.PropertyType.PropertyName);
-
                 if (xWalk.PropertyType.TypeName != "'String'")
                 {
-                    if (!xWalk.PropertyType.TypeName.Contains(xWalk.DataType))
-                        issues.Add($"'{xWalk.Attribute}' has a data type of '{xWalk.DataType}' and '{xWalk.PropertyType.PropertyName}' must be {xWalk.PropertyType.TypeName}.");
+                    if (!xWalk.PropertyType.TypeName.Contains(xWalk.DataType)) return false;
                 }
             }
-            return issues;
+            return true; ;
         }
+
 
         public abstract int GetUpdateCount();
         public abstract string CheckDupIds();

@@ -127,27 +127,10 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
 
             w.Stop();
         }
-
-        public override PermanentCallStation BuildAttributes(object unit, DataRow dataRow)
-        {
-            PermanentCallStation survey = (PermanentCallStation)unit;
-
-            var attributes = PropertyCrosswalk.Where(_ => _.PropertyType != null);
-            attributes = attributes.Where(_ => !_.PropertyType.PropertyName.Contains("."));
-
-            foreach (var attribute in attributes)
-            {
-                var prop = typeof(PermanentCallStation).GetProperty(attribute.PropertyType.PropertyName);
-                var val = ValueProcessors.GetParseValue(dataRow[attribute.Attribute], prop.PropertyType);
-                prop.SetValue(survey, val);
-            }
-
-            return survey;
-        }
         public override List<string> RecordTypeSaveCheck()
         {
             List<string> issues = new List<string>();
-            issues.AddRange(CheckTpes(typeof(PermanentCallStation)));
+            //issues.AddRange(CheckTpes(typeof(PermanentCallStation)));
 
             string dupIds = CheckBlanks();
             if (dupIds != "") issues.Add(dupIds);

@@ -164,26 +164,10 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
             Database.SaveChanges();
             w.Stop();
         }
-
-        public override BotanicalSurveyArea BuildAttributes(object unit, DataRow dataRow)
-        {
-            BotanicalSurveyArea surveyArea = (BotanicalSurveyArea)unit;
-
-            var attributes = PropertyCrosswalk.Where(_ => _.PropertyType != null);
-
-            foreach (var attribute in attributes)
-            {
-                var prop = typeof(BotanicalSurveyArea).GetProperty(attribute.PropertyType.PropertyName);
-                var val = ValueProcessors.GetParseValue(dataRow[attribute.Attribute], prop.PropertyType);
-                prop.SetValue(surveyArea, val);
-            }
-
-            return surveyArea;
-        }
         public override List<string> RecordTypeSaveCheck()
         {
             List<string> issues = new List<string>();
-            issues.AddRange(CheckTpes(typeof(BotanicalSurveyArea)));
+            //issues.AddRange(CheckTpes(typeof(BotanicalSurveyArea)));
 
             string dupIds = CheckBlanks();
             if (dupIds != "") issues.Add(dupIds);

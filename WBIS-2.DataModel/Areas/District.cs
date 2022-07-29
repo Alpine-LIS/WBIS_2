@@ -13,7 +13,7 @@ namespace WBIS_2.DataModel
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("id")]
         public Guid Id { get; set; }
-        [Required, Column("district_name"), ListInfo(DisplayField = true)]
+        [Required, Column("district_name"), ListInfo(DisplayField = true), Import]
         public string DistrictName { get; set; }
         [Required, Column("management_area"), ListInfo(DisplayField = true)]
         public string ManagementArea { get; set; }

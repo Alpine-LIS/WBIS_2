@@ -17,14 +17,14 @@ using WBIS_2.Modules.ViewModels.RecordImporters;
 namespace WBIS_2.Modules.Views.RecordImporters
 {
     /// <summary>
-    /// Interaction logic for SiteCallingImportView.xaml
+    /// Interaction logic for SPIGGOWImportView.xaml
     /// </summary>
-    public partial class SPIGGROWImportView : UserControl
+    public partial class SPIGGOWImportView : UserControl
     {
-        public SPIGGROWImportView()
+        public SPIGGOWImportView()
         {
             InitializeComponent();
-            DataContext = new SPIGGROWImportView();
+            DataContext = new SPIGGOWImportViewModel();
         }
     }
 }

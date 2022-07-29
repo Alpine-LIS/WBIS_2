@@ -22,7 +22,7 @@
             <ColumnDefinition Width="AUTO"/>
             <ColumnDefinition Width="AUTO"/>
         </Grid.ColumnDefinitions>
-        <Button Content="Select Shapefile" Grid.Column="0" Margin="5" Command="{Binding FileSelectCommand}"/>
+        <Button Content="Select File" Grid.Column="0" Margin="5" Command="{Binding FileSelectCommand}"/>
 
         <!--<Label Grid.Column="1" Content="Repositiry Data:" ToolTip="Import records as repository data."/>
         <dxe:CheckEdit Grid.Column="2" IsChecked="{Binding RepositryData, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTip="Import records as repository data."/>-->

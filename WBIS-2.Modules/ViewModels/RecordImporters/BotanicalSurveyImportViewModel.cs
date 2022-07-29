@@ -137,7 +137,7 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
                     THP_Area = surveyArea.THP_Area,
                     Repository = RepositoryData
                 };
-                BuildAttributes(survey, feat.DataRow);
+                BuildAttributes(ref survey, feat.DataRow);
 
                 if (feat.Geometry.SRID == 0) feat.Geometry.SRID = 26710;
 
@@ -151,7 +151,7 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
             w.Stop();
         }
 
-        public override BotanicalSurvey BuildAttributes(object unit, DataRow dataRow)
+        public override void BuildAttributes<BotanicalSurvey>(ref BotanicalSurvey unit, DataRow dataRow)
         {
             BotanicalSurvey survey = (BotanicalSurvey)unit;
 
@@ -164,13 +164,11 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
                 var val = ValueProcessors.GetParseValue(dataRow[attribute.Attribute], prop.PropertyType);
                 prop.SetValue(survey, val);
             }
-
-            return survey;
         }
         public override List<string> RecordTypeSaveCheck()
         {
             List<string> issues = new List<string>();
-            issues.AddRange(CheckTpes(typeof(BotanicalSurveyArea)));
+            //issues.AddRange(CheckTpes(typeof(BotanicalSurveyArea)));
 
             string dupIds = CheckBlanks();
             if (dupIds != "") issues.Add(dupIds);
