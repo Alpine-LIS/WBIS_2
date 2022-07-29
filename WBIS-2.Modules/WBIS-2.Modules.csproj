@@ -74,6 +74,15 @@
     <Compile Update="Views\Botany\BotanicalPlantListView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\RecordImporters\SPIWildlifeSightingImportView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\RecordImporters\SPISPOWImportView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\RecordImporters\SPINOGOImportView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\RecordImporters\SPIGGOWImportView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -189,6 +198,18 @@
 
   <ItemGroup>
     <Page Update="Views\Botany\BotanicalPlantListView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\RecordImporters\SPIWildlifeSightingImportView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\RecordImporters\SPISPOWImportView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\RecordImporters\SPINOGOImportView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
