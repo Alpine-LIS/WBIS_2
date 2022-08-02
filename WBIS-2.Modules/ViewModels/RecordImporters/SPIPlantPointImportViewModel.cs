@@ -82,10 +82,42 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
                     Database.SPIPlantPoints.Remove(item);
             }
 
-            foreach(DataRow r in ImportDataTable.Rows)
+            var sciNameCol = PropertyCrosswalk.Where(_ => _.PropertyType != null).FirstOrDefault(_ => _.PropertyType.PropertyName == "PlantSpecies.SciName");
+            var comNameCol = PropertyCrosswalk.Where(_ => _.PropertyType != null).FirstOrDefault(_ => _.PropertyType.PropertyName == "PlantSpecies.ComName");
+            List<PlantSpecies> newPlants = Database.PlantSpecies.ToList();
+
+            foreach (var feat in ImportShapefile.Features)
             {
                 SPIPlantPoint record = new SPIPlantPoint();
-                BuildAttributes(ref record, r);
+                BuildAttributes(ref record, feat.DataRow);
+
+                //if (sciNameCol != null && comNameCol != null)
+                //    record.PlantSpecies = Database.PlantSpecies.FirstOrDefault(_ => _.SciName.ToUpper() == feat.DataRow[sciNameCol.Attribute].ToString().ToUpper() && _.ComName.ToUpper() == feat.DataRow[comNameCol.Attribute].ToString().ToUpper());
+                //if (record.PlantSpecies == null)
+                //    record.PlantSpecies = Database.PlantSpecies.FirstOrDefault(_ => _.SciName.ToUpper() == feat.DataRow[sciNameCol.Attribute].ToString().ToUpper());
+                if (comNameCol != null)
+                    record.PlantSpecies = newPlants.FirstOrDefault(_ => _.SciName.ToUpper() == feat.DataRow[sciNameCol.Attribute].ToString().ToUpper() && _.ComName.ToUpper() == feat.DataRow[comNameCol.Attribute].ToString().ToUpper());
+                if (record.PlantSpecies == null)
+                    record.PlantSpecies = newPlants.FirstOrDefault(_ => _.SciName.ToUpper() == feat.DataRow[sciNameCol.Attribute].ToString().ToUpper());
+
+
+                if (record.PlantSpecies == null)
+                {
+                    PlantSpecies plantSpecies = new PlantSpecies()
+                    {
+                        ComName = feat.DataRow[sciNameCol.Attribute].ToString()
+                     };
+                    if (comNameCol != null)
+                        plantSpecies.ComName = feat.DataRow[comNameCol.Attribute].ToString();
+                    newPlants.Add(plantSpecies);
+                    Database.PlantSpecies.Add(plantSpecies);
+                                      
+                    record.PlantSpecies = plantSpecies;
+                }
+                if (feat.Geometry.SRID == 0) feat.Geometry.SRID = 26710;
+                record.Geometry = (NetTopologySuite.Geometries.Point)feat.Geometry;
+                record._delete = false;
+
                 Database.SPIPlantPoints.Add(record);
             }
 

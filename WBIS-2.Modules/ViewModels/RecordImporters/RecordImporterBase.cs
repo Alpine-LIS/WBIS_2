@@ -377,17 +377,22 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
         public virtual void BuildAttributes<t>(ref t record, DataRow dataRow) where t : class
         {
             var attributes = PropertyCrosswalk.Where(_ => _.PropertyType != null);
-            attributes = attributes.Where(_ => !_.PropertyType.PropertyName.Contains("."));
+            //attributes = attributes.Where(_ => !_.PropertyType.PropertyName.Contains("."));
 
             foreach (var attribute in attributes)
             {
-                var prop = typeof(t).GetProperty(attribute.PropertyType.PropertyName);
+                if (attribute.PropertyType.PropertyName.Contains(".")) continue;
+                PropertyInfo prop = typeof(t).GetProperty(attribute.PropertyType.PropertyName);// null;
+                //if (attribute.PropertyType.PropertyName.Contains("."))
+                //    prop = typeof(t).GetProperty(attribute.PropertyType.PropertyName.Split('.')[0]);
+                //else prop = typeof(t).GetProperty(attribute.PropertyType.PropertyName);
+                
+                if (prop == null) continue;                               
+                if (prop.GetValue(record) != null) continue;
+
                 object val;
-                if (!prop.PropertyType.GetInterfaces().Contains(typeof(IInformationType)))
-                {
-                    if (prop.GetValue(record) != null) continue;
+                if (!prop.PropertyType.GetInterfaces().Contains(typeof(IInformationType))) 
                     val = ValueProcessors.GetParseValue(dataRow[attribute.Attribute], prop.PropertyType);
-                }
                 else
                     val = GetRecordEntity(prop.PropertyType, dataRow);
                 prop.SetValue(record, val);
