@@ -70,18 +70,7 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
 
         public ICommand SaveCommand { get; set; }
         public abstract void SaveClick();
-        public virtual void BuildAttributes<t>(ref t record, DataRow dataRow) where t : class
-        {
-            var attributes = PropertyCrosswalk.Where(_ => _.PropertyType != null);
-            attributes = attributes.Where(_ => !_.PropertyType.PropertyName.Contains("."));
-
-            foreach (var attribute in attributes)
-            {
-                var prop = typeof(SPI_GGOW).GetProperty(attribute.PropertyType.PropertyName);
-                var val = ValueProcessors.GetParseValue(dataRow[attribute.Attribute], prop.PropertyType);
-                prop.SetValue(record, val);
-            }
-        }
+       
 
         /// <summary>
         /// Perfom chacks to see if records can be imported.
@@ -385,30 +374,24 @@ namespace WBIS_2.Modules.ViewModels.RecordImporters
 
 
 
-
-        public t BuildAttributes<t>(DataRow dataRow, t record) where t : class
+        public virtual void BuildAttributes<t>(ref t record, DataRow dataRow) where t : class
         {
             var attributes = PropertyCrosswalk.Where(_ => _.PropertyType != null);
+            attributes = attributes.Where(_ => !_.PropertyType.PropertyName.Contains("."));
 
             foreach (var attribute in attributes)
             {
-                PropertyInfo prop;
-                if (!attribute.PropertyType.PropertyName.Contains("."))
-                    prop = typeof(t).GetProperty(attribute.PropertyType.PropertyName);
-                else
-                {
-                    prop = typeof(t).GetProperty(attribute.PropertyType.PropertyName);
-                }
-
+                var prop = typeof(t).GetProperty(attribute.PropertyType.PropertyName);
                 object val;
                 if (!prop.PropertyType.GetInterfaces().Contains(typeof(IInformationType)))
+                {
+                    if (prop.GetValue(record) != null) continue;
                     val = ValueProcessors.GetParseValue(dataRow[attribute.Attribute], prop.PropertyType);
+                }
                 else
                     val = GetRecordEntity(prop.PropertyType, dataRow);
-
                 prop.SetValue(record, val);
             }
-            return record;
         }
         public object GetRecordEntity(Type propertyType, DataRow dataRow)
         {

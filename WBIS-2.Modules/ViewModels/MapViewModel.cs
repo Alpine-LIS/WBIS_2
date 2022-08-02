@@ -393,6 +393,7 @@ namespace WBIS_2.Modules.ViewModels
 
             var boolQuery = string.Join(" AND ", new string[] { delete, repository, districts });
             boolQuery = boolQuery.Replace(" AND AND ", " AND ");
+            boolQuery = boolQuery.Replace(" AND  AND ", " AND ");
             while (boolQuery.StartsWith(" AND "))
                 boolQuery = boolQuery.Remove(0, 5);
             while (boolQuery.EndsWith(" AND "))

@@ -15,33 +15,34 @@ namespace WBIS_2.DataModel
         public Guid Id { get; set; }
 
 
-        [Column("wildlife_species")]
+        [Column("wildlife_species"), Import]
         public string WildlifeSpecies { get; set; }
-        [Column("genus")]
+        [Column("genus"), Import]
         public string Genus { get; set; }
-        [Column("species")]
+        [Column("species"), Import]
         public string Species { get; set; }
-        [Column("year")]
+        [Column("year"), Import]
         public int Year { get; set; }
-        [Column("num_observed")]
+        [Column("num_observed"), Import]
         public int NumObserved { get; set; }
-        [Column("activity_observed")]
+        [Column("activity_observed"), Import]
         public string ActivityObserved { get; set; }
-        [Column("longitude")]
+        [Column("longitude"), Import]
         public double Longitude { get; set; }
-        [Column("latitude")]
+        [Column("latitude"), Import]
         public double Latitude { get; set; }
-        [Column("iucn_rating")]
+        [Column("iucn_rating"), Import]
         public string IUCN_Rating { get; set; }
 
 
 
         [Column("district_id")]
         public Guid? DistrictId { get; set; }
-        [ListInfo(AutoInclude = true)]
+        [ListInfo(AutoInclude = true), Import]
         public District District { get; set; }
         [Column("watershed_id")]
         public Guid? WatershedId { get; set; }
+        [ListInfo(AutoInclude = true), Import]
         public Watershed Watershed { get; set; }
 
         public bool _delete { get; set; }

@@ -15,7 +15,7 @@ namespace WBIS_2.DataModel
 
         [Required, Column("plant_species_id")]
         public Guid PlantSpeciesId { get; set; }   
-        [ListInfo(AutoInclude = true)]
+        [ListInfo(AutoInclude = true), Import]
         public PlantSpecies PlantSpecies { get; set; }
         [Column("geometry", TypeName = "geometry(Point,26710)")]
         public Point Geometry { get; set; }
@@ -23,9 +23,9 @@ namespace WBIS_2.DataModel
         public double Lat { get; set; }
         [Column("lon")]
         public double Lon { get;set; }
-        [Column("notes")]
+        [Column("notes"), Import]
         public string Notes { get; set; }
-        [Column("thp")]
+        [Column("thp"), Import]
         public string THP { get; set; }
 
 
